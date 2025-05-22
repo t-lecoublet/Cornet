@@ -1,32 +1,26 @@
 {
-  "name": "tmp",
-  "version": "0.0.0",
+  "name": "daisyui-vue-kit",
   "private": true,
+  "version": "0.0.0",
   "type": "module",
-  "scripts": {
-    "dev": "vite --host",
-    "build": "vite build",
-    "preview": "vite preview",
-    "build-only": "vite build",
-    "type-check": "vue-tsc --build"
-  },
-  "dependencies": {
-    "@tailwindcss/vite": "^4.1.7",
-    "daisyui": "^5.0.35",
-    "tailwindcss": "^4.1.7",
-    "vue": "^3.5.13",
-    "daisyui-vue-kit": "file:lib"
-
+  "main": "./index.ts",
+  "peerDependencies": {
+    "@tailwindcss/vite": "^4.0.6",
+    "daisyui": "^5.0.13",
+    "glob": "^11.0.2",
+    "tailwindcss": "^4.0.6",
+    "typescript": "^5.7.3",
+    "vite": "^6.1.0",
+    "vue": "^3.5.13"
   },
   "devDependencies": {
-    "@tsconfig/node22": "^22.0.1",
-    "@types/node": "^22.14.0",
-    "@vitejs/plugin-vue": "^5.2.3",
-    "@vue/tsconfig": "^0.7.0",
-    "npm-run-all2": "^7.0.2",
-    "typescript": "~5.8.0",
-    "vite": "^6.2.4",
-    "vite-plugin-vue-devtools": "^7.7.2",
-    "vue-tsc": "^2.2.8"
+    "@storybook/vue3": "^8.6.14",
+    "@storybook/vue3-vite": "^8.6.14",
+    "storybook": "^8.6.14"
+  },
+  "exports": {
+    ".": "./index.ts",
+    "./plugin-vite": "./plugin-vite.ts",
+    "./css": "./index.css"
   }
 }
