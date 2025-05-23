@@ -28,7 +28,7 @@ If you want to use the library in an existing project, you can download only the
 At the source of your project, run the following command to clone the `lib` branch of the repository:
 
 ```bash
-git clone git@gitlab.limos.fr:hub-isima/daisyui-vue-kit.git -b lib
+git clone git@gitlab.limos.fr:hub-isima/daisyui-vue-kit.git -b lib lib
 ```
 
 Install the local directory as a dependency with :
