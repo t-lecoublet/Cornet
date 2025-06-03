@@ -1,4 +1,3 @@
-import type { ArgTypes } from '@storybook/vue3'
 import { computed } from 'vue'
 
 export type Size = 'default' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
@@ -19,7 +18,7 @@ export function useSizeMapping(props: { size: Size }, suffix: string) {
   return { sizeClass }
 }
 
-export const useSizeStoriesControl: ArgTypes = {
+export const useSizeStoriesControl = {
   size: {
     control: { type: 'select' },
     options: ['default', 'xs', 'sm', 'md', 'lg', 'xl'],
