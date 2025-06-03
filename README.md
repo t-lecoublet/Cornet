@@ -15,13 +15,13 @@ This library is designed to be used as components next to your own components, a
 
 ## Installation
 
-### Method 1: Clone this vue repository
+### Method 1: (New Vue project) Clone this vue repository
 
 ```bash
 git clone git@gitlab.limos.fr:hub-isima/daisyui-vue-kit.git
 ```
 
-### Method 2: Download only lib directory from branch lib (for existing projects)
+### Method 2: (Vue existing projects) Download only lib directory from branch lib
 
 If you want to use the library in an existing project, you can download only the `lib` directory from the [lib](https://gitlab.limos.fr/hub-isima/daisyui-vue-kit/-/tree/lib?ref_type=heads) branch of the repository. This will allow you to use the library without having to clone the entire repository.
 
@@ -71,8 +71,14 @@ export default defineConfig({
 @plugin "daisyui";
 ```
 
+### Method 3: Nuxt project
+
+You can refer to this [Nuxt project with kit](https://gitlab.limos.fr/hub-isima/daisyui-vue-kit-nuxt-starter/-/tree/master?ref_type=heads) for installation needs.
+
 ## Storybook
 
 Library also provide storybook stories to test components. So you can install it and run daisyui-vue-kit stories.
 
 See [storybook](https://storybook.js.org/docs/vue/get-started/install) documentation for more information.
+
+WARNING: Storybook v9 is not compatible with Nuxt for now, so use vite storybook instead or use Storybook v8 inside Nuxt project. (Actually, Nuxt project linked above use Storybook v9 with vite)
