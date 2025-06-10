@@ -25,7 +25,7 @@ const defaultTplStr = `
     <template #trigger>
       <DuButton class="m-1">Click me !</DuButton>
     </template>
-    <Menu v-bind="args" class="w-56">
+    <Menu class="w-56">
       <li><a>Item 1</a></li>
       <li><a>Item 2</a></li>
       <li><a>Item 3</a></li>
@@ -35,41 +35,41 @@ const defaultTplStr = `
 
 const placementsTplStr = `
 <div class="flex flex-wrap gap-4 justify-center p-16">
-  <DuDropdown v-bind="args" placement="top">
+  <DuDropdown placement="top">
     <template #trigger>
       <DuButton class="m-1">Top</DuButton>
     </template>
-    <Menu v-bind="args" class="w-56">
+    <Menu class="w-56">
       <li><a>Item 1</a></li>
       <li><a>Item 2</a></li>
     </Menu>
   </DuDropdown>
   
-  <DuDropdown v-bind="args" placement="bottom">
+  <DuDropdown placement="bottom">
     <template #trigger>
       <DuButton class="m-1">Bottom</DuButton>
     </template>
-    <Menu v-bind="args" class="w-56">
+    <Menu class="w-56">
       <li><a>Item 1</a></li>
       <li><a>Item 2</a></li>
     </Menu>
   </DuDropdown>
   
-  <DuDropdown v-bind="args" placement="left">
+  <DuDropdown placement="left">
     <template #trigger>
       <DuButton class="m-1">Left</DuButton>
     </template>
-    <Menu v-bind="args" class="w-56">
+    <Menu class="w-56">
       <li><a>Item 1</a></li>
       <li><a>Item 2</a></li>
     </Menu>
   </DuDropdown>
   
-  <DuDropdown v-bind="args" placement="right">
+  <DuDropdown placement="right">
     <template #trigger>
       <DuButton class="m-1">Right</DuButton>
     </template>
-    <Menu v-bind="args" class="w-56">
+    <Menu class="w-56">
       <li><a>Item 1</a></li>
       <li><a>Item 2</a></li>
     </Menu>
@@ -79,31 +79,31 @@ const placementsTplStr = `
 
 const alignmentsTplStr = `
 <div class="flex flex-wrap gap-4 justify-center p-16">
-  <DuDropdown v-bind="args" placement="start">
+  <DuDropdown placement="start">
     <template #trigger>
       <DuButton class="m-1">Start</DuButton>
     </template>
-    <Menu v-bind="args" class="w-56">
+    <Menu class="w-56">
       <li><a>Item 1</a></li>
       <li><a>Item 2</a></li>
     </Menu>
   </DuDropdown>
   
-  <DuDropdown v-bind="args" placement="center">
+  <DuDropdown placement="center">
     <template #trigger>
       <DuButton class="m-1">Center</DuButton>
     </template>
-    <Menu v-bind="args" class="w-56">
+    <Menu class="w-56">
       <li><a>Item 1</a></li>
       <li><a>Item 2</a></li>
     </Menu>
   </DuDropdown>
   
-  <DuDropdown v-bind="args" placement="end">
+  <DuDropdown placement="end">
     <template #trigger>
       <DuButton class="m-1">End</DuButton>
     </template>
-    <Menu v-bind="args" class="w-56">
+    <Menu class="w-56">
       <li><a>Item 1</a></li>
       <li><a>Item 2</a></li>
     </Menu>
@@ -113,11 +113,11 @@ const alignmentsTplStr = `
 
 const hoverTplStr = `
 <div class="flex justify-center p-16">
-  <DuDropdown v-bind="args" hover>
+  <DuDropdown hover>
     <template #trigger>
       <DuButton class="m-1">Hover me !</DuButton>
     </template>
-    <Menu v-bind="args" class="w-56">
+    <Menu class="w-56">
       <li><a>Item 1</a></li>
       <li><a>Item 2</a></li>
     </Menu>
@@ -127,11 +127,11 @@ const hoverTplStr = `
 
 const openTplStr = `
 <div class="flex justify-center p-16">
-  <DuDropdown v-bind="args" open>
+  <DuDropdown open>
     <template #trigger>
       <DuButton class="m-1">Always open</DuButton>
     </template>
-    <Menu v-bind="args" class="w-56">
+    <Menu class="w-56">
       <li><a>Item 1</a></li>
       <li><a>Item 2</a></li>
     </Menu>
@@ -140,71 +140,147 @@ const openTplStr = `
 `
 
 // DEFAULT DROPDOWN
-
-const TemplateDropdown: Story = {
-  render: (args: any) => ({
+export const DefaultDropdown: Story = {
+  render: (args) => ({
     components: { DuDropdown, DuButton, Menu },
     setup() {
       return { args }
     },
     template: defaultTplStr,
   }),
-  args: {},
+  parameters: {
+    docs: {
+      source: {
+        code: `
+<DuDropdown>
+  <template #trigger>
+    <DuButton class="m-1">Click me !</DuButton>
+  </template>
+  <Menu class="w-56">
+    <li><a>Item 1</a></li>
+    <li><a>Item 2</a></li>
+    <li><a>Item 3</a></li>
+  </Menu>
+</DuDropdown>`,
+        language: 'html',
+        type: 'auto'
+      }
+    },
+  },
 }
-export const DefaultDropdown = { ...TemplateDropdown }
 
 // DROPDOWN PLACEMENTS
-
-const DropdownPlacementsTemplate: Story = {
-  render: (args: any) => ({
+export const DropdownPlacements: Story = {
+  render: (args) => ({
     components: { DuDropdown, DuButton, Menu },
     setup() {
-      return { args }
+      return { }
     },
     template: placementsTplStr,
   }),
-  args: {},
+  parameters: {
+    docs: {
+      source: {
+        code: placementsTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
-export const DropdownPlacements = { ...DropdownPlacementsTemplate }
 
 // DROPDOWN ALIGNMENTS
-
-const DropdownAlignmentsTemplate: Story = {
-  render: (args: any) => ({
+export const DropdownAlignments: Story = {
+  render: (args) => ({
     components: { DuDropdown, DuButton, Menu },
     setup() {
-      return { args }
+      return { }
     },
     template: alignmentsTplStr,
   }),
-  args: {},
+  parameters: {
+    docs: {
+      source: {
+        code: alignmentsTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
-export const DropdownAlignments = { ...DropdownAlignmentsTemplate }
 
 // DROPDOWN HOVER
-
-const DropdownHoverTemplate: Story = {
-  render: (args: any) => ({
+export const DropdownHover: Story = {
+  render: (args) => ({
     components: { DuDropdown, DuButton, Menu },
     setup() {
-      return { args }
+      return { }
     },
     template: hoverTplStr,
   }),
-  args: {},
+  parameters: {
+    docs: {
+      source: {
+        code: hoverTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
-export const DropdownHover = { ...DropdownHoverTemplate }
 
 // DROPDOWN OPEN
-
-const DropdownOpenTemplate: Story = {
-  render: (args: any) => ({
+export const DropdownOpen: Story = {
+  render: (args) => ({
     components: { DuDropdown, DuButton, Menu },
     setup() {
-      return { args }
+      return { }
     },
     template: openTplStr,
   }),
-  args: {},
+  parameters: {
+    docs: {
+      source: {
+        code: openTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
-export const DropdownOpen = { ...DropdownOpenTemplate } 
+
+// STORY EXEMPLE
+export const DropdownExample: Story = {
+  render: () => ({
+    components: { DuDropdown, DuButton, Menu },
+    setup() {
+      return { }
+    },
+    template: `
+      <DuDropdown>
+        <template #trigger>
+          <DuButton class="m-1">Example</DuButton>
+        </template>
+        <Menu class="w-56">
+          <li><a>Item 1</a></li>
+          <li><a>Item 2</a></li>
+          <li><a>Item 3</a></li>
+        </Menu>
+      </DuDropdown>
+    `,
+  }),
+  parameters: {
+    docs: {
+      source: {
+        code: `
+<DuDropdown>
+  <template #trigger>
+    <DuButton class="m-1">Example</DuButton>
+  </template>
+  <Menu class="w-56">
+    <li><a>Item 1</a></li>
+    <li><a>Item 2</a></li>
+    <li><a>Item 3</a></li>
+  </Menu>
+</DuDropdown>`,
+        language: 'html',
+      },
+    },
+  },
+}

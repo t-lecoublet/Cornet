@@ -34,59 +34,79 @@ const defaultTplStr = `
 </div>
 `
 
+const defaultSetupStr = `
+<script setup>
+const modalRef = ref(null)
+
+const showModal = () => {
+  if (modalRef.value) {
+    modalRef.value.showModal()
+  }
+}
+</script>
+`
+
 const withActionsTplStr = `
 <div>
-  <DuButton @click="showModal">Open modal with actions</DuButton>
-  <DuModal ref="modalRef" v-bind="args">
+  <DuButton @click="modalRef.showModal()">Open modal with actions</DuButton>
+  <DuModal ref="modalRef">
     <h3 class="font-bold text-lg">Confirmation</h3>
     <p class="py-4">Are you sure about that?</p>
     <template #actions>
       <div class="modal-action">
-        <DuButton @click="closeModal" variant="error">No.</DuButton>
-        <DuButton @click="closeModal" variant="success">YES !</DuButton>
+        <DuButton @click="modalRef.closeModal()" variant="error">No.</DuButton>
+        <DuButton @click="modalRef.closeModal()" variant="success">YES !</DuButton>
       </div>
     </template>
   </DuModal>
 </div>
 `
 
+const withActionsSetupStr = `
+<script setup>
+
+const modalRef = ref(null)
+
+</script>
+`
+
 const placementsTplStr = `
 <div class="flex flex-wrap gap-4 justify-center p-4">
   <div>
-    <DuButton @click="showTopModal">Top</DuButton>
-    <DuModal ref="topModalRef" v-bind="args" placement="top">
+    <DuButton @click="topModalRef.showModal()">Top</DuButton>
+    <DuModal ref="topModalRef" placement="top">
       <h3 class="font-bold text-lg">Modal Top</h3>
       <p class="py-4">Moves the modal to top </p>
     </DuModal>
   </div>
   
   <div>
-    <DuButton @click="showMiddleModal">Middle</DuButton>
-    <DuModal ref="middleModalRef" v-bind="args" placement="middle">
+    <DuButton @click="middleModalRef.showModal()">Middle</DuButton>
+    <DuModal ref="middleModalRef" placement="middle">
       <h3 class="font-bold text-lg">Modal Middle</h3>
       <p class="py-4">Moves the modal to middle </p>
     </DuModal>
   </div>
   
   <div>
-    <DuButton @click="showBottomModal">Bottom</DuButton>
-    <DuModal ref="bottomModalRef" v-bind="args" placement="bottom">
+    <DuButton @click="bottomModalRef.showModal()">Bottom</DuButton>
+    <DuModal ref="bottomModalRef" placement="bottom">
       <h3 class="font-bold text-lg">Modal Bottom</h3>
       <p class="py-4">Moves the modal to bottom </p>
     </DuModal>
   </div>
   
   <div>
-    <DuButton @click="showStartModal">Start</DuButton>
-    <DuModal ref="startModalRef" v-bind="args" placement="start">
+    <DuButton @click="startModalRef.showModal()">Start</DuButton>
+    <DuModal ref="startModalRef" placement="start">
       <h3 class="font-bold text-lg">Modal Start</h3>
       <p class="py-4">Moves the modal to start horizontally </p>
     </DuModal>
   </div>
   
   <div>
-    <DuButton @click="showEndModal">End</DuButton>
-    <DuModal ref="endModalRef" v-bind="args" placement="end">
+    <DuButton @click="endModalRef.showModal()">End</DuButton>
+    <DuModal ref="endModalRef" placement="end">
       <h3 class="font-bold text-lg">Modal End</h3>
       <p class="py-4">Moves the modal to end horizontally </p>
     </DuModal>
@@ -94,10 +114,21 @@ const placementsTplStr = `
 </div>
 `
 
-// DEFAULT MODAL
+const placementsSetupStr = `
+<script setup>
 
-const TemplateModal: Story = {
-  render: (args: any) => ({
+const topModalRef = ref(null)
+const middleModalRef = ref(null)
+const bottomModalRef = ref(null)
+const startModalRef = ref(null)
+const endModalRef = ref(null)
+
+</script>
+`
+
+// DEFAULT MODAL
+export const DefaultModal: Story = {
+  render: (args) => ({
     components: { DuModal, DuButton },
     setup() {
       const modalRef = ref<InstanceType<typeof DuModal> | null>(null)
@@ -112,14 +143,19 @@ const TemplateModal: Story = {
     },
     template: defaultTplStr,
   }),
-  args: {},
+  parameters: {
+    docs: {
+      source: {
+        code: `${defaultSetupStr}\n${defaultTplStr}`,
+        language: 'html',
+      },
+    },
+  },
 }
-export const DefaultModal = { ...TemplateModal }
 
 // MODAL WITH ACTIONS
-
-const ModalWithActionsTemplate: Story = {
-  render: (args: any) => ({
+export const ModalWithActions: Story = {
+  render: (args) => ({
     components: { DuModal, DuButton },
     setup() {
       const modalRef = ref<InstanceType<typeof DuModal> | null>(null)
@@ -134,18 +170,23 @@ const ModalWithActionsTemplate: Story = {
         }
       }
 
-      return { args, modalRef, showModal, closeModal }
+      return { modalRef, showModal, closeModal }
     },
     template: withActionsTplStr,
   }),
-  args: {},
+  parameters: {
+    docs: {
+      source: {
+        code: `${withActionsSetupStr}\n${withActionsTplStr}`,
+        language: 'html',
+      },
+    },
+  },
 }
-export const ModalWithActions = { ...ModalWithActionsTemplate }
 
 // MODAL PLACEMENTS
-
-const ModalPlacementsTemplate: Story = {
-  render: (args: any) => ({
+export const ModalPlacements: Story = {
+  render: (args) => ({
     components: { DuModal, DuButton },
     setup() {
       const topModalRef = ref<InstanceType<typeof DuModal> | null>(null)
@@ -154,42 +195,22 @@ const ModalPlacementsTemplate: Story = {
       const startModalRef = ref<InstanceType<typeof DuModal> | null>(null)
       const endModalRef = ref<InstanceType<typeof DuModal> | null>(null)
 
-      const showTopModal = () => {
-        topModalRef.value?.showModal()
-      }
-
-      const showMiddleModal = () => {
-        middleModalRef.value?.showModal()
-      }
-
-      const showBottomModal = () => {
-        bottomModalRef.value?.showModal()
-      }
-
-      const showStartModal = () => {
-        startModalRef.value?.showModal()
-      }
-
-      const showEndModal = () => {
-        endModalRef.value?.showModal()
-      }
-
       return {
-        args,
         topModalRef,
         middleModalRef,
         bottomModalRef,
         startModalRef,
-        endModalRef,
-        showTopModal,
-        showMiddleModal,
-        showBottomModal,
-        showStartModal,
-        showEndModal,
+        endModalRef
       }
     },
     template: placementsTplStr,
   }),
-  args: {},
+  parameters: {
+    docs: {
+      source: {
+        code: `${placementsSetupStr}\n${placementsTplStr}`,
+        language: 'html',
+      },
+    },
+  },
 }
-export const ModalPlacements = { ...ModalPlacementsTemplate } 

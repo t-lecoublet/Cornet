@@ -1,6 +1,7 @@
 import DuButton from './du-button.vue'
 import { useSizeStoriesControl } from '../../../composables/useSizeProps'
 import { useVariantStoriesControl } from '../../../composables/useVariantProps'
+import type { ArgTypes } from "@storybook/vue3";
 import type { Meta, StoryObj } from '@storybook/vue3'
 
 const meta: Meta<typeof DuButton> = {
@@ -8,8 +9,8 @@ const meta: Meta<typeof DuButton> = {
   component: DuButton,
   tags: ['autodocs'],
   argTypes: {
-    ...useVariantStoriesControl,
-    ...useSizeStoriesControl,
+    ...useVariantStoriesControl as ArgTypes,
+    ...useSizeStoriesControl as ArgTypes,
     outline: { control: 'boolean' },
     soft: { control: 'boolean' },
     dash: { control: 'boolean' },
@@ -268,15 +269,7 @@ export const DefaultButton: Story = {
       return { args }
     },
     template: defaultTplStr,
-  }),
-  parameters: {
-    docs: {
-      source: {
-        code: defaultTplStr,
-        language: 'html',
-      },
-    },
-  },
+  })
 }
 
 // BUTTON SIZES
