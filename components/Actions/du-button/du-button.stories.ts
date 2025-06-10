@@ -29,7 +29,7 @@ export default meta
 type Story = StoryObj<typeof DuButton>
 
 const defaultTplStr = `
-  <du-button v-bind="args">Default</du-button>
+  <du-button>Default</du-button>
 `
 
 const ButtonSizesTplStr = `
@@ -43,34 +43,77 @@ const ButtonSizesTplStr = `
 
 const ButtonColorsTplStr = `
 <div class="flex gap-2 items-center">
-    <du-button variant="neutral" v-bind="args">Neutral</du-button>
-    <du-button variant="primary" v-bind="args">Primary</du-button>
-    <du-button variant="secondary" v-bind="args">Secondary</du-button>
-    <du-button variant="accent" v-bind="args">Accent</du-button>
-    <du-button variant="info" v-bind="args">Info</du-button>
-    <du-button variant="success" v-bind="args">Success</du-button>
-    <du-button variant="warning" v-bind="args">Warning</du-button>
-    <du-button variant="error" v-bind="args">Error</du-button>
+    <du-button variant="neutral">Neutral</du-button>
+    <du-button variant="primary">Primary</du-button>
+    <du-button variant="secondary">Secondary</du-button>
+    <du-button variant="accent">Accent</du-button>
+    <du-button variant="info">Info</du-button>
+    <du-button variant="success">Success</du-button>
+    <du-button variant="warning">Warning</du-button>
+    <du-button variant="error">Error</du-button>
 </div>
 `
 
-const ButtonWithControlsTplStr = `
+const SoftButtonsTplStr = `
 <div class="flex gap-2 items-center">
-    <du-button v-bind="args">Default</du-button>
-    <du-button variant="primary" v-bind="args">Primary</du-button>
-    <du-button variant="secondary" v-bind="args">Secondary</du-button>
-    <du-button variant="accent" v-bind="args">Accent</du-button>
-    <du-button variant="info" v-bind="args">Info</du-button>
-    <du-button variant="success" v-bind="args">Success</du-button>
-    <du-button variant="warning" v-bind="args">Warning</du-button>
-    <du-button variant="error" v-bind="args">Error</du-button>
+    <du-button soft>Default</du-button>
+    <du-button variant="primary" soft>Primary</du-button>
+    <du-button variant="secondary" soft>Secondary</du-button>
+    <du-button variant="accent" soft>Accent</du-button>
+    <du-button variant="info" soft>Info</du-button>
+    <du-button variant="success" soft>Success</du-button>
+    <du-button variant="warning" soft>Warning</du-button>
+    <du-button variant="error" soft>Error</du-button>
 </div>
+`
+
+const OutlineButtonsTplStr = `
+<div class="flex gap-2 items-center">
+    <du-button outline>Default</du-button>
+    <du-button variant="primary" outline>Primary</du-button>
+    <du-button variant="secondary" outline>Secondary</du-button>
+    <du-button variant="accent" outline>Accent</du-button>
+    <du-button variant="info" outline>Info</du-button>
+    <du-button variant="success" outline>Success</du-button>
+    <du-button variant="warning" outline>Warning</du-button>
+    <du-button variant="error" outline>Error</du-button>
+</div>
+`
+
+const DashButtonsTplStr = `
+<div class="flex gap-2 items-center">
+    <du-button dash>Default</du-button>
+    <du-button variant="primary" dash>Primary</du-button>
+    <du-button variant="secondary" dash>Secondary</du-button>
+    <du-button variant="accent" dash>Accent</du-button>
+    <du-button variant="info" dash>Info</du-button>
+    <du-button variant="success" dash>Success</du-button>
+    <du-button variant="warning" dash>Warning</du-button>
+    <du-button variant="error" dash>Error</du-button>
+</div>
+`
+
+const ActiveButtonsTplStr = `
+<div class="flex gap-2 items-center">
+    <du-button active>Default</du-button>
+    <du-button variant="primary" active>Primary</du-button>
+    <du-button variant="secondary" active>Secondary</du-button>
+    <du-button variant="accent" active>Accent</du-button>
+    <du-button variant="info" active>Info</du-button>
+    <du-button variant="success" active>Success</du-button>
+    <du-button variant="warning" active>Warning</du-button>
+    <du-button variant="error" active>Error</du-button>
+</div>
+`
+
+const WideButtonTplStr = `
+  <du-button wide>Wide Button</du-button>
 `
 
 const ButtonGhostAndButtonLinkTplStr = `
 <div class="flex gap-2 items-center">
-    <du-button :ghost="true" v-bind="args">Ghost</du-button>
-    <du-button :link="true" v-bind="args">Link</du-button>
+    <du-button :ghost="true">Ghost</du-button>
+    <du-button :link="true">Link</du-button>
 </div>`
 
 const ButtonWithAnyHtmlTagsTplStr = `
@@ -84,15 +127,15 @@ const ButtonWithAnyHtmlTagsTplStr = `
 </div>`
 
 const DisabledButtonTplStr = `
-  <du-button :disabled="true" v-bind="args">Disabled using attribute</du-button>
+  <du-button :disabled="true">Disabled using attribute</du-button>
 `
 
 const CircleButtonAndSquareButtonTplStr = `
 <div class="flex gap-2 items-center">
-    <du-button :circle="true" v-bind="args">
+    <du-button :circle="true">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="size-[1.2em]"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" /></svg>
     </du-button>
-    <du-button :square="true" v-bind="args">
+    <du-button :square="true">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="size-[1.2em]"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" /></svg>
     </du-button>
 </div>
@@ -111,15 +154,15 @@ const ButtonWithIconTplStr = `
 </div>`
 
 const ButtonBlockTplStr = `
-  <du-button block v-bind="args">Block</du-button>
+  <du-button block>Block</du-button>
 `
 
 const ButtonWithLoadingSpinnerTplStr = `
 <div class="flex gap-2 items-center">
-  <du-button :square="true" v-bind="args">
+  <du-button :square="true">
     <span class="loading loading-spinner"></span>
   </du-button>
-  <du-button v-bind="args">
+  <du-button>
     <span class="loading loading-spinner"></span>
     loading
   </du-button>
@@ -205,7 +248,7 @@ const LoginButtonsTplStr = `
   
   <!-- WeChat -->
   <du-button class="bg-[#5EBB2B] text-white border-[#4eaa0c]">
-    <svg aria-label="WeChat logo" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><g fill="white"><path d="M11.606,3.068C5.031,3.068,0,7.529,0,12.393s4.344,7.681,4.344,7.681l-.706,2.676c-.093,.353,.284,.644,.602,.464l3.173-1.798c1.403,.447,4.381,.59,4.671,.603-.208-.721-.311-1.432-.311-2.095,0-3.754,3.268-9.04,10.532-9.04,.165,0,.331,.004,.496,.011-.965-4.627-5.769-7.827-11.195-7.827Zm-4.327,7.748c-.797,0-1.442-.646-1.442-1.442s.646-1.442,1.442-1.442,1.442,.646,1.442,1.442-.646,1.442-1.442,1.442Zm8.386,0c-.797,0-1.442-.646-1.442-1.442s.646-1.442,1.442-1.442,1.442,.646,1.442,1.442-.646,1.442-1.442,1.442Z"></path><path d="M32,19.336c0-4.26-4.998-7.379-9.694-7.379-6.642,0-9.459,4.797-9.459,7.966s2.818,7.966,9.459,7.966c1.469,0,2.762-.211,3.886-.584l2.498,1.585c.197,.125,.447-.052,.394-.279l-.567-2.46c2.36-1.643,3.483-4.234,3.483-6.815Zm-12.73-.81c-.704,0-1.275-.571-1.275-1.275s.571-1.275,1.275-1.275,1.275,.571,1.275,1.275c0,.705-.571,1.275-1.275,1.275Zm6.373,0c-.704,0-1.275-.571-1.275-1.275s.571-1.275,1.275-1.275,1.275,.571,1.275,1.275-.571,1.275-1.275,1.275Z"></path></g></svg>
+    <svg aria-label="WeChat logo" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><g fill="white"><path d="M11.606,3.068C5.031,3.068,0,7.529,0,12.393s4.344,7.681,4.344,7.681l-.706,2.676c-.093,.353,.284,.644,.602,.464l3.173-1.798c1.403,.447,4.381,.59,4.671,.603-.208-.721-.311-1.432-.311-2.095,0-3.754,3.268-9.04,10.532-9.04,.165,0,.331,.004,.496,.011-.965-4.627-5.769-7.827-11.195-7.827Zm-4.327,7.748c-.797,0-1.442-.646-1.442-1.442s.646-1.442,1.442-1.442,1.442,.646,1.442,1.442-.646,1.442-1.442,1.442Zm8.386,0c-.797,0-1.442-.646-1.442-1.442s.646-1.442,1.442-1.442,1.442,.646,1.442,1.442-.646,1.442-1.442,1.442Z"></path><path d="M32,19.336c0-4.26-4.998-7.379-9.694-7.379-6.642,0-9.459,4.797-9.459,7.966s2.818,7.966,9.459,7.966c1.469,0,2.762-.211,3.886-.584l2.498,1.585c.197,.125.447-.052.394-.279l-.567-2.46c2.36-1.643,3.483-4.234,3.483-6.815Zm-12.73-.81c-.704,0-1.275-.571-1.275-1.275s.571-1.275,1.275-1.275,1.275,.571,1.275,1.275c0,.705-.571,1.275-1.275,1.275Zm6.373,0c-.704,0-1.275-.571-1.275-1.275s.571-1.275,1.275-1.275,1.275,.571,1.275,1.275-.571,1.275-1.275,1.275Z"></path></g></svg>
     Login with WeChat
   </du-button>
   
@@ -217,9 +260,8 @@ const LoginButtonsTplStr = `
 </div>
 `
 
-// BUTTON
-
-const TemplateButton: Story = {
+// DEFAULT BUTTON
+export const DefaultButton: Story = {
   render: (args) => ({
     components: { DuButton },
     setup() {
@@ -227,16 +269,18 @@ const TemplateButton: Story = {
     },
     template: defaultTplStr,
   }),
-  // on indique ici les valeurs
-  args: {},
+  parameters: {
+    docs: {
+      source: {
+        code: defaultTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 
-export const DefaultButton = { ...TemplateButton }
-DefaultButton.args = {}
-
 // BUTTON SIZES
-
-const ButtonSizesTemplate: Story = {
+export const ButtonSizes: Story = {
   render: (args) => ({
     components: { DuButton },
     setup() {
@@ -244,14 +288,18 @@ const ButtonSizesTemplate: Story = {
     },
     template: ButtonSizesTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: ButtonSizesTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 
-export const ButtonSizes = { ...ButtonSizesTemplate }
-ButtonSizes.args = {}
-
 // BUTTON COLORS
-
-const ButtonColorsTemplate: Story = {
+export const ButtonColors: Story = {
   render: (args) => ({
     components: { DuButton },
     setup() {
@@ -259,52 +307,94 @@ const ButtonColorsTemplate: Story = {
     },
     template: ButtonColorsTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: ButtonColorsTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 
-export const ButtonColors = { ...ButtonColorsTemplate }
-ButtonColors.args = {}
-
 // SOFT BUTTONS
-
-const ButtonWithControlsTemplate: Story = {
+export const SoftButtons: Story = {
   render: (args) => ({
     components: { DuButton },
     setup() {
-      return { args }
+      return { }
     },
-    template: ButtonWithControlsTplStr,
+    template: SoftButtonsTplStr,
   }),
-}
-
-export const SoftButtons = { ...ButtonWithControlsTemplate }
-SoftButtons.args = {
-  soft: true,
+  parameters: {
+    docs: {
+      source: {
+        code: SoftButtonsTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 
 // OUTLINE BUTTONS
-
-export const OutlineButtons = { ...ButtonWithControlsTemplate }
-OutlineButtons.args = {
-  outline: true,
+export const OutlineButtons: Story = {
+  render: (args) => ({
+    components: { DuButton },
+    setup() {
+      return { }
+    },
+    template: OutlineButtonsTplStr,
+  }),
+  parameters: {
+    docs: {
+      source: {
+        code: OutlineButtonsTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 
 // DASH BUTTONS
-
-export const DashButtons = { ...ButtonWithControlsTemplate }
-DashButtons.args = {
-  dash: true,
+export const DashButtons: Story = {
+  render: (args) => ({
+    components: { DuButton },
+    setup() {
+      return { }
+    },
+    template: DashButtonsTplStr,
+  }),
+  parameters: {
+    docs: {
+      source: {
+        code: DashButtonsTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 
 // ACTIVE BUTTONS
-
-export const ActiveButtons = { ...ButtonWithControlsTemplate }
-ActiveButtons.args = {
-  active: true,
+export const ActiveButtons: Story = {
+  render: (args) => ({
+    components: { DuButton },
+    setup() {
+      return { }
+    },
+    template: ActiveButtonsTplStr,
+  }),
+  parameters: {
+    docs: {
+      source: {
+        code: ActiveButtonsTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 
 // BUTTONS GHOST AND BUTTON LINK
-
-const ButtonGhostAndButtonLinkTemplate: Story = {
+export const ButtonGhostAndButtonLink: Story = {
   render: (args) => ({
     components: { DuButton },
     setup() {
@@ -312,20 +402,37 @@ const ButtonGhostAndButtonLinkTemplate: Story = {
     },
     template: ButtonGhostAndButtonLinkTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: ButtonGhostAndButtonLinkTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 
-export const ButtonGhostAndButtonLink = { ...ButtonGhostAndButtonLinkTemplate }
-
 // WIDE BUTTON
-
-export const WideButton = { ...TemplateButton }
-WideButton.args = {
-  wide: true,
+export const WideButton: Story = {
+  render: (args) => ({
+    components: { DuButton },
+    setup() {
+      return { }
+    },
+    template: WideButtonTplStr,
+  }),
+  parameters: {
+    docs: {
+      source: {
+        code: WideButtonTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 
 // BUTTONS WITH ANY HTML TAGS
-
-const ButtonWithAnyHtmlTagsTemplate: Story = {
+export const ButtonWithAnyHtmlTags: Story = {
   render: (args) => ({
     components: { DuButton },
     setup() {
@@ -333,13 +440,18 @@ const ButtonWithAnyHtmlTagsTemplate: Story = {
     },
     template: ButtonWithAnyHtmlTagsTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: ButtonWithAnyHtmlTagsTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 
-export const ButtonWithAnyHtmlTags = { ...ButtonWithAnyHtmlTagsTemplate }
-
 // DISABLED BUTTON
-
-const DisabledButtonTemplate: Story = {
+export const DisabledButton: Story = {
   render: (args) => ({
     components: { DuButton },
     setup() {
@@ -347,13 +459,18 @@ const DisabledButtonTemplate: Story = {
     },
     template: DisabledButtonTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: DisabledButtonTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 
-export const DisabledButton = { ...DisabledButtonTemplate }
-
 // CIRCLE BUTTON AND SQUARE BUTTON
-
-const CircleButtonAndSquareButtonTemplate: Story = {
+export const CircleButtonAndSquareButton: Story = {
   render: (args) => ({
     components: { DuButton },
     setup() {
@@ -361,15 +478,18 @@ const CircleButtonAndSquareButtonTemplate: Story = {
     },
     template: CircleButtonAndSquareButtonTplStr,
   }),
-}
-
-export const CircleButtonAndSquareButton = {
-  ...CircleButtonAndSquareButtonTemplate,
+  parameters: {
+    docs: {
+      source: {
+        code: CircleButtonAndSquareButtonTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 
 // BUTTON WITH ICON
-
-const ButtonWithIconTemplate: Story = {
+export const ButtonWithIcon: Story = {
   render: (args) => ({
     components: { DuButton },
     setup() {
@@ -377,13 +497,18 @@ const ButtonWithIconTemplate: Story = {
     },
     template: ButtonWithIconTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: ButtonWithIconTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 
-export const ButtonWithIcon = { ...ButtonWithIconTemplate }
-
 // BUTTON BLOCK
-
-const ButtonBlockTemplate: Story = {
+export const ButtonBlock: Story = {
   render: (args) => ({
     components: { DuButton },
     setup() {
@@ -391,13 +516,18 @@ const ButtonBlockTemplate: Story = {
     },
     template: ButtonBlockTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: ButtonBlockTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 
-export const ButtonBlock = { ...ButtonBlockTemplate }
-
 // BUTTON WITH LOADING SPINNER
-
-const ButtonWithLoadingSpinnerTemplate: Story = {
+export const ButtonWithLoadingSpinner: Story = {
   render: (args) => ({
     components: { DuButton },
     setup() {
@@ -405,13 +535,18 @@ const ButtonWithLoadingSpinnerTemplate: Story = {
     },
     template: ButtonWithLoadingSpinnerTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: ButtonWithLoadingSpinnerTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 
-export const ButtonWithLoadingSpinner = { ...ButtonWithLoadingSpinnerTemplate }
-
 // LOGIN BUTTONS
-
-const LoginButtonsTemplate: Story = {
+export const LoginButtons: Story = {
   render: (args) => ({
     components: { DuButton },
     setup() {
@@ -419,6 +554,12 @@ const LoginButtonsTemplate: Story = {
     },
     template: LoginButtonsTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: LoginButtonsTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
-
-export const LoginButtons = { ...LoginButtonsTemplate }
