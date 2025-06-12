@@ -1,6 +1,10 @@
-# DaisyUi vue kit
+<div align="center">
+  <img src="./public/logoLong.svg" alt="Vue + daisyUI Logo" width="300">
+</div>
 
-Vue 3 component library for daisyUI without node_modules limitations.
+# Cornet
+
+Cornet is a Vue 3 component library for daisyUI without node_modules limitations.
 
 ## Why
 
@@ -18,18 +22,21 @@ This library is designed to be used as components next to your own components, a
 ### Method 1: (New Vue project) Clone this vue repository
 
 ```bash
-git clone git@gitlab.limos.fr:hub-isima/daisyui-vue-kit.git
+git clone --recurse-submodules git@gitlab.limos.fr:hub-isima/daisyui-vue-kit.git
 ```
 
 ### Method 2: (Vue existing projects) Download only lib directory from branch lib
 
 If you want to use the library in an existing project, you can download only the `lib` directory from the [lib](https://gitlab.limos.fr/hub-isima/daisyui-vue-kit/-/tree/lib?ref_type=heads) branch of the repository. This will allow you to use the library without having to clone the entire repository.
 
-At the source of your project, run the following command to clone the `lib` branch of the repository:
+At the source of your project, run the following command to add the `lib` as a submodule:
 
 ```bash
-git clone git@gitlab.limos.fr:hub-isima/daisyui-vue-kit.git -b lib lib
+git submodule add -b lib git@gitlab.limos.fr:hub-isima/daisyui-vue-kit.git lib
+git submodule update --init --recursive
 ```
+
+More information about submodules can be found in the [Git documentation](https://git-scm.com/docs/git-submodule).
 
 Install the local directory as a dependency with :
 
