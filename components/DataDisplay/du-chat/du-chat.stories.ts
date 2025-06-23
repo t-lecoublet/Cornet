@@ -118,6 +118,28 @@ export const WithColors: Story = {
   },
 };
 
+const withCustomSlotsTplStr = `
+      <div class="flex flex-col gap-2">
+        <DuChat :items="items">
+          <template #header-0="{ item }">
+            <div class="flex items-center gap-2">
+              <span>User</span>
+              <DuBadge variant="primary" size="sm">Online</DuBadge>
+            </div>
+          </template>
+          <template #footer-0>
+            <time class="text-xs opacity-50">12:45</time>
+          </template>
+          <template #header-1>
+            <div class="flex items-center gap-2">
+              <span>You</span>
+              <DuBadge variant="success" size="sm">Verified</DuBadge>
+            </div>
+          </template>
+        </DuChat>
+      </div>
+    `
+
 export const WithCustomSlots: Story = {
   render: (args: any) => ({
     components: { DuChat, DuBadge },
@@ -139,29 +161,85 @@ export const WithCustomSlots: Story = {
 
       return { items };
     },
-    template: `
-      <div class="flex flex-col gap-2">
-        <DuChat :items="items">
-          <template #header-0="{ item }">
-            <div class="flex items-center gap-2">
-              <span>User</span>
-              <DuBadge variant="primary" size="sm">Online</DuBadge>
-            </div>
-          </template>
-          <template #footer-0>
-            <time class="text-xs opacity-50">12:45</time>
-          </template>
-          <template #header-1>
-            <div class="flex items-center gap-2">
-              <span>You</span>
-              <DuBadge variant="success" size="sm">Verified</DuBadge>
-            </div>
-          </template>
-        </DuChat>
-      </div>
-    `,
+    template: withCustomSlotsTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: `
+      <script setup lang="ts">
+        const items = [
+          {
+            message: "Message with custom slot",
+            placement: "start",
+            image:
+              "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
+          },
+          {
+            message: "Another message with custom slot",
+            placement: "end",
+            image:
+              "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp",
+          },
+        ];
+      </script>
+        `+withCustomSlotsTplStr,
+        language: 'html',
+      },
+    },
+  },
 };
+
+const manualModeTprStr = `
+<div class="flex flex-col gap-2">
+  <DuChat>
+    <DuChatItem placement="start">
+      <template #image>
+        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" alt="Avatar" />
+      </template>
+      <template #header>
+        <div class="flex items-center gap-2">
+          <span>Support</span>
+          <DuBadge variant="primary" size="sm">Staff</DuBadge>
+        </div>
+      </template>
+      <template #message>
+        Hello! How can I help you today?
+      </template>
+      <template #footer>
+        <time class="text-xs opacity-50">12:45</time>
+      </template>
+    </DuChatItem>
+    
+    <DuChatItem placement="end" variant="secondary">
+      <template #image>
+        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" alt="Avatar" />
+      </template>
+      <template #header>
+        <span>You</span>
+      </template>
+      <template #message>
+        I have a question about my recent order.
+      </template>
+      <template #footer>
+        <time class="text-xs opacity-50">12:46</time>
+      </template>
+    </DuChatItem>
+    
+    <DuChatItem placement="start">
+      <template #image>
+        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" alt="Avatar" />
+      </template>
+      <template #message>
+        Of course, I'd be happy to help with that. Can you provide your order number?
+      </template>
+      <template #footer>
+        <time class="text-xs opacity-50">12:47</time>
+      </template>
+    </DuChatItem>
+  </DuChat>
+</div>
+`
 
 export const ManualMode: Story = {
   render: (args: any) => ({
@@ -169,57 +247,16 @@ export const ManualMode: Story = {
     setup() {
       return { args };
     },
-    template: `
-      <div class="flex flex-col gap-2">
-        <DuChat>
-          <DuChatItem placement="start" variant="primary">
-            <template #image>
-              <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" alt="Avatar" />
-            </template>
-            <template #header>
-              <div class="flex items-center gap-2">
-                <span>Support</span>
-                <DuBadge variant="primary" size="sm">Staff</DuBadge>
-              </div>
-            </template>
-            <template #message>
-              Hello! How can I help you today?
-            </template>
-            <template #footer>
-              <time class="text-xs opacity-50">12:45</time>
-            </template>
-          </DuChatItem>
-          
-          <DuChatItem placement="end" variant="secondary">
-            <template #image>
-              <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" alt="Avatar" />
-            </template>
-            <template #header>
-              <span>You</span>
-            </template>
-            <template #message>
-              I have a question about my recent order.
-            </template>
-            <template #footer>
-              <time class="text-xs opacity-50">12:46</time>
-            </template>
-          </DuChatItem>
-          
-          <DuChatItem placement="start" variant="primary">
-            <template #image>
-              <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" alt="Avatar" />
-            </template>
-            <template #message>
-              Of course, I'd be happy to help with that. Can you provide your order number?
-            </template>
-            <template #footer>
-              <time class="text-xs opacity-50">12:47</time>
-            </template>
-          </DuChatItem>
-        </DuChat>
-      </div>
-    `,
+    template: manualModeTprStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: manualModeTprStr,
+        language: 'html',
+      },
+    },
+  },
 };
 
 export const WithoutImages: Story = {

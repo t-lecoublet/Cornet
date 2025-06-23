@@ -1,4 +1,15 @@
-import { type Variant } from "../../../composables/useVariantProps";
+export const CHAT_COLORS = [
+  'chat-bubble-primary',
+  'chat-bubble-secondary',
+  'chat-bubble-accent',
+  'chat-bubble-neutral',
+  'chat-bubble-info',
+  'chat-bubble-success',
+  'chat-bubble-warning',
+  'chat-bubble-error',
+] as const
+
+export type CHATColor = (typeof CHAT_COLORS)[number]
 
 export const DU_CHAT_PLACEMENTS = ["start", "end"] as const;
 export type ChatPlacement = (typeof DU_CHAT_PLACEMENTS)[number];
@@ -9,7 +20,7 @@ export interface ChatItem {
   header?: string;
   footer?: string;
   placement?: ChatPlacement;
-  variant?: Variant;
+  variant?: CHATColor;
   customClass?: string;
 }
 

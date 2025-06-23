@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, inject } from "vue";
 import { type Variant, useVariantMapping } from "../../../composables/useVariantProps";
-import { type ChatPlacement } from "./du-chat.types";
+import { type CHATColor, type ChatPlacement } from "./du-chat.types";
 
 interface ChatItemProps {
   message?: string;
@@ -15,7 +15,7 @@ const props = withDefaults(
   {
     message: "",
     placement: undefined,
-    variant: "primary",
+    variant: "default",
     customClass: "",
   },
 );
@@ -24,7 +24,7 @@ const defaultPlacement = inject("defaultChatPlacement", "start");
 
 const finalPlacement = computed(() => props.placement || defaultPlacement);
 
-const { colorClass } = useVariantMapping(props, "chat-bubble");
+const { colorClass } = useVariantMapping(props, "chat-bubble") as CHATColor;
 
 const placementClass = computed(() => {
   return finalPlacement.value === "end" ? "chat-end" : "chat-start";

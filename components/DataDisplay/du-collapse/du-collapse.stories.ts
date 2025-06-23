@@ -64,6 +64,31 @@ export const WithPlusIcon: Story = {
   },
 }
 
+const withCUstomContentTplStr = `
+<div class="flex flex-col gap-2">
+  <DuCollapse :items="items" modifier="collapse-arrow">
+    <template #content-0>
+      <div class="p-2">
+        <p>This is custom content for the first collapse.</p>
+        <div class="flex gap-2 mt-4">
+          <DuButton variant="primary">Action</DuButton>
+          <DuButton variant="outline">Cancel</DuButton>
+        </div>
+      </div>
+    </template>
+    <template #content-1>
+      <div class="p-2">
+        <p>This is custom content for the second collapse.</p>
+        <div class="flex gap-2 mt-4">
+          <DuButton variant="secondary">Action</DuButton>
+          <DuButton variant="outline">Cancel</DuButton>
+        </div>
+      </div>
+    </template>
+  </DuCollapse>
+</div>
+`
+
 export const WithCustomContent: Story = {
   render: (args: any) => ({
     components: { DuCollapse, DuButton },
@@ -83,31 +108,31 @@ export const WithCustomContent: Story = {
 
       return { items }
     },
-    template: `
-      <div class="flex flex-col gap-2">
-        <DuCollapse :items="items" modifier="collapse-arrow">
-          <template #content-0>
-            <div class="p-2">
-              <p>This is custom content for the first collapse.</p>
-              <div class="flex gap-2 mt-4">
-                <DuButton variant="primary">Action</DuButton>
-                <DuButton variant="outline">Cancel</DuButton>
-              </div>
-            </div>
-          </template>
-          <template #content-1>
-            <div class="p-2">
-              <p>This is custom content for the second collapse.</p>
-              <div class="flex gap-2 mt-4">
-                <DuButton variant="secondary">Action</DuButton>
-                <DuButton variant="outline">Cancel</DuButton>
-              </div>
-            </div>
-          </template>
-        </DuCollapse>
-      </div>
-    `,
+    template: withCUstomContentTplStr,
   }),
+    parameters: {
+    docs: {
+      source: {
+        code: `
+<script setup lang="ts">
+  const items = [
+    {
+      title: 'Collapse with custom content',
+      content: '',
+      open: true,
+    },
+    {
+      title: 'Another collapse with custom content',
+      content: '',
+      open: false,
+    },
+  ]
+</script>
+        `+withCUstomContentTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 
 export const ManualMode: Story = {

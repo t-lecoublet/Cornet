@@ -1,7 +1,7 @@
-import { AvailableSizes, type Size, useSizeMapping } from './composables/useSizeProps'
+import { AvailableSizes, useSizeMapping, type Size } from './composables/useSizeProps'
 import { useVariantMapping, type Variant } from './composables/useVariantProps'
 
-export { AvailableSizes, type Size, useSizeMapping, useVariantMapping, type Variant }
+export { AvailableSizes, useSizeMapping, type Size, useVariantMapping, type Variant }
 
 export { default as DuButton } from './components/Actions/du-button/du-button.vue';
 export { default as DuBadge } from './components/DataDisplay/du-badge/du-badge.vue';

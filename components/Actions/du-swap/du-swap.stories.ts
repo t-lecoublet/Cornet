@@ -34,89 +34,133 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
+const defaultTplStr = `
+<DuSwap v-bind="args" v-model="args.modelValue" class="text-4xl">
+  <template #on>ON</template>
+  <template #off>OFF</template>
+</DuSwap>
+`
+
+const rotateTplStr = `
+<DuSwap rotate class="text-4xl">
+  <template #on>🌞</template>
+  <template #off>🌜</template>
+</DuSwap>
+`
+
+const flipTplStr = `
+<DuSwap flip class="text-4xl">
+  <template #on>🥞</template>
+  <template #off>🍔</template>
+</DuSwap>
+`
+
+const classNameTplStr = `
+<DuSwap class="text-5xl">
+  <template #on>😈</template>
+  <template #off>😇</template>
+</DuSwap>
+`
+
+const indeterminateTplStr = `
+<DuSwap useCheckbox class="text-4xl">
+  <template #on>ON</template>
+  <template #off>OFF</template>
+  <template #indeterminate>INDETERMINATE</template>
+</DuSwap>
+`
+
+// DEFAULT SWAP
 export const Default: Story = {
-  args: {},
-  render: (args: any) => ({
+  render: (args) => ({
     components: { DuSwap },
     setup() {
       return { args }
     },
-    template: `
-      <DuSwap v-bind="args" v-model="args.modelValue" class="text-4xl">
-        <template #on>ON</template>
-        <template #off>OFF</template>
-      </DuSwap>
-    `,
+    template: defaultTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: defaultTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 
+// SWAP WITH ROTATE
 export const WithRotate: Story = {
-  args: {
-    rotate: true,
-  },
-  render: (args: any) => ({
+  render: (args) => ({
     components: { DuSwap },
     setup() {
       return { args }
     },
-    template: `
-      <DuSwap v-bind="args" v-model="args.modelValue" class="text-4xl">
-        <template #on>🌞</template>
-        <template #off>🌜</template>
-      </DuSwap>
-    `,
+    template: rotateTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: rotateTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 
+// SWAP WITH FLIP
 export const WithFlip: Story = {
-  args: {
-    flip: true,
-  },
-  render: (args: any) => ({
+  render: (args) => ({
     components: { DuSwap },
     setup() {
       return { args }
     },
-    template: `
-      <DuSwap v-bind="args" v-model="args.modelValue" class="text-4xl">
-        <template #on>🥞</template>
-        <template #off>🍔</template>
-      </DuSwap>
-    `,
+    template: flipTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: flipTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 
+// SWAP WITH CLASS NAME
 export const WithClassName: Story = {
-  args: {},
-  render: (args: any) => ({
+  render: (args) => ({
     components: { DuSwap },
     setup() {
       return { args }
     },
-    template: `
-      <DuSwap v-bind="args" v-model="args.modelValue" class="text-4xl">
-        <template #on>😈</template>
-        <template #off>😇</template>
-      </DuSwap>
-    `,
+    template: classNameTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: classNameTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 
+// SWAP WITH INDETERMINATE STATE
 export const WithIndeterminate: Story = {
-  args: {
-    useCheckbox: true,
-  },
-  render: (args: any) => ({
+  render: (args) => ({
     components: { DuSwap },
     setup() {
       return { args }
     },
-    template: `
-      <DuSwap v-bind="args" v-model="args.modelValue" class="text-4xl">
-        <template #on>ON</template>
-        <template #off>OFF</template>
-        <template #indeterminate>INDETERMINATE</template>
-      </DuSwap>
-    `,
+    template: indeterminateTplStr,
   }),
-} 
+  parameters: {
+    docs: {
+      source: {
+        code: indeterminateTplStr,
+        language: 'html',
+      },
+    },
+  },
+}

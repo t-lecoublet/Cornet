@@ -3,6 +3,28 @@ import { computed, inject } from "vue";
 import { type MenuProps } from './du-menu.types';
 import { useSizeMapping } from "../../../composables/useSizeProps";
 
+export interface MenuProps {
+  direction?: MenuDirection;
+  size?: Size;
+  rounded?: boolean;
+  items?: Array<{
+    label: string;
+    icon?: string;
+    href?: string;
+    onClick?: () => void;
+    disabled?: boolean;
+    subItems?: Array<{
+      label: string;
+      href?: string;
+      onClick?: () => void;
+      disabled?: boolean;
+    }>;
+  }>;
+  activeItem?: string;
+  onItemClick?: (item: { label: string; href?: string; onClick?: () => void }) => void;
+  onSubItemClick?: (item: { label: string; href?: string; onClick?: () => void }) => void;
+} 
+
 const props = withDefaults(
   defineProps<MenuProps>(),
   {
@@ -35,6 +57,48 @@ const inDropdownClass = computed(() => {
   <ul
     :class="['menu', inDropdownClass, roundedClass, directionClass, sizeClass]"
   >
+  <template v-if="props.items">
+    <li v-for="(item, index) in props.items" :key="index" :class="{ 'menu-item': true, 'disabled': item.disabled }">
+      <a
+        v-if="item.href"
+        :href="item.href"
+        @click="item.onClick ? item.onClick() : null"
+        class="flex items-center"
+      >
+        <Icon v-if="item.icon" :name="item.icon" class="mr-2" />
+        {{ item.label }}
+      </a>
+      <button
+        v-else
+        @click="item.onClick ? item.onClick() : null"
+        class="flex items-center w-full text-left"
+      >
+        <Icon v-if="item.icon" :name="item.icon" class="mr-2" />
+        {{ item.label }}
+      </button>
+      <ul v-if="item.subItems" class="menu-sub">
+        <li v-for="(subItem, subIndex) in item.subItems" :key="subIndex" :class="{ 'disabled': subItem.disabled }">
+          <a
+            v-if="subItem.href"
+            :href="subItem.href"
+            @click="subItem.onClick ? subItem.onClick() : null"
+            class="flex items-center"
+          >           
+            {{ subItem.label }}
+          </a>
+          <button
+            v-else
+            @click="subItem.onClick ? subItem.onClick() : null"
+            class="flex items-center w-full text-left"
+          >
+            {{ subItem.label }}
+          </button>
+        </li>
+      </ul>
+    </li>
+  </template>
+  <template v-else>
     <slot />
+  </template>
   </ul>
 </template> 

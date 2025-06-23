@@ -56,8 +56,8 @@ const props = withDefaults(
 const isInDropdownTrigger = inject('isDropdownTrigger', false)
 const filterName = inject('filterName', undefined)
 
-const { sizeClass } = useSizeMapping(props, 'btn') as BUTTONSize
-const { colorClass } = useVariantMapping(props, 'btn') as BUTTONColor
+const { sizeClass } = useSizeMapping(props, 'btn')
+const { colorClass } = useVariantMapping(props, 'btn')
 const softClass = computed(() => {
   return props.soft ? 'btn-soft' : ''
 })
@@ -101,7 +101,7 @@ const isInputElement = computed(() => elementTag.value === 'input')
 const isAnchorElement = computed(() => elementTag.value === 'a')
 
 const buttonAttributes = computed(() => {
-  const attrs: Record<string, never> = {}
+  const attrs: Record<string, any> = {}
 
   if (filterName) {
     attrs.name = filterName
