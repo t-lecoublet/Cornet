@@ -32,4 +32,5 @@ export type INPUTFIELDProps = {
   suggestionName?: string
   suggestionList?: string[]
   required?: boolean
+  class?: string
 } & INPUTFIELDValidatorProps 

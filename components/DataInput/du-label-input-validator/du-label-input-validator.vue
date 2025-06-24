@@ -1,10 +1,7 @@
 <script setup lang="ts">
-import { useSlots } from "vue";
 import DuInputField from "../du-input-field/du-input-field.vue";
 import DuLabel from "../du-label/du-label.vue";
 import { type LabelInputValidatorProps } from "./du-label-input-validator.types";
-
-const slots = useSlots();
 
 const props = withDefaults(defineProps<LabelInputValidatorProps>(), {
   type: "floating-label",
@@ -33,7 +30,7 @@ const props = withDefaults(defineProps<LabelInputValidatorProps>(), {
     />
     <slot name="after"></slot>
   </DuLabel>
-  <p class="validator-hint" v-if="slots.hint">
+  <p class="validator-hint" v-if="$slots.hint">
     <slot name="hint"></slot>
   </p>
 </template> 
