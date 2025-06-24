@@ -41,13 +41,13 @@ const verticalClass = computed(() => {
 <template>
   <template v-if="to">
     <Teleport defer :to="to">
-      <div :class="['toast', horizontalClass, verticalClass]">
+      <div :class="['toast z-999', horizontalClass, verticalClass]">
         <slot></slot>
       </div>
     </Teleport>
   </template>
   <template v-else>
-    <div :class="['toast', horizontalClass, verticalClass]">
+    <div :class="['toast z-999', horizontalClass, verticalClass]">
       <slot></slot>
     </div>
   </template>
