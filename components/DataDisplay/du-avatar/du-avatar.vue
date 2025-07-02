@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { type Size, useSizeMapping} from '../../../composables/useSizeProps'
+import { useVariantMapping, type Variant } from '../../../composables/useVariantProps'
 import { computed } from 'vue'
 import { type AVATARRounded, type Rounded, type AVATARMask, type Mask } from './du-avatar.types'
 
 const props = withDefaults(
   defineProps<{
     size?: Size
+    variant?: Variant
     rounded?: Rounded
     offline?: boolean
     online?: boolean
@@ -17,6 +19,7 @@ const props = withDefaults(
   }>(),
   {
     size: 'default',
+    variant: 'default',
     rounded: 'default',
     offline: false,
     online: false,
@@ -28,6 +31,7 @@ const props = withDefaults(
 )
 
 const { sizeClass } = useSizeMapping(props, 'avatar')
+const { colorClass } = useVariantMapping(props, 'avatar')
 
 const roundedClass = computed(() => {
   return {
@@ -65,7 +69,7 @@ const placeholderClass = computed(() => {
 
 <template>
   <div :class="['avatar', statusClass, placeholderClass]">
-    <div :class="[sizeClass, roundedClass, maskClass, ringClass]">
+    <div :class="['bg-base-300', sizeClass, roundedClass, maskClass, ringClass, colorClass]">
       <slot />
     </div>
   </div>
@@ -91,5 +95,45 @@ const placeholderClass = computed(() => {
 
 .avatar-xl {
   width: calc(var(--spacing)*28);
+}
+
+.avatar-primary {
+  background-color: var(--color-primary);
+  color: var(--color-primary-content);
+}
+
+.avatar-secondary {
+  background-color: var(--color-secondary);
+  color: var(--color-secondary-content);
+}
+
+.avatar-accent {
+  background-color: var(--color-accent);
+  color: var(--color-accent-content);
+}
+
+.avatar-neutral {
+  background-color: var(--color-neutral);
+  color: var(--color-neutral-content);
+}
+
+.avatar-info {
+  background-color: var(--color-info);
+  color: var(--color-info-content);
+}
+
+.avatar-success {
+  background-color: var(--color-success);
+  color: var(--color-success-content);
+}
+
+.avatar-warning {
+  background-color: var(--color-warning);
+  color: var(--color-warning-content);
+}
+
+.avatar-error {
+  background-color: var(--color-error);
+  color: var(--color-error-content);
 }
 </style>

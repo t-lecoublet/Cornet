@@ -4,6 +4,8 @@ import { useVariantMapping } from "../../../composables/useVariantProps"
 import { computed, inject } from "vue"
 import { type INPUTFIELDProps } from "./du-input-field.types"
 
+const model = defineModel()
+
 const props = withDefaults(defineProps<INPUTFIELDProps>(), {
   placeholder: "",
   type: "text",
@@ -33,6 +35,7 @@ const isInput = inject("isInInput", false)
     :minlength="minlength"
     :maxlength="maxlength"
     :title="title"
+    v-model="model"
   />
   <datalist v-if="suggestionName" :id="suggestionName">
     <option v-for="suggestion in suggestionList" :key="suggestion">

@@ -53,16 +53,53 @@ export const Default: Story = {}
 export const WithTargetDate: Story = {
   args: {
     value: undefined,
-    targetDate: new Date(Date.now() + 24 * 60 * 60 * 1000), // Tomorrow
+    targetDate: new Date(Date.now() + 24 * 60 * 60 * 1000), // Demain
     format: 'seconds',
   },
+  parameters: {
+    docs: {
+      source: {
+        code: `<DuCountdown :target-date="new Date(Date.now() + 24 * 60 * 60 * 1000)" format="seconds" />`,
+        language: 'html',
+      },
+    },
+  },
 }
+
+const withDifferentFormatsTplStr = `
+<script setup lang="ts">
+const targetDate = new Date(
+  Date.now() +
+    2 * 24 * 60 * 60 * 1000 +
+    3 * 60 * 60 * 1000 +
+    45 * 60 * 1000 +
+    30 * 1000,
+)
+</script>
+<div class="flex flex-col gap-4">
+  <div class="flex items-center gap-2">
+    <span>Days:</span>
+    <DuCountdown :target-date="targetDate" format="days" />
+  </div>
+  <div class="flex items-center gap-2">
+    <span>Hours:</span>
+    <DuCountdown :target-date="targetDate" format="hours" />
+  </div>
+  <div class="flex items-center gap-2">
+    <span>Minutes:</span>
+    <DuCountdown :target-date="targetDate" format="minutes" />
+  </div>
+  <div class="flex items-center gap-2">
+    <span>Seconds:</span>
+    <DuCountdown :target-date="targetDate" format="seconds" />
+  </div>
+</div>
+`
 
 export const WithDifferentFormats: Story = {
   render: (args: any) => ({
     components: { DuCountdown },
     setup() {
-      // Set target date to 2 days, 3 hours, 45 minutes and 30 seconds from now
       const targetDate = new Date(
         Date.now() +
           2 * 24 * 60 * 60 * 1000 +
@@ -70,7 +107,6 @@ export const WithDifferentFormats: Story = {
           45 * 60 * 1000 +
           30 * 1000,
       )
-
       return { targetDate }
     },
     template: `
@@ -79,17 +115,14 @@ export const WithDifferentFormats: Story = {
           <span>Days:</span>
           <DuCountdown :target-date="targetDate" format="days" />
         </div>
-        
         <div class="flex items-center gap-2">
           <span>Hours:</span>
           <DuCountdown :target-date="targetDate" format="hours" />
         </div>
-        
         <div class="flex items-center gap-2">
           <span>Minutes:</span>
           <DuCountdown :target-date="targetDate" format="minutes" />
         </div>
-        
         <div class="flex items-center gap-2">
           <span>Seconds:</span>
           <DuCountdown :target-date="targetDate" format="seconds" />
@@ -97,13 +130,47 @@ export const WithDifferentFormats: Story = {
       </div>
     `,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: withDifferentFormatsTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
+
+const countdownGroupExampleTplStr = `
+<script setup lang="ts">
+const targetDate = new Date(
+  Date.now() +
+    2 * 24 * 60 * 60 * 1000 +
+    3 * 60 * 60 * 1000 +
+    45 * 60 * 1000 +
+    30 * 1000,
+)
+</script>
+<div class="flex flex-col gap-4">
+  <DuCountdownGroup :target-date="targetDate" />
+  <DuCountdownGroup 
+    :target-date="targetDate" 
+    :labels="{ days: 'jours', hours: 'heures', minutes: 'min', seconds: 'sec' }"
+    separator="-"
+  />
+  <DuCountdownGroup 
+    :target-date="targetDate" 
+    :show-days="false"
+    :show-hours="true"
+    :show-minutes="true"
+    :show-seconds="true"
+  />
+</div>
+`
 
 export const CountdownGroupExample: Story = {
   render: (args: any) => ({
     components: { DuCountdownGroup },
     setup() {
-      // Set target date to 2 days, 3 hours, 45 minutes and 30 seconds from now
       const targetDate = new Date(
         Date.now() +
           2 * 24 * 60 * 60 * 1000 +
@@ -111,19 +178,16 @@ export const CountdownGroupExample: Story = {
           45 * 60 * 1000 +
           30 * 1000,
       )
-
       return { targetDate }
     },
     template: `
       <div class="flex flex-col gap-4">
         <DuCountdownGroup :target-date="targetDate" />
-        
         <DuCountdownGroup 
           :target-date="targetDate" 
           :labels="{ days: 'jours', hours: 'heures', minutes: 'min', seconds: 'sec' }"
           separator="-"
         />
-        
         <DuCountdownGroup 
           :target-date="targetDate" 
           :show-days="false"
@@ -134,7 +198,35 @@ export const CountdownGroupExample: Story = {
       </div>
     `,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: countdownGroupExampleTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
+
+const withControlsTplStr = `
+<script setup lang="ts">
+const countdownRef = ref(<InstanceType<typeof DuCountdown> | null>(null))
+const value = ref(30)
+const start = () => { if (countdownRef.value) countdownRef.value.start() }
+const stop = () => { if (countdownRef.value) countdownRef.value.stop() }
+const reset = () => { if (countdownRef.value) countdownRef.value.reset() } 
+</script>
+<div class="flex flex-col gap-4">
+  <div class="flex items-center gap-2">
+    <DuCountdown ref="countdownRef" :value="value" :auto-start="false" />
+  </div>
+  <div class="flex gap-2">
+    <DuButton variant="primary" @click="start">Start</DuButton>
+    <DuButton variant="secondary" @click="stop">Stop</DuButton>
+    <DuButton variant="accent" @click="reset">Reset</DuButton>
+  </div>
+</div>
+`
 
 export const WithControls: Story = {
   render: (args: any) => ({
@@ -142,25 +234,9 @@ export const WithControls: Story = {
     setup() {
       const countdownRef = ref<InstanceType<typeof DuCountdown> | null>(null)
       const value = ref(30)
-
-      const start = () => {
-        if (countdownRef.value) {
-          countdownRef.value.start()
-        }
-      }
-
-      const stop = () => {
-        if (countdownRef.value) {
-          countdownRef.value.stop()
-        }
-      }
-
-      const reset = () => {
-        if (countdownRef.value) {
-          countdownRef.value.reset()
-        }
-      }
-
+      const start = () => { if (countdownRef.value) countdownRef.value.start() }
+      const stop = () => { if (countdownRef.value) countdownRef.value.stop() }
+      const reset = () => { if (countdownRef.value) countdownRef.value.reset() }
       return { countdownRef, value, start, stop, reset }
     },
     template: `
@@ -168,7 +244,6 @@ export const WithControls: Story = {
         <div class="flex items-center gap-2">
           <DuCountdown ref="countdownRef" :value="value" :auto-start="false" />
         </div>
-        
         <div class="flex gap-2">
           <DuButton variant="primary" @click="start">Start</DuButton>
           <DuButton variant="secondary" @click="stop">Stop</DuButton>
@@ -177,14 +252,55 @@ export const WithControls: Story = {
       </div>
     `,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: withControlsTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
+
+const largeStyledTplStr = `
+<script setup lang="ts">
+const targetDate = new Date(Date.now() + 60 * 1000)
+</script>
+<div class="flex flex-col items-center gap-4">
+  <div class="text-center">
+    <h3 class="text-lg font-bold mb-2">Sale ends in:</h3>
+    <div class="flex items-center justify-center">
+      <span class="countdown font-mono text-6xl">
+        <span style="--value:10;"></span>:
+        <span style="--value:24;"></span>:
+        <span style="--value:53;"></span>
+      </span>
+    </div>
+    <div class="flex justify-center gap-4 text-xs mt-2">
+      <span>HOURS</span>
+      <span>MINUTES</span>
+      <span>SECONDS</span>
+    </div>
+  </div>
+  <div class="text-center">
+    <h3 class="text-lg font-bold mb-2">Live countdown:</h3>
+    <div class="flex items-center justify-center">
+      <span class="countdown font-mono text-6xl">
+        <DuCountdown :target-date="targetDate" format="seconds" />
+      </span>
+    </div>
+    <div class="flex justify-center text-xs mt-2">
+      <span>SECONDS REMAINING</span>
+    </div>
+  </div>
+</div>
+`
 
 export const LargeStyled: Story = {
   render: (args: any) => ({
     components: { DuCountdown },
     setup() {
-      const targetDate = new Date(Date.now() + 60 * 1000) // 60 seconds from now
-
+      const targetDate = new Date(Date.now() + 60 * 1000)
       return { targetDate }
     },
     template: `
@@ -204,7 +320,6 @@ export const LargeStyled: Story = {
             <span>SECONDS</span>
           </div>
         </div>
-        
         <div class="text-center">
           <h3 class="text-lg font-bold mb-2">Live countdown:</h3>
           <div class="flex items-center justify-center">
@@ -219,7 +334,48 @@ export const LargeStyled: Story = {
       </div>
     `,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: largeStyledTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
+
+const withEndEventTplStr = `
+<script setup lang="ts">
+const countdownRef = ref<InstanceType<typeof DuCountdown> | null>(null)
+const value = ref(5)
+const message = ref("")
+const handleCountdownEnd = () => {
+  message.value = "Countdown finished !"
+  setTimeout(() => { message.value = "" }, 3000)
+}
+const resetCountdown = () => {
+  if (countdownRef.value) {
+    value.value = 5
+    countdownRef.value.reset()
+    countdownRef.value.start()
+    message.value = ""
+  }
+}
+</script>
+<div class="flex flex-col gap-4">
+  <div class="flex items-center gap-2">
+    <DuCountdown
+      ref="countdownRef"
+      :value="value"
+      @end="handleCountdownEnd"
+    />
+    <span class="text-success font-bold">{{ message }}</span>
+  </div>
+  <div class="flex gap-2">
+    <DuButton variant="primary" @click="resetCountdown">Reset & Start</DuButton>
+  </div>
+</div>
+`
 
 export const WithEndEvent: Story = {
   render: (args: any) => ({
@@ -228,14 +384,10 @@ export const WithEndEvent: Story = {
       const countdownRef = ref<InstanceType<typeof DuCountdown> | null>(null)
       const value = ref(5)
       const message = ref("")
-
       const handleCountdownEnd = () => {
         message.value = "Countdown finished !"
-        setTimeout(() => {
-          message.value = ""
-        }, 3000)
+        setTimeout(() => { message.value = "" }, 3000)
       }
-
       const resetCountdown = () => {
         if (countdownRef.value) {
           value.value = 5
@@ -244,14 +396,7 @@ export const WithEndEvent: Story = {
           message.value = ""
         }
       }
-
-      return {
-        countdownRef,
-        value,
-        message,
-        handleCountdownEnd,
-        resetCountdown,
-      }
+      return { countdownRef, value, message, handleCountdownEnd, resetCountdown }
     },
     template: `
       <div class="flex flex-col gap-4">
@@ -263,11 +408,18 @@ export const WithEndEvent: Story = {
           />
           <span class="text-success font-bold">{{ message }}</span>
         </div>
-        
         <div class="flex gap-2">
           <DuButton variant="primary" @click="resetCountdown">Reset & Start</DuButton>
         </div>
       </div>
     `,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: withEndEventTplStr,
+        language: 'html',
+      },
+    },
+  },
 } 

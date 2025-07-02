@@ -20,11 +20,24 @@ export const AVATAR_RING_COLORS = [
   'ring-error',
 ] as const
 
+export const AVATAR_COLORS = [
+  'avatar-primary',
+  'avatar-secondary',
+  'avatar-accent',
+  'avatar-neutral',
+  'avatar-info',
+  'avatar-success',
+  'avatar-warning',
+  'avatar-error',
+]
+
 export type Rounded = 'default' | 'rounded' | 'full' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 export type Mask = 'default' | 'heart' | 'squircle' | 'hexagon' | 'hexagon-2' | 'decagon' | 'pentagon' | 'diamond' | 'square' | 'circle' | 'parallelogram' | 'parallelogram-2' | 'star' | 'star-2'
 
 export type AVATARSize = (typeof AVATAR_SIZES)[number]
 export type AVATARRounded = (typeof AVATAR_ROUNDED)[number]
+export type AVATARRingColor = (typeof AVATAR_RING_COLORS)[number]
+export type AVATARColor = (typeof AVATAR_COLORS)[number]
 
 // Types pour les masques
 export const AVATAR_MASK = [

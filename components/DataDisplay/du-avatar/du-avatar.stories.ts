@@ -169,7 +169,7 @@ const avatarWithIconTplStr = `
 `
 
 const avatarGroupTplStr = `
-<div class="flex -space-x-4">
+<div class="avatar-group -space-x-4">
   <DuAvatar size="md" rounded="full">
     <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" alt="Avatar" />
   </DuAvatar>
@@ -179,7 +179,7 @@ const avatarGroupTplStr = `
   <DuAvatar size="md" rounded="full">
     <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" alt="Avatar" />
   </DuAvatar>
-  <DuAvatar size="md" rounded="full" placeholder>
+  <DuAvatar size="md" variant="neutral" rounded="full" placeholder>
     <span>+99</span>
   </DuAvatar>
 </div>
