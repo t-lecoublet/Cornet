@@ -3,14 +3,28 @@ import DuRange from "./du-range.vue"
 import { useVariantStoriesControl } from "../../../composables/useVariantProps"
 import { useSizeStoriesControl } from "../../../composables/useSizeProps"
 import { ref } from "vue"
+import type { ArgTypes } from "@storybook/vue3";
 
 const meta: Meta<typeof DuRange> = {
   title: "Components/DataInput/Range",
   component: DuRange,
   tags: ['autodocs'],
   argTypes: {
-    ...useVariantStoriesControl,
-    ...useSizeStoriesControl,
+    ...(() => {
+      const { size, ...restSize } = useSizeStoriesControl as ArgTypes;
+      const { variant, ...restVariant } = useVariantStoriesControl as ArgTypes;
+      return { ...restSize, ...restVariant };
+    })(),
+    size: {
+      control: { type: 'select' },
+      options: ['default', 'xs', 'sm', 'md', 'lg', 'xl'],
+      description: 'Taille du range',
+    },
+    variant: {
+      control: { type: 'select' },
+      options: ['default', 'primary', 'secondary', 'accent', 'info', 'success', 'warning', 'error'],
+      description: 'Couleur du range',
+    },
     modelValue: { control: { type: "number" } },
     min: { control: { type: "number" } },
     max: { control: { type: "number" } },
@@ -138,6 +152,14 @@ const RangeColorsTemplate: Story = {
     },
     template: RangeColorsTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: RangeColorsTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const RangeColors = { ...RangeColorsTemplate }
 
@@ -155,6 +177,14 @@ const RangeSizesTemplate: Story = {
     },
     template: RangeSizesTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: RangeSizesTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const RangeSizes = { ...RangeSizesTemplate }
 
@@ -167,6 +197,14 @@ const DisabledRangeTemplate: Story = {
     },
     template: DisabledRangeTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: DisabledRangeTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const DisabledRange = { ...DisabledRangeTemplate }
 
@@ -179,5 +217,13 @@ const SteppedRangeTemplate: Story = {
     },
     template: SteppedRangeTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: SteppedRangeTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const SteppedRange = { ...SteppedRangeTemplate } 

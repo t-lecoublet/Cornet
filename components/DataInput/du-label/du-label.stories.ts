@@ -105,6 +105,14 @@ const LabelForInputAtTheEndTemplate: Story = {
     },
     template: LabelForInputAtTheEndTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: LabelForInputAtTheEndTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const LabelForInputAtTheEnd = { ...LabelForInputAtTheEndTemplate }
 
@@ -117,6 +125,14 @@ const LabelForSelectTemplate: Story = {
     },
     template: LabelForSelectTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: LabelForSelectTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const LabelForSelect = { ...LabelForSelectTemplate }
 
@@ -129,6 +145,14 @@ const LabelForDateInputTemplate: Story = {
     },
     template: LabelForDateInputTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: LabelForDateInputTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const LabelForDateInput = { ...LabelForDateInputTemplate }
 
@@ -141,6 +165,14 @@ const FloatingLabelTemplate: Story = {
     },
     template: FloatingLabelTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: FloatingLabelTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const FloatingLabel = { ...FloatingLabelTemplate }
 
@@ -154,6 +186,14 @@ const FloatingLabelWithDifferentSizesTemplate: Story = {
     },
     template: FloatingLabelWithDifferentSizesTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: FloatingLabelWithDifferentSizesTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const FloatingLabelWithDifferentSizes = {
   ...FloatingLabelWithDifferentSizesTemplate,

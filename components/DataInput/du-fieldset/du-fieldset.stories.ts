@@ -89,6 +89,14 @@ const FieldsetWithBackgroundAndBorderTemplate: Story = {
     },
     template: FieldsetWithBackgroundAndBorderTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: FieldsetWithBackgroundAndBorderTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const FieldsetWithBackgroundAndBorder = {
   ...FieldsetWithBackgroundAndBorderTemplate,
@@ -105,6 +113,14 @@ const FieldsetWithMultipleInputsTemplate: Story = {
     },
     template: FieldsetWithMultipleInputsTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: FieldsetWithMultipleInputsTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const FieldsetWithMultipleInputs = {
   ...FieldsetWithMultipleInputsTemplate,
@@ -121,6 +137,14 @@ const LoginFormTemplate: Story = {
     },
     template: LoginFormTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: LoginFormTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const LoginForm = { ...LoginFormTemplate }
 LoginForm.args = {} 

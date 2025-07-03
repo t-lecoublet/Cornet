@@ -3,28 +3,6 @@ import { computed, inject } from "vue";
 import { type MenuProps } from './du-menu.types';
 import { useSizeMapping } from "../../../composables/useSizeProps";
 
-export interface MenuProps {
-  direction?: MenuDirection;
-  size?: Size;
-  rounded?: boolean;
-  items?: Array<{
-    label: string;
-    icon?: string;
-    href?: string;
-    onClick?: () => void;
-    disabled?: boolean;
-    subItems?: Array<{
-      label: string;
-      href?: string;
-      onClick?: () => void;
-      disabled?: boolean;
-    }>;
-  }>;
-  activeItem?: string;
-  onItemClick?: (item: { label: string; href?: string; onClick?: () => void }) => void;
-  onSubItemClick?: (item: { label: string; href?: string; onClick?: () => void }) => void;
-} 
-
 const props = withDefaults(
   defineProps<MenuProps>(),
   {
@@ -51,54 +29,133 @@ const roundedClass = computed(() => {
 const inDropdownClass = computed(() => {
   return isInDropdownTrigger ? "bg-base-100 shadow-sm" : "bg-base-200";
 });
+// Slots documentation : voir le template pour la gestion des slots indexés et globaux.
 </script>
 
 <template>
-  <ul
-    :class="['menu', inDropdownClass, roundedClass, directionClass, sizeClass]"
-  >
-  <template v-if="props.items">
-    <li v-for="(item, index) in props.items" :key="index" :class="{ 'menu-item': true, 'disabled': item.disabled }">
-      <a
-        v-if="item.href"
-        :href="item.href"
-        @click="item.onClick ? item.onClick() : null"
-        class="flex items-center"
-      >
-        <Icon v-if="item.icon" :name="item.icon" class="mr-2" />
-        {{ item.label }}
-      </a>
-      <button
-        v-else
-        @click="item.onClick ? item.onClick() : null"
-        class="flex items-center w-full text-left"
-      >
-        <Icon v-if="item.icon" :name="item.icon" class="mr-2" />
-        {{ item.label }}
-      </button>
-      <ul v-if="item.subItems" class="menu-sub">
-        <li v-for="(subItem, subIndex) in item.subItems" :key="subIndex" :class="{ 'disabled': subItem.disabled }">
-          <a
-            v-if="subItem.href"
-            :href="subItem.href"
-            @click="subItem.onClick ? subItem.onClick() : null"
-            class="flex items-center"
-          >           
-            {{ subItem.label }}
-          </a>
-          <button
-            v-else
-            @click="subItem.onClick ? subItem.onClick() : null"
-            class="flex items-center w-full text-left"
-          >
-            {{ subItem.label }}
-          </button>
-        </li>
-      </ul>
-    </li>
-  </template>
-  <template v-else>
-    <slot />
-  </template>
+  <ul :class="['menu', inDropdownClass, roundedClass, directionClass, sizeClass]">
+    <!-- Mode automatique (items) -->
+    <template v-if="items && !$slots.default">
+      <template v-for="(item, index) in items" :key="index">
+        <!-- Titre simple (menu-title) -->
+        <template v-if="item.isTitle && !item.subItems">
+          <template v-if="$slots[`title-${index}`]">
+            <slot :name="`title-${index}`" v-bind="{ item, index }" />
+          </template>
+          <template v-else-if="$slots.title">
+            <slot name="title" v-bind="{ item, index }" />
+          </template>
+          <template v-else>
+            <li class="menu-title">{{ item.label }}</li>
+          </template>
+        </template>
+        <!-- Titre parent (menu-title + sous-menu) -->
+        <template v-else-if="item.isTitle && item.subItems">
+          <template v-if="$slots[`title-${index}`]">
+            <slot :name="`title-${index}`" v-bind="{ item, index }" />
+            <ul>
+              <template v-for="(sub, subIndex) in item.subItems" :key="subIndex">
+                <template v-if="$slots[`item-${index}-${subIndex}`]">
+                  <slot :name="`item-${index}-${subIndex}`" v-bind="{ item: sub, index: subIndex }" />
+                </template>
+                <template v-else-if="$slots.item">
+                  <slot name="item" v-bind="{ item: sub, index: subIndex }" />
+                </template>
+                <template v-else>
+                  <li :class="{ 'menu-disabled': sub.disabled }">
+                    <a :href="sub.href">{{ sub.label }}</a>
+                  </li>
+                </template>
+              </template>
+            </ul>
+          </template>
+          <template v-else-if="$slots.title">
+            <slot name="title" v-bind="{ item, index }" />
+            <ul>
+              <template v-for="(sub, subIndex) in item.subItems" :key="subIndex">
+                <template v-if="$slots[`item-${index}-${subIndex}`]">
+                  <slot :name="`item-${index}-${subIndex}`" v-bind="{ item: sub, index: subIndex }" />
+                </template>
+                <template v-else-if="$slots.item">
+                  <slot name="item" v-bind="{ item: sub, index: subIndex }" />
+                </template>
+                <template v-else>
+                  <li :class="{ 'menu-disabled': sub.disabled }">
+                    <a :href="sub.href">{{ sub.label }}</a>
+                  </li>
+                </template>
+              </template>
+            </ul>
+          </template>
+          <template v-else>
+            <li>
+              <h2 class="menu-title">{{ item.label }}</h2>
+              <ul>
+                <template v-for="(sub, subIndex) in item.subItems" :key="subIndex">
+                  <template v-if="$slots[`item-${index}-${subIndex}`]">
+                    <slot :name="`item-${index}-${subIndex}`" v-bind="{ item: sub, index: subIndex }" />
+                  </template>
+                  <template v-else-if="$slots.item">
+                    <slot name="item" v-bind="{ item: sub, index: subIndex }" />
+                  </template>
+                  <template v-else>
+                    <li :class="{ 'menu-disabled': sub.disabled }">
+                      <a :href="sub.href">{{ sub.label }}</a>
+                    </li>
+                  </template>
+                </template>
+              </ul>
+            </li>
+          </template>
+        </template>
+        <!-- Item avec sous-menu -->
+        <template v-else-if="item.subItems">
+          <template v-if="$slots[`submenu-${index}`]">
+            <slot :name="`submenu-${index}`" v-bind="{ item, index }" />
+          </template>
+          <template v-else-if="$slots.submenu">
+            <slot name="submenu" v-bind="{ item, index }" />
+          </template>
+          <template v-else>
+            <li>
+              <a :href="item.href" :class="{ 'menu-disabled': item.disabled }">{{ item.label }}</a>
+              <ul>
+                <template v-for="(sub, subIndex) in item.subItems" :key="subIndex">
+                  <template v-if="$slots[`item-${index}-${subIndex}`]">
+                    <slot :name="`item-${index}-${subIndex}`" v-bind="{ item: sub, index: subIndex }" />
+                  </template>
+                  <template v-else-if="$slots.item">
+                    <slot name="item" v-bind="{ item: sub, index: subIndex }" />
+                  </template>
+                  <template v-else>
+                    <li :class="{ 'menu-disabled': sub.disabled }">
+                      <a :href="sub.href">{{ sub.label }}</a>
+                    </li>
+                  </template>
+                </template>
+              </ul>
+            </li>
+          </template>
+        </template>
+        <!-- Item simple -->
+        <template v-else>
+          <template v-if="$slots[`item-${index}`]">
+            <slot :name="`item-${index}`" v-bind="{ item, index }" />
+          </template>
+          <template v-else-if="$slots.item">
+            <slot name="item" v-bind="{ item, index }" />
+          </template>
+          <template v-else>
+            <li :class="{ 'menu-disabled': item.disabled }">
+              <a :href="item.href">{{ item.label }}</a>
+            </li>
+          </template>
+        </template>
+      </template>
+    </template>
+    <!-- Mode manuel (slot) -->
+    <template v-else>
+      <slot />
+    </template>
   </ul>
-</template> 
+</template>

@@ -6,6 +6,7 @@ export interface STATItem {
   figureClass?: string
   valueClass?: string
   descClass?: string
+  titleClass?: string
   actions?: any
   [key: string]: any
 } 

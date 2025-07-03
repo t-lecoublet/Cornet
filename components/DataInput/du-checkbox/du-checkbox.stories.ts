@@ -2,14 +2,28 @@ import type { Meta, StoryObj } from "@storybook/vue3"
 import DuCheckbox from "./du-checkbox.vue"
 import { useVariantStoriesControl } from "../../../composables/useVariantProps"
 import { useSizeStoriesControl } from "../../../composables/useSizeProps"
+import type { ArgTypes } from "@storybook/vue3";
 
 const meta: Meta<typeof DuCheckbox> = {
   title: "Components/DataInput/Checkbox",
   component: DuCheckbox,
   tags: ['autodocs'],
   argTypes: {
-    ...useVariantStoriesControl,
-    ...useSizeStoriesControl,
+    ...(() => {
+      const { size, ...restSize } = useSizeStoriesControl as ArgTypes;
+      const { variant, ...restVariant } = useVariantStoriesControl as ArgTypes;
+      return { ...restSize, ...restVariant };
+    })(),
+    size: {
+      control: { type: 'select' },
+      options: ['default', 'xs', 'sm', 'md', 'lg', 'xl'],
+      description: 'Taille de la checkbox',
+    },
+    variant: {
+      control: { type: 'select' },
+      options: ['default', 'primary', 'secondary', 'accent', 'info', 'success', 'warning', 'error'],
+      description: 'Couleur de la checkbox',
+    },
     checked: { control: "boolean" },
     disabled: { control: "boolean" },
     indeterminate: { control: "boolean" },
@@ -55,6 +69,14 @@ const CheckboxColorsTemplate: Story = {
     },
     template: CheckboxColorsTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: CheckboxColorsTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const CheckboxColors = { ...CheckboxColorsTemplate }
 
@@ -86,6 +108,14 @@ const CheckboxSizesTemplate: Story = {
     },
     template: CheckboxSizesTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: CheckboxSizesTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const CheckboxSizes = { ...CheckboxSizesTemplate }
 
@@ -121,5 +151,13 @@ const CheckboxStatesTemplate: Story = {
     },
     template: CheckboxStatesTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: CheckboxStatesTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const CheckboxStates = { ...CheckboxStatesTemplate } 

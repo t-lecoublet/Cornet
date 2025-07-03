@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/vue3";
+import type { Meta, StoryObj, ArgTypes } from "@storybook/vue3";
 import DuRating from "./du-rating.vue";
 import DuRatingItem from "./du-rating-item.vue"
 import { useSizeStoriesControl } from "../../../composables/useSizeProps";
@@ -10,7 +10,7 @@ const meta: Meta<typeof DuRating> = {
   component: DuRating,
   tags: ['autodocs'],
   argTypes: {
-    ...useSizeStoriesControl,
+    ...(useSizeStoriesControl as ArgTypes),
     modelValue: { control: { type: "number" } },
     count: { control: { type: "number" } },
     halfStar: { control: "boolean" },
@@ -29,6 +29,7 @@ export default meta;
 
 type Story = StoryObj<typeof DuRating>;
 
+// --- TEMPLATES ---
 const defaultTplStr = `
   <div class="flex flex-col gap-4 w-80">
     <DuRating v-bind="args" v-model="ratingValue" />
@@ -36,27 +37,7 @@ const defaultTplStr = `
   </div>
 `;
 
-const TemplateRating: Story = {
-  render: (args: any) => ({
-    components: { DuRating },
-    setup() {
-      const ratingValue = ref(args.modelValue || 0);
-      return { args, ratingValue };
-    },
-    template: defaultTplStr,
-  }),
-  args: {
-    modelValue: 3,
-    count: 5,
-    halfStar: false,
-    clearable: false,
-    disabled: false,
-    shape: "star-2",
-  },
-};
-export const Default = { ...TemplateRating };
-
-const RatingSizesTplStr = `
+const ratingSizesTplStr = `
 <div class="flex flex-col gap-6 w-80">
   <div class="flex flex-col gap-2">
     <span>XS</span>
@@ -80,26 +61,12 @@ const RatingSizesTplStr = `
   </div>
 </div>
 `;
+const ratingSizesScriptStr = `<script setup lang=\"ts\">
+import { ref } from 'vue';
+const values = ref({ xs: 3, sm: 3, md: 3, lg: 3, xl: 3 });
+<\/script>`;
 
-const RatingSizesTemplate: Story = {
-  render: () => ({
-    components: { DuRating },
-    setup() {
-      const values = ref({
-        xs: 3,
-        sm: 3,
-        md: 3,
-        lg: 3,
-        xl: 3,
-      });
-      return { values };
-    },
-    template: RatingSizesTplStr,
-  }),
-};
-export const RatingSizes = { ...RatingSizesTemplate };
-
-const RatingShapesTplStr = `
+const ratingShapesTplStr = `
 <div class="flex flex-col gap-6 w-80">
   <div class="flex flex-col gap-2">
     <span>Star</span>
@@ -119,25 +86,12 @@ const RatingShapesTplStr = `
   </div>
 </div>
 `;
+const ratingShapesScriptStr = `<script setup lang=\"ts\">
+import { ref } from 'vue';
+const values = ref({ star: 3, star2: 3, heart: 3, circle: 3 });
+<\/script>`;
 
-const RatingShapesTemplate: Story = {
-  render: () => ({
-    components: { DuRating },
-    setup() {
-      const values = ref({
-        star: 3,
-        star2: 3,
-        heart: 3,
-        circle: 3,
-      });
-      return { values };
-    },
-    template: RatingShapesTplStr,
-  }),
-};
-export const RatingShapes = { ...RatingShapesTemplate };
-
-const RatingColorsTplStr = `
+const ratingColorsTplStr = `
 <div class="flex flex-col gap-6 w-80">
   <div class="flex flex-col gap-2">
     <span>Primary</span>
@@ -161,83 +115,45 @@ const RatingColorsTplStr = `
   </div>
 </div>
 `;
+const ratingColorsScriptStr = `<script setup lang=\"ts\">
+import { ref } from 'vue';
+const values = ref({ primary: 3, secondary: 3, orange: 3, red: 3, green: 3 });
+<\/script>`;
 
-const RatingColorsTemplate: Story = {
-  render: () => ({
-    components: { DuRating },
-    setup() {
-      const values = ref({
-        primary: 3,
-        secondary: 3,
-        orange: 3,
-        red: 3,
-        green: 3,
-      });
-      return { values };
-    },
-    template: RatingColorsTplStr,
-  }),
-};
-export const RatingColors = { ...RatingColorsTemplate };
-
-const HalfStarRatingTplStr = `
+const halfStarRatingTplStr = `
 <div class="flex flex-col gap-4 w-80">
   <DuRating halfStar v-model="halfStarValue" />
   <div class="text-center">Value: {{ halfStarValue }}</div>
 </div>
 `;
+const halfStarRatingScriptStr = `<script setup lang=\"ts\">
+import { ref } from 'vue';
+const halfStarValue = ref(3.5);
+<\/script>`;
 
-const HalfStarRatingTemplate: Story = {
-  render: () => ({
-    components: { DuRating },
-    setup() {
-      const halfStarValue = ref(3.5);
-      return { halfStarValue };
-    },
-    template: HalfStarRatingTplStr,
-  }),
-};
-export const HalfStarRating = { ...HalfStarRatingTemplate };
-
-const ClearableRatingTplStr = `
+const clearableRatingTplStr = `
 <div class="flex flex-col gap-4 w-80">
   <DuRating clearable v-model="clearableValue" />
   <div class="text-center">Value: {{ clearableValue }} (click on the same star to clear)</div>
 </div>
 `;
+const clearableRatingScriptStr = `<script setup lang=\"ts\">
+import { ref } from 'vue';
+const clearableValue = ref(3);
+<\/script>`;
 
-const ClearableRatingTemplate: Story = {
-  render: () => ({
-    components: { DuRating },
-    setup() {
-      const clearableValue = ref(3);
-      return { clearableValue };
-    },
-    template: ClearableRatingTplStr,
-  }),
-};
-export const ClearableRating = { ...ClearableRatingTemplate };
-
-const DisabledRatingTplStr = `
+const disabledRatingTplStr = `
 <div class="flex flex-col gap-2 w-80">
   <span>Rating disabled</span>
   <DuRating disabled v-model="disabledValue" />
 </div>
 `;
+const disabledRatingScriptStr = `<script setup lang=\"ts\">
+import { ref } from 'vue';
+const disabledValue = ref(3);
+<\/script>`;
 
-const DisabledRatingTemplate: Story = {
-  render: () => ({
-    components: { DuRating },
-    setup() {
-      const disabledValue = ref(3);
-      return { disabledValue };
-    },
-    template: DisabledRatingTplStr,
-  }),
-};
-export const DisabledRating = { ...DisabledRatingTemplate };
-
-const ManualRatingTplStr = `
+const manualRatingTplStr = `
 <div class="flex flex-col gap-4 w-80">
   <DuRating v-model="manualValue">
     <DuRatingItem :value="1" :checked="manualValue === 1" @change="manualValue = $event" color="bg-red-500"/>
@@ -249,15 +165,160 @@ const ManualRatingTplStr = `
   <div class="text-center">Value: {{ manualValue }}</div>
 </div>
 `;
+const manualRatingScriptStr = `<script setup lang=\"ts\">
+import { ref } from 'vue';
+const manualValue = ref(3);
+<\/script>`;
 
-const ManualRatingTemplate: Story = {
+// --- STORIES ---
+export const Default: Story = {
+  render: (args: any) => ({
+    components: { DuRating },
+    setup() {
+      const ratingValue = ref(args.modelValue || 0);
+      return { args, ratingValue };
+    },
+    template: defaultTplStr,
+  }),
+  args: {
+    modelValue: 3,
+    count: 5,
+    halfStar: false,
+    clearable: false,
+    disabled: false,
+    shape: "star-2",
+  },
+};
+
+export const RatingSizes: Story = {
+  render: () => ({
+    components: { DuRating },
+    setup() {
+      const values = ref({ xs: 3, sm: 3, md: 3, lg: 3, xl: 3 });
+      return { values };
+    },
+    template: ratingSizesTplStr,
+  }),
+  parameters: {
+    docs: {
+      source: {
+        code: `${ratingSizesScriptStr}\n${ratingSizesTplStr}`,
+        language: 'html',
+      },
+    },
+  },
+};
+
+export const RatingShapes: Story = {
+  render: () => ({
+    components: { DuRating },
+    setup() {
+      const values = ref({ star: 3, star2: 3, heart: 3, circle: 3 });
+      return { values };
+    },
+    template: ratingShapesTplStr,
+  }),
+  parameters: {
+    docs: {
+      source: {
+        code: `${ratingShapesScriptStr}\n${ratingShapesTplStr}`,
+        language: 'html',
+      },
+    },
+  },
+};
+
+export const RatingColors: Story = {
+  render: () => ({
+    components: { DuRating },
+    setup() {
+      const values = ref({ primary: 3, secondary: 3, orange: 3, red: 3, green: 3 });
+      return { values };
+    },
+    template: ratingColorsTplStr,
+  }),
+  parameters: {
+    docs: {
+      source: {
+        code: `${ratingColorsScriptStr}\n${ratingColorsTplStr}`,
+        language: 'html',
+      },
+    },
+  },
+};
+
+export const HalfStarRating: Story = {
+  render: () => ({
+    components: { DuRating },
+    setup() {
+      const halfStarValue = ref(3.5);
+      return { halfStarValue };
+    },
+    template: halfStarRatingTplStr,
+  }),
+  parameters: {
+    docs: {
+      source: {
+        code: `${halfStarRatingScriptStr}\n${halfStarRatingTplStr}`,
+        language: 'html',
+      },
+    },
+  },
+};
+
+export const ClearableRating: Story = {
+  render: () => ({
+    components: { DuRating },
+    setup() {
+      const clearableValue = ref(3);
+      return { clearableValue };
+    },
+    template: clearableRatingTplStr,
+  }),
+  parameters: {
+    docs: {
+      source: {
+        code: `${clearableRatingScriptStr}\n${clearableRatingTplStr}`,
+        language: 'html',
+      },
+    },
+  },
+};
+
+export const DisabledRating: Story = {
+  render: () => ({
+    components: { DuRating },
+    setup() {
+      const disabledValue = ref(3);
+      return { disabledValue };
+    },
+    template: disabledRatingTplStr,
+  }),
+  parameters: {
+    docs: {
+      source: {
+        code: `${disabledRatingScriptStr}\n${disabledRatingTplStr}`,
+        language: 'html',
+      },
+    },
+  },
+};
+
+export const ManualRating: Story = {
   render: () => ({
     components: { DuRating, DuRatingItem },
     setup() {
       const manualValue = ref(3);
       return { manualValue };
     },
-    template: ManualRatingTplStr,
+    template: manualRatingTplStr,
   }),
-};
-export const ManualRating = { ...ManualRatingTemplate }; 
+  parameters: {
+    docs: {
+      source: {
+        code: `${manualRatingScriptStr}\n${manualRatingTplStr}`,
+        language: 'html',
+      },
+    },
+  },
+}; 

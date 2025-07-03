@@ -2,14 +2,28 @@ import type { Meta, StoryObj } from "@storybook/vue3"
 import DuFileInput from "./du-file-input.vue"
 import { useVariantStoriesControl } from "../../../composables/useVariantProps"
 import { useSizeStoriesControl } from "../../../composables/useSizeProps"
+import type { ArgTypes } from "@storybook/vue3";
 
 const meta: Meta<typeof DuFileInput> = {
   title: "Components/DataInput/FileInput",
   component: DuFileInput,
   tags: ['autodocs'],
   argTypes: {
-    ...useVariantStoriesControl,
-    ...useSizeStoriesControl,
+    ...(() => {
+      const { size, ...restSize } = useSizeStoriesControl as ArgTypes;
+      const { variant, ...restVariant } = useVariantStoriesControl as ArgTypes;
+      return { ...restSize, ...restVariant };
+    })(),
+    size: {
+      control: { type: 'select' },
+      options: ['default', 'xs', 'sm', 'md', 'lg', 'xl'],
+      description: 'Taille du champ fichier',
+    },
+    variant: {
+      control: { type: 'select' },
+      options: ['default', 'primary', 'secondary', 'accent', 'info', 'success', 'warning', 'error'],
+      description: 'Couleur du champ fichier',
+    },
     ghost: { control: "boolean" },
     disabled: { control: "boolean" },
   },
@@ -73,6 +87,14 @@ const FileInputSizesTemplate: Story = {
     },
     template: FileInputSizesTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: FileInputSizesTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const FileInputSizes = { ...FileInputSizesTemplate }
 
@@ -85,6 +107,14 @@ const FileInputColorsTemplate: Story = {
     },
     template: FileInputColorsTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: FileInputColorsTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const FileInputColors = { ...FileInputColorsTemplate }
 
@@ -97,6 +127,14 @@ const GhostFileInputTemplate: Story = {
     },
     template: GhostFileInputTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: GhostFileInputTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const GhostFileInput = { ...GhostFileInputTemplate }
 
@@ -109,5 +147,13 @@ const DisabledFileInputTemplate: Story = {
     },
     template: DisabledFileInputTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: DisabledFileInputTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const DisabledFileInput = { ...DisabledFileInputTemplate } 

@@ -4,13 +4,22 @@ import DuTableItem from "./du-table-item.vue"
 import DuBadge from "../du-badge/du-badge.vue"
 import DuButton from "../../Actions/du-button/du-button.vue"
 import { useSizeStoriesControl } from "../../../composables/useSizeProps"
+import type { ArgTypes } from "@storybook/vue3";
 
 const meta = {
   title: "Components/DataDisplay/Table",
   component: DuTable,
   tags: ['autodocs'],
   argTypes: {
-    ...useSizeStoriesControl,
+    ...(() => {
+      const { size, ...rest } = useSizeStoriesControl as ArgTypes;
+      return rest;
+    })(),
+    size: {
+      control: { type: 'select' },
+      options: ['default', 'xs', 'sm', 'md', 'lg', 'xl'],
+      description: 'Taille du tableau',
+    },
     columns: {
       control: "object",
       description:
@@ -123,65 +132,132 @@ export const WithFooter: Story = {
   },
 }
 
+const manualModeTplStr = `
+<DuTable zebra size="md">
+  <thead>
+    <tr>
+      <DuTableItem isHeader>Name</DuTableItem>
+      <DuTableItem isHeader>Job</DuTableItem>
+      <DuTableItem isHeader>Status</DuTableItem>
+      <DuTableItem isHeader>Action</DuTableItem>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <DuTableItem>Cy Ganderton</DuTableItem>
+      <DuTableItem>Quality Control Specialist</DuTableItem>
+      <DuTableItem>
+        <DuBadge variant="success" size="sm">active</DuBadge>
+      </DuTableItem>
+      <DuTableItem>
+        <DuButton variant="primary" size="xs">View</DuButton>
+      </DuTableItem>
+    </tr>
+    <tr>
+      <DuTableItem>Hart Hagerty</DuTableItem>
+      <DuTableItem>Desktop Support Technician</DuTableItem>
+      <DuTableItem>
+        <DuBadge variant="error" size="sm">inactive</DuBadge>
+      </DuTableItem>
+      <DuTableItem>
+        <DuButton variant="primary" size="xs">View</DuButton>
+      </DuTableItem>
+    </tr>
+    <tr>
+      <DuTableItem>Brice Swyre</DuTableItem>
+      <DuTableItem>Tax Accountant</DuTableItem>
+      <DuTableItem>
+        <DuBadge variant="success" size="sm">active</DuBadge>
+      </DuTableItem>
+      <DuTableItem>
+        <DuButton variant="primary" size="xs">View</DuButton>
+      </DuTableItem>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <DuTableItem colspan="4" customClass="text-right font-bold">
+        Total Employees: 3
+      </DuTableItem>
+    </tr>
+  </tfoot>
+</DuTable>
+`
+
 export const ManualMode: Story = {
   render: (args: any) => ({
     components: { DuTable, DuTableItem, DuBadge, DuButton },
     setup() {
       return { args }
     },
-    template: `
-      <DuTable zebra size="md">
-        <thead>
-          <tr>
-            <DuTableItem isHeader>Name</DuTableItem>
-            <DuTableItem isHeader>Job</DuTableItem>
-            <DuTableItem isHeader>Status</DuTableItem>
-            <DuTableItem isHeader>Action</DuTableItem>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <DuTableItem>Cy Ganderton</DuTableItem>
-            <DuTableItem>Quality Control Specialist</DuTableItem>
-            <DuTableItem>
-              <DuBadge variant="success" size="sm">active</DuBadge>
-            </DuTableItem>
-            <DuTableItem>
-              <DuButton variant="primary" size="xs">View</DuButton>
-            </DuTableItem>
-          </tr>
-          <tr>
-            <DuTableItem>Hart Hagerty</DuTableItem>
-            <DuTableItem>Desktop Support Technician</DuTableItem>
-            <DuTableItem>
-              <DuBadge variant="error" size="sm">inactive</DuBadge>
-            </DuTableItem>
-            <DuTableItem>
-              <DuButton variant="primary" size="xs">View</DuButton>
-            </DuTableItem>
-          </tr>
-          <tr>
-            <DuTableItem>Brice Swyre</DuTableItem>
-            <DuTableItem>Tax Accountant</DuTableItem>
-            <DuTableItem>
-              <DuBadge variant="success" size="sm">active</DuBadge>
-            </DuTableItem>
-            <DuTableItem>
-              <DuButton variant="primary" size="xs">View</DuButton>
-            </DuTableItem>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr>
-            <DuTableItem colspan="4" customClass="text-right font-bold">
-              Total Employees: 3
-            </DuTableItem>
-          </tr>
-        </tfoot>
-      </DuTable>
-    `,
+    template: manualModeTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: manualModeTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
+
+const complexTableTplStr = `
+<DuTable zebra size="sm" customClass="border border-base-300">
+  <thead>
+    <tr>
+      <DuTableItem isHeader customClass="bg-primary text-primary-content">Product</DuTableItem>
+      <DuTableItem isHeader customClass="bg-primary text-primary-content">Category</DuTableItem>
+      <DuTableItem isHeader customClass="bg-primary text-primary-content">Price</DuTableItem>
+      <DuTableItem isHeader customClass="bg-primary text-primary-content">Stock</DuTableItem>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <DuTableItem>Smartphone XYZ</DuTableItem>
+      <DuTableItem>Electronics</DuTableItem>
+      <DuTableItem>$599</DuTableItem>
+      <DuTableItem>
+        <DuBadge variant="success" size="sm">In stock</DuBadge>
+      </DuTableItem>
+    </tr>
+    <tr>
+      <DuTableItem>Laptop ABC</DuTableItem>
+      <DuTableItem>Electronics</DuTableItem>
+      <DuTableItem>$1299</DuTableItem>
+      <DuTableItem>
+        <DuBadge variant="warning" size="sm">Limited stock</DuBadge>
+      </DuTableItem>
+    </tr>
+    <tr>
+      <DuTableItem>Headphones DEF</DuTableItem>
+      <DuTableItem>Accessories</DuTableItem>
+      <DuTableItem>$199</DuTableItem>
+      <DuTableItem>
+        <DuBadge variant="error" size="sm">Out of stock</DuBadge>
+      </DuTableItem>
+    </tr>
+    <tr>
+      <DuTableItem>Smartwatch GHI</DuTableItem>
+      <DuTableItem>Accessories</DuTableItem>
+      <DuTableItem>$299</DuTableItem>
+      <DuTableItem>
+        <DuBadge variant="success" size="sm">In stock</DuBadge>
+      </DuTableItem>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <DuTableItem colspan="4" customClass="text-right">
+        <div class="flex justify-between">
+          <span>Updated: 06/01/2023</span>
+          <span class="font-bold">Total products: 4</span>
+        </div>
+      </DuTableItem>
+    </tr>
+  </tfoot>
+</DuTable>
+`
 
 export const ComplexTable: Story = {
   render: (args: any) => ({
@@ -189,61 +265,14 @@ export const ComplexTable: Story = {
     setup() {
       return { args }
     },
-    template: `
-      <DuTable zebra size="sm" customClass="border border-base-300">
-        <thead>
-          <tr>
-            <DuTableItem isHeader customClass="bg-primary text-primary-content">Product</DuTableItem>
-            <DuTableItem isHeader customClass="bg-primary text-primary-content">Category</DuTableItem>
-            <DuTableItem isHeader customClass="bg-primary text-primary-content">Price</DuTableItem>
-            <DuTableItem isHeader customClass="bg-primary text-primary-content">Stock</DuTableItem>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <DuTableItem>Smartphone XYZ</DuTableItem>
-            <DuTableItem>Electronics</DuTableItem>
-            <DuTableItem>$599</DuTableItem>
-            <DuTableItem>
-              <DuBadge variant="success" size="sm">In stock</DuBadge>
-            </DuTableItem>
-          </tr>
-          <tr>
-            <DuTableItem>Laptop ABC</DuTableItem>
-            <DuTableItem>Electronics</DuTableItem>
-            <DuTableItem>$1299</DuTableItem>
-            <DuTableItem>
-              <DuBadge variant="warning" size="sm">Limited stock</DuBadge>
-            </DuTableItem>
-          </tr>
-          <tr>
-            <DuTableItem>Headphones DEF</DuTableItem>
-            <DuTableItem>Accessories</DuTableItem>
-            <DuTableItem>$199</DuTableItem>
-            <DuTableItem>
-              <DuBadge variant="error" size="sm">Out of stock</DuBadge>
-            </DuTableItem>
-          </tr>
-          <tr>
-            <DuTableItem>Smartwatch GHI</DuTableItem>
-            <DuTableItem>Accessories</DuTableItem>
-            <DuTableItem>$299</DuTableItem>
-            <DuTableItem>
-              <DuBadge variant="success" size="sm">In stock</DuBadge>
-            </DuTableItem>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr>
-            <DuTableItem colspan="4" customClass="text-right">
-              <div class="flex justify-between">
-                <span>Updated: 06/01/2023</span>
-                <span class="font-bold">Total products: 4</span>
-              </div>
-            </DuTableItem>
-          </tr>
-        </tfoot>
-      </DuTable>
-    `,
+    template: complexTableTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: complexTableTplStr,
+        language: 'html',
+      },
+    },
+  },
 } 

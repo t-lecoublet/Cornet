@@ -30,6 +30,7 @@ const shadowClass = computed(() => {
         :figureClass="item.figureClass"
         :valueClass="item.valueClass"
         :descClass="item.descClass"
+        :titleClass="item.titleClass"
       >
         <template v-if="item.figure || $slots.figure" #figure>
           <slot name="figure" :item="item">

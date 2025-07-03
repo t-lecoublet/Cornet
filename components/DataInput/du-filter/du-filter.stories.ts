@@ -68,6 +68,14 @@ const DynamicItemsTemplate: Story = {
       { title: "Trending", checked: false, customClass: "btn-accent" },
     ],
   },
+  parameters: {
+    docs: {
+      source: {
+        code: dynamicItemsTplStr,
+        language: 'html',
+      },
+    },
+  },
 };
 export const DynamicItems = { ...DynamicItemsTemplate };
 
@@ -88,6 +96,14 @@ const ManualModeTemplate: Story = {
     template: manualModeTplStr,
   }),
   args: {},
+  parameters: {
+    docs: {
+      source: {
+        code: manualModeTplStr,
+        language: 'html',
+      },
+    },
+  },
 };
 export const ManualMode = { ...ManualModeTemplate };
 
@@ -132,6 +148,14 @@ const CustomStylesTemplate: Story = {
       { title: "Mobile", checked: false },
       { title: "Desktop", checked: false },
     ],
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: customStylesTplStr,
+        language: 'html',
+      },
+    },
   },
 };
 export const CustomStyles = { ...CustomStylesTemplate }; 

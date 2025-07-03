@@ -108,6 +108,14 @@ const TextInputWithLabelInsideTemplate: Story = {
     },
     template: TextInputWithLabelInsideTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: TextInputWithLabelInsideTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const TextInputWithLabelInside = { ...TextInputWithLabelInsideTemplate }
 TextInputWithLabelInside.args = {}
@@ -129,6 +137,14 @@ const WithFieldsetAndFieldsetLegendTemplate: Story = {
     },
     template: WithFieldsetAndFieldsetLegendTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: WithFieldsetAndFieldsetLegendTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const WithFieldsetAndFieldsetLegend = {
   ...WithFieldsetAndFieldsetLegendTemplate,
@@ -145,6 +161,14 @@ const ColorsInputTemplate: Story = {
     },
     template: ColorsInputTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: ColorsInputTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const ColorsInput = { ...ColorsInputTemplate }
 ColorsInput.args = {}
@@ -159,6 +183,14 @@ const SizesInputTemplate: Story = {
     },
     template: SizesInputTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: SizesInputTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const SizesInput = { ...SizesInputTemplate }
 SizesInput.args = {}
@@ -173,6 +205,14 @@ const DisabledInputTemplate: Story = {
     },
     template: DisabledInputTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: DisabledInputTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const DisabledInput = { ...DisabledInputTemplate }
 DisabledInput.args = {}
@@ -187,6 +227,14 @@ const TextInputWithDataListSuggestionTemplate: Story = {
     },
     template: TextInputWithDataListSuggestionTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: TextInputWithDataListSuggestionTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const TextInputWithDataListSuggestion = {
   ...TextInputWithDataListSuggestionTemplate,

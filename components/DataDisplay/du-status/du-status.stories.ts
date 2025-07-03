@@ -17,28 +17,28 @@ const defaultTplStr = `
 `
 const StatusSizesTplStr = `
 <div class="flex gap-2 items-center">
-  <DuStatus v-bind="args" size="xs" />
-  <DuStatus v-bind="args" size="sm" />
-  <DuStatus v-bind="args" size="md" />
-  <DuStatus v-bind="args" size="lg" />
-  <DuStatus v-bind="args" size="xl" />
+  <DuStatus size="xs" />
+  <DuStatus size="sm" />
+  <DuStatus size="md" />
+  <DuStatus size="lg" />
+  <DuStatus size="xl" />
 </div>
 `
 const StatusWithColorsTplStr = `
 <div class="flex gap-2 items-center">
-  <DuStatus v-bind="args" variant="primary" />
-  <DuStatus v-bind="args" variant="secondary" />
-  <DuStatus v-bind="args" variant="accent" />
-  <DuStatus v-bind="args" variant="neutral" />
-  <DuStatus v-bind="args" variant="info" />
-  <DuStatus v-bind="args" variant="success" />
-  <DuStatus v-bind="args" variant="warning" />
-  <DuStatus v-bind="args" variant="error" />
+  <DuStatus variant="primary" />
+  <DuStatus variant="secondary" />
+  <DuStatus variant="accent" />
+  <DuStatus variant="neutral" />
+  <DuStatus variant="info" />
+  <DuStatus variant="success" />
+  <DuStatus variant="warning" />
+  <DuStatus variant="error" />
 </div>`
 const StatusWithPingAnimationTplStr = `
-<DuStatus v-bind="args" variant="info" ping /> Server is down`
+<DuStatus variant="info" ping /> Server is down`
 const StatusWithBounceAnimationTplStr = `
-<DuStatus v-bind="args" variant="info" bounce /> Unread messages`
+<DuStatus variant="info" bounce /> Unread messages`
 
 // DEFAULT
 
@@ -66,6 +66,14 @@ const StatusSizesTemplate: Story = {
     template: StatusSizesTplStr,
   }),
   args: {},
+  parameters: {
+    docs: {
+      source: {
+        code: StatusSizesTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const StatusSizes = { ...StatusSizesTemplate }
 StatusSizes.args = {}
@@ -81,6 +89,14 @@ const StatusWithColorsTemplate: Story = {
     template: StatusWithColorsTplStr,
   }),
   args: {},
+  parameters: {
+    docs: {
+      source: {
+        code: StatusWithColorsTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const StatusWithColors = { ...StatusWithColorsTemplate }
 StatusWithColors.args = {}
@@ -94,6 +110,14 @@ const StatusWithPingAnimationTemplate: Story = {
     },
     template: StatusWithPingAnimationTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: StatusWithPingAnimationTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const StatusWithPingAnimation = { ...StatusWithPingAnimationTemplate }
 
@@ -106,7 +130,13 @@ const StatusWithBounceAnimationTemplate: Story = {
     },
     template: StatusWithBounceAnimationTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: StatusWithBounceAnimationTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
-export const StatusWithBounceAnimation = {
-  ...StatusWithBounceAnimationTemplate,
-} 
+export const StatusWithBounceAnimation = { ...StatusWithBounceAnimationTemplate } 

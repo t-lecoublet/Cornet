@@ -241,6 +241,34 @@ export const WithItemHrClasses: Story = {
   },
 }
 
+const withCustomMiddleTplStr = `
+<script setup lang="ts">
+const items = [
+  {
+    start: '1984',
+    middle: '🍎',
+    end: 'First Macintosh computer',
+  },
+  {
+    start: '1998',
+    middle: '🖥️',
+    end: 'iMac',
+  },
+  {
+    start: '2001',
+    middle: '🎵',
+    end: 'iPod',
+  },
+  {
+    start: '2007',
+    middle: '📱',
+    end: 'iPhone',
+  },
+]
+</script>
+<DuTimeline :items="items" />
+`
+
 export const WithCustomMiddle: Story = {
   render: (args: any) => ({
     components: { DuTimeline },
@@ -267,14 +295,51 @@ export const WithCustomMiddle: Story = {
           end: 'iPhone',
         },
       ]
-
       return { items }
     },
-    template: `
-      <DuTimeline :items="items" />
-    `,
+    template: `<DuTimeline :items="items" />`,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: withCustomMiddleTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
+
+const withSlotsTplStr = `
+<script setup lang="ts">
+import DuButton from '../../Actions/du-button/du-button.vue'
+const items = [
+  {
+    start: '1984',
+    end: 'First Macintosh computer',
+  },
+  {
+    start: '1998',
+    end: 'iMac',
+  },
+  {
+    start: '2001',
+    end: 'iPod',
+  },
+]
+</script>
+<DuTimeline :items="items">
+  <template #middle-1="{ item }">
+    <span class="text-2xl">💻</span>
+  </template>
+  <template #end-1="{ item }">
+    <div>
+      <h3 class="font-bold">{{ item.end }}</h3>
+      <p>The iMac was a revolutionary all-in-one computer.</p>
+      <DuButton variant="primary" size="xs" class="mt-2">Learn More</DuButton>
+    </div>
+  </template>
+</DuTimeline>
+`
 
 export const WithSlots: Story = {
   render: (args: any) => ({
@@ -294,7 +359,6 @@ export const WithSlots: Story = {
           end: 'iPod',
         },
       ]
-
       return { items }
     },
     template: `
@@ -312,7 +376,51 @@ export const WithSlots: Story = {
       </DuTimeline>
     `,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: withSlotsTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
+
+const manualModeTplStr = `
+<script setup lang="ts">
+import DuButton from '../../Actions/du-button/du-button.vue'
+import DuTimelineItem from './du-timeline-item.vue'
+</script>
+<DuTimeline modifier="timeline-box">
+  <DuTimelineItem start="1984" end="First Macintosh">
+    <template #middle>
+      <span class="text-xl">🍎</span>
+    </template>
+  </DuTimelineItem>
+  <DuTimelineItem start="1998">
+    <template #middle>
+      <span class="text-xl">💻</span>
+    </template>
+    <template #end>
+      <div>
+        <h3 class="font-bold">iMac</h3>
+        <p>Revolutionary all-in-one computer.</p>
+        <DuButton variant="primary" size="xs" class="mt-2">Learn More</DuButton>
+      </div>
+    </template>
+  </DuTimelineItem>
+  <DuTimelineItem 
+    start="2001" 
+    end="iPod"
+    valid="true"
+  />
+  <DuTimelineItem 
+    start="2007" 
+    end="iPhone"
+    valid="false"
+  />
+</DuTimeline>
+`
 
 export const ManualMode: Story = {
   render: (args: any) => ({
@@ -320,39 +428,38 @@ export const ManualMode: Story = {
     setup() {
       return {}
     },
-    template: `
-      <DuTimeline modifier="timeline-box">
-        <DuTimelineItem start="1984" end="First Macintosh">
-          <template #middle>
-            <span class="text-xl">🍎</span>
-          </template>
-        </DuTimelineItem>
-        <DuTimelineItem start="1998">
-          <template #middle>
-            <span class="text-xl">💻</span>
-          </template>
-          <template #end>
-            <div>
-              <h3 class="font-bold">iMac</h3>
-              <p>Revolutionary all-in-one computer.</p>
-              <DuButton variant="primary" size="xs" class="mt-2">Learn More</DuButton>
-            </div>
-          </template>
-        </DuTimelineItem>
-        <DuTimelineItem 
-          start="2001" 
-          end="iPod"
-          valid="true"
-        />
-        <DuTimelineItem 
-          start="2007" 
-          end="iPhone"
-          valid="false"
-        />
-      </DuTimeline>
-    `,
+    template: manualModeTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: manualModeTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
+
+const nestedItemsTplStr = `
+<script setup lang="ts">
+import DuTimelineItem from './du-timeline-item.vue'
+</script>
+<DuTimeline>
+  <DuTimelineItem start="2020" end="Main Event">
+    <DuTimeline>
+      <DuTimelineItem start="Jan" end="Sub-event 1" />
+      <DuTimelineItem start="Apr" end="Sub-event 2" />
+      <DuTimelineItem start="Dec" end="Sub-event 3" />
+    </DuTimeline>
+  </DuTimelineItem>
+  <DuTimelineItem start="2021" end="Main Event 2">
+    <DuTimeline>
+      <DuTimelineItem start="Mar" end="Sub-event 1" />
+      <DuTimelineItem start="Jun" end="Sub-event 2" />
+    </DuTimeline>
+  </DuTimelineItem>
+</DuTimeline>
+`
 
 export const NestedItems: Story = {
   render: (args: any) => ({
@@ -360,22 +467,14 @@ export const NestedItems: Story = {
     setup() {
       return {}
     },
-    template: `
-      <DuTimeline>
-        <DuTimelineItem start="2020" end="Main Event">
-          <DuTimeline>
-            <DuTimelineItem start="Jan" end="Sub-event 1" />
-            <DuTimelineItem start="Apr" end="Sub-event 2" />
-            <DuTimelineItem start="Dec" end="Sub-event 3" />
-          </DuTimeline>
-        </DuTimelineItem>
-        <DuTimelineItem start="2021" end="Main Event 2">
-          <DuTimeline>
-            <DuTimelineItem start="Mar" end="Sub-event 1" />
-            <DuTimelineItem start="Jun" end="Sub-event 2" />
-          </DuTimeline>
-        </DuTimelineItem>
-      </DuTimeline>
-    `,
+    template: nestedItemsTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: nestedItemsTplStr,
+        language: 'html',
+      },
+    },
+  },
 } 

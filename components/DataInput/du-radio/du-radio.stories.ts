@@ -2,14 +2,28 @@ import type { Meta, StoryObj } from "@storybook/vue3"
 import DuRadio from "./du-radio.vue"
 import { useVariantStoriesControl } from "../../../composables/useVariantProps"
 import { useSizeStoriesControl } from "../../../composables/useSizeProps"
+import type { ArgTypes } from "@storybook/vue3";
 
 const meta: Meta<typeof DuRadio> = {
   title: "Components/DataInput/Radio",
   component: DuRadio,
   tags: ['autodocs'],
   argTypes: {
-    ...useVariantStoriesControl,
-    ...useSizeStoriesControl,
+    ...(() => {
+      const { size, ...restSize } = useSizeStoriesControl as ArgTypes;
+      const { variant, ...restVariant } = useVariantStoriesControl as ArgTypes;
+      return { ...restSize, ...restVariant };
+    })(),
+    size: {
+      control: { type: 'select' },
+      options: ['default', 'xs', 'sm', 'md', 'lg', 'xl'],
+      description: 'Taille du radio',
+    },
+    variant: {
+      control: { type: 'select' },
+      options: ['default', 'primary', 'secondary', 'accent', 'info', 'success', 'warning', 'error'],
+      description: 'Couleur du radio',
+    },
     checked: { control: "boolean" },
     disabled: { control: "boolean" },
   },
@@ -131,6 +145,14 @@ const RadioColorsTemplate: Story = {
     },
     template: RadioColorsTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: RadioColorsTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const RadioColors = { ...RadioColorsTemplate }
 
@@ -142,6 +164,14 @@ const RadioSizesTemplate: Story = {
     },
     template: RadioSizesTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: RadioSizesTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const RadioSizes = { ...RadioSizesTemplate }
 
@@ -153,6 +183,14 @@ const RadioStatesTemplate: Story = {
     },
     template: RadioStatesTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: RadioStatesTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const RadioStates = { ...RadioStatesTemplate }
 
@@ -164,5 +202,13 @@ const RadioGroupTemplate: Story = {
     },
     template: RadioGroupTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: RadioGroupTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const RadioGroup = { ...RadioGroupTemplate } 

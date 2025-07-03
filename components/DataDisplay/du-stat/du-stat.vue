@@ -3,6 +3,7 @@ defineProps<{
   figureClass?: string
   valueClass?: string
   descClass?: string
+  titleClass?: string
 }>()
 </script>
 
@@ -11,7 +12,7 @@ defineProps<{
     <div v-if="$slots.figure" class="stat-figure" :class="figureClass">
       <slot name="figure"></slot>
     </div>
-    <div v-if="$slots.title" class="stat-title">
+    <div v-if="$slots.title" class="stat-title" :class="titleClass">
       <slot name="title"></slot>
     </div>
     <div v-if="$slots.value" class="stat-value" :class="valueClass">

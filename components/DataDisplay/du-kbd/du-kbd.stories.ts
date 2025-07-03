@@ -1,13 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import DuKbd from './du-kbd.vue'
 import { useSizeStoriesControl } from '../../../composables/useSizeProps'
+import type { ArgTypes } from "@storybook/vue3";
 
 const meta: Meta<typeof DuKbd> = {
   title: 'Components/DataDisplay/Kbd',
   component: DuKbd,
   tags: ['autodocs'],
   argTypes: {
-    ...useSizeStoriesControl,
+    ...useSizeStoriesControl as ArgTypes,
   },
 }
 
@@ -20,77 +21,77 @@ const defaultTplStr = `
 `
 const KbdSizesTplStr = `
 <div class="flex gap-2 items-center">
-  <DuKbd size="xs" v-bind="args">XSmall</DuKbd>
-  <DuKbd size="sm" v-bind="args">Small</DuKbd>
-  <DuKbd size="md" v-bind="args">Medium</DuKbd>
-  <DuKbd size="lg" v-bind="args">Large</DuKbd>
-  <DuKbd size="xl" v-bind="args">XLarge</DuKbd>
+  <DuKbd size="xs">XSmall</DuKbd>
+  <DuKbd size="sm">Small</DuKbd>
+  <DuKbd size="md">Medium</DuKbd>
+  <DuKbd size="lg">Large</DuKbd>
+  <DuKbd size="xl">XLarge</DuKbd>
 </div>`
 const InTextKbdTplStr = `
 <div class="flex gap-2 items-center">
   <p>
-    Press <DuKbd v-bind="args">F</DuKbd> to pay respects.
+    Press <DuKbd>F</DuKbd> to pay respects.
   </p>
 </div>
 `
 const KeyCombinationsTplStr = `
 <div>
-  <DuKbd v-bind="args">ctrl</DuKbd> + <DuKbd v-bind="args">shift</DuKbd> + <DuKbd v-bind="args">del</DuKbd>
+  <DuKbd>ctrl</DuKbd> + <DuKbd>shift</DuKbd> + <DuKbd>del</DuKbd>
 </div>
 `
 const FunctionKeysTplStr = `
 <div class="flex gap-2 m-4">
-  <DuKbd v-bind="args">⌘</DuKbd>
-  <DuKbd v-bind="args">⌥</DuKbd>
-  <DuKbd v-bind="args">⇧</DuKbd>
-  <DuKbd v-bind="args">⌃</DuKbd>
+  <DuKbd>⌘</DuKbd>
+  <DuKbd>⌥</DuKbd>
+  <DuKbd>⇧</DuKbd>
+  <DuKbd>⌃</DuKbd>
 </div>
 `
 const FullKeyboardTplStr = `
 <div class="my-1 flex w-full justify-center gap-1">
-  <DuKbd v-bind="args">q</DuKbd>
-  <DuKbd v-bind="args">w</DuKbd>
-  <DuKbd v-bind="args">e</DuKbd>
-  <DuKbd v-bind="args">r</DuKbd>
-  <DuKbd v-bind="args">t</DuKbd>
-  <DuKbd v-bind="args">y</DuKbd>
-  <DuKbd v-bind="args">u</DuKbd>
-  <DuKbd v-bind="args">i</DuKbd>
-  <DuKbd v-bind="args">o</DuKbd>
-  <DuKbd v-bind="args">p</DuKbd>
+  <DuKbd>q</DuKbd>
+  <DuKbd>w</DuKbd>
+  <DuKbd>e</DuKbd>
+  <DuKbd>r</DuKbd>
+  <DuKbd>t</DuKbd>
+  <DuKbd>y</DuKbd>
+  <DuKbd>u</DuKbd>
+  <DuKbd>i</DuKbd>
+  <DuKbd>o</DuKbd>
+  <DuKbd>p</DuKbd>
 </div>
 <div class="my-1 flex w-full justify-center gap-1">
-  <DuKbd v-bind="args">a</DuKbd>
-  <DuKbd v-bind="args">s</DuKbd>
-  <DuKbd v-bind="args">d</DuKbd>
-  <DuKbd v-bind="args">f</DuKbd>
-  <DuKbd v-bind="args">g</DuKbd>
-  <DuKbd v-bind="args">h</DuKbd>
-  <DuKbd v-bind="args">j</DuKbd>
-  <DuKbd v-bind="args">k</DuKbd>
-  <DuKbd v-bind="args">l</DuKbd>
+  <DuKbd>a</DuKbd>
+  <DuKbd>s</DuKbd>
+  <DuKbd>d</DuKbd>
+  <DuKbd>f</DuKbd>
+  <DuKbd>g</DuKbd>
+  <DuKbd>h</DuKbd>
+  <DuKbd>j</DuKbd>
+  <DuKbd>k</DuKbd>
+  <DuKbd>l</DuKbd>
 </div>
 <div class="my-1 flex w-full justify-center gap-1">
-  <DuKbd v-bind="args">z</DuKbd>
-  <DuKbd v-bind="args">x</DuKbd>
-  <DuKbd v-bind="args">c</DuKbd>
-  <DuKbd v-bind="args">v</DuKbd>
-  <DuKbd v-bind="args">b</DuKbd>
-  <DuKbd v-bind="args">n</DuKbd>
-  <DuKbd v-bind="args">m</DuKbd>
-  <DuKbd v-bind="args">/</DuKbd>
+  <DuKbd>z</DuKbd>
+  <DuKbd>x</DuKbd>
+  <DuKbd>c</DuKbd>
+  <DuKbd>v</DuKbd>
+  <DuKbd>b</DuKbd>
+  <DuKbd>n</DuKbd>
+  <DuKbd>m</DuKbd>
+  <DuKbd>/</DuKbd>
 </div>
 `
 const ArrowKeysTplStr = `
 <div class="flex w-full justify-center">
-  <DuKbd v-bind="args">▲</DuKbd>
+  <DuKbd>▲</DuKbd>
 </div>
 <div class="flex w-full justify-center gap-12">
-  <DuKbd v-bind="args">◀︎</DuKbd>
-  <DuKbd v-bind="args">▶︎</DuKbd>
+  <DuKbd>◀︎</DuKbd>
+  <DuKbd>▶︎</DuKbd>
 </div>
 <div class="flex w-full justify-center">
-  <DuKbd v-bind="args">▼</DuKbd>
+  <DuKbd>▼</DuKbd>
 </div>
 `
 
@@ -119,6 +120,14 @@ const KbdSizesTemplate: Story = {
     },
     template: KbdSizesTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: KbdSizesTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const KbdSizes = { ...KbdSizesTemplate }
 KbdSizes.args = {}
@@ -133,6 +142,14 @@ const InTextKbdTemplate: Story = {
     },
     template: InTextKbdTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: InTextKbdTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const InTextKbd = { ...InTextKbdTemplate }
 InTextKbd.args = {}
@@ -147,6 +164,14 @@ const KeyCombinationsTemplate: Story = {
     },
     template: KeyCombinationsTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: KeyCombinationsTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const KeyCombinations = { ...KeyCombinationsTemplate }
 KeyCombinations.args = {}
@@ -161,6 +186,14 @@ const FunctionKeysTemplate: Story = {
     },
     template: FunctionKeysTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: FunctionKeysTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const FunctionKeys = { ...FunctionKeysTemplate }
 FunctionKeys.args = {}
@@ -175,6 +208,14 @@ const FullKeyboardTemplate: Story = {
     },
     template: FullKeyboardTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: FullKeyboardTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const FullKeyboard = { ...FullKeyboardTemplate }
 FullKeyboard.args = {}
@@ -189,6 +230,14 @@ const ArrowKeysTemplate: Story = {
     },
     template: ArrowKeysTplStr,
   }),
+  parameters: {
+    docs: {
+      source: {
+        code: ArrowKeysTplStr,
+        language: 'html',
+      },
+    },
+  },
 }
 export const ArrowKeys = { ...ArrowKeysTemplate }
 ArrowKeys.args = {} 

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/vue3";
 import DuMenu from "./du-menu.vue";
+import DuButton from "../../Actions/du-button/du-button.vue";
 import { useSizeStoriesControl } from "../../../composables/useSizeProps";
 import { DU_MENU_DIRECTIONS } from "./du-menu.types";
 
@@ -8,6 +9,10 @@ const meta: Meta<typeof DuMenu> = {
   component: DuMenu,
   tags: ['autodocs'],
   argTypes: {
+    items: {
+      control: 'object',
+      description: 'Array of menu items with label, href, disabled, isTitle, and subItems properties',
+    },
     direction: {
       control: { type: "select" },
       options: DU_MENU_DIRECTIONS,
@@ -17,12 +22,18 @@ const meta: Meta<typeof DuMenu> = {
       control: { type: "boolean" },
     },
   },
+  args: {
+    direction: "default",
+    size: "default",
+    rounded: true,
+  },
 };
 
 export default meta;
 
 type Story = StoryObj<typeof DuMenu>;
 
+// DEFAULT MENU (Manual mode)
 const DefaultTplStr = `
 <DuMenu v-bind="args" class="w-56">
   <li><a>Item 1</a></li>
@@ -30,6 +41,164 @@ const DefaultTplStr = `
   <li><a>Item 3</a></li>
 </DuMenu>`;
 
+export const Default: Story = {
+  render: (args: any) => ({
+    components: { DuMenu },
+    setup() {
+      return { args };
+    },
+    template: DefaultTplStr,
+  }),
+};
+
+// AUTOMATIC MODE WITH ITEMS
+export const WithItems: Story = {
+  args: {
+    items: [
+      { label: "Home", href: "#home" },
+      { label: "About", href: "#about" },
+      { label: "Contact", href: "#contact", disabled: true },
+    ],
+  },
+};
+
+// MENU WITH TITLES
+export const WithTitles: Story = {
+  args: {
+    items: [
+      { label: "Navigation", isTitle: true },
+      { label: "Home", href: "#home" },
+      { label: "About", href: "#about" },
+      { label: "Actions", isTitle: true },
+      { label: "Contact", href: "#contact" },
+      { label: "Login", href: "#login" },
+    ],
+  },
+};
+
+// MENU WITH SUBMENUS
+export const WithSubMenus: Story = {
+  args: {
+    items: [
+      { label: "Home", href: "#home" },
+      {
+        label: "Products",
+        href: "#products",
+        subItems: [
+          { label: "Web Design", href: "#web-design" },
+          { label: "Mobile Apps", href: "#mobile-apps" },
+          { label: "SEO", href: "#seo" },
+        ],
+      },
+      { label: "About", href: "#about" },
+      { label: "Contact", href: "#contact" },
+    ],
+  },
+};
+
+// RECURSIVE MENUS (Deep nesting)
+export const RecursiveMenus: Story = {
+  args: {
+    items: [
+      { label: "Home", href: "#home" },
+      {
+        label: "Products",
+        href: "#products",
+        subItems: [
+          { label: "Web Design", href: "#web-design" },
+          {
+            label: "Development",
+            href: "#development",
+            subItems: [
+              { label: "Frontend", href: "#frontend" },
+              {
+                label: "Backend",
+                href: "#backend",
+                subItems: [
+                  { label: "Node.js", href: "#nodejs" },
+                  { label: "Python", href: "#python" },
+                  { label: "PHP", href: "#php" },
+                ],
+              },
+              { label: "Full Stack", href: "#fullstack" },
+            ],
+          },
+          { label: "Mobile Apps", href: "#mobile-apps" },
+        ],
+      },
+      { label: "About", href: "#about" },
+    ],
+  },
+};
+
+// MENU WITH TITLE AS PARENT
+export const WithTitleAsParent: Story = {
+  args: {
+    items: [
+      { label: "Home", href: "#home" },
+      {
+        label: "Categories",
+        isTitle: true,
+        subItems: [
+          { label: "Technology", href: "#technology" },
+          { label: "Design", href: "#design" },
+          { label: "Business", href: "#business" },
+        ],
+      },
+      {
+        label: "Services",
+        isTitle: true,
+        subItems: [
+          { label: "Consulting", href: "#consulting" },
+          { label: "Development", href: "#development" },
+          { label: "Support", href: "#support" },
+        ],
+      },
+    ],
+  },
+};
+
+// COMPLEX MENU WITH MIXED CONTENT
+export const ComplexMenu: Story = {
+  args: {
+    items: [
+      { label: "Dashboard", href: "#dashboard" },
+      { label: "Main Navigation", isTitle: true },
+      {
+        label: "Projects",
+        href: "#projects",
+        subItems: [
+          { label: "Active Projects", href: "#active" },
+          { label: "Archived", href: "#archived" },
+          {
+            label: "Categories",
+            href: "#categories",
+            subItems: [
+              { label: "Web Development", href: "#web-dev" },
+              { label: "Mobile Apps", href: "#mobile" },
+              { label: "UI/UX Design", href: "#design" },
+            ],
+          },
+        ],
+      },
+      {
+        label: "Team",
+        href: "#team",
+        subItems: [
+          { label: "Members", href: "#members" },
+          { label: "Roles", href: "#roles" },
+          { label: "Permissions", href: "#permissions", disabled: true },
+        ],
+      },
+      { label: "Settings", isTitle: true },
+      { label: "Profile", href: "#profile" },
+      { label: "Preferences", href: "#preferences" },
+      { label: "Logout", href: "#logout", disabled: true },
+    ],
+  },
+};
+
+// MENU SIZES
 const MenuSizesTplStr = `
 <div class="flex flex-col gap-4">
   <DuMenu v-bind="args" class="w-56" size="xs">
@@ -54,6 +223,213 @@ const MenuSizesTplStr = `
   </DuMenu>
 </div>`;
 
+export const MenuSizes: Story = {
+  render: (args: any) => ({
+    components: { DuMenu },
+    setup() {
+      return { args };
+    },
+    template: MenuSizesTplStr,
+  }),
+};
+
+// MENU WITH CUSTOM SLOTS
+const WithCustomSlotsTemplate = `
+<div class="flex flex-col gap-2">
+  <DuMenu :items="items" class="w-64">
+    <template #title-0="{ item, index }">
+      <li class="menu-title text-primary">
+        <span class="badge badge-primary badge-sm">{{ index + 1 }}</span>
+        {{ item.label }}
+      </li>
+    </template>
+    <template #item-1="{ item, index }">
+      <li>
+        <a :href="item.href" class="flex items-center gap-2">
+          <span class="badge badge-secondary badge-xs"></span>
+          {{ item.label }}
+        </a>
+      </li>
+    </template>
+    <template #submenu-2="{ item, index }">
+      <li>
+        <details open>
+          <summary class="font-semibold text-accent">{{ item.label }} (Custom)</summary>
+          <ul>
+            <li v-for="sub in item.subItems" :key="sub.label">
+              <a :href="sub.href">{{ sub.label }}</a>
+            </li>
+          </ul>
+        </details>
+      </li>
+    </template>
+  </DuMenu>
+</div>
+`;
+
+export const WithCustomSlots: Story = {
+  render: (args: any) => ({
+    components: { DuMenu, DuButton },
+    setup() {
+      const items = [
+        { label: "Custom Title", isTitle: true },
+        { label: "Custom Item", href: "#custom" },
+        {
+          label: "Custom Submenu",
+          href: "#custom-sub",
+          subItems: [
+            { label: "Sub Item 1", href: "#sub1" },
+            { label: "Sub Item 2", href: "#sub2" },
+          ],
+        },
+        { label: "Normal Item", href: "#normal" },
+      ];
+
+      return { items };
+    },
+    template: WithCustomSlotsTemplate,
+  }),
+  parameters: {
+    docs: {
+      source: {
+        code: WithCustomSlotsTemplate,
+        language: 'html',
+      },
+    },
+  },
+};
+
+// MENU WITH GLOBAL SLOTS
+const WithGlobalSlotsTemplate = `
+<div class="flex flex-col gap-2">
+  <DuMenu :items="items" class="w-64">
+    <template #title="{ item, index }">
+      <li class="menu-title flex items-center gap-2">
+        <span class="badge badge-info badge-sm">{{ index + 1 }}</span>
+        <span class="text-info">{{ item.label }}</span>
+      </li>
+    </template>
+    <template #item="{ item, index }">
+      <li :class="{ 'menu-disabled': item.disabled }">
+        <a :href="item.href" class="flex items-center gap-2">
+          <span class="w-2 h-2 bg-success rounded-full"></span>
+          {{ item.label }}
+          <span v-if="item.disabled" class="badge badge-error badge-xs">Disabled</span>
+        </a>
+      </li>
+    </template>
+    <template #submenu="{ item, index }">
+      <li>
+        <a :href="item.href" class="font-semibold text-warning">
+          📁 {{ item.label }}
+        </a>
+        <ul>
+          <li v-for="sub in item.subItems" :key="sub.label" :class="{ 'menu-disabled': sub.disabled }">
+            <a :href="sub.href">{{ sub.label }}</a>
+          </li>
+        </ul>
+      </li>
+    </template>
+  </DuMenu>
+</div>
+`;
+
+export const WithGlobalSlots: Story = {
+  render: (args: any) => ({
+    components: { DuMenu, DuButton },
+    setup() {
+      const items = [
+        { label: "Navigation", isTitle: true },
+        { label: "Dashboard", href: "#dashboard" },
+        { label: "Disabled Item", href: "#disabled", disabled: true },
+        {
+          label: "Projects",
+          href: "#projects",
+          subItems: [
+            { label: "Active", href: "#active" },
+            { label: "Archived", href: "#archived" },
+            { label: "Drafts", href: "#drafts", disabled: true },
+          ],
+        },
+        { label: "Settings", isTitle: true },
+        { label: "Profile", href: "#profile" },
+      ];
+
+      return { items };
+    },
+    template: WithGlobalSlotsTemplate,
+  }),
+  parameters: {
+    docs: {
+      source: {
+        code: WithGlobalSlotsTemplate,
+        language: 'html',
+      },
+    },
+  },
+};
+
+// HORIZONTAL MENU
+export const HorizontalMenu: Story = {
+  args: {
+    direction: "horizontal",
+    items: [
+      { label: "Home", href: "#home" },
+      {
+        label: "Products",
+        href: "#products",
+        subItems: [
+          { label: "Web Design", href: "#web-design" },
+          { label: "Mobile Apps", href: "#mobile-apps" },
+        ],
+      },
+      { label: "About", href: "#about" },
+      { label: "Contact", href: "#contact" },
+    ],
+  },
+};
+
+// VERTICAL MENU
+export const VerticalMenu: Story = {
+  args: {
+    direction: "vertical",
+    items: [
+      { label: "Home", href: "#home" },
+      {
+        label: "Products",
+        href: "#products",
+        subItems: [
+          { label: "Web Design", href: "#web-design" },
+          { label: "Mobile Apps", href: "#mobile-apps" },
+        ],
+      },
+      { label: "About", href: "#about" },
+      { label: "Contact", href: "#contact" },
+    ],
+  },
+};
+
+// RESPONSIVE MENU
+export const ResponsiveMenu: Story = {
+  args: {
+    direction: "responsive",
+    items: [
+      { label: "Home", href: "#home" },
+      {
+        label: "Products",
+        href: "#products",
+        subItems: [
+          { label: "Web Design", href: "#web-design" },
+          { label: "Mobile Apps", href: "#mobile-apps" },
+        ],
+      },
+      { label: "About", href: "#about" },
+      { label: "Contact", href: "#contact" },
+    ],
+  },
+};
+
+// MENU WITH DISABLED ITEMS (Manual mode)
 const MenuWithDisabledItemsTplStr = `
 <DuMenu v-bind="args" class="w-56">
   <li><a>Enabled item</a></li>
@@ -61,48 +437,17 @@ const MenuWithDisabledItemsTplStr = `
   <li class="menu-disabled"><a>disabled item</a></li>
 </DuMenu>`;
 
-const MenuWithTitleTplStr = `
-<DuMenu v-bind="args" class="w-56">
-  <li class="menu-title">Title</li>
-  <li><a>Item 1</a></li>
-  <li><a>Item 2</a></li>
-  <li><a>Item 3</a></li>
-</DuMenu>`;
+export const MenuWithDisabledItems: Story = {
+  render: (args: any) => ({
+    components: { DuMenu },
+    setup() {
+      return { args };
+    },
+    template: MenuWithDisabledItemsTplStr,
+  }),
+};
 
-const MenuWithTitleAsParentTplStr = `
-<DuMenu v-bind="args" class="w-56">
-  <li>
-    <h2 class="menu-title">Title</h2>
-    <ul>
-      <li><a>Item 1</a></li>
-      <li><a>Item 2</a></li>
-      <li><a>Item 3</a></li>
-    </ul>
-  </li>
-</DuMenu>
-`;
-
-const SubMenuTplStr = `
-<DuMenu v-bind="args" class="w-56">
-  <li><a>Item 1</a></li>
-  <li>
-    <a>Parent</a>
-    <ul>
-      <li><a>Submenu 1</a></li>
-      <li><a>Submenu 2</a></li>
-      <li>
-        <a>Parent</a>
-        <ul>
-          <li><a>Submenu 1</a></li>
-          <li><a>Submenu 2</a></li>
-        </ul>
-      </li>
-    </ul>
-  </li>
-  <li><a>Item 3</a></li>
-</DuMenu>
-`;
-
+// COLLAPSIBLE SUBMENU (Manual mode)
 const CollapsibleSubMenuTplStr = `
 <DuMenu v-bind="args" class="w-56">
   <li><a>Item 1</a></li>
@@ -114,10 +459,10 @@ const CollapsibleSubMenuTplStr = `
         <li><a>Submenu 2</a></li>
         <li>
           <details open>
-            <summary>Parent</summary>
+            <summary>Nested Parent</summary>
             <ul>
-              <li><a>Submenu 1</a></li>
-              <li><a>Submenu 2</a></li>
+              <li><a>Deep Submenu 1</a></li>
+              <li><a>Deep Submenu 2</a></li>
             </ul>
           </details>
         </li>
@@ -128,105 +473,7 @@ const CollapsibleSubMenuTplStr = `
 </DuMenu>
 `;
 
-const CollapsibleSubMenuWithClassNamesTplStr = `
-<div class="flex items-center justify-center gap-4 mt-8">
-  <DuMenu v-bind="args" class="w-56">
-    <li><a>Item 1</a></li>
-    <li>
-      <span class="menu-dropdown-toggle">Parent</span>
-      <ul class="menu-dropdown">
-        <li><a>Submenu 1</a></li>
-        <li><a>Submenu 2</a></li>
-      </ul>
-    </li>
-  </DuMenu>
-  <DuMenu v-bind="args" class="w-56">
-    <li><a>Item 1</a></li>
-    <li>
-      <span class="menu-dropdown-toggle menu-dropdown-show">Parent</span>
-      <ul class="menu-dropdown menu-dropdown-show">
-        <li><a>Submenu 1</a></li>
-        <li><a>Submenu 2</a></li>
-      </ul>
-    </li>
-  </DuMenu>
-</div>
-`;
-
-// DEFAULT MENU
-const TemplateMenu: Story = {
-  render: (args: any) => ({
-    components: { DuMenu },
-    setup() {
-      return { args };
-    },
-    template: DefaultTplStr,
-  }),
-};
-export const Default = { ...TemplateMenu };
-
-// MENU SIZES
-const MenuSizesTemplate: Story = {
-  render: (args: any) => ({
-    components: { DuMenu },
-    setup() {
-      return { args };
-    },
-    template: MenuSizesTplStr,
-  }),
-};
-export const MenuSizes = { ...MenuSizesTemplate };
-
-// MENU WITH DISABLED ITEMS
-const MenuWithDisabledItemsTemplate: Story = {
-  render: (args: any) => ({
-    components: { DuMenu },
-    setup() {
-      return { args };
-    },
-    template: MenuWithDisabledItemsTplStr,
-  }),
-};
-export const MenuWithDisabledItems = { ...MenuWithDisabledItemsTemplate };
-
-// MENU WITH TITLE
-const MenuWithTitleTemplate: Story = {
-  render: (args: any) => ({
-    components: { DuMenu },
-    setup() {
-      return { args };
-    },
-    template: MenuWithTitleTplStr,
-  }),
-};
-export const MenuWithTitle = { ...MenuWithTitleTemplate };
-
-// MENU WITH TITLE AS PARENT
-const MenuWithTitleAsParentTemplate: Story = {
-  render: (args: any) => ({
-    components: { DuMenu },
-    setup() {
-      return { args };
-    },
-    template: MenuWithTitleAsParentTplStr,
-  }),
-};
-export const MenuWithTitleAsParent = { ...MenuWithTitleAsParentTemplate };
-
-// SUBMENU
-const SubMenuTemplate: Story = {
-  render: (args: any) => ({
-    components: { DuMenu },
-    setup() {
-      return { args };
-    },
-    template: SubMenuTplStr,
-  }),
-};
-export const SubMenu = { ...SubMenuTemplate };
-
-// COLLAPSIBLE SUBMENU
-const CollapsibleSubMenuTemplate: Story = {
+export const CollapsibleSubMenu: Story = {
   render: (args: any) => ({
     components: { DuMenu },
     setup() {
@@ -235,28 +482,3 @@ const CollapsibleSubMenuTemplate: Story = {
     template: CollapsibleSubMenuTplStr,
   }),
 };
-export const CollapsibleSubMenu = { ...CollapsibleSubMenuTemplate };
-
-// COLLAPSIBLE SUBMENU WITH CLASSNAMES
-const CollapsibleSubMenuWithClassNamesTemplate: Story = {
-  render: (args: any) => ({
-    components: { DuMenu },
-    setup() {
-      return { args };
-    },
-    template: CollapsibleSubMenuWithClassNamesTplStr,
-  }),
-};
-export const CollapsibleSubMenuWithClassNames = { ...CollapsibleSubMenuWithClassNamesTemplate };
-
-// HORIZONTAL MENU
-export const HorizontalMenu = { ...TemplateMenu };
-HorizontalMenu.args = { direction: "horizontal" };
-
-// VERTICAL MENU
-export const VerticalMenu = { ...TemplateMenu };
-VerticalMenu.args = { direction: "vertical" };
-
-// RESPONSIVE MENU
-export const ResponsiveMenu = { ...TemplateMenu };
-ResponsiveMenu.args = { direction: "responsive" }; 
