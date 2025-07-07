@@ -15,4 +15,7 @@ export interface SELECTProps {
   multiple?: boolean
   modelValue?: string | string[]
   placeholder?: string
+  search?: boolean
+  searchPlaceholder?: string
+  searchNoResultsText?: string
 }

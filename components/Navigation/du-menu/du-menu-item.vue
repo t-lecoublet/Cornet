@@ -2,16 +2,26 @@
 import { computed } from 'vue';
 import { type MenuItem } from './du-menu.types';
 
-defineProps<{
+const props = defineProps<{
   item: MenuItem;
   index: number;
   parentIndex?: string;
 }>();
 
-const props = defineProps<{ item: MenuItem; index: number; parentIndex?: string }>();
 const slots = defineSlots();
 
 const idx = computed(() => props.parentIndex ? `${props.parentIndex}-${props.index}` : `${props.index}`);
+
+// Détermine si l'item est actif (sélectionné)
+const isActive = computed(() => {
+  if (props.item.multiple) {
+    // En mode multiple, utilise la propriété checked
+    return props.item.checked
+  } else {
+    // En mode simple, peut utiliser checked ou une autre logique
+    return props.item.checked || props.item.active
+  }
+});
 </script>
 
 <template>
@@ -93,7 +103,16 @@ const idx = computed(() => props.parentIndex ? `${props.parentIndex}-${props.ind
     </template>
     <template v-else>
       <li>
-        <a :href="item.href" :class="{ 'menu-disabled': item.disabled }">{{ item.label }}</a>
+        <a 
+          :href="item.href" 
+          :class="{ 
+            'menu-disabled': item.disabled,
+            'menu-active': isActive
+          }" 
+          @click.stop="item.onClick && item.onClick()"
+        >
+          {{ item.label }}
+        </a>
         <ul>
           <du-menu-item
             v-for="(sub, subIndex) in item.subItems"
@@ -121,8 +140,22 @@ const idx = computed(() => props.parentIndex ? `${props.parentIndex}-${props.ind
     </template>
     <template v-else>
       <li :class="{ 'menu-disabled': item.disabled }">
-        <a :href="item.href">{{ item.label }}</a>
+        <a 
+          :href="item.href" 
+          :class="{ 'menu-active': isActive }"
+          @click.stop="item.onClick && item.onClick()"
+        >
+          <!-- Checkbox pour sélection multiple -->
+          <input 
+            v-if="item.multiple && item.value !== undefined" 
+            type="checkbox" 
+            class="invisible w-0 h-0 overflow-clip" 
+            :checked="item.checked" 
+            disabled
+          >
+          {{ item.label }}
+        </a>
       </li>
     </template>
   </template>
-</template> 
+</template>

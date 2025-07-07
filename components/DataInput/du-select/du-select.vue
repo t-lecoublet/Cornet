@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { ref, computed, watch, toRefs, onUnmounted } from 'vue'
+import { ref, computed, watch, toRefs, onUnmounted, nextTick, provide } from 'vue'
 import DuMenu from "../../Navigation/du-menu/du-menu.vue"
 import { type SELECTProps } from './du-select.types'
 import { useVariantMapping } from "../../../composables/useVariantProps"
 import { useSizeMapping } from "../../../composables/useSizeProps"
 
 const rootRef = ref<HTMLElement | null>(null)
+const searchInputRef = ref<HTMLInputElement | null>(null)
 
 const props = withDefaults(
   defineProps<SELECTProps & { options?: any[] }>(),
@@ -15,19 +16,25 @@ const props = withDefaults(
     size: "default",
     disabled: false,
     multiple: false,
+    search: false,
     options: () => [],
-    placeholder: 'Sélectionnez...'
+    placeholder: 'Select an option',
+    searchPlaceholder: 'Search...',
+    searchNoResultsText: 'No results found',
   },
 )
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits<{
+  'update:modelValue': [value: any]
+}>()
 
-const { ghost, variant, size, disabled, multiple, modelValue, options, placeholder } = toRefs(props)
+const { ghost, variant, size, disabled, multiple, modelValue, options, placeholder, search, searchPlaceholder } = toRefs(props)
 
 const ghostClass = computed(() => (ghost.value ? "select-ghost" : ""))
 const { colorClass } = useVariantMapping(props, "select")
 const { sizeClass } = useSizeMapping(props, "select")
 
 const isOpen = ref(false)
+const searchQuery = ref('')
 const internalValue = ref<any>(multiple.value ? ([] as (string | number)[]) : (null as null | string | number))
 
 watch(
@@ -61,6 +68,35 @@ watch(
   }
 )
 
+// Fonction de filtrage récursive
+function filterOptions(optionsList: any[], query: string): any[] {
+  if (!query.trim()) return optionsList
+  
+  return optionsList.reduce((filtered: any[], opt: any) => {
+    if ('options' in opt) {
+      // C'est un groupe
+      const filteredSubOptions = filterOptions(opt.options, query)
+      if (filteredSubOptions.length > 0) {
+        filtered.push({
+          ...opt,
+          options: filteredSubOptions
+        })
+      }
+    } else {
+      // C'est une option simple
+      if (opt.label.toLowerCase().includes(query.toLowerCase())) {
+        filtered.push(opt)
+      }
+    }
+    return filtered
+  }, [])
+}
+
+// Options filtrées basées sur la recherche
+const filteredOptions = computed(() => {
+  return filterOptions(options.value, searchQuery.value)
+})
+
 /**
  * Transforme les options du select en MenuItem[] pour DuMenu.
  * Prend en compte isTitle (groupe/titre) + subItems.
@@ -80,6 +116,7 @@ function mapOptionsToMenuItems(optionsList: any[]): any[] {
         disabled: !!opt.disabled,
         onClick: () => onSelectOption(opt),
         checked: multiple.value ? (internalValue.value as any[]).includes(opt.value) : internalValue.value === opt.value,
+        multiple: multiple.value, // Indique au menu-item s'il doit afficher la checkbox
       }
     }
   })
@@ -98,6 +135,7 @@ function onSelectOption(opt: any) {
   } else {
     internalValue.value = opt.value
     isOpen.value = false
+    searchQuery.value = '' // Reset search on selection
   }
 }
 
@@ -133,10 +171,16 @@ const selectedLabels = computed(() => {
   }
 })
 
-function handleDropdownClick(e: MouseEvent) {
+async function handleDropdownClick(e: MouseEvent) {
   if (disabled.value) return
   isOpen.value = !isOpen.value
   e.stopPropagation()
+  
+  // Focus sur l'input de recherche si activé
+  if (isOpen.value && search.value) {
+    await nextTick()
+    searchInputRef.value?.focus()
+  }
 }
 
 function handleOutsideClick(e: MouseEvent) {
@@ -144,53 +188,89 @@ function handleOutsideClick(e: MouseEvent) {
   const target = e.target as Node
   if (rootRef.value && !rootRef.value.contains(target)) {
     isOpen.value = false
+    searchQuery.value = '' // Reset search when closing
   }
+}
+
+function handleSearchInput(e: Event) {
+  const target = e.target as HTMLInputElement
+  searchQuery.value = target.value
+}
+
+function clearSearch() {
+  searchQuery.value = ''
+  searchInputRef.value?.focus()
 }
 
 if (typeof window !== 'undefined') {
   window.addEventListener('click', handleOutsideClick)
 }
+
 onUnmounted(() => {
-  window.removeEventListener('click', handleOutsideClick)
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('click', handleOutsideClick)
+  }
 })
+
+provide('isDropdownTrigger', true)
 </script>
 
 <template>
-  <div class="relative w-full " ref="rootRef">
-    <div :class="[
-      'select',
-      ghostClass,
-      colorClass,
-      sizeClass,
-      'w-full flex items-center cursor-pointer',
-      { 'select-disabled': disabled, 'bg-base-100': isOpen }
-    ]" @click.stop="handleDropdownClick" tabindex="0" :aria-disabled="disabled">
+  <div class="relative w-full" ref="rootRef">
+    <div 
+      :class="[
+        'select',
+        ghostClass,
+        colorClass,
+        sizeClass,
+        'w-full flex items-center cursor-pointer',
+        { 'select-disabled': disabled, 'bg-base-100': isOpen }
+      ]" 
+      @click="handleDropdownClick" 
+      tabindex="0" 
+      :aria-disabled="disabled"
+    >
       <span class="truncate flex-1 text-left">
         {{ selectedLabels || placeholder }}
       </span>
-      <svg class="w-4 h-4 ml-2 opacity-70" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <path d="M19 9l-7 7-7-7"></path>
-      </svg>
     </div>
     <transition name="fade">
-      <div v-if="isOpen" class="absolute z-30 w-full mt-1 shadow-lg rounded-box bg-base-100 overflow-auto max-h-72 ">
-        <DuMenu :items="mapOptionsToMenuItems(options)" class="w-56">
-          <template #item="{ item }">
-            <li><a @click.stop="item.onClick && item.onClick()">
-              <input v-if="multiple && item.value !== undefined" type="checkbox" class="invisible w-0 h-0 overflow-clip" :checked="item.checked" disabled>
-              {{ item.label }}
-            </a></li>
-          </template>
-          <template #submenu="{ item }">
-            <li>
-              <a>{{ item.label }}</a>
-              <ul>
-                <li><a>Submenu slot 1</a></li>
-                <li><a>Submenu slot 2</a></li>
-              </ul>
-            </li>
-          </template>
-        </DuMenu>
+      <div v-if="isOpen" class="absolute z-30 w-full mt-1 shadow-lg rounded-box bg-base-100 overflow-hidden max-h-72">
+        <!-- Input de recherche -->
+        <div v-if="search" class="p-2 border-b border-base-300">
+          <div class="relative">
+            <input
+              ref="searchInputRef"
+              type="text"
+              class="input input-sm w-full pr-8"
+              :placeholder="searchPlaceholder"
+              :value="searchQuery"
+              @input="handleSearchInput"
+              @click.stop
+            />
+            <button
+              v-if="searchQuery"
+              @click="clearSearch"
+              class="absolute right-2 top-1/2 transform -translate-y-1/2 opacity-60 hover:opacity-100"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <!-- Menu des options -->
+        <div class="overflow-auto" :class="{ 'max-h-60': search, 'max-h-72': !search }">
+          <DuMenu 
+            :items="mapOptionsToMenuItems(filteredOptions)" 
+            class="w-full" 
+            :rounded="true"
+          />
+          <!-- Message si aucun résultat -->
+          <div v-if="search && searchQuery && filteredOptions.length === 0" class="px-4 py-2 text-sm text-base-content/60 text-center">
+            {{ searchNoResultsText }}
+          </div>
+        </div>
       </div>
     </transition>
   </div>

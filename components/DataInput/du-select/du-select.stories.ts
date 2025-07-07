@@ -14,7 +14,18 @@ const meta: Meta<typeof DuSelect> = {
     ghost: { control: { type: "boolean" } },
     disabled: { control: { type: "boolean" } },
     multiple: { control: { type: "boolean" } },
+    search: { control: { type: "boolean" } },
     placeholder: { control: { type: "text" } },
+    searchPlaceholder: { control: { type: "text" } },
+    options: { control: { type: "object" } },
+  },
+  args: {
+    ghost: false,
+    disabled: false,
+    multiple: false,
+    search: false,
+    placeholder: "Sélectionnez...",
+    searchPlaceholder: "Rechercher...",
   },
 }
 
@@ -22,240 +33,315 @@ export default meta
 
 type Story = StoryObj<typeof DuSelect>
 
-const DefaultTplStr = `
-<DuSelect v-bind="args">
-  <li><a data-select-option value="crimson">Crimson</a></li>
-  <li><a data-select-option value="amber">Amber</a></li>
-  <li><a data-select-option value="velvet">Velvet</a></li>
-</DuSelect>
-`
-
-const GhostSelectTplStr = `
-<DuSelect ghost v-bind="args">
-  <li><a data-select-option value="inter">Inter</a></li>
-  <li><a data-select-option value="poppins">Poppins</a></li>
-  <li><a data-select-option value="raleway">Raleway</a></li>
-</DuSelect>
-`
-
-const SelectWithFieldsetTplStr = `
-<fieldset class="fieldset">
-  <legend class="fieldset-legend">Browsers</legend>
-  <DuSelect v-bind="args" placeholder="Pick a browser">
-    <li><a data-select-option value="chrome">Chrome</a></li>
-    <li><a data-select-option value="firefox">FireFox</a></li>
-    <li><a data-select-option value="safari">Safari</a></li>
-  </DuSelect>
-  <span class="fieldset-label">Optional</span>
-</fieldset>
-`
-
-const ColorsSelectTplStr = `
-<div class="flex flex-col gap-4">
-  <DuSelect v-bind="args" variant="primary" placeholder="Pick a text editor">
-    <li><a data-select-option value="vscode">VScode</a></li>
-    <li><a data-select-option value="vscode-fork">VScode fork</a></li>
-    <li><a data-select-option value="another-vscode-fork">Another VScode fork</a></li>
-  </DuSelect>
-  <DuSelect v-bind="args" variant="secondary" placeholder="Pick a language">
-    <li><a data-select-option value="zig">Zig</a></li>
-    <li><a data-select-option value="go">Go</a></li>
-    <li><a data-select-option value="rust">Rust</a></li>
-  </DuSelect>
-  <DuSelect v-bind="args" variant="accent" placeholder="Color scheme">
-    <li><a data-select-option value="light">Light mode</a></li>
-    <li><a data-select-option value="dark">Dark mode</a></li>
-    <li><a data-select-option value="system">System</a></li>
-  </DuSelect>
-  <DuSelect v-bind="args" variant="neutral" placeholder="Server location">
-    <li><a data-select-option value="north-america">North America</a></li>
-    <li><a data-select-option value="eu-west">EU west</a></li>
-    <li><a data-select-option value="sea">South East Asia</a></li>
-  </DuSelect>
-  <DuSelect v-bind="args" variant="info" placeholder="Pick a Framework">
-    <li><a data-select-option value="react">React</a></li>
-    <li><a data-select-option value="vue">Vue</a></li>
-    <li><a data-select-option value="angular">Angular</a></li>
-  </DuSelect>
-  <DuSelect v-bind="args" variant="success" placeholder="Pick a Runtime">
-    <li><a data-select-option value="npm">npm</a></li>
-    <li><a data-select-option value="bun">Bun</a></li>
-    <li><a data-select-option value="yarn">yarn</a></li>
-  </DuSelect>
-  <DuSelect v-bind="args" variant="warning" placeholder="Pick an OS">
-    <li><a data-select-option value="windows">Windows</a></li>
-    <li><a data-select-option value="macos">MacOS</a></li>
-    <li><a data-select-option value="linux">Linux</a></li>
-  </DuSelect>
-  <DuSelect v-bind="args" variant="error" placeholder="Pick an AI Model">
-    <li><a data-select-option value="gpt4">GPT-4</a></li>
-    <li><a data-select-option value="claude">Claude</a></li>
-    <li><a data-select-option value="llama">Llama</a></li>
-  </DuSelect>
-</div>`
-
-const SizesSelectTplStr = `
-<div class="flex flex-col gap-4">
-  <DuSelect v-bind="args" size="xs" placeholder="Xsmall">
-    <li><a data-select-option value="apple-xs">Xsmall Apple</a></li>
-    <li><a data-select-option value="orange-xs">Xsmall Orange</a></li>
-    <li><a data-select-option value="tomato-xs">Xsmall Tomato</a></li>
-  </DuSelect>
-  <DuSelect v-bind="args" size="sm" placeholder="Small">
-    <li><a data-select-option value="apple-sm">Small Apple</a></li>
-    <li><a data-select-option value="orange-sm">Small Orange</a></li>
-    <li><a data-select-option value="tomato-sm">Small Tomato</a></li>
-  </DuSelect>
-  <DuSelect v-bind="args" size="md" placeholder="Medium">
-    <li><a data-select-option value="apple-md">Medium Apple</a></li>
-    <li><a data-select-option value="orange-md">Medium Orange</a></li>
-    <li><a data-select-option value="tomato-md">Medium Tomato</a></li>
-  </DuSelect>
-  <DuSelect v-bind="args" size="lg" placeholder="Large">
-    <li><a data-select-option value="apple-lg">Large Apple</a></li>
-    <li><a data-select-option value="orange-lg">Large Orange</a></li>
-    <li><a data-select-option value="tomato-lg">Large Tomato</a></li>
-  </DuSelect>
-  <DuSelect v-bind="args" size="xl" placeholder="Xlarge">
-    <li><a data-select-option value="apple-xl">Xlarge Apple</a></li>
-    <li><a data-select-option value="orange-xl">Xlarge Orange</a></li>
-    <li><a data-select-option value="tomato-xl">Xlarge Tomato</a></li>
-  </DuSelect>
-</div>
-`
-
-const DisabledSelectTplStr = `
-<DuSelect disabled v-bind="args" placeholder="Disabled select">
-  <li><a data-select-option value="option1">You can't touch this</a></li>
-</DuSelect>`
-
-const DisabledOptionTplStr = `
-<DuSelect v-bind="args" placeholder="With disabled option">
-  <li><a data-select-option value="option1">Option 1</a></li>
-  <li class="menu-disabled"><a data-select-option value="option2">Option 2 (disabled)</a></li>
-  <li><a data-select-option value="option3">Option 3</a></li>
-</DuSelect>`
-
-const MultipleSelectTplStr = `
-<div class="flex flex-col gap-4 w-72">
-  <DuSelect v-model="selectedValues" multiple placeholder="Select multiple items">
-    <li><a data-select-option value="apple">Apple</a></li>
-    <li><a data-select-option value="orange">Orange</a></li>
-    <li><a data-select-option value="banana">Banana</a></li>
-    <li><a data-select-option value="grape">Grape</a></li>
-    <li><a data-select-option value="pear">Pear</a></li>
-  </DuSelect>
-  <div>Selected: {{ selectedValues.join(', ') }}</div>
-</div>
-`
-
-// DEFAULT
-
-const DefaultSelectTemplate: Story = {
-  render: (args: any) => ({
-    components: { DuSelect },
-    setup() {
-      return { args }
-    },
-    template: DefaultTplStr,
-  }),
+// DEFAULT SELECT WITH OPTIONS
+export const Default: Story = {
   args: {
-    placeholder: "Pick a color"
+    placeholder: "Pick a color",
+    options: [
+      { label: "Crimson", value: "crimson" },
+      { label: "Amber", value: "amber" },
+      { label: "Velvet", value: "velvet" },
+    ],
   },
 }
-export const DefaultSelect = { ...DefaultSelectTemplate }
 
-// GHOST SELECT
-
-const GhostSelectTemplate: Story = {
-  render: (args: any) => ({
-    components: { DuSelect },
-    setup() {
-      return { args }
-    },
-    template: GhostSelectTplStr,
-  }),
+// SELECT WITH SEARCH
+export const WithSearch: Story = {
   args: {
-    placeholder: "Pick a font"
+    placeholder: "Pick a framework",
+    search: true,
+    searchPlaceholder: "Search frameworks...",
+    options: [
+      { label: "React", value: "react" },
+      { label: "Vue.js", value: "vue" },
+      { label: "Angular", value: "angular" },
+      { label: "Svelte", value: "svelte" },
+      { label: "Next.js", value: "nextjs" },
+      { label: "Nuxt.js", value: "nuxtjs" },
+      { label: "Solid.js", value: "solidjs" },
+      { label: "Qwik", value: "qwik" },
+    ],
   },
 }
-export const GhostSelect = { ...GhostSelectTemplate }
-
-// SELECT WITH FIELDSET
-
-const SelectWithFieldsetTemplate: Story = {
-  render: (args: any) => ({
-    components: { DuSelect },
-    setup() {
-      return { args }
-    },
-    template: SelectWithFieldsetTplStr,
-  }),
-}
-export const SelectWithFieldset = { ...SelectWithFieldsetTemplate }
-
-// COLORS SELECT
-
-const ColorsSelectTemplate: Story = {
-  render: (args: any) => ({
-    components: { DuSelect },
-    setup() {
-      return { args }
-    },
-    template: ColorsSelectTplStr,
-  }),
-}
-export const ColorsSelect = { ...ColorsSelectTemplate }
-
-// SIZES SELECT
-
-const SizesSelectTemplate: Story = {
-  render: (args: any) => ({
-    components: { DuSelect },
-    setup() {
-      return { args }
-    },
-    template: SizesSelectTplStr,
-  }),
-}
-export const SizesSelect = { ...SizesSelectTemplate }
-
-// DISABLED SELECT
-
-const DisabledSelectTemplate: Story = {
-  render: (args: any) => ({
-    components: { DuSelect },
-    setup() {
-      return { args }
-    },
-    template: DisabledSelectTplStr,
-  }),
-}
-export const DisabledSelect = { ...DisabledSelectTemplate }
-
-// DISABLED OPTION
-
-const DisabledOptionTemplate: Story = {
-  render: (args: any) => ({
-    components: { DuSelect },
-    setup() {
-      return { args }
-    },
-    template: DisabledOptionTplStr,
-  }),
-}
-export const DisabledOption = { ...DisabledOptionTemplate }
 
 // MULTIPLE SELECT
-
-const MultipleSelectTemplate: Story = {
+export const Multiple: Story = {
   render: (args: any) => ({
     components: { DuSelect },
     setup() {
       const selectedValues = ref<string[]>([])
       return { args, selectedValues }
     },
-    template: MultipleSelectTplStr,
+    template: `
+      <div class="flex flex-col gap-4 w-72">
+        <DuSelect v-model="selectedValues" v-bind="args" />
+        <div class="text-sm">Selected: {{ selectedValues.join(', ') || 'None' }}</div>
+      </div>
+    `,
   }),
+  args: {
+    multiple: true,
+    placeholder: "Select multiple fruits",
+    options: [
+      { label: "Apple", value: "apple" },
+      { label: "Orange", value: "orange" },
+      { label: "Banana", value: "banana" },
+      { label: "Grape", value: "grape" },
+      { label: "Pear", value: "pear" },
+      { label: "Kiwi", value: "kiwi" },
+    ],
+  },
 }
-export const MultipleSelect = { ...MultipleSelectTemplate }
+
+// MULTIPLE SELECT WITH SEARCH
+export const MultipleWithSearch: Story = {
+  render: (args: any) => ({
+    components: { DuSelect },
+    setup() {
+      const selectedValues = ref<string[]>(['react', 'vue'])
+      return { args, selectedValues }
+    },
+    template: `
+      <div class="flex flex-col gap-4 w-72">
+        <DuSelect v-model="selectedValues" v-bind="args" />
+        <div class="text-sm">Selected: {{ selectedValues.join(', ') || 'None' }}</div>
+      </div>
+    `,
+  }),
+  args: {
+    multiple: true,
+    search: true,
+    placeholder: "Select technologies",
+    searchPlaceholder: "Search technologies...",
+    options: [
+      { label: "React", value: "react" },
+      { label: "Vue.js", value: "vue" },
+      { label: "Angular", value: "angular" },
+      { label: "Svelte", value: "svelte" },
+      { label: "TypeScript", value: "typescript" },
+      { label: "JavaScript", value: "javascript" },
+      { label: "Node.js", value: "nodejs" },
+      { label: "Deno", value: "deno" },
+      { label: "Bun", value: "bun" },
+    ],
+  },
+}
+
+// SELECT WITH GROUPS
+export const WithGroups: Story = {
+  args: {
+    placeholder: "Pick a technology",
+    search: true,
+    searchPlaceholder: "Search technologies...",
+    options: [
+      {
+        label: "Frontend Frameworks",
+        options: [
+          { label: "React", value: "react" },
+          { label: "Vue.js", value: "vue" },
+          { label: "Angular", value: "angular" },
+          { label: "Svelte", value: "svelte" },
+        ],
+      },
+      {
+        label: "Backend Technologies",
+        options: [
+          { label: "Node.js", value: "nodejs" },
+          { label: "Python", value: "python" },
+          { label: "PHP", value: "php" },
+          { label: "Ruby", value: "ruby" },
+        ],
+      },
+      {
+        label: "Databases",
+        options: [
+          { label: "PostgreSQL", value: "postgresql" },
+          { label: "MongoDB", value: "mongodb" },
+          { label: "Redis", value: "redis" },
+          { label: "MySQL", value: "mysql" },
+        ],
+      },
+    ],
+  },
+}
+
+// SELECT WITH DISABLED OPTIONS
+export const WithDisabledOptions: Story = {
+  args: {
+    placeholder: "Pick a browser",
+    options: [
+      { label: "Chrome", value: "chrome" },
+      { label: "Firefox", value: "firefox" },
+      { label: "Safari", value: "safari" },
+      { label: "Edge", value: "edge", disabled: true },
+      { label: "Internet Explorer", value: "ie", disabled: true },
+    ],
+  },
+}
+
+// GHOST SELECT
+export const Ghost: Story = {
+  args: {
+    ghost: true,
+    placeholder: "Pick a font",
+    options: [
+      { label: "Inter", value: "inter" },
+      { label: "Poppins", value: "poppins" },
+      { label: "Raleway", value: "raleway" },
+    ],
+  },
+}
+
+// DISABLED SELECT
+export const Disabled: Story = {
+  args: {
+    disabled: true,
+    placeholder: "Disabled select",
+    options: [
+      { label: "You can't touch this", value: "option1" },
+    ],
+  },
+}
+
+// SELECT VARIANTS
+export const Variants: Story = {
+  render: (args: any) => ({
+    components: { DuSelect },
+    setup() {
+      return { args }
+    },
+    template: `
+      <div class="flex flex-col gap-4">
+        <DuSelect variant="primary" placeholder="Primary" :options="args.options" />
+        <DuSelect variant="secondary" placeholder="Secondary" :options="args.options" />
+        <DuSelect variant="accent" placeholder="Accent" :options="args.options" />
+        <DuSelect variant="info" placeholder="Info" :options="args.options" />
+        <DuSelect variant="success" placeholder="Success" :options="args.options" />
+        <DuSelect variant="warning" placeholder="Warning" :options="args.options" />
+        <DuSelect variant="error" placeholder="Error" :options="args.options" />
+      </div>
+    `,
+  }),
+  args: {
+    options: [
+      { label: "Option 1", value: "option1" },
+      { label: "Option 2", value: "option2" },
+      { label: "Option 3", value: "option3" },
+    ],
+  },
+}
+
+// SELECT SIZES
+export const Sizes: Story = {
+  render: (args: any) => ({
+    components: { DuSelect },
+    setup() {
+      return { args }
+    },
+    template: `
+      <div class="flex flex-col gap-4">
+        <DuSelect size="xs" placeholder="Extra Small" :options="args.options" />
+        <DuSelect size="sm" placeholder="Small" :options="args.options" />
+        <DuSelect size="md" placeholder="Medium" :options="args.options" />
+        <DuSelect size="lg" placeholder="Large" :options="args.options" />
+        <DuSelect size="xl" placeholder="Extra Large" :options="args.options" />
+      </div>
+    `,
+  }),
+  args: {
+    options: [
+      { label: "Apple", value: "apple" },
+      { label: "Orange", value: "orange" },
+      { label: "Banana", value: "banana" },
+    ],
+  },
+}
+
+// COMPLEX EXAMPLE WITH NESTED GROUPS AND SEARCH
+export const ComplexExample: Story = {
+  render: (args: any) => ({
+    components: { DuSelect },
+    setup() {
+      const selectedValue = ref('')
+      return { args, selectedValue }
+    },
+    template: `
+      <div class="flex flex-col gap-4 w-80">
+        <DuSelect v-model="selectedValue" v-bind="args" />
+        <div class="text-sm">Selected: {{ selectedValue || 'None' }}</div>
+      </div>
+    `,
+  }),
+  args: {
+    search: true,
+    placeholder: "Choose your development stack",
+    searchPlaceholder: "Search technologies...",
+    options: [
+      {
+        label: "Frontend",
+        options: [
+          { label: "React", value: "react" },
+          { label: "Vue.js", value: "vue" },
+          { label: "Angular", value: "angular" },
+          { label: "Svelte", value: "svelte" },
+        ],
+      },
+      {
+        label: "Backend",
+        options: [
+          { label: "Node.js", value: "nodejs" },
+          { label: "Python (Django)", value: "django" },
+          { label: "Python (FastAPI)", value: "fastapi" },
+          { label: "PHP (Laravel)", value: "laravel" },
+          { label: "Ruby on Rails", value: "rails" },
+          { label: "Java (Spring)", value: "spring" },
+        ],
+      },
+      {
+        label: "Databases",
+        options: [
+          { label: "PostgreSQL", value: "postgresql" },
+          { label: "MongoDB", value: "mongodb" },
+          { label: "Redis", value: "redis" },
+          { label: "MySQL", value: "mysql" },
+          { label: "SQLite", value: "sqlite", disabled: true },
+        ],
+      },
+      {
+        label: "Cloud Services",
+        options: [
+          { label: "AWS", value: "aws" },
+          { label: "Google Cloud", value: "gcp" },
+          { label: "Azure", value: "azure" },
+          { label: "Vercel", value: "vercel" },
+          { label: "Netlify", value: "netlify" },
+        ],
+      },
+    ],
+  },
+}
+
+// SELECT WITH FIELDSET (Legacy example adapted)
+export const WithFieldset: Story = {
+  render: (args: any) => ({
+    components: { DuSelect },
+    setup() {
+      return { args }
+    },
+    template: `
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">Browsers</legend>
+        <DuSelect v-bind="args" />
+        <span class="fieldset-label">Optional</span>
+      </fieldset>
+    `,
+  }),
+  args: {
+    placeholder: "Pick a browser",
+    options: [
+      { label: "Chrome", value: "chrome" },
+      { label: "Firefox", value: "firefox" },
+      { label: "Safari", value: "safari" },
+    ],
+  },
+}
