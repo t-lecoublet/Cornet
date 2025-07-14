@@ -19,6 +19,7 @@ const props = withDefaults(defineProps<INPUTFIELDProps>(), {
 const { colorClass } = useVariantMapping(props, "input")
 const { sizeClass } = useSizeMapping(props, "input")
 const ghostClass = computed(() => (props.ghost ? "input-ghost" : ""))
+const invalidClass = computed(() => (props.invalid ? "input-bordered focus:invalid:input-error" : ""))
 
 const isInput = inject("isInInput", false)
 </script>
@@ -28,7 +29,7 @@ const isInput = inject("isInInput", false)
     :disabled="disabled"
     :type="type"
     :placeholder="placeholder"
-    :class="[!isInput && 'input', colorClass, sizeClass, ghostClass, props.class]"
+    :class="[!isInput && 'input', colorClass, sizeClass, ghostClass, invalidClass, props.class]"
     :list="suggestionName"
     :required="required"
     :pattern="pattern"

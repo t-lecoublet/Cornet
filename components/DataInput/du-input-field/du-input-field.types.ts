@@ -33,6 +33,7 @@ export type INPUTFIELDProps = {
   placeholder?: string
   size?: Size
   ghost?: boolean
+  invalid?: boolean
   variant?: Variant
   disabled?: boolean
   suggestionName?: string
