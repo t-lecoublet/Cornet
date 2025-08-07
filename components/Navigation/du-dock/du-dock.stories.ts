@@ -15,7 +15,7 @@ const chartIcon = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
               </svg>`;
 
-const meta: Meta<typeof DuDock> = {
+const meta = {
   title: "Components/Navigation/Dock",
   component: DuDock,
   tags: ['autodocs'],
@@ -24,6 +24,10 @@ const meta: Meta<typeof DuDock> = {
     items: {
       control: "object",
       description: "Array of dock items with icon and label properties",
+    },
+    reverseTheme: {
+      control: 'boolean',
+      description: 'Apply reverse theme styling',
     },
   },
   args: {
@@ -42,7 +46,7 @@ const meta: Meta<typeof DuDock> = {
       },
     ],
   },
-};
+} satisfies Meta<typeof DuDock>
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -80,7 +84,106 @@ export const WithoutLabels: Story = {
     ],
   },
 };
-export const WithEmitExposedAndCustomProps: Story = {
+
+export const WithCustomClass: Story = {
+  args: {
+    items: [
+      {
+        icon: homeIcon,
+        label: "Home",
+        class: "text-red-500",
+      },
+      {
+        icon: detailIcon,
+        label: "Info",
+        class: "text-blue-500",
+      },
+      {
+        icon: chartIcon,
+        label: "Stats",
+        class: "text-green-500",
+      },
+    ],
+  },
+};
+
+export const WithReverseTheme: Story = {
+  args: {
+    reverseTheme: true,
+  },
+};
+
+const WithClickEventsTemplate = `
+<div class="flex flex-col gap-4">
+  <DuDock :items="items" @change="onClick" />
+  <div class="mt-4">
+    <p class="text-sm text-gray-500">Clicked item:</p>
+    <pre class="bg-gray-100 p-2 ring-1 ring-gray-200 rounded">{{ clickedItem }}</pre>
+  </div>
+</div>
+`;
+
+export const WithClickEvents: Story = {
+  render: (args: any) => ({
+    components: { DuDock },
+    setup() {
+      const items = [
+        {
+          icon: homeIcon,
+          label: "Home",
+          onClick: () => alert("Home clicked"),
+        },
+        {
+          icon: detailIcon,
+          label: "Info",
+          onClick: () => alert("Info clicked"),
+        },
+        {
+          icon: chartIcon,
+          label: "Stats",
+          onClick: () => alert("Stats clicked"),
+        },
+      ];
+
+      return { items };
+    },
+    template: WithClickEventsTemplate,
+    data() {
+      return {
+        clickedItem: null,
+      };
+    },
+    methods: {
+      onClick(item: any) {
+        this.clickedItem = item.label;
+      },
+    },
+  }),
+  parameters: {
+    docs: {
+      source: {
+        code: WithClickEventsTemplate,
+        language: 'html',
+      },
+    },
+  },
+};
+
+const WithEmitExposedTemplate = `
+<div class="flex flex-col gap-4">
+  <DuDock v-bind="args" ref="myDock" @change="onClick" />
+  <div class="mt-4">
+    <p class="text-sm text-gray-500">Dock exposed props:</p>
+    <pre class="bg-gray-100 p-2 ring-1 ring-gray-200 rounded">{{ myDock }}</pre>
+  </div>
+  <div class="mt-4">
+    <p class="text-sm text-gray-500">Clicked item (item.label from $emit):</p>
+    <pre class="bg-gray-100 p-2 ring-1 ring-gray-200 rounded">{{ clickedItem }}</pre>
+  </div>
+</div>
+`;
+
+export const WithEmitExposed: Story = {
   render: (args: any) => ({
     components: { DuDock },
     setup() {
@@ -105,17 +208,7 @@ export const WithEmitExposedAndCustomProps: Story = {
       args.items = items;
       return { args, myDock };
     },
-    template: `
-            <DuDock v-bind="args" ref="myDock" @change="onClick" />
-            <div class="mt-4">
-                <p class="text-sm text-gray-500">Dock exposed props:</p>
-                <pre class="bg-gray-100 p-2 ring-1 ring-gray-200 rounded">{{ myDock }}</pre>
-            </div>
-            <div class="mt-4">
-                <p class="text-sm text-gray-500">Clicked item (item.label from $emit):</p>
-                <pre class="bg-gray-100 p-2 ring-1 ring-gray-200 rounded">{{ clickedItem }}</pre>
-            </div>
-        `,
+    template: WithEmitExposedTemplate,
     data() {
       return {
         clickedItem: null,
@@ -127,51 +220,32 @@ export const WithEmitExposedAndCustomProps: Story = {
       },
     },
   }),
-};
-
-export const WithClickEventAgrs: Story = {
-  args: {
-    items: [
-      {
-        icon: homeIcon,
-        label: "Home",
-        onClick: () => alert("Home clicked"),
+  parameters: {
+    docs: {
+      source: {
+        code: WithEmitExposedTemplate,
+        language: 'html',
       },
-      {
-        icon: detailIcon,
-        label: "Info",
-        onClick: () => alert("Info clicked"),
-      },
-      {
-        icon: chartIcon,
-        label: "Stats",
-        onClick: () => alert("Stats clicked"),
-      },
-    ],
+    },
   },
 };
 
-export const WithCustomClass: Story = {
-  args: {
-    items: [
-      {
-        icon: homeIcon,
-        label: "Home",
-        class: "text-red-500",
-      },
-      {
-        icon: detailIcon,
-        label: "Info",
-        class: "text-blue-500",
-      },
-      {
-        icon: chartIcon,
-        label: "Stats",
-        class: "text-green-500",
-      },
-    ],
-  },
-};
+const ManualModeTemplate = `
+<DuDock>
+  <button class="dock-active">
+    <div v-html="homeIcon"></div>
+    <span class="dock-label">Home</span>
+  </button>
+  <button>
+    <div v-html="detailIcon"></div>
+    <span class="dock-label">Info</span>
+  </button>
+  <button>
+    <div v-html="chartIcon"></div>
+    <span class="dock-label">Stats</span>
+  </button>
+</DuDock>
+`;
 
 export const ManualMode: Story = {
   render: (args: any) => ({
@@ -179,21 +253,67 @@ export const ManualMode: Story = {
     setup() {
       return { args, homeIcon, detailIcon, chartIcon };
     },
-    template: `
-            <DuDock>
-                <button class="dock-active">
-                    <div v-html="homeIcon"></div>
-                    <span class="dock-label">Home</span>
-                </button>
-                <button>
-                    <div v-html="detailIcon"></div>
-                    <span class="dock-label">Info</span>
-                </button>
-                <button>
-                    <div v-html="chartIcon"></div>
-                    <span class="dock-label">Stats</span>
-                </button>
-            </DuDock>
-        `,
+    template: ManualModeTemplate,
   }),
-}; 
+  parameters: {
+    docs: {
+      source: {
+        code: ManualModeTemplate,
+        language: 'html',
+      },
+    },
+  },
+};
+
+const WithCustomSlotsTemplate = `
+<DuDock :items="items" @change="onClick">
+  <template #icon="{ item }">
+    <div class="flex items-center justify-center w-6 h-6 bg-primary text-primary-content rounded">
+      {{ item.label?.charAt(0) }}
+    </div>
+  </template>
+  <template #label="{ item }">
+    <span class="font-bold">{{ item.label }}</span>
+  </template>
+</DuDock>
+`;
+
+export const WithCustomSlots: Story = {
+  render: (args: any) => ({
+    components: { DuDock },
+    setup() {
+      const items = [
+        {
+          label: "Home",
+        },
+        {
+          label: "Info",
+        },
+        {
+          label: "Stats",
+        },
+      ];
+
+      return { items };
+    },
+    template: WithCustomSlotsTemplate,
+    data() {
+      return {
+        clickedItem: null,
+      };
+    },
+    methods: {
+      onClick(item: any) {
+        this.clickedItem = item.label;
+      },
+    },
+  }),
+  parameters: {
+    docs: {
+      source: {
+        code: WithCustomSlotsTemplate,
+        language: 'html',
+      },
+    },
+  },
+};
