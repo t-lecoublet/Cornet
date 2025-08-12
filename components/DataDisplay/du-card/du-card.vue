@@ -70,7 +70,7 @@ const imageFullClass = computed(() => {
       v-else-if="$slots.title || $slots.actions || $slots.default || title"
       class="card-body"
     >
-      <h2 v-if="title || $slots.title" class="card-title">
+      <h2 v-if="title || $slots.title" class="card-title flex-wrap">
         <template v-if="title">{{ title }}</template>
         <slot name="title"></slot>
       </h2>

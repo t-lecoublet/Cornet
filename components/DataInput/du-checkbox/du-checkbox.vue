@@ -2,7 +2,9 @@
 import { type CHECKBOXProps } from './du-checkbox.types'
 import { useVariantMapping } from "../../../composables/useVariantProps"
 import { useSizeMapping } from "../../../composables/useSizeProps"
-import { computed, onMounted, ref } from "vue"
+import { onMounted, ref } from "vue"
+
+const model = defineModel()
 
 const props = withDefaults(
   defineProps<CHECKBOXProps>(),
@@ -31,8 +33,8 @@ onMounted(() => {
   <input
     ref="currentCheckbox"
     type="checkbox"
-    :checked="checked"
+    v-model="model"
     :disabled="disabled"
     :class="['checkbox', colorClass, sizeClass]"
   />
-</template> 
+</template>

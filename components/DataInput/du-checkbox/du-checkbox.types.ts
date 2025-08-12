@@ -8,6 +8,7 @@ export type CHECKBOXVariant = (typeof CHECKBOX_VARIANTS)[number]
 export type CHECKBOXSize = (typeof CHECKBOX_SIZES)[number]
 
 export interface CHECKBOXProps {
+  modelValue?: boolean
   checked?: boolean
   disabled?: boolean
   indeterminate?: boolean
