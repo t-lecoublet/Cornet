@@ -39,7 +39,7 @@ const sideClass = computed(() => {
 })
 
 const responsiveClass = computed(() => {
-  return props.responsive ? 'lg:card-side' : ''
+  return props.responsive ? 'card-compact sm:card-normal' : ''
 })
 
 const imageFullClass = computed(() => {
