@@ -1,0 +1,1271 @@
+# DaisyUI Vue Kit - Documentation des Composants
+
+## COMPOSABLES
+
+### useSizeProps
+**Fichier:** composables/useSizeProps.ts
+
+**Type Size:**
+```typescript
+export type Size = 'default' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+export const AvailableSizes: Size[] = ['default', 'xs', 'sm', 'md', 'lg', 'xl']
+```
+
+**Fonction:**
+```typescript
+export function useSizeMapping(props: { size: Size }, suffix: string)
+```
+
+### useVariantProps
+**Fichier:** composables/useVariantProps.ts
+
+**Type Variant:**
+```typescript
+export type Variant = 'default' | 'neutral' | 'primary' | 'secondary' | 'accent' | 'info' | 'success' | 'warning' | 'error'
+```
+
+**Fonction:**
+```typescript
+export function useVariantMapping(props: { variant: Variant }, suffix: string)
+```
+
+---
+
+## ACTIONS
+
+### DuButton
+**Fichier:** components/Actions/du-button/du-button.vue
+
+**Props:**
+- customClass?: string
+- size?: Size ('default' | 'xs' | 'sm' | 'md' | 'lg' | 'xl')
+- variant?: Variant ('default' | 'neutral' | 'primary' | 'secondary' | 'accent' | 'info' | 'success' | 'warning' | 'error')
+- outline?: boolean
+- soft?: boolean
+- dash?: boolean
+- active?: boolean
+- ghost?: boolean
+- link?: boolean
+- wide?: boolean
+- disabled?: boolean
+- square?: boolean
+- circle?: boolean
+- block?: boolean
+- as?: ElementType ('button' | 'a' | 'input' | 'div')
+- type?: string
+- href?: string
+- value?: string
+- inputType?: 'button' | 'submit' | 'reset' | 'radio' | 'checkbox'
+- label?: string
+
+**Types (du-button.types.ts):**
+```typescript
+export const BUTTON_SIZES = ['btn-xs', 'btn-sm', 'btn-md', 'btn-lg', 'btn-xl'] as const
+export const BUTTON_COLORS = [
+  'btn-primary', 'btn-secondary', 'btn-accent', 'btn-neutral',
+  'btn-info', 'btn-success', 'btn-warning', 'btn-error'
+] as const
+
+export type BUTTONSize = (typeof BUTTON_SIZES)[number]
+export type BUTTONColor = (typeof BUTTON_COLORS)[number]
+```
+
+### DuDropdown
+**Fichier:** components/Actions/du-dropdown/du-dropdown.vue
+
+**Props:**
+- placement?: DROPDOWNPlacement
+- hover?: boolean
+- open?: boolean
+
+**Types (du-dropdown.types.ts):**
+```typescript
+export const DROPDOWN_PLACEMENTS = [
+  'dropdown-start', 'dropdown-center', 'dropdown-end',
+  'dropdown-top', 'dropdown-bottom', 'dropdown-left', 'dropdown-right'
+] as const
+
+export type DROPDOWNPlacement = (typeof DROPDOWN_PLACEMENTS)[number]
+```
+
+### DuModal
+**Fichier:** components/Actions/du-modal/du-modal.vue
+
+**Props:**
+- classBox?: string
+- placement?: MODALPlacement
+- open?: boolean
+- closeOnEscape?: boolean
+
+**Types (du-modal.types.ts):**
+```typescript
+export const MODAL_PLACEMENTS = [
+  'modal-top', 'modal-middle', 'modal-bottom',
+  'modal-start', 'modal-end', 'modal-bottom sm:modal-middle'
+] as const
+
+export type MODALPlacement = (typeof MODAL_PLACEMENTS)[number]
+```
+
+### DuSwap
+**Fichier:** components/Actions/du-swap/du-swap.vue
+
+**Props:**
+- useCheckbox?: boolean
+- modelValue?: boolean
+- rotate?: boolean
+- flip?: boolean
+
+**Types (du-swap.types.ts):**
+```typescript
+export const SWAP_PROPERTIES = ['swap-rotate', 'swap-flip', 'swap-active'] as const
+export type SWAPProperty = (typeof SWAP_PROPERTIES)[number]
+```
+
+---
+
+## DATA DISPLAY
+
+### DuAccordion
+**Fichier:** components/DataDisplay/du-accordion/du-accordion.vue
+
+**Props:**
+- customClass?: string
+- items?: ACCORDIONItem[]
+- modifier?: ACCORDIONModifier
+- name?: string
+
+**Types (du-accordion.types.ts):**
+```typescript
+export const ACCORDION_MODIFIERS = [
+  'collapse-arrow', 'collapse-plus', 'collapse-open', 'collapse-close'
+] as const
+
+export interface ACCORDIONItem {
+  title?: string
+  content?: string
+  checked?: boolean
+  customClass?: string
+}
+
+export type ACCORDIONModifier = (typeof ACCORDION_MODIFIERS)[number]
+```
+
+### DuAvatar
+**Fichier:** components/DataDisplay/du-avatar/du-avatar.vue
+
+**Props:**
+- size?: Size
+- variant?: Variant
+- rounded?: Rounded
+- mask?: Mask
+- ring?: boolean
+- ringColor?: string
+- ringOffset?: number
+- online?: boolean
+- offline?: boolean
+- placeholder?: boolean
+
+**Types (du-avatar.types.ts):**
+```typescript
+export const AVATAR_SIZES = ['avatar-xs', 'avatar-sm', 'avatar-md', 'avatar-lg', 'avatar-xl'] as const
+export const AVATAR_ROUNDED = [
+  'rounded', 'rounded-full', 'rounded-xs', 'rounded-sm', 'rounded-md', 'rounded-lg', 'rounded-xl'
+] as const
+
+export type Rounded = 'default' | 'rounded' | 'full' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+export type Mask = 'default' | 'heart' | 'squircle' | 'hexagon' | 'hexagon-2' | 'decagon' | 'pentagon' | 'diamond' | 'square' | 'circle' | 'parallelogram' | 'parallelogram-2' | 'star' | 'star-2'
+
+export type AVATARSize = (typeof AVATAR_SIZES)[number]
+export type AVATARRounded = (typeof AVATAR_ROUNDED)[number]
+```
+
+### DuBadge
+**Fichier:** components/DataDisplay/du-badge/du-badge.vue
+
+**Props:**
+- size?: Size
+- variant?: Variant
+- outline?: boolean
+- soft?: boolean
+- dash?: boolean
+- ghost?: boolean
+- icon?: boolean
+
+**Types (du-badge.types.ts):**
+```typescript
+export const BADGE_SIZES = ['badge-xs', 'badge-sm', 'badge-md', 'badge-lg', 'badge-xl'] as const
+export const BADGE_VARIANTS = [
+  'badge-primary', 'badge-secondary', 'badge-accent', 'badge-neutral',
+  'badge-info', 'badge-success', 'badge-warning', 'badge-error'
+] as const
+
+export type BADGESize = (typeof BADGE_SIZES)[number]
+export type BADGEVariant = (typeof BADGE_VARIANTS)[number]
+```
+
+### DuCard
+**Fichier:** components/DataDisplay/du-card/du-card.vue
+
+**Props:**
+- title?: string
+- size?: Size
+- bordered?: boolean
+- dash?: boolean
+- side?: boolean
+- responsive?: boolean
+- imageFull?: boolean
+
+**Types (du-card.types.ts):**
+```typescript
+export const CARD_SIZES = ['card-xs', 'card-sm', 'card-md', 'card-lg', 'card-xl'] as const
+export const CARD_PROPERTIES = [
+  'card-border', 'card-dash', 'card-side', 'lg:card-side', 'image-full'
+] as const
+
+export type CARDSize = (typeof CARD_SIZES)[number]
+export type CARDProperty = (typeof CARD_PROPERTIES)[number]
+```
+
+### DuCarousel
+**Fichier:** components/DataDisplay/du-carousel/du-carousel.vue
+
+**Props:**
+- vertical?: boolean
+- center?: boolean
+- end?: boolean
+
+**Types (du-carousel.types.ts):**
+```typescript
+export const CAROUSEL_POSITIONS = ['carousel-start', 'carousel-center', 'carousel-end'] as const
+export const CAROUSEL_DIRECTIONS = ['carousel-horizontal', 'carousel-vertical'] as const
+
+export type CAROUSELPosition = (typeof CAROUSEL_POSITIONS)[number]
+export type CAROUSELDirection = (typeof CAROUSEL_DIRECTIONS)[number]
+```
+
+### DuChat
+**Fichier:** components/DataDisplay/du-chat/du-chat.vue
+
+**Props:**
+- items?: ChatItem[]
+- placement?: ChatPlacement
+- customClass?: string
+
+**Types (du-chat.types.ts):**
+```typescript
+export const CHAT_COLORS = [
+  'chat-bubble-primary', 'chat-bubble-secondary', 'chat-bubble-accent', 'chat-bubble-neutral',
+  'chat-bubble-info', 'chat-bubble-success', 'chat-bubble-warning', 'chat-bubble-error'
+] as const
+
+export const DU_CHAT_PLACEMENTS = ["start", "end"] as const
+export type ChatPlacement = (typeof DU_CHAT_PLACEMENTS)[number]
+
+export interface ChatItem {
+  message?: string
+  image?: string
+  header?: string
+  footer?: string
+  placement?: ChatPlacement
+  variant?: CHATColor
+  customClass?: string
+}
+```
+
+### DuCollapse
+**Fichier:** components/DataDisplay/du-collapse/du-collapse.vue
+
+**Props:**
+- customClass?: string
+- items?: COLLAPSEItem[]
+- modifier?: COLLAPSEModifier
+
+**Types (du-collapse.types.ts):**
+```typescript
+export const COLLAPSE_MODIFIERS = [
+  'collapse-arrow', 'collapse-plus', 'collapse-open', 'collapse-close'
+] as const
+
+export interface COLLAPSEItem {
+  title?: string
+  content?: string
+  open?: boolean
+  customClass?: string
+}
+
+export type COLLAPSEModifier = (typeof COLLAPSE_MODIFIERS)[number]
+```
+
+### DuCountdown
+**Fichier:** components/DataDisplay/du-countdown/du-countdown.vue
+
+**Props:**
+- value?: number
+- targetDate?: Date
+- format?: COUNTDOWNFormat
+- autoStart?: boolean
+
+**Types (du-countdown.types.ts):**
+```typescript
+export const COUNTDOWN_FORMATS = ['days', 'hours', 'minutes', 'seconds'] as const
+
+export type COUNTDOWNFormat = (typeof COUNTDOWN_FORMATS)[number]
+
+export interface COUNTDOWNLabels {
+  days?: string
+  hours?: string
+  minutes?: string
+  seconds?: string
+}
+```
+
+### DuDiff
+**Fichier:** components/DataDisplay/du-diff/du-diff.vue
+
+**Props:**
+- aspectRatio?: DIFFAspectRatio | string | null
+
+**Types (du-diff.types.ts):**
+```typescript
+export const DIFF_ASPECT_RATIOS = [
+  'aspect-16/9', 'aspect-4/3', 'aspect-1/1', 'aspect-video', 'aspect-square'
+] as const
+
+export type DIFFAspectRatio = (typeof DIFF_ASPECT_RATIOS)[number]
+```
+
+### DuKbd
+**Fichier:** components/DataDisplay/du-kbd/du-kbd.vue
+
+**Props:**
+- size?: Size
+
+**Types (du-kbd.types.ts):**
+```typescript
+export const KBD_SIZES = ['kbd-xs', 'kbd-sm', 'kbd-md', 'kbd-lg', 'kbd-xl'] as const
+export type KBDSize = (typeof KBD_SIZES)[number]
+```
+
+### DuList
+**Fichier:** components/DataDisplay/du-list/du-list.vue
+
+**Props:**
+- class?: string
+
+**Types (du-list.types.ts):**
+```typescript
+export interface LISTProps {
+  class?: string
+}
+```
+
+### DuStat
+**Fichier:** components/DataDisplay/du-stat/du-stat.vue
+
+**Props:**
+- figureClass?: string
+- valueClass?: string
+- descClass?: string
+- titleClass?: string
+
+**Types (du-stat.types.ts):**
+```typescript
+export interface STATItem {
+  title?: string
+  value?: string | number
+  description?: string
+  figure?: any
+  figureClass?: string
+  valueClass?: string
+  descClass?: string
+  titleClass?: string
+  actions?: any
+  [key: string]: any
+}
+```
+
+### DuStats
+**Fichier:** components/DataDisplay/du-stats/du-stats.vue
+
+**Props:**
+- items?: STATSItem[]
+- vertical?: boolean
+- shadow?: boolean
+
+**Types (du-stats.types.ts):**
+```typescript
+export interface STATSItem extends STATItem {}
+```
+
+### DuStatus
+**Fichier:** components/DataDisplay/du-status/du-status.vue
+
+**Props:**
+- size?: Size
+- variant?: Variant
+- ping?: boolean
+- bounce?: boolean
+
+**Types (du-status.types.ts):**
+```typescript
+export const STATUS_SIZES = ['status-xs', 'status-sm', 'status-md', 'status-lg', 'status-xl'] as const
+export const STATUS_VARIANTS = [
+  'status-primary', 'status-secondary', 'status-accent', 'status-neutral',
+  'status-info', 'status-success', 'status-warning', 'status-error'
+] as const
+
+export type STATUSSize = (typeof STATUS_SIZES)[number]
+export type STATUSVariant = (typeof STATUS_VARIANTS)[number]
+```
+
+### DuTable
+**Fichier:** components/DataDisplay/du-table/du-table.vue
+
+**Props:**
+- columns?: TABLEColumn[]
+- rows?: TABLERow[]
+- zebra?: boolean
+- pinRows?: boolean
+- pinCols?: boolean
+- size?: TABLESize
+- customClass?: string
+- header?: boolean
+- footer?: boolean
+
+**Types (du-table.types.ts):**
+```typescript
+export const TABLE_SIZES = ['default', 'xs', 'sm', 'md', 'lg', 'xl'] as const
+export type TABLESize = (typeof TABLE_SIZES)[number]
+
+export interface TABLEColumn {
+  key: string
+  label: string
+  customClass?: string
+}
+
+export interface TABLERow {
+  id: string | number
+  [key: string]: any
+  customClass?: string
+}
+```
+
+### DuTimeline
+**Fichier:** components/DataDisplay/du-timeline/du-timeline.vue
+
+**Props:**
+- items?: TIMELINEItem[]
+- direction?: TIMELINEDirection
+- modifier?: TIMELINEModifier
+- customClass?: string
+- responsive?: boolean
+- validItems?: (boolean | undefined)[]
+- hrClasses?: string[]
+
+**Types (du-timeline.types.ts):**
+```typescript
+export const TIMELINE_DIRECTIONS = ['timeline-vertical', 'timeline-horizontal'] as const
+export const TIMELINE_MODIFIERS = ['timeline-snap-icon', 'timeline-box', 'timeline-compact'] as const
+
+export type TIMELINEDirection = (typeof TIMELINE_DIRECTIONS)[number]
+export type TIMELINEModifier = (typeof TIMELINE_MODIFIERS)[number]
+
+export interface TIMELINEItem {
+  start?: string
+  middle?: string
+  end?: string
+  customClass?: string
+  valid?: boolean | undefined
+  hrClass?: string
+}
+```
+
+---
+
+## DATA INPUT
+
+### DuCheckbox
+**Fichier:** components/DataInput/du-checkbox/du-checkbox.vue
+
+**Props:**
+- modelValue?: boolean
+- checked?: boolean
+- disabled?: boolean
+- indeterminate?: boolean
+- variant?: Variant
+- size?: Size
+
+**Types (du-checkbox.types.ts):**
+```typescript
+export const CHECKBOX_VARIANTS = ['default', 'checkbox-primary', 'checkbox-secondary', 'checkbox-accent', 'checkbox-info', 'checkbox-success', 'checkbox-warning', 'checkbox-error'] as const
+export const CHECKBOX_SIZES = ['default', 'checkbox-xs', 'checkbox-sm', 'checkbox-md', 'checkbox-lg', 'checkbox-xl'] as const
+
+export type CHECKBOXVariant = (typeof CHECKBOX_VARIANTS)[number]
+export type CHECKBOXSize = (typeof CHECKBOX_SIZES)[number]
+
+export interface CHECKBOXProps {
+  modelValue?: boolean
+  checked?: boolean
+  disabled?: boolean
+  indeterminate?: boolean
+  variant?: Variant
+  size?: Size
+}
+```
+
+### DuFieldset
+**Fichier:** components/DataInput/du-fieldset/du-fieldset.vue
+
+**Props:**
+- legend: string
+- label?: string
+
+**Types (du-fieldset.types.ts):**
+```typescript
+export interface FIELDSETProps {
+  legend: string
+  label?: string
+}
+```
+
+### DuFileInput
+**Fichier:** components/DataInput/du-file-input/du-file-input.vue
+
+**Props:**
+- disabled?: boolean
+- variant?: Variant
+- size?: Size
+- ghost?: boolean
+
+**Types (du-file-input.types.ts):**
+```typescript
+export interface FILEINPUTProps {
+  disabled?: boolean
+  variant?: Variant
+  size?: Size
+  ghost?: boolean
+}
+```
+
+### DuFilter
+**Fichier:** components/DataInput/du-filter/du-filter.vue
+
+**Props:**
+- items?: FilterItem[]
+- name?: string
+- buttonsArgs?: FilterButtonArgs
+
+**Types (du-filter.types.ts):**
+```typescript
+export interface FilterButtonArgs {
+  variant?: Variant
+  size?: Size
+  outline?: boolean
+  soft?: boolean
+  dash?: boolean
+  active?: boolean
+  ghost?: boolean
+  link?: boolean
+  wide?: boolean
+  disabled?: boolean
+  square?: boolean
+  circle?: boolean
+}
+
+export interface FilterItem {
+  title?: string
+  checked?: boolean
+  customClass?: string
+  buttonsArgs?: FilterButtonArgs
+}
+
+export interface FilterProps {
+  items?: FilterItem[]
+  name?: string
+  buttonsArgs?: FilterButtonArgs
+}
+```
+
+### DuInputField
+**Fichier:** components/DataInput/du-input-field/du-input-field.vue
+
+**Props:**
+- type?: INPUTFIELDType
+- placeholder?: string
+- size?: Size
+- ghost?: boolean
+- invalid?: boolean
+- variant?: Variant
+- disabled?: boolean
+- suggestionName?: string
+- suggestionList?: string[]
+- required?: boolean
+- class?: string
+- pattern?: string
+- minlength?: number
+- maxlength?: number
+- title?: string
+
+**Types (du-input-field.types.ts):**
+```typescript
+export const INPUTFIELD_VARIANTS = ['default', 'input-primary', 'input-secondary', 'input-accent', 'input-info', 'input-success', 'input-warning', 'input-error'] as const
+export const INPUTFIELD_SIZES = ['default', 'input-xs', 'input-sm', 'input-md', 'input-lg', 'input-xl'] as const
+
+export type INPUTFIELDVariant = (typeof INPUTFIELD_VARIANTS)[number]
+export type INPUTFIELDSize = (typeof INPUTFIELD_SIZES)[number]
+
+export type INPUTFIELDType = "text" | "password" | "email" | "number" | "date" | "datetime-local" | "week" | "month" | "tel" | "url" | "search" | "time"
+```
+
+### DuLabel
+**Fichier:** components/DataInput/du-label/du-label.vue
+
+**Props:**
+- type?: "label" | "input" | "select" | "floating-label" | "fieldset-label"
+
+**Types (du-label.types.ts):**
+```typescript
+export type LABELProps = {
+  type?: "label" | "input" | "select" | "floating-label" | "fieldset-label"
+}
+```
+
+### DuLabelInputValidator
+**Fichier:** components/DataInput/du-label-input-validator/du-label-input-validator.vue
+
+**Props:**
+- type?: LABELProps["type"]
+- pattern?: string
+- minlength?: number
+- maxlength?: number
+- title?: string
+- required?: boolean
+- placeholder?: string
+- inputType?: INPUTFIELDType
+- disabled?: boolean
+
+### DuRadio
+**Fichier:** components/DataInput/du-radio/du-radio.vue
+
+**Props:**
+- checked?: boolean
+- disabled?: boolean
+- variant?: Variant
+- size?: Size
+
+**Types (du-radio.types.ts):**
+```typescript
+export const RADIO_VARIANTS = ['default', 'radio-primary', 'radio-secondary', 'radio-accent', 'radio-info', 'radio-success', 'radio-warning', 'radio-error'] as const
+export const RADIO_SIZES = ['default', 'radio-xs', 'radio-sm', 'radio-md', 'radio-lg', 'radio-xl'] as const
+
+export type RADIOVariant = (typeof RADIO_VARIANTS)[number]
+export type RADIOSize = (typeof RADIO_SIZES)[number]
+
+export interface RADIOProps {
+  checked?: boolean
+  disabled?: boolean
+  variant?: Variant
+  size?: Size
+}
+```
+
+### DuRange
+**Fichier:** components/DataInput/du-range/du-range.vue
+
+**Props:**
+- modelValue?: number
+- min?: number
+- max?: number
+- step?: number
+- disabled?: boolean
+- variant?: Variant
+- size?: Size
+
+**Types (du-range.types.ts):**
+```typescript
+export const RANGE_VARIANTS = ['default', 'range-primary', 'range-secondary', 'range-accent', 'range-info', 'range-success', 'range-warning', 'range-error'] as const
+export const RANGE_SIZES = ['default', 'range-xs', 'range-sm', 'range-md', 'range-lg', 'range-xl'] as const
+
+export type RANGEVariant = (typeof RANGE_VARIANTS)[number]
+export type RANGESize = (typeof RANGE_SIZES)[number]
+
+export interface RANGEProps {
+  modelValue?: number
+  min?: number
+  max?: number
+  step?: number
+  disabled?: boolean
+  variant?: Variant
+  size?: Size
+}
+```
+
+### DuRating
+**Fichier:** components/DataInput/du-rating/du-rating.vue
+
+**Props:**
+- modelValue?: number
+- items?: RatingItem[]
+- count?: number
+- name?: string
+- halfStar?: boolean
+- clearable?: boolean
+- disabled?: boolean
+- size?: Size
+- shape?: RatingShape
+- color?: string
+- customClass?: string
+
+**Types (du-rating.types.ts):**
+```typescript
+export const DU_RATING_SHAPES = ["star", "star-2", "heart", "circle"] as const
+export type RatingShape = (typeof DU_RATING_SHAPES)[number]
+
+export interface RatingItem {
+  value: number
+  checked?: boolean
+}
+
+export interface RatingProps {
+  modelValue?: number
+  items?: RatingItem[]
+  count?: number
+  name?: string
+  halfStar?: boolean
+  clearable?: boolean
+  disabled?: boolean
+  size?: Size
+  shape?: RatingShape
+  color?: string
+  customClass?: string
+}
+```
+
+### DuSelect
+**Fichier:** components/DataInput/du-select/du-select.vue
+
+**Props:**
+- ghost?: boolean
+- variant?: Variant
+- size?: Size
+- disabled?: boolean
+- multiple?: boolean
+- modelValue?: string | string[]
+- placeholder?: string
+- search?: boolean
+- searchPlaceholder?: string
+- searchNoResultsText?: string
+- options?: any[]
+
+**Types (du-select.types.ts):**
+```typescript
+export const SELECT_VARIANTS = ['default', 'select-primary', 'select-secondary', 'select-accent', 'select-info', 'select-success', 'select-warning', 'select-error'] as const
+export const SELECT_SIZES = ['default', 'select-xs', 'select-sm', 'select-md', 'select-lg', 'select-xl'] as const
+
+export type SELECTVariant = (typeof SELECT_VARIANTS)[number]
+export type SELECTSize = (typeof SELECT_SIZES)[number]
+
+export interface SELECTProps {
+  ghost?: boolean
+  variant?: Variant
+  size?: Size
+  disabled?: boolean
+  multiple?: boolean
+  modelValue?: string | string[]
+  placeholder?: string
+  search?: boolean
+  searchPlaceholder?: string
+  searchNoResultsText?: string
+}
+```
+
+### DuTextArea
+**Fichier:** components/DataInput/du-text-area/du-text-area.vue
+
+**Props:**
+- modelValue?: string
+- placeholder?: string
+- disabled?: boolean
+- variant?: Variant
+- size?: Size
+- ghost?: boolean
+
+**Types (du-text-area.types.ts):**
+```typescript
+export interface TEXTAREAProps {
+  modelValue?: string
+  placeholder?: string
+  disabled?: boolean
+  variant?: Variant
+  size?: Size
+  ghost?: boolean
+}
+```
+
+---
+
+## FEEDBACK
+
+### DuAlert
+**Fichier:** components/Feedback/du-alert/du-alert.vue
+
+**Props:**
+- variant?: AlertVariant
+- direction?: AlertDirection
+- soft?: boolean
+- outline?: boolean
+- dash?: boolean
+- dismissible?: boolean
+- autoDismissible?: boolean
+- icon?: boolean
+
+**Types (du-alert.types.ts):**
+```typescript
+export const DU_ALERT_VARIANTS = ["default", "success", "error", "warning", "info"] as const
+export type AlertVariant = (typeof DU_ALERT_VARIANTS)[number]
+
+export const DU_ALERT_DIRECTIONS = ["default", "vertical", "horizontal", "responsive"] as const
+export type AlertDirection = (typeof DU_ALERT_DIRECTIONS)[number]
+
+export interface AlertProps {
+  variant?: AlertVariant
+  direction?: AlertDirection
+  soft?: boolean
+  outline?: boolean
+  dash?: boolean
+  dismissible?: boolean
+  autoDismissible?: boolean
+  icon?: boolean
+}
+```
+
+### DuLoading
+**Fichier:** components/Feedback/du-loading/du-loading.vue
+
+**Props:**
+- animation?: LoadingAnimation
+- size?: Size
+- variant?: Variant
+
+**Types (du-loading.types.ts):**
+```typescript
+export const DU_LOADING_ANIMATIONS = ["spinner", "dots", "ring", "ball", "bars", "infinity"] as const
+export type LoadingAnimation = (typeof DU_LOADING_ANIMATIONS)[number]
+
+export interface LoadingProps {
+  animation?: LoadingAnimation
+  size?: Size
+  variant?: Variant
+}
+```
+
+### DuProgress
+**Fichier:** components/Feedback/du-progress/du-progress.vue
+
+**Props:**
+- value?: number
+- max?: number
+- indeterminate?: boolean
+- variant?: Variant
+
+**Types (du-progress.types.ts):**
+```typescript
+export interface ProgressProps {
+  value?: number
+  max?: number
+  indeterminate?: boolean
+  variant?: Variant
+}
+```
+
+### DuRadialProgress
+**Fichier:** components/Feedback/du-radial-progress/du-radial-progress.vue
+
+**Props:**
+- value?: number
+- variant?: Variant
+- size?: Size | string
+- thickness?: string
+
+**Types (du-radial-progress.types.ts):**
+```typescript
+export interface RadialProgressProps {
+  value?: number
+  variant?: Variant
+  size?: Size | string
+  thickness?: string
+}
+```
+
+### DuSkeleton
+**Fichier:** components/Feedback/du-skeleton/du-skeleton.vue
+
+**Props:**
+- class?: string
+
+**Types (du-skeleton.types.ts):**
+```typescript
+export interface SkeletonProps {
+  class?: string
+}
+```
+
+### DuToast
+**Fichier:** components/Feedback/du-toast/du-toast.vue
+
+**Props:**
+- horizontalPosition?: ToastHorizontalPosition
+- verticalPosition?: ToastVerticalPosition
+- to?: string
+
+**Types (du-toast.types.ts):**
+```typescript
+export const DU_TOAST_HORIZONTAL_POSITIONS = ["start", "center", "end"] as const
+export type ToastHorizontalPosition = (typeof DU_TOAST_HORIZONTAL_POSITIONS)[number]
+
+export const DU_TOAST_VERTICAL_POSITIONS = ["top", "middle", "bottom"] as const
+export type ToastVerticalPosition = (typeof DU_TOAST_VERTICAL_POSITIONS)[number]
+
+export interface ToastProps {
+  horizontalPosition?: ToastHorizontalPosition
+  verticalPosition?: ToastVerticalPosition
+  to?: string
+}
+```
+
+### DuTooltip
+**Fichier:** components/Feedback/du-tooltip/du-tooltip.vue
+
+**Props:**
+- variant?: Variant
+- dataTip?: string
+- open?: boolean
+- position?: TooltipPosition
+- responsive?: boolean
+
+**Types (du-tooltip.types.ts):**
+```typescript
+export const DU_TOOLTIP_POSITIONS = ["top", "right", "bottom", "left"] as const
+export type TooltipPosition = (typeof DU_TOOLTIP_POSITIONS)[number]
+
+export interface TooltipProps {
+  variant?: Variant
+  dataTip?: string
+  open?: boolean
+  position?: TooltipPosition
+  responsive?: boolean
+}
+```
+
+---
+
+## LAYOUT
+
+### DuJoin
+**Fichier:** components/Layout/du-join/du-join.vue
+
+**Props:**
+- as?: string
+- direction?: JoinDirection
+
+**Types (du-join.types.ts):**
+```typescript
+export const DU_JOIN_DIRECTIONS = ["horizontal", "vertical"] as const
+export type JoinDirection = (typeof DU_JOIN_DIRECTIONS)[number]
+
+export interface JoinProps {
+  as?: string
+  direction?: JoinDirection
+}
+```
+
+---
+
+## NAVIGATION
+
+### DuBreadcrumbs
+**Fichier:** components/Navigation/du-breadcrumbs/du-breadcrumbs.vue
+
+**Props:**
+- items: BreadcrumbItem[]
+- separator?: string
+
+**Types (du-breadcrumbs.types.ts):**
+```typescript
+export interface BreadcrumbItem {
+  label: string
+  href?: string
+  icon?: string
+}
+
+export interface BreadcrumbsProps {
+  items: BreadcrumbItem[]
+  separator?: string
+}
+```
+
+### DuButtonLink
+**Fichier:** components/Navigation/du-button-link/du-button-link.vue
+
+**Props:**
+- size?: Size
+- variant?: Variant
+- outline?: boolean
+- soft?: boolean
+- dash?: boolean
+- active?: boolean
+- ghost?: boolean
+- link?: boolean
+- wide?: boolean
+- square?: boolean
+- circle?: boolean
+- block?: boolean
+
+**Types (du-button-link.types.ts):**
+```typescript
+export interface ButtonLinkProps {
+  size?: Size
+  variant?: Variant
+  outline?: boolean
+  soft?: boolean
+  dash?: boolean
+  active?: boolean
+  ghost?: boolean
+  link?: boolean
+  wide?: boolean
+  square?: boolean
+  circle?: boolean
+  block?: boolean
+}
+```
+
+### DuDock
+**Fichier:** components/Navigation/du-dock/du-dock.vue
+
+**Props:**
+- size?: Size
+- items?: DockItem[]
+- reverseTheme?: boolean
+
+**Types (du-dock.types.ts):**
+```typescript
+export interface DockItem {
+  label?: string
+  icon?: any
+  class?: string
+  active?: boolean
+  onClick?: () => void
+  [key: string]: any
+}
+
+export interface DockProps {
+  size?: Size
+  items?: DockItem[]
+  reverseTheme?: boolean
+}
+```
+
+### DuLink
+**Fichier:** components/Navigation/du-link/du-link.vue
+
+**Props:**
+- variant?: Variant
+- onlyUnderlineOnHover?: boolean
+- ghost?: boolean
+
+**Types (du-link.types.ts):**
+```typescript
+export interface LinkProps {
+  variant?: Variant
+  onlyUnderlineOnHover?: boolean
+  ghost?: boolean
+}
+```
+
+### DuMenu
+**Fichier:** components/Navigation/du-menu/du-menu.vue
+
+**Props:**
+- direction?: MenuDirection
+- size?: Size
+- rounded?: boolean
+- items?: MenuItem[]
+- activeItem?: string
+- onItemClick?: (item: MenuItem) => void
+- onSubItemClick?: (item: MenuItem) => void
+
+**Types (du-menu.types.ts):**
+```typescript
+export const DU_MENU_DIRECTIONS = ["default", "vertical", "horizontal", "responsive"] as const
+export type MenuDirection = (typeof DU_MENU_DIRECTIONS)[number]
+
+export interface MenuItem {
+  label: string
+  href?: string
+  disabled?: boolean
+  isTitle?: boolean
+  subItems?: MenuItem[]
+  value?: string | number
+  onClick?: () => void
+  checked?: boolean
+  multiple?: boolean
+  active?: boolean
+}
+
+export interface MenuProps {
+  direction?: MenuDirection
+  size?: Size
+  rounded?: boolean
+  items?: MenuItem[]
+  activeItem?: string
+  onItemClick?: (item: MenuItem) => void
+  onSubItemClick?: (item: MenuItem) => void
+}
+```
+
+### DuNavbar
+**Fichier:** components/Navigation/du-navbar/du-navbar.vue
+
+**Props:**
+- (Aucune propriété spécifique)
+
+**Types (du-navbar.types.ts):**
+```typescript
+export interface NavbarProps {
+  // Le composant Navbar n'a pas de propriétés spécifiques pour l'instant
+}
+```
+
+### DuPagination
+**Fichier:** components/Navigation/du-pagination/du-pagination.vue
+
+**Props:**
+- modelValue?: number
+- total: number
+- perPage?: number
+- showNext?: boolean
+- showPrevious?: boolean
+- showFirst?: boolean
+- showLast?: boolean
+- size?: Size
+- nextLabel?: string
+- previousLabel?: string
+- firstLabel?: string
+- lastLabel?: string
+- variant?: Variant
+- outline?: boolean
+- manual?: boolean
+- showEllipsis?: boolean
+- maxPages?: number
+
+**Types (du-pagination.types.ts):**
+```typescript
+export interface PaginationProps {
+  modelValue?: number
+  total: number
+  perPage?: number
+  showNext?: boolean
+  showPrevious?: boolean
+  showFirst?: boolean
+  showLast?: boolean
+  size?: Size
+  nextLabel?: string
+  previousLabel?: string
+  firstLabel?: string
+  lastLabel?: string
+  variant?: Variant
+  outline?: boolean
+  manual?: boolean
+  showEllipsis?: boolean
+  maxPages?: number
+}
+```
+
+### DuStepItem
+**Fichier:** components/Navigation/du-step-item/du-step-item.vue
+
+**Props:**
+- label?: string
+- active?: boolean
+- customClass?: string
+- dataContent?: string
+- variant?: Variant
+
+**Types (du-step-item.types.ts):**
+```typescript
+export interface StepItemProps {
+  label?: string
+  active?: boolean
+  customClass?: string
+  dataContent?: string
+  variant?: Variant
+}
+```
+
+### DuSteps
+**Fichier:** components/Navigation/du-steps/du-steps.vue
+
+**Props:**
+- items?: StepItem[]
+- direction?: StepsDirection
+- customClass?: string
+- responsive?: boolean
+- activeSteps?: number[]
+- variant?: Variant
+
+**Types (du-steps.types.ts):**
+```typescript
+export const DU_STEPS_DIRECTIONS = ["steps-vertical", "steps-horizontal"] as const
+export type StepsDirection = (typeof DU_STEPS_DIRECTIONS)[number]
+
+export interface StepItem {
+  label?: string
+  active?: boolean
+  customClass?: string
+  dataContent?: string
+}
+
+export interface StepsProps {
+  items?: StepItem[]
+  direction?: StepsDirection
+  customClass?: string
+  responsive?: boolean
+  activeSteps?: number[]
+  variant?: Variant
+}
+```
+
+### DuTabs
+**Fichier:** components/Navigation/du-tabs/du-tabs.vue
+
+**Props:**
+- size?: Size
+- items?: TabItem[]
+- type?: TabsType
+- bottom?: boolean
+- name?: string
+
+**Types (du-tabs.types.ts):**
+```typescript
+export const DU_TABS_TYPES = ["lift", "border", "box"] as const
+export type TabsType = (typeof DU_TABS_TYPES)[number]
+
+export interface TabItem {
+  label?: string
+  icon?: any
+  class?: string
+  active?: boolean
+  onClick?: () => void
+  content?: string
+  [key: string]: any
+}
+
+export interface TabsProps {
+  size?: Size
+  items?: TabItem[]
+  type?: TabsType
+  bottom?: boolean
+  name?: string
+}
+```
