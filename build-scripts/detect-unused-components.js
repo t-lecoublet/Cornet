@@ -15,7 +15,7 @@ const failOnError = process.env.DAISYUI_FAIL_ON_ERROR === 'true';
 // Configuration
 const LIB_ROOT = path.resolve(__dirname, '..');
 const APP_SRC = path.resolve(process.cwd(), 'src');
-const OUTPUT_DIR = path.resolve(process.cwd(), '.');
+const OUTPUT_DIR = path.resolve(LIB_ROOT);
 const LIB_NAME = 'daisyui-vue-kit';
 
 /**

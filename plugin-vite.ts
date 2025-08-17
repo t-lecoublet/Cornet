@@ -84,6 +84,44 @@ export default function vueDaisyUI(options: VueDaisyUIOptions = {}): Plugin {
           throw error
         }
       }
+    },
+
+    // Hook exécuté quand le bundle est complètement fermé (après writeBundle)
+    closeBundle: async () => {
+      try {
+        const { resolve } = await import('path')
+        const { writeFileSync, existsSync, mkdirSync } = await import('fs')
+        
+        // Chemin vers le fichier index.css dans lib/
+        const libPath = resolve('./lib')
+        const cssFilePath = resolve(libPath, 'index.css')
+        
+        // S'assurer que le dossier lib existe
+        if (!existsSync(libPath)) {
+          mkdirSync(libPath, { recursive: true })
+        }
+        
+        // Contenu de remplacement
+        const resetContent = `/* Automatically generated file to exclude unused components */
+/* Build completed on ${new Date().toISOString()} */
+/* File reset after build completion */
+`
+        
+        // Écraser le fichier avec le contenu de base
+        writeFileSync(cssFilePath, resetContent)
+        
+        if (showOutput) {
+          console.log(`${'\x1b[32m'}✓${'\x1b[0m'} lib/index.css cleaned after build completion`)
+        }
+        
+      } catch (error) {
+        if (showOutput) {
+          console.error('Error cleaning lib/index.css:', error)
+        }
+        if (failOnError) {
+          throw error
+        }
+      }
     }
   }
 }
