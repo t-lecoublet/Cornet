@@ -40,7 +40,7 @@ const props = withDefaults(
     ghost: false,
     link: false,
     wide: false,
-    disabled: undefined,
+    disabled: false,
     square: false,
     circle: false,
     block: false,

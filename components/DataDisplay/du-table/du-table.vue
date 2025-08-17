@@ -18,6 +18,7 @@ const props = withDefaults(
   },
 )
 
+
 const { sizeClass } = useSizeMapping(props, "table")
 
 const zebraClass = computed(() => {

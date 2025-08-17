@@ -1,4 +1,4 @@
 export interface FIELDSETProps {
-  legend: string
+  legend?: string
   label?: string
 } 

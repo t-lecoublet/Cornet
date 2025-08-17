@@ -17,6 +17,7 @@
   "exports": {
     ".": "./index.ts",
     "./plugin-vite": "./plugin-vite.ts",
-    "./css": "./index.css"
+    "./css": "./index.css",
+    "./types": "./types/index.ts"
   }
 }
