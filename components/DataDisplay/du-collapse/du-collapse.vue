@@ -38,7 +38,7 @@ provide('collapseId', collapseId.value)
         item.customClass || customClass,
       ]"
     >
-      <input type="checkbox" :checked="item.open ? 'checked' : undefined" />
+      <input type="checkbox" :checked="item.open ?? false" />
       <div class="collapse-title">
         <slot :name="`title-${index}`" :item="item" :index="index">
           {{ item.title }}
@@ -56,4 +56,4 @@ provide('collapseId', collapseId.value)
   <template v-else>
     <slot></slot>
   </template>
-</template> 
+</template>
