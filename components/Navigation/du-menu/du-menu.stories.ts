@@ -36,9 +36,9 @@ type Story = StoryObj<typeof DuMenu>;
 // DEFAULT MENU (Manual mode)
 const DefaultTplStr = `
 <DuMenu v-bind="args" class="w-56">
-  <li><a>Item 1</a></li>
-  <li><a>Item 2</a></li>
-  <li><a>Item 3</a></li>
+  <li><a href="#">Item 1</a></li>
+  <li><a href="#">Item 2</a></li>
+  <li><a href="#">Item 3</a></li>
 </DuMenu>`;
 
 export const Default: Story = {

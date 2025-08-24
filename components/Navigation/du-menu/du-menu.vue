@@ -7,7 +7,7 @@ import DuMenuItem from './du-menu-item.vue';
 const props = withDefaults(
   defineProps<MenuProps>(),
   {
-    direction: "default",
+    direction: "vertical",
     size: "default",
     rounded: true,
   },
@@ -34,7 +34,7 @@ const inDropdownClass = computed(() => {
 </script>
 
 <template>
-  <ul :class="['menu', inDropdownClass, roundedClass, directionClass, sizeClass]">
+  <ul role="listbox" :aria-orientation="props.direction" :class="['menu', inDropdownClass, roundedClass, directionClass, sizeClass]">
     <!-- Mode automatique (items) -->
     <template v-if="items && !$slots.default">
       <DuMenuItem

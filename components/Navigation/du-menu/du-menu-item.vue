@@ -41,7 +41,7 @@ const isActive = computed(() => {
   <template v-else-if="item.isTitle && item.subItems">
     <template v-if="$slots[`title-${idx}`]">
       <slot :name="`title-${idx}`" :item="item" :index="index" />
-      <ul>
+      <ul role="listbox">
         <du-menu-item
           v-for="(sub, subIndex) in item.subItems"
           :key="subIndex"
@@ -58,7 +58,7 @@ const isActive = computed(() => {
     </template>
     <template v-else-if="$slots.title">
       <slot name="title" :item="item" :index="index" />
-      <ul>
+      <ul role="listbox">
         <du-menu-item
           v-for="(sub, subIndex) in item.subItems"
           :key="subIndex"
@@ -76,7 +76,7 @@ const isActive = computed(() => {
     <template v-else>
       <li>
         <h2 class="menu-title">{{ item.label }}</h2>
-        <ul>
+        <ul role="listbox">
           <du-menu-item
             v-for="(sub, subIndex) in item.subItems"
             :key="subIndex"
@@ -103,7 +103,7 @@ const isActive = computed(() => {
     </template>
     <template v-else>
       <li>
-        <a 
+        <a :role="item.disabled ? undefined : 'option'"
           :href="item.href" 
           :class="{ 
             'menu-disabled': item.disabled,
@@ -113,7 +113,7 @@ const isActive = computed(() => {
         >
           {{ item.label }}
         </a>
-        <ul>
+        <ul role="listbox">
           <du-menu-item
             v-for="(sub, subIndex) in item.subItems"
             :key="subIndex"
@@ -140,7 +140,7 @@ const isActive = computed(() => {
     </template>
     <template v-else>
       <li :class="{ 'menu-disabled': item.disabled }">
-        <a 
+        <a :role="item.disabled ? undefined : 'option'"
           :href="item.href" 
           :class="{ 'menu-active': isActive }"
           @click.stop="item.onClick && item.onClick()"
