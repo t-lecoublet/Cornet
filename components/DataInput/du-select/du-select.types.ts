@@ -1,5 +1,5 @@
-import { type Variant } from "../../../composables/useVariantProps"
 import { type Size } from "../../../composables/useSizeProps"
+import { type Variant } from "../../../composables/useVariantProps"
 
 export const SELECT_VARIANTS = ['default', 'select-primary', 'select-secondary', 'select-accent', 'select-info', 'select-success', 'select-warning', 'select-error'] as const
 export const SELECT_SIZES = ['default', 'select-xs', 'select-sm', 'select-md', 'select-lg', 'select-xl'] as const
@@ -13,9 +13,17 @@ export interface SELECTProps {
   size?: Size
   disabled?: boolean
   multiple?: boolean
-  modelValue?: string | string[]
+  modelValue?: string | string[] | null
   placeholder?: string
   search?: boolean
   searchPlaceholder?: string
   searchNoResultsText?: string
+  options?: any[]
+  searchable?: boolean
+  searchableInside?: boolean
+  checkboxes?: boolean
+  closeOnSelect?: boolean
+  trackBy?: string
+  labelBy?: string
+  returnObject?: boolean
 }

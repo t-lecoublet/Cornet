@@ -1,289 +1,375 @@
 <script setup lang="ts">
-import { ref, computed, watch, toRefs, onUnmounted, nextTick, provide } from 'vue'
-import DuMenu from "../../Navigation/du-menu/du-menu.vue"
-import { type SELECTProps } from './du-select.types'
-import { useVariantMapping } from "../../../composables/useVariantProps"
+import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { useSizeMapping } from "../../../composables/useSizeProps"
+import { useVariantMapping } from "../../../composables/useVariantProps"
+import type { SELECTProps } from './du-select.types'
 
-const rootRef = ref<HTMLElement | null>(null)
-const searchInputRef = ref<HTMLInputElement | null>(null)
-
-const props = withDefaults(
-  defineProps<SELECTProps & { options?: any[] }>(),
-  {
-    ghost: false,
-    variant: "default",
-    size: "default",
-    disabled: false,
-    multiple: false,
-    search: false,
+const props = withDefaults(defineProps<SELECTProps>(), {
     options: () => [],
-    placeholder: 'Select an option',
-    searchPlaceholder: 'Search...',
-    searchNoResultsText: 'No results found',
-  },
-)
-const emit = defineEmits<{
-  'update:modelValue': [value: any]
-}>()
+    multiple: false,
+    placeholder: 'Choisissez...',
+    searchable: false,
+    searchableInside: false,
+    searchPlaceholder: 'Rechercher...',
+    searchNoResultsText: 'Aucune option trouvée',
+    checkboxes: false,
+    closeOnSelect: true,
+    trackBy: 'id',
+    labelBy: 'name',
+    returnObject: false,
+    ghost: false,
+    variant: 'default',
+    size: 'default',
+    disabled: false,
+    search: false,
+})
 
-const { ghost, variant, size, disabled, multiple, modelValue, options, placeholder, search, searchPlaceholder } = toRefs(props)
+const emit = defineEmits(['update:modelValue', 'select', 'remove', 'open', 'close'])
 
-const ghostClass = computed(() => (ghost.value ? "select-ghost" : ""))
 const { colorClass } = useVariantMapping(props, "select")
 const { sizeClass } = useSizeMapping(props, "select")
+const ghostClass = computed(() => (props.ghost ? "select-ghost" : ""))
 
-const isOpen = ref(false)
-const searchQuery = ref('')
-const internalValue = ref<any>(multiple.value ? ([] as (string | number)[]) : (null as null | string | number))
+const root = ref<HTMLElement | null>(null)
+const searchInput = ref<HTMLInputElement | null>(null)
+const searchInputInside = ref<HTMLInputElement | null>(null)
+const open = ref(false)
+const query = ref('')
+const highlightedIndex = ref(-1)
+const listId = `du-select-list-${Math.random().toString(36).slice(2, 9)}`
 
-watch(
-  () => modelValue.value,
-  (val) => {
-    if (multiple.value) {
-      if (Array.isArray(val) && JSON.stringify(val) !== JSON.stringify(internalValue.value)) {
-        internalValue.value = val.slice()
-      }
+function optionValue(opt: any): any {
+    if (opt && typeof opt === 'object') return opt[props.trackBy] ?? opt.value ?? opt.id ?? opt
+    return opt
+}
+function optionLabel(opt: any): string {
+    if (opt && typeof opt === 'object') return opt[props.labelBy] ?? opt.label ?? opt.name ?? String(opt)
+    return String(opt)
+}
+function labelFromOption(opt: any): string { return optionLabel(opt) }
+function labelFromValue(val: any): string {
+    const o = props.options.find(o => optionValue(o) === val)
+    return o ? optionLabel(o) : String(val)
+}
+function keyForOption(opt: any, i: number): string {
+    const v = optionValue(opt)
+    return `${String(v)}__${i}`
+}
+function valKey(val: any, idx: number): string { return `${String(val)}__${idx}` }
+
+const selectedValues = ref<any[]>([])
+const selectedSingle = ref<any>(null)
+
+function syncFromModel() {
+    if (props.multiple) {
+        if (Array.isArray(props.modelValue)) {
+            selectedValues.value = props.modelValue.map(v => (v && typeof v === 'object' ? optionValue(v) : v))
+        } else {
+            selectedValues.value = []
+        }
     } else {
-      if (val !== internalValue.value) {
-        internalValue.value = val as string | number | null
-      }
+        if (props.modelValue && typeof props.modelValue === 'object') {
+            selectedSingle.value = optionValue(props.modelValue)
+        } else {
+            selectedSingle.value = props.modelValue
+        }
     }
-  },
-  { immediate: true }
-)
-
-watch(
-  () => internalValue.value,
-  (val) => {
-    if (multiple.value) {
-      if (JSON.stringify(val) !== JSON.stringify(modelValue.value)) {
-        emit('update:modelValue', val)
-      }
-    } else {
-      if (val !== modelValue.value) {
-        emit('update:modelValue', val)
-      }
-    }
-  }
-)
-
-// Fonction de filtrage récursive
-function filterOptions(optionsList: any[], query: string): any[] {
-  if (!query.trim()) return optionsList
-  
-  return optionsList.reduce((filtered: any[], opt: any) => {
-    if ('options' in opt) {
-      // C'est un groupe
-      const filteredSubOptions = filterOptions(opt.options, query)
-      if (filteredSubOptions.length > 0) {
-        filtered.push({
-          ...opt,
-          options: filteredSubOptions
-        })
-      }
-    } else {
-      // C'est une option simple
-      if (opt.label.toLowerCase().includes(query.toLowerCase())) {
-        filtered.push(opt)
-      }
-    }
-    return filtered
-  }, [])
 }
 
-// Options filtrées basées sur la recherche
+watch(() => props.modelValue, () => syncFromModel(), { immediate: true })
+
 const filteredOptions = computed(() => {
-  return filterOptions(options.value, searchQuery.value)
+    const q = query.value?.toString().trim().toLowerCase()
+    if (!q) return props.options
+    return props.options.filter(o => optionLabel(o).toString().toLowerCase().includes(q))
 })
 
-/**
- * Transforme les options du select en MenuItem[] pour DuMenu.
- * Prend en compte isTitle (groupe/titre) + subItems.
- */
-function mapOptionsToMenuItems(optionsList: any[]): any[] {
-  return optionsList.map(opt => {
-    if ('options' in opt) {
-      return {
-        label: opt.label,
-        isTitle: true,
-        subItems: mapOptionsToMenuItems(opt.options),
-      }
-    } else {
-      return {
-        label: opt.label,
-        value: opt.value,
-        disabled: !!opt.disabled,
-        onClick: () => onSelectOption(opt),
-        checked: multiple.value ? (internalValue.value as any[]).includes(opt.value) : internalValue.value === opt.value,
-        multiple: multiple.value, // Indique au menu-item s'il doit afficher la checkbox
-      }
-    }
-  })
+function isSelected(opt: any): boolean {
+    const v = optionValue(opt)
+    if (props.multiple) return selectedValues.value.includes(v)
+    return selectedSingle.value === v
 }
 
-function onSelectOption(opt: any) {
-  if (opt.disabled) return
-  if (multiple.value) {
-    let arr = Array.isArray(internalValue.value) ? internalValue.value.slice() : []
-    if (arr.includes(opt.value)) {
-      arr = arr.filter(v => v !== opt.value)
-    } else {
-      arr = [...arr, opt.value]
-    }
-    internalValue.value = arr
-  } else {
-    internalValue.value = opt.value
-    isOpen.value = false
-    searchQuery.value = '' // Reset search on selection
-  }
+function optionFromValue(v: any): any {
+    return props.options.find(o => optionValue(o) === v) ?? v
 }
 
-const selectedLabels = computed(() => {
-  if (multiple.value) {
-    const arr = internalValue.value as (string | number)[]
-    // Récupère les labels des items sélectionnés (y compris dans les groupes)
-    function collectLabels(opts: any[]): string[] {
-      return opts.flatMap(opt => {
-        if (opt.options) {
-          return collectLabels(opt.options)
-        } else if (arr.includes(opt.value)) {
-          return [opt.label]
+function emitModelForMultiple() {
+    const out = props.returnObject ? selectedValues.value.map(v => optionFromValue(v)) : [...selectedValues.value]
+    emit('update:modelValue', out)
+}
+function emitModelForSingle(val: any) {
+    const out = props.returnObject ? optionFromValue(val) : val
+    emit('update:modelValue', out)
+}
+
+function toggleOption(opt: any) {
+    const v = optionValue(opt)
+    if (props.multiple) {
+        const idx = selectedValues.value.indexOf(v)
+        if (idx === -1) {
+            selectedValues.value.push(v)
+            emit('select', optionFromValue(v))
+        } else {
+            selectedValues.value.splice(idx, 1)
+            emit('remove', optionFromValue(v))
         }
-        return []
-      })
+        emitModelForMultiple()
+    } else {
+        selectedSingle.value = v
+        emit('select', optionFromValue(v))
+        emitModelForSingle(v)
+        if (props.closeOnSelect) close()
     }
-    return collectLabels(options.value).join(', ')
-  } else {
-    // Trouve le label de la valeur sélectionnée
-    function findLabel(opts: any[]): string | undefined {
-      for (const opt of opts) {
-        if (opt.options) {
-          const label = findLabel(opt.options)
-          if (label) return label
-        } else if (opt.value === internalValue.value) {
-          return opt.label
+}
+
+function handleOptionClick(opt: any) {
+    toggleOption(opt)
+}
+
+function removeValue(val: any) {
+    if (!props.multiple) return
+    const idx = selectedValues.value.indexOf(val)
+    if (idx > -1) {
+        selectedValues.value.splice(idx, 1)
+        emit('remove', optionFromValue(val))
+        emitModelForMultiple()
+    }
+}
+
+function openDropdown() {
+    open.value = true
+    emit('open')
+    highlightedIndex.value = 0
+    nextTick(() => {
+        if (props.searchable && (props.searchableInside || props.multiple)) {
+            // focus internal search if present
+            if (searchInput.value) searchInput.value.focus()
+            if (searchInputInside.value) searchInputInside.value.focus()
         }
-      }
-      return undefined
+    })
+}
+function close() {
+    open.value = false
+    query.value = ''
+    highlightedIndex.value = -1
+    emit('close')
+}
+function toggle() {
+    if (open.value) close()
+    else openDropdown()
+}
+function focusToggle() {
+    if (!open.value) openDropdown()
+    else {
+        // focus search input if there
+        nextTick(() => {
+            if (searchInput.value) searchInput.value.focus()
+            if (searchInputInside.value) searchInputInside.value.focus()
+        })
     }
-    return findLabel(options.value) || ''
-  }
+}
+
+function onQuery() {
+    highlightedIndex.value = 0
+}
+
+function onKeydown(e: KeyboardEvent) {
+    if (!open.value && ['ArrowDown', 'ArrowUp', 'Enter', ' '].includes(e.key)) {
+        openDropdown()
+        e.preventDefault()
+        return
+    }
+    const len = filteredOptions.value.length
+    if (e.key === 'ArrowDown') {
+        highlightedIndex.value = (highlightedIndex.value + 1 + len) % len
+        scrollHighlightedIntoView()
+        e.preventDefault()
+    } else if (e.key === 'ArrowUp') {
+        highlightedIndex.value = (highlightedIndex.value - 1 + len) % len
+        scrollHighlightedIntoView()
+        e.preventDefault()
+    } else if (e.key === 'Enter') {
+        if (highlightedIndex.value >= 0 && highlightedIndex.value < len) {
+            toggleOption(filteredOptions.value[highlightedIndex.value])
+        }
+        e.preventDefault()
+    } else if (e.key === 'Escape') {
+        close()
+        e.preventDefault()
+    } else if (e.key === 'Backspace' && props.multiple && query.value === '') {
+        // remove last tag
+        const last = selectedValues.value[selectedValues.value.length - 1]
+        if (last !== undefined) removeValue(last)
+    }
+}
+
+function scrollHighlightedIntoView() {
+    nextTick(() => {
+        const list = root.value?.querySelector(`#${listId}`)
+        const active = list?.querySelectorAll('li')[highlightedIndex.value]
+        if (active && active.scrollIntoView) active.scrollIntoView({ block: 'nearest' })
+    })
+}
+
+function onClickOutside(e: Event) {
+    if (!root.value) return
+    if (!root.value.contains(e.target as Node)) close()
+}
+
+function onFocusOut(e: FocusEvent) {
+    setTimeout(() => {
+        if (!root.value) return
+        
+        // Check if the new focus target is outside our component
+        const activeElement = document.activeElement
+        if (!activeElement || !root.value.contains(activeElement)) {
+            close()
+        }
+    }, 0)
+}
+
+function onFocus(e: FocusEvent) {
+    if (!open.value) {
+        openDropdown()
+    }
+}
+
+onMounted(() => {
+    document.addEventListener('click', onClickOutside)
+    root.value?.addEventListener('focusout', onFocusOut)
+})
+onBeforeUnmount(() => {
+    document.removeEventListener('click', onClickOutside)
+    root.value?.removeEventListener('focusout', onFocusOut)
 })
 
-async function handleDropdownClick(e: MouseEvent) {
-  if (disabled.value) return
-  isOpen.value = !isOpen.value
-  e.stopPropagation()
-  
-  // Focus sur l'input de recherche si activé
-  if (isOpen.value && search.value) {
-    await nextTick()
-    searchInputRef.value?.focus()
-  }
-}
+const selectedOption = computed(() => optionFromValue(selectedSingle.value))
 
-function handleOutsideClick(e: MouseEvent) {
-  if (!isOpen.value) return
-  const target = e.target as Node
-  if (rootRef.value && !rootRef.value.contains(target)) {
-    isOpen.value = false
-    searchQuery.value = '' // Reset search when closing
-  }
-}
-
-function handleSearchInput(e: Event) {
-  const target = e.target as HTMLInputElement
-  searchQuery.value = target.value
-}
-
-function clearSearch() {
-  searchQuery.value = ''
-  searchInputRef.value?.focus()
-}
-
-if (typeof window !== 'undefined') {
-  window.addEventListener('click', handleOutsideClick)
-}
-
-onUnmounted(() => {
-  if (typeof window !== 'undefined') {
-    window.removeEventListener('click', handleOutsideClick)
-  }
-})
-
-provide('isDropdownTrigger', true)
 </script>
 
 <template>
-  <div class="relative w-full" ref="rootRef">
-    <div 
-      :class="[
-        'select',
-        ghostClass,
-        colorClass,
-        sizeClass,
-        'w-full flex items-center cursor-pointer',
-        { 'select-disabled': disabled, 'bg-base-100': isOpen }
-      ]" 
-      @click="handleDropdownClick" 
-      tabindex="0" 
-      :aria-disabled="disabled"
-    >
-      <span class="truncate flex-1 text-left">
-        {{ selectedLabels || placeholder }}
-      </span>
-    </div>
-    <transition name="fade">
-      <div v-if="isOpen" class="absolute z-30 w-full mt-1 shadow-lg rounded-box bg-base-100 overflow-hidden max-h-72">
-        <!-- Input de recherche -->
-        <div v-if="search" class="p-2 border-b border-base-300">
-          <div class="relative">
-            <input
-              ref="searchInputRef"
-              type="text"
-              class="input input-sm w-full pr-8"
-              :placeholder="searchPlaceholder"
-              :value="searchQuery"
-              @input="handleSearchInput"
-              @click.stop
-            />
-            <button
-              v-if="searchQuery"
-              @click="clearSearch"
-              class="absolute right-2 top-1/2 transform -translate-y-1/2 opacity-60 hover:opacity-100"
-            >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-              </svg>
+    <div class="relative" ref="root" @keydown="onKeydown">
+        <div class="input input-bordered min-h-[2.5rem] flex items-center gap-2 cursor-text w-full overflow-x-clip" 
+            :class="[colorClass, sizeClass, ghostClass, { 'input-disabled': disabled }]"
+            tabindex="0"
+            role="combobox" 
+            :aria-expanded="open" 
+            :aria-controls="listId" 
+            @click="focusToggle" 
+            @focus="onFocus">
+            <template v-if="multiple">
+                <template v-for="(val, idx) in selectedValues" :key="valKey(val, idx)">
+                    <slot name="tag" :value="optionFromValue(val)" :index="idx">
+                        <label class="badge badge-sm badge-neutral mr-1 flex items-center gap-2 cursor-pointer">
+                            {{ labelFromValue(val) }}
+                            <button class="btn btn-ghost btn-circle btn-xs p-0" @click.stop="removeValue(val)"
+                                aria-label="Supprimer">✕</button>
+                        </label>
+                    </slot>
+                </template>
+
+                <input v-if="searchable" ref="searchInput" v-model="query" @focus="open = true" @input="onQuery"
+                    class="input input-ghost flex-1 w-full !outline-none pl-0"
+                    :placeholder="selectedValues.length ? '' : placeholder" aria-autocomplete="list" />
+
+                <span v-else class="flex-1" :class="{ 'text-gray-400': !selectedValues.length }">
+                    {{ !selectedValues.length ? placeholder : '' }}
+                </span>
+            </template>
+
+            <template v-else>
+                <template v-if="searchable">
+                    <input ref="searchInput" v-model="query" @focus="open = true" @input="onQuery"
+                        class="input input-ghost flex-1 min-w-[6rem] !outline-none pl-0"
+                        :placeholder="selectedOption ? labelFromOption(selectedOption) : placeholder" 
+                        aria-autocomplete="list" />
+                </template>
+                <template v-else>
+                    <slot name="selected" :selected="selectedOption">
+                        <span class="flex-1">{{ selectedOption ? labelFromOption(selectedOption) : placeholder }}</span>
+                    </slot>
+                </template>
+            </template>
+
+            <button class="btn btn-ghost btn-sm !outline-none" type="button" @click.stop="toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
             </button>
-          </div>
         </div>
-        <!-- Menu des options -->
-        <div class="overflow-auto" :class="{ 'max-h-60': search, 'max-h-72': !search }">
-          <DuMenu 
-            :items="mapOptionsToMenuItems(filteredOptions)" 
-            class="w-full" 
-            :rounded="true"
-          />
-          <!-- Message si aucun résultat -->
-          <div v-if="search && searchQuery && filteredOptions.length === 0" class="px-4 py-2 text-sm text-base-content/60 text-center">
-            {{ searchNoResultsText }}
-          </div>
+
+        <transition
+            enter-active-class="transition ease-out duration-100"
+            enter-from-class="opacity-0 scale-95"
+            enter-to-class="opacity-100 scale-100"
+            leave-active-class="transition ease-in duration-75"
+            leave-from-class="opacity-100 scale-100"
+            leave-to-class="opacity-0 scale-95"
+        >
+            <div v-if="open" class="absolute dropdown-content menu flex-nowrap bg-base-100 rounded-box shadow mt-1 w-full z-50 p-0"
+                role="listbox" :id="listId">
+            <!-- optional internal search at top of dropdown -->
+            <div v-if="searchable && searchableInside" class="p-2">
+                <input v-model="query" ref="searchInputInside" class="input input-bordered w-full"
+                    :placeholder="searchPlaceholder" @input="onQuery" />
+            </div>
+
+            <div class="block max-h-[18rem] overflow-auto">
+                <ul class="block m-0 p-2">
+                    <li v-for="(opt, i) in filteredOptions" :key="keyForOption(opt, i)" class="block w-full rounded-box"
+                        :class="[{ 'bg-neutral text-neutral-content': isSelected(opt), 'bg-base-300': i === highlightedIndex, 'bg-neutral/50': isSelected(opt) && i === highlightedIndex }, 'cursor-pointer']"
+                        role="option" 
+                        :aria-selected="isSelected(opt)"
+                        @mousedown.prevent="handleOptionClick(opt)">
+                        <a class="flex items-center gap-3 py-2 px-3 !text-balance">
+                            <input v-if="checkboxes" type="checkbox" class="checkbox checkbox-sm"
+                                :checked="isSelected(opt)" @change.stop.prevent="toggleOption(opt)"
+                                tabindex="-1" />
+                            <slot name="option" :option="opt" :index="i">
+                                {{ labelFromOption(opt) }}
+                            </slot>
+                        </a>
+                    </li>
+
+                    <li v-if="filteredOptions.length === 0" class="p-2 text-sm text-gray-500">
+                        <slot name="no-options">Aucune option trouvée</slot>
+                    </li>
+                </ul>
+            </div>
+
+
         </div>
-      </div>
-    </transition>
-  </div>
+        </transition>
+    </div>
 </template>
 
 <style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.15s;
-}
 
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
+.dropdown-content.menu {
+    @supports (scrollbar-color: auto) {
+
+        *,
+        *:hover {
+            scrollbar-width: thin;
+        }
+    }
+
+    @supports (scrollbar-width: none) {
+
+        *,
+        *:hover {
+            scrollbar-width: thin;
+        }
+    }
+
+    & ul {
+        display: block;
+    }
+
+    & li a {
+        white-space: nowrap;
+    }
 }
 </style>

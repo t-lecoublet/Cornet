@@ -33,6 +33,7 @@ export type { RADIOVariant,RADIOSize,RADIOProps } from '../components/DataInput/
 export type { RANGEVariant,RANGESize,RANGEProps } from '../components/DataInput/du-range/du-range.types.ts'
 export type { RatingShape,RatingItem,RatingProps,RatingItemProps,RatingEmits,RatingItemEmits } from '../components/DataInput/du-rating/du-rating.types.ts'
 export type { SELECTVariant,SELECTSize,SELECTProps } from '../components/DataInput/du-select/du-select.types.ts'
+export type { SEARCHVariant,SEARCHSize,SEARCHProps } from '../components/DataInput/du-search/du-search.types.ts'
 export type { TEXTAREAProps } from '../components/DataInput/du-text-area/du-text-area.types.ts'
 export type { AlertVariant,AlertDirection,AlertProps } from '../components/Feedback/du-alert/du-alert.types.ts'
 export type { LoadingAnimation,LoadingProps } from '../components/Feedback/du-loading/du-loading.types.ts'

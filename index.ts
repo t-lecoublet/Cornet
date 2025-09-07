@@ -33,6 +33,7 @@ export { default as DuLabelInputValidator } from './components/DataInput/du-labe
 export { default as DuRadio } from './components/DataInput/du-radio/du-radio.vue';
 export { default as DuRange } from './components/DataInput/du-range/du-range.vue';
 export { default as DuRating } from './components/DataInput/du-rating/du-rating.vue';
+export { default as DuSearch } from './components/DataInput/du-search/du-search.vue';
 export { default as DuSelect } from './components/DataInput/du-select/du-select.vue';
 export { default as DuTextArea } from './components/DataInput/du-text-area/du-text-area.vue';
 export { default as DuAlert } from './components/Feedback/du-alert/du-alert.vue';
