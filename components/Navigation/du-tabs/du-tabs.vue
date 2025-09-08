@@ -44,9 +44,9 @@ const typeClass = computed(() => {
             <slot name="tab" :item="item" :index="index">
               <slot :name="`tab-${index}`" :item="item" :index="index">
                 <slot name="icon" :item="item">
-                  <component
+                  <component class="w-5 h-5"
                     :is="item.icon"
-                    v-if="typeof item.icon === 'object'"
+                    v-if="typeof item.icon === 'object' || typeof item.icon === 'function'"
                   />
                   <img
                     v-else-if="
@@ -66,7 +66,7 @@ const typeClass = computed(() => {
             </slot>
           </template>
         </label>
-        <template v-if="item.content || $slots.content">
+        <template v-if="item.content || $slots.content || $slots[`content-${index}`]">
           <div class="tab-content">
             <slot name="content" :item="item" :index="index">
               <slot :name="`content-${index}`" :item="item" :index="index">
