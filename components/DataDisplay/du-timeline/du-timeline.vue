@@ -51,7 +51,7 @@ const getLineClass = (index: number): string => {
   }
 
   if (props.validItems && props.validItems[index] !== undefined) {
-    return props.validItems[index] ? "bg-primary" : "bg-error"
+    return props.validItems[index] === true ? "bg-success" : props.validItems[index] === false ? "bg-error" : ""
   }
 
   if (
@@ -59,7 +59,7 @@ const getLineClass = (index: number): string => {
     props.items[index] &&
     props.items[index].valid !== undefined
   ) {
-    return props.items[index].valid ? "bg-primary" : "bg-error"
+    return props.items[index].valid === true ? "bg-success" : props.items[index].valid === false ? "bg-error" : ""
   }
 
   return ""
@@ -95,11 +95,11 @@ const getLineClass = (index: number): string => {
                   :class="[
                     'w-5 h-5',
                     item.valid === true
-                      ? 'text-primary'
+                      ? 'text-success'
                       : item.valid === false
                         ? 'text-error'
                         : validItems && validItems[index] === true
-                          ? 'text-primary'
+                          ? 'text-success'
                           : validItems && validItems[index] === false
                             ? 'text-error'
                             : '',
