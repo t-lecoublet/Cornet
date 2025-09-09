@@ -40,7 +40,7 @@ const props = withDefaults(
     ghost: false,
     link: false,
     wide: false,
-    disabled: false,
+    disabled: undefined,
     square: false,
     circle: false,
     block: false,
@@ -118,9 +118,6 @@ const buttonAttributes = computed(() => {
   } else {
     attrs.type = props.type || 'button'
   }
-
-  attrs.disabled = props.disabled
-
   return attrs
 })
 </script>
@@ -145,6 +142,7 @@ const buttonAttributes = computed(() => {
       blockClass,
     ]"
     :aria-label="props.label"
+    :disabled="props.disabled"
   >
     <slot v-if="!isInputElement"></slot>
   </component>
