@@ -271,6 +271,7 @@ const selectedOption = computed(() => optionFromValue(selectedSingle.value))
 
                 <input v-if="searchable" ref="searchInput" v-model="query" @focus="open = true" @input="onQuery"
                     class="input input-ghost flex-1 w-full !outline-none pl-0"
+                    :class="{ ' placeholder:!text-base-content': selectedValues.length }"
                     :placeholder="selectedValues.length ? '' : placeholder" aria-autocomplete="list" />
 
                 <span v-else class="flex-1" :class="{ 'text-gray-400': !selectedValues.length }">
@@ -282,6 +283,7 @@ const selectedOption = computed(() => optionFromValue(selectedSingle.value))
                 <template v-if="searchable">
                     <input ref="searchInput" v-model="query" @focus="open = true" @input="onQuery"
                         class="input input-ghost flex-1 min-w-[6rem] !outline-none pl-0"
+                        :class="{ ' placeholder:!text-base-content': selectedOption }"
                         :placeholder="selectedOption ? labelFromOption(selectedOption) : placeholder" 
                         aria-autocomplete="list" />
                 </template>
