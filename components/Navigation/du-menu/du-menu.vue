@@ -30,11 +30,15 @@ const roundedClass = computed(() => {
 const inDropdownClass = computed(() => {
   return isInDropdownTrigger ? "bg-base-100 shadow-sm" : "bg-base-200";
 });
+
+const ariaOrientation = computed(() => {
+  return props.direction === "horizontal" || props.direction === "responsive" ? "horizontal" : "vertical";
+});
 // Slots documentation : voir le template pour la gestion des slots indexés et globaux.
 </script>
 
 <template>
-  <ul role="listbox" :aria-orientation="props.direction" :class="['menu', inDropdownClass, roundedClass, directionClass, sizeClass]">
+  <ul role="listbox" :aria-orientation="ariaOrientation" :class="['menu', inDropdownClass, roundedClass, directionClass, sizeClass]">
     <!-- Mode automatique (items) -->
     <template v-if="items && !$slots.default">
       <DuMenuItem
