@@ -148,6 +148,10 @@ onMounted(() => {
 onBeforeUnmount(() => {
   stopCountdown()
 })
+
+const cssVars = computed(() => ({
+  '--value': `${currentValue}`
+}))
 </script>
 
 <template>
@@ -156,7 +160,7 @@ onBeforeUnmount(() => {
     aria-live="polite"
     :aria-label="ariaLabel"
   >
-    <span :style="`--value: ${currentValue};`">
+    <span :style="cssVars">
       <slot>{{ formattedValue }}</slot>
     </span>
   </span>

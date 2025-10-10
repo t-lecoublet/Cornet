@@ -12,13 +12,17 @@ const props = withDefaults(
 const separatorClass = computed(() => {
   return props.separator ? "spec-seperator" : "";
 });
+
+const cssVars = computed(() => ({
+  '--separator': props.separator
+}))
 </script>
 
 <template>
   <div
     class="breadcrumbs"
     :class="[separatorClass]"
-    :style="`--separator: '${props.separator}'`"
+    :style="cssVars"
   >
     <ul>
       <li v-for="(item, index) in items" :key="index">

@@ -16,17 +16,21 @@ const props = withDefaults(
 const { colorClass } = useVariantMapping(props, "text");
 
 const styleVar = computed(() => {
-  let styles = `--value: ${props.value};`;
+  let styleObject: any = {
+    "--value": props.value?.toString() || "0",
+  }
+  // let styles = `--value: ${props.value};`;
 
   if (props.size && AvailableSizes.indexOf(props.size as any) === -1) {
-    styles += `--size: ${props.size};`;
+    // styles += `--size: ${props.size};`;
+    styleObject["--size"] = props.size;
   }
 
   if (props.thickness) {
-    styles += `--thickness: ${props.thickness};`;
+    styleObject["--thickness"] = props.thickness;
   }
 
-  return styles.trim();
+  return styleObject;
 });
 </script>
 
