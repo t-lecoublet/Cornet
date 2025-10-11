@@ -4,7 +4,7 @@ import { useVariantMapping, type Variant } from '../../../composables/useVariant
 import { type BUTTONColor, type BUTTONSize } from './du-button.types'
 import { computed, inject } from 'vue'
 
-type ElementType = 'button' | 'a' | 'input' | 'div'
+type ElementType = 'button' | 'a' | 'input' | 'div' | 'RouterLink' | 'NuxtLink' | string
 
 const props = withDefaults(
   defineProps<{
