@@ -13,7 +13,7 @@ export interface SELECTProps {
   size?: Size
   disabled?: boolean
   multiple?: boolean
-  modelValue?: string | string[] | null
+  modelValue?: any
   placeholder?: string
   search?: boolean
   searchPlaceholder?: string
