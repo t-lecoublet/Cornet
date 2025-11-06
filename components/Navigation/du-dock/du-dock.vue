@@ -37,41 +37,32 @@ defineExpose({
 </script>
 
 <template>
-  <div
-    :class="[
-      'dock',
-      sizeClass,
-      reverseTheme && 'bg-neutral text-neutral-content',
-    ]"
-  >
+  <div :class="[
+    'dock',
+    sizeClass,
+    reverseTheme && 'bg-neutral text-neutral-content',
+  ]">
     <template v-if="$slots.default">
       <slot></slot>
     </template>
     <template v-else-if="items">
-      <button
-        v-for="(item, index) in items"
-        :key="index"
-        @click="setActiveItem(index)"
-        :class="[item.class, isActive(index) && 'dock-active']"
-      >
-        <slot name="icon" :item="item">
-          <component :is="item.icon" v-if="typeof item.icon === 'object'" />
-          <img
-            v-else-if="
+      <button v-for="(item, index) in items" :key="index" @click="setActiveItem(index)"
+        :class="[item.class, isActive(index) && 'dock-active']">
+        <slot name="icon" :item="item" :index="index">
+          <slot :name="`icon-${index}`" :item="item" :index="index">
+            <component :is="item.icon" v-if="typeof item.icon === 'object'" />
+            <img v-else-if="
               typeof item.icon === 'string' && item.icon.startsWith('http')
-            "
-            :src="item.icon"
-            :alt="item.label"
-          />
-          <div
-            v-else-if="typeof item.icon === 'string'"
-            v-html="item.icon"
-          ></div>
+            " :src="item.icon" :alt="item.label" />
+            <div v-else-if="typeof item.icon === 'string'" v-html="item.icon"></div>
+          </slot>
         </slot>
 
         <span v-if="item.label || $slots.label" :class="'dock-label'">
-          <slot name="label" :item="item">
-            {{ item.label }}
+          <slot name="label" :item="item" :index="index">
+            <slot :name="`label-${index}`" :item="item" :index="index">
+              {{ item.label }}
+            </slot>
           </slot>
         </span>
       </button>
