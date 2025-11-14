@@ -44,7 +44,6 @@ const props = withDefaults(
     square: false,
     circle: false,
     block: false,
-    as: 'button',
     type: undefined,
     href: undefined,
     value: undefined,
@@ -90,9 +89,9 @@ const blockClass = computed(() => {
 })
 
 const elementTag = computed((): ElementType => {
+  if (props.as) return props.as
   if (isInDropdownTrigger) return 'div'
   if (filterName) return 'input'
-  if (props.as) return props.as
 
   return 'button'
 })
