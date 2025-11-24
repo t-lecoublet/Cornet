@@ -54,3 +54,4 @@ export { default as DuPagination } from './components/Navigation/du-pagination/d
 export { default as DuStepItem } from './components/Navigation/du-step-item/du-step-item.vue';
 export { default as DuSteps } from './components/Navigation/du-steps/du-steps.vue';
 export { default as DuTabs } from './components/Navigation/du-tabs/du-tabs.vue';
+export { default as DuFab } from './components/Actions/du-fab/du-fab.vue';

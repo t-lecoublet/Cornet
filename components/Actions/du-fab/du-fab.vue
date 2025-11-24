@@ -74,7 +74,7 @@ const getTooltipPosition = (position?: 'left' | 'top' | 'right' | 'bottom') => {
 
 <template>
   <!-- Dynamic items mode -->
-  <template v-if="items">
+  <template v-if="items || mainAction">
     <div :class="fabClasses">
       <!-- Main trigger button -->
       <div
