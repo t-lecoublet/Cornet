@@ -139,7 +139,7 @@ defineExpose({
         <div :class="drawerSideClasses">
             <label :for="drawerId" aria-label="close sidebar" :class="drawerOverlayClasses"></label>
 
-            <div class="bg-base-200 text-base-content min-h-full w-80 p-4">
+            <div class="text-base-content h-full p-4">
                 <!-- Dynamic items mode -->
                 <template v-if="items">
                     <!-- Forward menu customization slots (item, title, submenu, indexed) to DuMenu -->
