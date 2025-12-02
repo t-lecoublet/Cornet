@@ -1,0 +1,166 @@
+<script setup lang="ts">
+import { computed, ref, watch, useSlots } from 'vue'
+import { type DRAWERItem } from './du-drawer.types'
+import DuMenu from '../../Navigation/du-menu/du-menu.vue'
+
+const slots = useSlots()
+
+const props = withDefaults(
+    defineProps<{
+        id?: string
+        position?: 'start' | 'end'
+        open?: boolean
+        responsive?: boolean
+        alwaysOpenOnLarge?: boolean
+        modelValue?: boolean
+        sidebarClass?: string
+        contentClass?: string
+        overlayClass?: string
+        items?: DRAWERItem[]
+    }>(),
+    {
+        id: undefined,
+        position: 'start',
+        open: false,
+        responsive: false,
+        alwaysOpenOnLarge: false,
+        modelValue: false,
+        sidebarClass: '',
+        contentClass: '',
+        overlayClass: '',
+        items: undefined,
+    },
+)
+
+const emit = defineEmits<{
+    'update:modelValue': [value: boolean]
+    'update:open': [value: boolean]
+}>()
+
+const drawerId = computed(() => {
+    return props.id || `drawer-${Math.random().toString(36).substring(2, 11)}`
+})
+
+const drawerClasses = computed(() => {
+    const classes = ['drawer']
+
+    if (props.position === 'end') {
+        classes.push('drawer-end')
+    }
+
+    if (props.alwaysOpenOnLarge) {
+        classes.push('lg:drawer-open')
+    }
+
+    return classes
+})
+
+const drawerSideClasses = computed(() => {
+    const classes = ['drawer-side']
+
+    if (props.alwaysOpenOnLarge) {
+        classes.push('max-lg:z-[1002]')
+    }
+
+    if (props.sidebarClass) {
+        classes.push(props.sidebarClass)
+    }
+
+    return classes
+})
+
+const drawerContentClasses = computed(() => {
+    const classes = ['drawer-content']
+
+    if (props.contentClass) {
+        classes.push(props.contentClass)
+    }
+
+    return classes
+})
+
+const drawerOverlayClasses = computed(() => {
+    const classes = ['drawer-overlay']
+
+    if (props.overlayClass) {
+        classes.push(props.overlayClass)
+    }
+
+    return classes
+})
+
+const internalOpen = ref(props.open || props.modelValue)
+
+watch(
+    () => props.open,
+    (newValue) => {
+        internalOpen.value = newValue
+    },
+)
+
+watch(
+    () => props.modelValue,
+    (newValue) => {
+        internalOpen.value = newValue
+    },
+)
+
+watch(internalOpen, (newValue) => {
+    emit('update:modelValue', newValue)
+    emit('update:open', newValue)
+})
+
+const toggleDrawer = () => {
+    internalOpen.value = !internalOpen.value
+}
+
+const menuSlots = computed(() => {
+    const excludedSlots = ['default', 'content', 'sidebar', 'side']
+    return Object.keys(slots).filter(name => !excludedSlots.includes(name))
+})
+
+defineExpose({
+    toggleDrawer,
+})
+</script>
+
+<template>
+    <div :class="drawerClasses">
+        <input :id="drawerId" type="checkbox" class="drawer-toggle" v-model="internalOpen" />
+
+        <!-- Drawer Content -->
+        <div :class="drawerContentClasses">
+            <slot name="content">
+                <slot></slot>
+            </slot>
+        </div>
+
+        <!-- Drawer Side -->
+        <div :class="drawerSideClasses">
+            <label :for="drawerId" aria-label="close sidebar" :class="drawerOverlayClasses"></label>
+
+            <div class="bg-base-200 text-base-content min-h-full w-80 p-4">
+                <!-- Dynamic items mode -->
+                <template v-if="items">
+                    <!-- Forward menu customization slots (item, title, submenu, indexed) to DuMenu -->
+                    <DuMenu :items="items" class="w-full">
+                        <template
+                            v-for="name in menuSlots"
+                            :key="name"
+                            #[name]="slotProps"
+                        >
+                            <slot :name="name" v-bind="slotProps" />
+                        </template>
+                    </DuMenu>
+                </template>
+
+                <!-- Manual/Slot mode -->
+                <template v-else>
+                    <slot name="sidebar">
+                        <slot name="side"></slot>
+                    </slot>
+                </template>
+            </div>
+        </div>
+    </div>
+</template>
