@@ -1,9 +1,29 @@
 # DaisyUI Vue Kit - Components documentation
 
+## AI Instructions
+
+This file contains summarized documentation for DaisyUI Vue Kit components.
+For each component, the main props and types are listed.
+
+**Conditional References:**
+If you need more details about a specific component (full implementation, 
+internal logic, styles, advanced slots), refer to the source files using `@see-if-needed` annotations.
+
+- **Vue File:** `components/{Category}/{component-name}/{component-name}.vue`
+- **Types File:** `components/{Category}/{component-name}/{component-name}.types.ts`
+- **Stories File:** `components/{Category}/{component-name}/{component-name}.stories.ts`
+
+Available categories: `Actions`, `DataDisplay`, `DataInput`, `Feedback`, `Layout`, `Navigation`
+
+> ⚠️ Only read these files if the documentation below is insufficient for your task.
+
+---
+
 ## COMPOSABLES
 
 ### useSizeProps
 **File:** composables/useSizeProps.ts
+<!-- @see-if-needed: composables/useSizeProps.ts -->
 
 **Type Size:**
 ```typescript
@@ -18,6 +38,7 @@ export function useSizeMapping(props: { size: Size }, suffix: string)
 
 ### useVariantProps
 **File:** composables/useVariantProps.ts
+<!-- @see-if-needed: composables/useVariantProps.ts -->
 
 **Type Variant:**
 ```typescript
@@ -35,6 +56,7 @@ export function useVariantMapping(props: { variant: Variant }, suffix: string)
 
 ### DuButton
 **File:** components/Actions/du-button/du-button.vue
+<!-- @see-if-needed: components/Actions/du-button/du-button.vue -->
 
 **Props:**
 - customClass?: string
@@ -72,6 +94,7 @@ export type BUTTONColor = (typeof BUTTON_COLORS)[number]
 
 ### DuDropdown
 **File:** components/Actions/du-dropdown/du-dropdown.vue
+<!-- @see-if-needed: components/Actions/du-dropdown/du-dropdown.vue -->
 
 **Props:**
 - placement?: 'start' | 'center' | 'end' | 'top' | 'bottom' | 'left' | 'right'
@@ -90,6 +113,7 @@ export type DROPDOWNPlacement = (typeof DROPDOWN_PLACEMENTS)[number]
 
 ### DuModal
 **File:** components/Actions/du-modal/du-modal.vue
+<!-- @see-if-needed: components/Actions/du-modal/du-modal.vue -->
 
 **Props:**
 - id?: string
@@ -112,6 +136,7 @@ export type MODALPlacement = (typeof MODAL_PLACEMENTS)[number]
 
 ### DuSwap
 **File:** components/Actions/du-swap/du-swap.vue
+<!-- @see-if-needed: components/Actions/du-swap/du-swap.vue -->
 
 **Props:**
 - useCheckbox?: boolean
@@ -127,6 +152,7 @@ export type SWAPProperty = (typeof SWAP_PROPERTIES)[number]
 
 ### DuFab
 **File:** components/Actions/du-fab/du-fab.vue
+<!-- @see-if-needed: components/Actions/du-fab/du-fab.vue -->
 
 **Props:**
 - items?: FABItem[]
@@ -177,6 +203,7 @@ export interface FABCloseButton {
 
 ### DuAccordion
 **File:** components/DataDisplay/du-accordion/du-accordion.vue
+<!-- @see-if-needed: components/DataDisplay/du-accordion/du-accordion.vue -->
 
 **Props:**
 - customClass?: string
@@ -202,6 +229,7 @@ export type ACCORDIONModifier = (typeof ACCORDION_MODIFIERS)[number]
 
 ### DuAvatar
 **File:** components/DataDisplay/du-avatar/du-avatar.vue
+<!-- @see-if-needed: components/DataDisplay/du-avatar/du-avatar.vue -->
 
 **Props:**
 - size?: Size
@@ -231,6 +259,7 @@ export type AVATARRounded = (typeof AVATAR_ROUNDED)[number]
 
 ### DuBadge
 **File:** components/DataDisplay/du-badge/du-badge.vue
+<!-- @see-if-needed: components/DataDisplay/du-badge/du-badge.vue -->
 
 **Props:**
 - size?: Size
@@ -255,6 +284,7 @@ export type BADGEVariant = (typeof BADGE_VARIANTS)[number]
 
 ### DuCard
 **File:** components/DataDisplay/du-card/du-card.vue
+<!-- @see-if-needed: components/DataDisplay/du-card/du-card.vue -->
 
 **Props:**
 - title?: string
@@ -278,6 +308,7 @@ export type CARDProperty = (typeof CARD_PROPERTIES)[number]
 
 ### DuCarousel
 **File:** components/DataDisplay/du-carousel/du-carousel.vue
+<!-- @see-if-needed: components/DataDisplay/du-carousel/du-carousel.vue -->
 
 **Props:**
 - start?: boolean
@@ -296,6 +327,7 @@ export type CAROUSELDirection = (typeof CAROUSEL_DIRECTIONS)[number]
 
 ### DuChat
 **File:** components/DataDisplay/du-chat/du-chat.vue
+<!-- @see-if-needed: components/DataDisplay/du-chat/du-chat.vue -->
 
 **Props:**
 - items?: ChatItem[]
@@ -333,6 +365,7 @@ export interface ChatProps {
 
 ### DuCollapse
 **File:** components/DataDisplay/du-collapse/du-collapse.vue
+<!-- @see-if-needed: components/DataDisplay/du-collapse/du-collapse.vue -->
 
 **Props:**
 - customClass?: string
@@ -357,6 +390,7 @@ export type COLLAPSEModifier = (typeof COLLAPSE_MODIFIERS)[number]
 
 ### DuCountdown
 **File:** components/DataDisplay/du-countdown/du-countdown.vue
+<!-- @see-if-needed: components/DataDisplay/du-countdown/du-countdown.vue -->
 
 **Props:**
 - value?: number
@@ -382,6 +416,7 @@ export interface COUNTDOWNLabels {
 
 ### DuDiff
 **File:** components/DataDisplay/du-diff/du-diff.vue
+<!-- @see-if-needed: components/DataDisplay/du-diff/du-diff.vue -->
 
 **Props:**
 - item1?: string
@@ -399,6 +434,7 @@ export type DIFFAspectRatio = (typeof DIFF_ASPECT_RATIOS)[number]
 
 ### DuKbd
 **File:** components/DataDisplay/du-kbd/du-kbd.vue
+<!-- @see-if-needed: components/DataDisplay/du-kbd/du-kbd.vue -->
 
 **Props:**
 - size?: Size
@@ -411,6 +447,7 @@ export type KBDSize = (typeof KBD_SIZES)[number]
 
 ### DuList
 **File:** components/DataDisplay/du-list/du-list.vue
+<!-- @see-if-needed: components/DataDisplay/du-list/du-list.vue -->
 
 **Props:**
 - class?: string
@@ -424,6 +461,7 @@ export interface LISTProps {
 
 ### DuStat
 **File:** components/DataDisplay/du-stat/du-stat.vue
+<!-- @see-if-needed: components/DataDisplay/du-stat/du-stat.vue -->
 
 **Props:**
 - figureClass?: string
@@ -449,6 +487,7 @@ export interface STATItem {
 
 ### DuStats
 **File:** components/DataDisplay/du-stats/du-stats.vue
+<!-- @see-if-needed: components/DataDisplay/du-stats/du-stats.vue -->
 
 **Props:**
 - items?: STATSItem[]
@@ -462,6 +501,7 @@ export interface STATSItem extends STATItem {}
 
 ### DuStatus
 **File:** components/DataDisplay/du-status/du-status.vue
+<!-- @see-if-needed: components/DataDisplay/du-status/du-status.vue -->
 
 **Props:**
 - size?: Size
@@ -483,6 +523,7 @@ export type STATUSVariant = (typeof STATUS_VARIANTS)[number]
 
 ### DuTable
 **File:** components/DataDisplay/du-table/du-table.vue
+<!-- @see-if-needed: components/DataDisplay/du-table/du-table.vue (slots pour cellules personnalisées) -->
 
 **Props:**
 - columns?: TABLEColumn[]
@@ -515,6 +556,7 @@ export interface TABLERow {
 
 ### DuTimeline
 **File:** components/DataDisplay/du-timeline/du-timeline.vue
+<!-- @see-if-needed: components/DataDisplay/du-timeline/du-timeline.vue -->
 
 **Props:**
 - items?: TIMELINEItem[]
@@ -549,6 +591,7 @@ export interface TIMELINEItem {
 
 ### DuCheckbox
 **File:** components/DataInput/du-checkbox/du-checkbox.vue
+<!-- @see-if-needed: components/DataInput/du-checkbox/du-checkbox.vue -->
 
 **Props:**
 - modelValue?: boolean
@@ -578,6 +621,7 @@ export interface CHECKBOXProps {
 
 ### DuFieldset
 **File:** components/DataInput/du-fieldset/du-fieldset.vue
+<!-- @see-if-needed: components/DataInput/du-fieldset/du-fieldset.vue -->
 
 **Props:**
 - legend?: string
@@ -593,6 +637,7 @@ export interface FIELDSETProps {
 
 ### DuFileInput
 **File:** components/DataInput/du-file-input/du-file-input.vue
+<!-- @see-if-needed: components/DataInput/du-file-input/du-file-input.vue -->
 
 **Props:**
 - disabled?: boolean
@@ -612,6 +657,7 @@ export interface FILEINPUTProps {
 
 ### DuFilter
 **File:** components/DataInput/du-filter/du-filter.vue
+<!-- @see-if-needed: components/DataInput/du-filter/du-filter.vue -->
 
 **Props:**
 - items?: FilterItem[]
@@ -651,6 +697,7 @@ export interface FilterProps {
 
 ### DuInputField
 **File:** components/DataInput/du-input-field/du-input-field.vue
+<!-- @see-if-needed: components/DataInput/du-input-field/du-input-field.vue -->
 
 **Props:**
 - type?: INPUTFIELDType
@@ -682,6 +729,7 @@ export type INPUTFIELDType = "text" | "password" | "email" | "number" | "date" |
 
 ### DuLabel
 **File:** components/DataInput/du-label/du-label.vue
+<!-- @see-if-needed: components/DataInput/du-label/du-label.vue -->
 
 **Props:**
 - type?: "label" | "input" | "select" | "floating-label" | "fieldset-label"
@@ -695,6 +743,7 @@ export type LABELProps = {
 
 ### DuLabelInputValidator
 **File:** components/DataInput/du-label-input-validator/du-label-input-validator.vue
+<!-- @see-if-needed: components/DataInput/du-label-input-validator/du-label-input-validator.vue -->
 
 **Props:**
 - type?: LABELProps["type"]
@@ -727,6 +776,7 @@ export interface LabelInputValidatorProps extends LABELProps,
 
 ### DuRadio
 **File:** components/DataInput/du-radio/du-radio.vue
+<!-- @see-if-needed: components/DataInput/du-radio/du-radio.vue -->
 
 **Props:**
 - checked?: boolean
@@ -752,6 +802,7 @@ export interface RADIOProps {
 
 ### DuRange
 **File:** components/DataInput/du-range/du-range.vue
+<!-- @see-if-needed: components/DataInput/du-range/du-range.vue -->
 
 **Props:**
 - modelValue?: number
@@ -783,6 +834,7 @@ export interface RANGEProps {
 
 ### DuRating
 **File:** components/DataInput/du-rating/du-rating.vue
+<!-- @see-if-needed: components/DataInput/du-rating/du-rating.vue -->
 
 **Props:**
 - modelValue?: number
@@ -824,6 +876,7 @@ export interface RatingProps {
 
 ### DuSelect
 **File:** components/DataInput/du-select/du-select.vue
+<!-- @see-if-needed: components/DataInput/du-select/du-select.vue (logique de recherche et sélection multiple) -->
 
 **Props:**
 - ghost?: boolean
@@ -877,6 +930,7 @@ export interface SELECTProps {
 
 ### DuSearch
 **File:** components/DataInput/du-search/du-search.vue
+<!-- @see-if-needed: components/DataInput/du-search/du-search.vue -->
 
 **Props:**
 - modelValue?: any | any[]
@@ -931,6 +985,7 @@ export interface SEARCHProps {
 
 ### DuTextArea
 **File:** components/DataInput/du-text-area/du-text-area.vue
+<!-- @see-if-needed: components/DataInput/du-text-area/du-text-area.vue -->
 
 **Props:**
 - modelValue?: string
@@ -958,6 +1013,7 @@ export interface TEXTAREAProps {
 
 ### DuAlert
 **File:** components/Feedback/du-alert/du-alert.vue
+<!-- @see-if-needed: components/Feedback/du-alert/du-alert.vue -->
 
 **Props:**
 - variant?: AlertVariant
@@ -991,6 +1047,7 @@ export interface AlertProps {
 
 ### DuLoading
 **File:** components/Feedback/du-loading/du-loading.vue
+<!-- @see-if-needed: components/Feedback/du-loading/du-loading.vue -->
 
 **Props:**
 - animation?: LoadingAnimation
@@ -1011,6 +1068,7 @@ export interface LoadingProps {
 
 ### DuProgress
 **File:** components/Feedback/du-progress/du-progress.vue
+<!-- @see-if-needed: components/Feedback/du-progress/du-progress.vue -->
 
 **Props:**
 - value?: number
@@ -1030,6 +1088,7 @@ export interface ProgressProps {
 
 ### DuRadialProgress
 **File:** components/Feedback/du-radial-progress/du-radial-progress.vue
+<!-- @see-if-needed: components/Feedback/du-radial-progress/du-radial-progress.vue -->
 
 **Props:**
 - value?: number
@@ -1049,6 +1108,7 @@ export interface RadialProgressProps {
 
 ### DuSkeleton
 **File:** components/Feedback/du-skeleton/du-skeleton.vue
+<!-- @see-if-needed: components/Feedback/du-skeleton/du-skeleton.vue -->
 
 **Props:**
 - class?: string
@@ -1062,6 +1122,7 @@ export interface SkeletonProps {
 
 ### DuToast
 **File:** components/Feedback/du-toast/du-toast.vue
+<!-- @see-if-needed: components/Feedback/du-toast/du-toast.vue -->
 
 **Props:**
 - horizontalPosition?: ToastHorizontalPosition
@@ -1085,6 +1146,7 @@ export interface ToastProps {
 
 ### DuTooltip
 **File:** components/Feedback/du-tooltip/du-tooltip.vue
+<!-- @see-if-needed: components/Feedback/du-tooltip/du-tooltip.vue -->
 
 **Props:**
 - variant?: Variant
@@ -1113,6 +1175,7 @@ export interface TooltipProps {
 
 ### DuJoin
 **File:** components/Layout/du-join/du-join.vue
+<!-- @see-if-needed: components/Layout/du-join/du-join.vue -->
 
 **Props:**
 - as?: string
@@ -1131,6 +1194,7 @@ export interface JoinProps {
 
 ### DuDrawer
 **File:** components/Layout/du-drawer/du-drawer.vue
+<!-- @see-if-needed: components/Layout/du-drawer/du-drawer.vue (gestion responsive et overlay) -->
 
 **Props:**
 - id?: string
@@ -1178,6 +1242,7 @@ export interface DRAWERProps {
 
 ### DuBreadcrumbs
 **File:** components/Navigation/du-breadcrumbs/du-breadcrumbs.vue
+<!-- @see-if-needed: components/Navigation/du-breadcrumbs/du-breadcrumbs.vue -->
 
 **Props:**
 - items: BreadcrumbItem[]
@@ -1199,6 +1264,7 @@ export interface BreadcrumbsProps {
 
 ### DuButtonLink
 **File:** components/Navigation/du-button-link/du-button-link.vue
+<!-- @see-if-needed: components/Navigation/du-button-link/du-button-link.vue -->
 
 **Props:**
 - size?: Size
@@ -1234,6 +1300,7 @@ export interface ButtonLinkProps {
 
 ### DuDock
 **File:** components/Navigation/du-dock/du-dock.vue
+<!-- @see-if-needed: components/Navigation/du-dock/du-dock.vue -->
 
 **Props:**
 - size?: Size
@@ -1260,6 +1327,7 @@ export interface DockProps {
 
 ### DuLink
 **File:** components/Navigation/du-link/du-link.vue
+<!-- @see-if-needed: components/Navigation/du-link/du-link.vue -->
 
 **Props:**
 - variant?: Variant
@@ -1277,6 +1345,8 @@ export interface LinkProps {
 
 ### DuMenu
 **File:** components/Navigation/du-menu/du-menu.vue
+<!-- @see-if-needed: components/Navigation/du-menu/du-menu.vue (gestion des sous-menus et slots) -->
+<!-- @see-if-needed: components/Navigation/du-menu/du-menu-item.vue (composant item interne) -->
 
 **Props:**
 - direction?: MenuDirection
@@ -1318,6 +1388,7 @@ export interface MenuProps {
 
 ### DuNavbar
 **File:** components/Navigation/du-navbar/du-navbar.vue
+<!-- @see-if-needed: components/Navigation/du-navbar/du-navbar.vue -->
 
 **Props:**
 - (Aucune propriété spécifique)
@@ -1331,6 +1402,7 @@ export interface NavbarProps {
 
 ### DuPagination
 **File:** components/Navigation/du-pagination/du-pagination.vue
+<!-- @see-if-needed: components/Navigation/du-pagination/du-pagination.vue (logique de pagination et ellipsis) -->
 
 **Props:**
 - modelValue?: number
@@ -1376,6 +1448,7 @@ export interface PaginationProps {
 
 ### DuStepItem
 **File:** components/Navigation/du-step-item/du-step-item.vue
+<!-- @see-if-needed: components/Navigation/du-step-item/du-step-item.vue -->
 
 **Props:**
 - label?: string
@@ -1397,6 +1470,7 @@ export interface StepItemProps {
 
 ### DuSteps
 **File:** components/Navigation/du-steps/du-steps.vue
+<!-- @see-if-needed: components/Navigation/du-steps/du-steps.vue -->
 
 **Props:**
 - items?: StepItem[]
@@ -1430,6 +1504,7 @@ export interface StepsProps {
 
 ### DuTabs
 **File:** components/Navigation/du-tabs/du-tabs.vue
+<!-- @see-if-needed: components/Navigation/du-tabs/du-tabs.vue (gestion des contenus et slots dynamiques) -->
 
 **Props:**
 - size?: Size
