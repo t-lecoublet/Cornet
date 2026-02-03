@@ -16,6 +16,7 @@ import {
   DuChat,
   DuCollapse,
   DuCountdown,
+  DuCountdownGroup,
   DuDiff,
   DuKbd,
   DuList,
@@ -72,6 +73,14 @@ const textAreaValue = ref('')
 const inputValue = ref('')
 const currentPage = ref(1)
 const drawerOpen = ref(false)
+const showToast = ref(false)
+const targetDate = ref(new Date(
+  Date.now() +
+  2 * 24 * 60 * 60 * 1000 +
+  3 * 60 * 60 * 1000 +
+  45 * 60 * 1000 +
+  30 * 1000
+))
 
 // Sample data
 const accordionItems = [
@@ -254,9 +263,9 @@ const drawerItems = [
                 <DuButton>Click me</DuButton>
               </template>
               <DuMenu class="w-56">
-                  <li><a>Item 1</a></li>
-                  <li><a>Item 2</a></li>
-                  <li><a>Item 3</a></li>
+                <li><a>Item 1</a></li>
+                <li><a>Item 2</a></li>
+                <li><a>Item 3</a></li>
               </DuMenu>
             </DuDropdown>
             <DuDropdown hover>
@@ -264,9 +273,9 @@ const drawerItems = [
                 <DuButton variant="secondary">Hover me</DuButton>
               </template>
               <DuMenu class="w-56">
-                  <li><a>Item 1</a></li>
-                  <li><a>Item 2</a></li>
-                  <li><a>Item 3</a></li>
+                <li><a>Item 1</a></li>
+                <li><a>Item 2</a></li>
+                <li><a>Item 3</a></li>
               </DuMenu>
             </DuDropdown>
           </div>
@@ -278,8 +287,8 @@ const drawerItems = [
           <DuButton variant="primary" @click="modalRef.showModal()">Open Modal</DuButton>
           <DuModal ref="modalRef" close-button>
             <h3 class="text-lg font-bold">Welcome!</h3>
-              <p>This is a beautiful modal dialog built with DaisyUI Vue Kit.</p>
-              <p class="mt-2">You can add any content here including forms, images, and more.</p>
+            <p>This is a beautiful modal dialog built with DaisyUI Vue Kit.</p>
+            <p class="mt-2">You can add any content here including forms, images, and more.</p>
             <template #actions>
               <DuButton @click="modalRef.closeModal()">Close</DuButton>
               <DuButton variant="primary" @click="modalRef.closeModal()">Confirm</DuButton>
@@ -307,13 +316,7 @@ const drawerItems = [
         <DuCard dash class="mb-6" title="DuFab">
           <p class="text-base-content/70 mb-4">Floating Action Button for quick actions.</p>
           <div class="relative h-32 bg-base-200 rounded-lg">
-            <DuFab 
-              :items="fabItems" 
-              variant="primary" 
-              circle 
-              :main-action="{ label: '+' }"
-              absolute
-            />
+            <DuFab :items="fabItems" variant="primary" circle :main-action="{ label: '+' }" absolute />
           </div>
         </DuCard>
       </section>
@@ -418,7 +421,7 @@ const drawerItems = [
             </DuCard>
             <DuCard title="Image Card" image-full>
               <template #figure>
-                <img src="https://picsum.photos/400/200" alt="Card image" />
+                <figure><img src="https://picsum.photos/600/200" alt="Card image" /></figure>
               </template>
               <p>Card with full-width image.</p>
             </DuCard>
@@ -452,17 +455,22 @@ const drawerItems = [
           <DuTable :columns="tableColumns" :rows="tableRows" zebra header />
         </DuCard>
 
-        <!-- Timeline -->
-        <DuCard dash class="mb-6" title="DuTimeline">
-          <p class="text-base-content/70 mb-4">Display events in chronological order.</p>
-          <DuTimeline :items="timelineItems" :valid-items="[true, true, false]" />
-        </DuCard>
+        <div class="grid md:grid-cols-2 gap-6 mb-6">
+          <!-- Timeline -->
+          <DuCard dash class="mb-6" title="DuTimeline">
+            <p class="text-base-content/70 mb-4">Display events in chronological order.</p>
+            <DuTimeline :items="timelineItems" :valid-items="[true, true, false]" />
+          </DuCard>
 
-        <!-- Stats -->
-        <DuCard dash class="mb-6" title="DuStats">
-          <p class="text-base-content/70 mb-4">Display statistics and metrics.</p>
-          <DuStats :items="statsItems" shadow />
-        </DuCard>
+          <!-- Stats -->
+          <DuCard dash class="mb-6" title="DuStats">
+            <p class="text-base-content/70 mb-4">Display statistics and metrics.</p>
+            <div class="flex flex-wrap gap-6">
+              <DuStats dash :items="statsItems.slice(0, 2)" />
+              <DuStats shadow :items="statsItems.slice(2, 4)" />
+            </div>
+          </DuCard>
+        </div>
 
         <!-- Carousel -->
         <DuCard dash class="mb-6" title="DuCarousel">
@@ -483,35 +491,55 @@ const drawerItems = [
         <!-- Diff -->
         <DuCard dash class="mb-6" title="DuDiff">
           <p class="text-base-content/70 mb-4">Compare two images with a slider.</p>
-          <DuDiff 
-            item1="https://picsum.photos/id/1/800/400" 
-            item2="https://picsum.photos/id/2/800/400" 
-            :aspect-ratio="null" 
-            class="h-24"
-          />
+          <DuDiff item1="https://picsum.photos/id/1/800/400" item2="https://picsum.photos/id/2/800/400"
+            :aspect-ratio="null" class="h-24" />
         </DuCard>
 
         <!-- Countdown & Kbd -->
         <div class="grid md:grid-cols-2 gap-6 mb-6">
-          <DuCard dash title="DuCountdown">
+          <DuCard dash title="DuCountdown & DuCountdownGroup">
             <p class="text-base-content/70 mb-4">Animated countdown timer.</p>
-            <div class="flex gap-4">
-              <DuCountdown :value="15" />
-              <DuCountdown :value="59" />
-              <DuCountdown :value="45" />
+            <div class="flex flex-row gap-4">
+              <div class="flex items-center gap-2">
+                <span>Days:</span>
+                <DuCountdown :target-date="targetDate" format="days" />
+              </div>
+              <div class="flex items-center gap-2">
+                <span>Hours:</span>
+                <DuCountdown :target-date="targetDate" format="hours" />
+              </div>
+              <div class="flex items-center gap-2">
+                <span>Minutes:</span>
+                <DuCountdown :target-date="targetDate" format="minutes" />
+              </div>
+              <div class="flex items-center gap-2">
+                <span>Seconds:</span>
+                <DuCountdown :target-date="targetDate" format="seconds" />
+              </div>
+            </div>
+            <div class="divider"></div>
+            <div class="flex flex-row gap-4">
+              <DuCountdownGroup :target-date="targetDate"
+                :labels="{ days: 'jours', hours: 'heures', minutes: 'min', seconds: 'sec' }" separator="-" />
+              <div class="divider divider-horizontal"></div>
+              <DuCountdownGroup :target-date="targetDate" :show-days="false" :show-hours="true" :show-minutes="true"
+                :show-seconds="true" />
             </div>
           </DuCard>
 
           <DuCard dash title="DuKbd">
             <p class="text-base-content/70 mb-4">Keyboard key indicators.</p>
-            <div class="flex flex-wrap gap-2 items-center">
+            <div>
               <DuKbd>⌘</DuKbd>
+              +
               <DuKbd>K</DuKbd>
-              <span class="mx-2">or</span>
+            </div>
+            <span class="mx-2">or</span>
+            <div>
               <DuKbd size="sm">Ctrl</DuKbd>
-              <span>+</span>
+              +
               <DuKbd size="sm">Shift</DuKbd>
-              <span>+</span>
+              +
               <DuKbd size="sm">P</DuKbd>
             </div>
           </DuCard>
@@ -614,24 +642,14 @@ const drawerItems = [
         <div class="grid md:grid-cols-2 gap-6 mb-6">
           <DuCard dash title="DuSelect">
             <p class="text-base-content/70 mb-4">Dropdown select with search support.</p>
-            <DuSelect 
-              v-model="selectValue" 
-              :options="selectOptions"
-              placeholder="Choose an option"
-              track-by="id"
-              label-by="name"
-            />
+            <DuSelect v-model="selectValue" :options="selectOptions" placeholder="Choose an option" track-by="id"
+              label-by="name" />
           </DuCard>
 
           <DuCard dash title="DuSearch">
             <p class="text-base-content/70 mb-4">Search input with autocomplete.</p>
-            <DuSearch 
-              v-model="searchValue"
-              name="framework-search"
-              id="framework-search"
-              :list-values="searchOptions"
-              placeholder="Search frameworks..."
-            />
+            <DuSearch v-model="searchValue" name="framework-search" id="framework-search" :list-values="searchOptions"
+              placeholder="Search frameworks..." />
           </DuCard>
         </div>
 
@@ -660,11 +678,7 @@ const drawerItems = [
         <div class="grid md:grid-cols-2 gap-6 mb-6">
           <DuCard dash title="DuTextArea">
             <p class="text-base-content/70 mb-4">Multi-line text input.</p>
-            <DuTextArea 
-              v-model="textAreaValue" 
-              placeholder="Write your message here..."
-              variant="primary"
-            />
+            <DuTextArea v-model="textAreaValue" placeholder="Write your message here..." variant="primary" />
           </DuCard>
 
           <DuCard dash title="DuFileInput">
@@ -679,11 +693,7 @@ const drawerItems = [
         <!-- Filter -->
         <DuCard dash class="mb-6" title="DuFilter">
           <p class="text-base-content/70 mb-4">Filter toggle buttons.</p>
-          <DuFilter 
-            :items="filterItems" 
-            name="status-filter"
-            :buttons-args="{ variant: 'primary', outline: true }"
-          />
+          <DuFilter :items="filterItems" name="status-filter" :buttons-args="{ variant: 'primary', outline: true }" />
         </DuCard>
       </section>
 
@@ -784,11 +794,21 @@ const drawerItems = [
             </div>
           </DuCard>
 
-          <DuCard dash title="DuToast">
+          <DuCard dash title="DuToast" class="relative">
             <p class="text-base-content/70 mb-4">Toast notifications (positioned).</p>
             <p class="text-sm text-base-content/60">
               Toast components are positioned absolutely. See documentation for usage.
             </p>
+            <DuToast horizontalPosition="end" verticalPosition="bottom" v-if="showToast">
+              <DuAlert variant="success">
+                <span>Your purchase has been confirmed.</span>
+                <template #actions>
+                  <DuButton size="sm" ghost @click="showToast = false">Dismiss</DuButton>
+                </template>
+              </DuAlert>
+            </DuToast>
+
+            <DuButton @click="showToast = true">Show Toast</DuButton>
           </DuCard>
         </div>
       </section>
@@ -799,34 +819,36 @@ const drawerItems = [
           <DuBadge variant="warning">Layout</DuBadge>
           Layout Components
         </h2>
+        <div class="grid md:grid-cols-2 gap-6 mb-6">
+          <!-- Join -->
+          <DuCard dash class="mb-6" title="DuJoin">
+            <p class="text-base-content/70 mb-4">Group elements together visually.</p>
+            <div class="space-x-4 space-y-4">
+              <DuJoin>
+                <DuButton class="join-item">Button 1</DuButton>
+                <DuButton class="join-item">Button 2</DuButton>
+                <DuButton class="join-item">Button 3</DuButton>
+              </DuJoin>
+              <DuJoin direction="vertical">
+                <DuButton class="join-item" variant="primary">Top</DuButton>
+                <DuButton class="join-item" variant="secondary">Middle</DuButton>
+                <DuButton class="join-item" variant="accent">Bottom</DuButton>
+              </DuJoin>
+            </div>
+          </DuCard>
 
-        <!-- Join -->
-        <DuCard dash class="mb-6" title="DuJoin">
-          <p class="text-base-content/70 mb-4">Group elements together visually.</p>
-          <div class="space-y-4">
-            <DuJoin>
-              <DuButton class="join-item">Button 1</DuButton>
-              <DuButton class="join-item">Button 2</DuButton>
-              <DuButton class="join-item">Button 3</DuButton>
-            </DuJoin>
-            <DuJoin direction="vertical">
-              <DuButton class="join-item" variant="primary">Top</DuButton>
-              <DuButton class="join-item" variant="secondary">Middle</DuButton>
-              <DuButton class="join-item" variant="accent">Bottom</DuButton>
-            </DuJoin>
-          </div>
-        </DuCard>
+          <!-- Drawer -->
+          <DuCard dash class="mb-6" title="DuDrawer">
+            <p class="text-base-content/70 mb-4">Slide-out drawer navigation.</p>
+            <DuButton variant="primary" @click="drawerOpen = !drawerOpen">
+              Toggle Drawer Demo
+            </DuButton>
+            <p class="text-sm text-base-content/60 mt-2">
+              Drawer component is typically used for navigation sidebars.
+            </p>
+          </DuCard>
 
-        <!-- Drawer -->
-        <DuCard dash class="mb-6" title="DuDrawer">
-          <p class="text-base-content/70 mb-4">Slide-out drawer navigation.</p>
-          <DuButton variant="primary" @click="drawerOpen = !drawerOpen">
-            Toggle Drawer Demo
-          </DuButton>
-          <p class="text-sm text-base-content/60 mt-2">
-            Drawer component is typically used for navigation sidebars.
-          </p>
-        </DuCard>
+        </div>
       </section>
 
       <!-- NAVIGATION SECTION -->
@@ -858,16 +880,8 @@ const drawerItems = [
         <DuCard dash class="mb-6" title="DuMenu">
           <p class="text-base-content/70 mb-4">Vertical and horizontal menus.</p>
           <div class="flex flex-wrap gap-8">
-            <DuMenu 
-              :items="menuItems" 
-              direction="vertical"
-              class="bg-base-200 rounded-box w-56"
-            />
-            <DuMenu 
-              :items="menuItems.slice(0, 3)" 
-              direction="horizontal"
-              class="bg-base-200 rounded-box"
-            />
+            <DuMenu :items="menuItems" direction="vertical" class="bg-base-200 rounded-box w-56" />
+            <DuMenu :items="menuItems.slice(0, 3)" direction="horizontal" class="bg-base-200 rounded-box" />
           </div>
         </DuCard>
 
@@ -896,16 +910,8 @@ const drawerItems = [
         <!-- Pagination -->
         <DuCard dash class="mb-6" title="DuPagination">
           <p class="text-base-content/70 mb-4">Page navigation for lists.</p>
-          <DuPagination 
-            v-model="currentPage"
-            :total="100" 
-            :per-page="10"
-            show-previous
-            show-next
-            show-first
-            show-last
-            variant="default"
-          />
+          <DuPagination v-model="currentPage" :total="100" :per-page="10" show-previous show-next show-first show-last
+            variant="default" />
           <p class="text-sm mt-2">Current page: {{ currentPage }}</p>
         </DuCard>
 
