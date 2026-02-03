@@ -7,6 +7,7 @@ const props = defineProps<{
   items?: STATSItem[]
   vertical?: boolean
   shadow?: boolean
+  dash?: boolean
 }>()
 
 const verticalClass = computed(() => {
@@ -16,10 +17,14 @@ const verticalClass = computed(() => {
 const shadowClass = computed(() => {
   return props.shadow ? "shadow" : ""
 })
+
+const dashClass = computed(() => {
+  return props.dash ? "stats-dash" : ""
+})
 </script>
 
 <template>
-  <div :class="['stats', verticalClass, shadowClass]">
+  <div :class="['stats', verticalClass, shadowClass, dashClass]">
     <template v-if="$slots.default">
       <slot></slot>
     </template>
@@ -77,3 +82,10 @@ const shadowClass = computed(() => {
     </template>
   </div>
 </template> 
+
+
+<style scoped>
+.stats-dash {
+  border:var(--border)dashed color-mix(in oklab,currentColor 10%,#0000);
+}
+</style>

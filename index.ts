@@ -15,6 +15,7 @@ export { default as DuCarousel } from './components/DataDisplay/du-carousel/du-c
 export { default as DuChat } from './components/DataDisplay/du-chat/du-chat.vue';
 export { default as DuCollapse } from './components/DataDisplay/du-collapse/du-collapse.vue';
 export { default as DuCountdown } from './components/DataDisplay/du-countdown/du-countdown.vue';
+export { default as DuCountdownGroup } from './components/DataDisplay/du-countdown/du-countdown-group.vue';
 export { default as DuDiff } from './components/DataDisplay/du-diff/du-diff.vue';
 export { default as DuKbd } from './components/DataDisplay/du-kbd/du-kbd.vue';
 export { default as DuList } from './components/DataDisplay/du-list/du-list.vue';
