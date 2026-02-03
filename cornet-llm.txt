@@ -51,7 +51,7 @@ export function useVariantMapping(props: { variant: Variant }, suffix: string)
 - square?: boolean
 - circle?: boolean
 - block?: boolean
-- as?: ElementType ('button' | 'a' | 'input' | 'div')
+- as?: ElementType ('button' | 'a' | 'input' | 'div' | 'RouterLink' | 'NuxtLink' | string)
 - type?: string
 - href?: string
 - value?: string
@@ -74,7 +74,7 @@ export type BUTTONColor = (typeof BUTTON_COLORS)[number]
 **File:** components/Actions/du-dropdown/du-dropdown.vue
 
 **Props:**
-- placement?: DROPDOWNPlacement
+- placement?: 'start' | 'center' | 'end' | 'top' | 'bottom' | 'left' | 'right'
 - hover?: boolean
 - open?: boolean
 
@@ -92,10 +92,13 @@ export type DROPDOWNPlacement = (typeof DROPDOWN_PLACEMENTS)[number]
 **File:** components/Actions/du-modal/du-modal.vue
 
 **Props:**
-- classBox?: string
-- placement?: MODALPlacement
+- id?: string
 - open?: boolean
+- closeButton?: boolean
 - closeOnEscape?: boolean
+- closeBackdrop?: boolean
+- placement?: 'top' | 'middle' | 'bottom' | 'start' | 'end' | 'responsive'
+- classBox?: string
 
 **Types (du-modal.types.ts):**
 ```typescript
@@ -120,6 +123,52 @@ export type MODALPlacement = (typeof MODAL_PLACEMENTS)[number]
 ```typescript
 export const SWAP_PROPERTIES = ['swap-rotate', 'swap-flip', 'swap-active'] as const
 export type SWAPProperty = (typeof SWAP_PROPERTIES)[number]
+```
+
+### DuFab
+**File:** components/Actions/du-fab/du-fab.vue
+
+**Props:**
+- items?: FABItem[]
+- modifier?: 'fab-flower'
+- customClass?: string
+- size?: Size
+- variant?: Variant
+- circle?: boolean
+- mainAction?: FABMainAction
+- closeButton?: FABCloseButton
+- absolute?: boolean
+
+**Types (du-fab.types.ts):**
+```typescript
+export const FAB_MODIFIERS = ['fab-flower'] as const
+
+export type FABModifier = (typeof FAB_MODIFIERS)[number]
+
+export interface FABItem {
+  label?: string
+  icon?: any
+  customClass?: string
+  onClick?: () => void
+  tooltip?: string
+  tooltipPosition?: 'left' | 'top' | 'right' | 'bottom'
+  [key: string]: any
+}
+
+export interface FABMainAction {
+  label?: string
+  icon?: any
+  customClass?: string
+  variant?: string
+  onClick?: () => void
+}
+
+export interface FABCloseButton {
+  label?: string
+  icon?: string
+  customClass?: string
+  variant?: string
+}
 ```
 
 ---
@@ -231,9 +280,10 @@ export type CARDProperty = (typeof CARD_PROPERTIES)[number]
 **File:** components/DataDisplay/du-carousel/du-carousel.vue
 
 **Props:**
-- vertical?: boolean
+- start?: boolean
 - center?: boolean
 - end?: boolean
+- vertical?: boolean
 
 **Types (du-carousel.types.ts):**
 ```typescript
@@ -259,6 +309,8 @@ export const CHAT_COLORS = [
   'chat-bubble-info', 'chat-bubble-success', 'chat-bubble-warning', 'chat-bubble-error'
 ] as const
 
+export type CHATColor = (typeof CHAT_COLORS)[number]
+
 export const DU_CHAT_PLACEMENTS = ["start", "end"] as const
 export type ChatPlacement = (typeof DU_CHAT_PLACEMENTS)[number]
 
@@ -269,6 +321,12 @@ export interface ChatItem {
   footer?: string
   placement?: ChatPlacement
   variant?: CHATColor
+  customClass?: string
+}
+
+export interface ChatProps {
+  items?: ChatItem[]
+  placement?: ChatPlacement
   customClass?: string
 }
 ```
@@ -304,6 +362,8 @@ export type COLLAPSEModifier = (typeof COLLAPSE_MODIFIERS)[number]
 - value?: number
 - targetDate?: Date
 - format?: COUNTDOWNFormat
+- separator?: string
+- customClass?: string
 - autoStart?: boolean
 
 **Types (du-countdown.types.ts):**
@@ -324,6 +384,8 @@ export interface COUNTDOWNLabels {
 **File:** components/DataDisplay/du-diff/du-diff.vue
 
 **Props:**
+- item1?: string
+- item2?: string
 - aspectRatio?: DIFFAspectRatio | string | null
 
 **Types (du-diff.types.ts):**
@@ -518,13 +580,13 @@ export interface CHECKBOXProps {
 **File:** components/DataInput/du-fieldset/du-fieldset.vue
 
 **Props:**
-- legend: string
+- legend?: string
 - label?: string
 
 **Types (du-fieldset.types.ts):**
 ```typescript
 export interface FIELDSETProps {
-  legend: string
+  legend?: string
   label?: string
 }
 ```
@@ -644,6 +706,24 @@ export type LABELProps = {
 - placeholder?: string
 - inputType?: INPUTFIELDType
 - disabled?: boolean
+- suggestionName?: string
+- suggestionList?: string[]
+
+**Types (du-label-input-validator.types.ts):**
+```typescript
+import { type LABELProps } from "../du-label/du-label.types"
+import { type INPUTFIELDProps, type INPUTFIELDType } from "../du-input-field/du-input-field.types"
+
+export interface LabelInputValidatorProps extends LABELProps, 
+  Omit<INPUTFIELDProps, "type" | "size" | "ghost" | "variant"> {
+  pattern?: string
+  minlength?: number
+  maxlength?: number
+  title?: string
+  required?: boolean
+  inputType?: INPUTFIELDType
+}
+```
 
 ### DuRadio
 **File:** components/DataInput/du-radio/du-radio.vue
@@ -751,12 +831,19 @@ export interface RatingProps {
 - size?: Size
 - disabled?: boolean
 - multiple?: boolean
-- modelValue?: string | string[]
+- modelValue?: any
 - placeholder?: string
 - search?: boolean
+- searchable?: boolean
+- searchableInside?: boolean
 - searchPlaceholder?: string
 - searchNoResultsText?: string
 - options?: any[]
+- checkboxes?: boolean
+- closeOnSelect?: boolean
+- trackBy?: string
+- labelBy?: string
+- returnObject?: boolean
 
 **Types (du-select.types.ts):**
 ```typescript
@@ -772,11 +859,73 @@ export interface SELECTProps {
   size?: Size
   disabled?: boolean
   multiple?: boolean
-  modelValue?: string | string[]
+  modelValue?: any
   placeholder?: string
   search?: boolean
   searchPlaceholder?: string
   searchNoResultsText?: string
+  options?: any[]
+  searchable?: boolean
+  searchableInside?: boolean
+  checkboxes?: boolean
+  closeOnSelect?: boolean
+  trackBy?: string
+  labelBy?: string
+  returnObject?: boolean
+}
+```
+
+### DuSearch
+**File:** components/DataInput/du-search/du-search.vue
+
+**Props:**
+- modelValue?: any | any[]
+- name: string
+- id: string
+- placeholder?: string
+- listValues: SearchOption[]
+- limit?: number
+- addOption?: boolean
+- type?: string
+- required?: boolean
+- pattern?: string
+- multiple?: boolean
+- size?: Size
+- variant?: Variant
+- ghost?: boolean
+- disabled?: boolean
+- customClass?: string
+
+**Types (du-search.types.ts):**
+```typescript
+export const SEARCH_VARIANTS = ['default', 'input-primary', 'input-secondary', 'input-accent', 'input-info', 'input-success', 'input-warning', 'input-error'] as const
+export const SEARCH_SIZES = ['default', 'input-xs', 'input-sm', 'input-md', 'input-lg', 'input-xl'] as const
+
+export type SEARCHVariant = (typeof SEARCH_VARIANTS)[number]
+export type SEARCHSize = (typeof SEARCH_SIZES)[number]
+
+export interface SearchOption {
+  id: any
+  name: string
+}
+
+export interface SEARCHProps {
+  modelValue?: any | any[]
+  name: string
+  id: string
+  placeholder?: string
+  listValues: SearchOption[]
+  limit?: number
+  addOption?: boolean
+  type?: string
+  required?: boolean
+  pattern?: string
+  multiple?: boolean
+  size?: Size
+  variant?: Variant
+  ghost?: boolean
+  disabled?: boolean
+  customClass?: string
 }
 ```
 
@@ -977,6 +1126,49 @@ export type JoinDirection = (typeof DU_JOIN_DIRECTIONS)[number]
 export interface JoinProps {
   as?: string
   direction?: JoinDirection
+}
+```
+
+### DuDrawer
+**File:** components/Layout/du-drawer/du-drawer.vue
+
+**Props:**
+- id?: string
+- position?: 'start' | 'end'
+- open?: boolean
+- responsive?: boolean
+- alwaysOpenOnLarge?: boolean
+- modelValue?: boolean
+- sidebarClass?: string
+- contentClass?: string
+- overlayClass?: string
+- items?: DRAWERItem[]
+
+**Types (du-drawer.types.ts):**
+```typescript
+import { type MenuItem } from '../../Navigation/du-menu/du-menu.types'
+
+export const DRAWER_POSITIONS = ['start', 'end'] as const
+
+export type DRAWERPosition = (typeof DRAWER_POSITIONS)[number]
+
+export interface DRAWERItem extends MenuItem {
+  icon?: any
+  customClass?: string
+  [key: string]: any
+}
+
+export interface DRAWERProps {
+  id?: string
+  position?: 'start' | 'end'
+  open?: boolean
+  responsive?: boolean
+  alwaysOpenOnLarge?: boolean
+  modelValue?: boolean
+  sidebarClass?: string
+  contentClass?: string
+  overlayClass?: string
+  items?: DRAWERItem[]
 }
 ```
 
