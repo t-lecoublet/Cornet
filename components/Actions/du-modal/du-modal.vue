@@ -99,7 +99,7 @@ function handleEscapeKey(event: KeyboardEvent) {
         </button>
       </form>
       <slot></slot>
-      <slot name="actions" class="modal-action"> </slot>
+      <div class="modal-action" v-if="$slots.actions"><slot name="actions"> </slot></div>
     </div>
     <form v-if="closeBackdrop" method="dialog" class="modal-backdrop">
       <button>Close</button>

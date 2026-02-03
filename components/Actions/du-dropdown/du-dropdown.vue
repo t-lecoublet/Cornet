@@ -58,6 +58,7 @@ const openClass = computed(() => {
   <div :class="['dropdown', placementClass, hoverClass, openClass]">
     <slot name="trigger"></slot>
     <div class="dropdown-content">
+      <slot name="content"></slot>
       <slot></slot>
     </div>
   </div>

@@ -53,10 +53,8 @@ const withActionsTplStr = `
     <h3 class="font-bold text-lg">Confirmation</h3>
     <p class="py-4">Are you sure about that?</p>
     <template #actions>
-      <div class="modal-action">
         <DuButton @click="modalRef.closeModal()" variant="error">No.</DuButton>
         <DuButton @click="modalRef.closeModal()" variant="success">YES !</DuButton>
-      </div>
     </template>
   </DuModal>
 </div>
