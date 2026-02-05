@@ -72,7 +72,8 @@ const searchValue = ref('')
 const textAreaValue = ref('')
 const inputValue = ref('')
 const currentPage = ref(1)
-const drawerOpen = ref(false)
+const drawerOpen1 = ref(false)
+const drawerOpen2 = ref(false)
 const showToast = ref(false)
 const targetDate = ref(new Date(
   Date.now() +
@@ -122,6 +123,13 @@ const statsItems = [
   { title: 'Downloads', value: '31K', description: 'Jan 1st - Feb 1st' },
   { title: 'New Users', value: '4,200', description: '↗︎ 400 (22%)' },
   { title: 'New Registers', value: '1,200', description: '↘︎ 90 (14%)' },
+]
+
+const carouselItems = [
+  { src: 'https://picsum.photos/1200/200?random=1', alt: 'Slide 1' },
+  { src: 'https://picsum.photos/1200/200?random=2', alt: 'Slide 2' },
+  { src: 'https://picsum.photos/1200/200?random=3', alt: 'Slide 3' },
+  { src: 'https://picsum.photos/1200/200?random=4', alt: 'Slide 4' },
 ]
 
 const selectOptions = [
@@ -195,16 +203,12 @@ const drawerItems = [
     <div class="hero min-h-[50vh] bg-base-100">
       <div class="hero-content text-center">
         <div class="max-w-3xl">
-          <h1 class="text-5xl font-bold bg-gradient-to-r from-primary to-info bg-clip-text text-transparent pb-2">
+          <h1 class="text-5xl font-bold bg-linear-to-r from-primary via-success to-secondary bg-clip-text text-transparent pb-2">
             DaisyUI Vue Kit
           </h1>
           <p class="py-6 text-lg text-base-content/70">
             A comprehensive Vue 3 component library built on DaisyUI & Tailwind CSS.
           </p>
-          <div class="flex gap-4 justify-center flex-wrap">
-            <DuButton variant="primary" size="lg">Get Started</DuButton>
-            <DuButton variant="secondary" outline size="lg">Documentation</DuButton>
-          </div>
         </div>
       </div>
     </div>
@@ -475,17 +479,7 @@ const drawerItems = [
         <!-- Carousel -->
         <DuCard dash class="mb-6" title="DuCarousel">
           <p class="text-base-content/70 mb-4">Image and content carousels.</p>
-          <DuCarousel center class="rounded-box">
-            <div class="carousel-item">
-              <img src="https://picsum.photos/400/200?random=1" alt="Slide 1" class="rounded-box" />
-            </div>
-            <div class="carousel-item">
-              <img src="https://picsum.photos/400/200?random=2" alt="Slide 2" class="rounded-box" />
-            </div>
-            <div class="carousel-item">
-              <img src="https://picsum.photos/400/200?random=3" alt="Slide 3" class="rounded-box" />
-            </div>
-          </DuCarousel>
+          <DuCarousel class="max-w-300 rounded-box" center :items="carouselItems" />
         </DuCard>
 
         <!-- Diff -->
@@ -583,6 +577,10 @@ const drawerItems = [
             <DuLabel type="floating-label">
               <DuInputField placeholder="Email" type="email" />
               <span>Email Address</span>
+            </DuLabel>
+            <DuLabel>
+              <DuInputField placeholder="Domain-name" />
+              <DuLabel type="label">.com</DuLabel>
             </DuLabel>
           </DuCard>
 
@@ -840,12 +838,90 @@ const drawerItems = [
           <!-- Drawer -->
           <DuCard dash class="mb-6" title="DuDrawer">
             <p class="text-base-content/70 mb-4">Slide-out drawer navigation.</p>
-            <DuButton variant="primary" @click="drawerOpen = !drawerOpen">
-              Toggle Drawer Demo
-            </DuButton>
-            <p class="text-sm text-base-content/60 mt-2">
-              Drawer component is typically used for navigation sidebars.
-            </p>
+            <DuDrawer v-model="drawerOpen1" id="demo-drawer" class="h-16 rounded-box overflow-hidden">
+              <template #content>
+                <div class="flex flex-col items-center justify-center h-full bg-base-200">
+                  <DuButton variant="primary" as="label" for="demo-drawer">
+                    Open Drawer
+                  </DuButton>
+                </div>
+              </template>
+              <template #sidebar>
+                <div class="bg-base-100 h-full min-w-64">
+                  <h3 class="text-lg font-bold mb-4 w-full text-center">Drawer Menu</h3>
+                  <DuMenu class="bg-transparent rounded-box w-full">
+                    <li><a>Home</a></li>
+                    <li><a>Profile</a></li>
+                    <li><a>Settings</a></li>
+                    <li><a>Logout</a></li>
+                  </DuMenu>
+                </div>
+              </template>
+            </DuDrawer>
+            <DuDrawer 
+              id="icon-drawer" 
+              alwaysOpenOnLarge 
+              iconOnly 
+              class="h-72 rounded-box overflow-hidden z-9"
+            >
+              <template #content>
+                <!-- Navbar -->
+                <DuNavbar customClass="bg-base-300">
+                  <template #start>
+                    <DuButton as="label" for="icon-drawer" aria-label="open sidebar" ghost square>
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor" class="inline-block size-5">
+                        <path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path>
+                        <path d="M9 4v16"></path>
+                        <path d="M14 10l2 2l-2 2"></path>
+                      </svg>
+                    </DuButton>
+                    <span class="px-4">Navbar Title</span>
+                  </template>
+                </DuNavbar>
+                <!-- Page content -->
+                <div class="p-4 text-base-content/70">Page Content</div>
+              </template>
+              
+              <template #sidebar>
+                <DuMenu class="w-full grow">
+                  <!-- Home -->
+                  <li>
+                    <button class="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Home">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor" class="inline-block size-5">
+                        <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path>
+                        <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                      </svg>
+                      <span class="is-drawer-close:hidden">Home</span>
+                    </button>
+                  </li>
+                  <!-- Analytics -->
+                  <li>
+                    <button class="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Analytics">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor" class="inline-block size-5">
+                        <path d="M3 3v18h18"></path>
+                        <path d="M20 18v3"></path>
+                        <path d="M16 16v5"></path>
+                        <path d="M12 13v8"></path>
+                        <path d="M8 21v-6"></path>
+                      </svg>
+                      <span class="is-drawer-close:hidden">Analytics</span>
+                    </button>
+                  </li>
+                  <!-- Settings -->
+                  <li>
+                    <button class="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Settings">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor" class="inline-block size-5">
+                        <path d="M20 7h-9"></path>
+                        <path d="M14 17H5"></path>
+                        <circle cx="17" cy="17" r="3"></circle>
+                        <circle cx="7" cy="7" r="3"></circle>
+                      </svg>
+                      <span class="is-drawer-close:hidden">Settings</span>
+                    </button>
+                  </li>
+                </DuMenu>
+              </template>
+            </DuDrawer>
           </DuCard>
 
         </div>
