@@ -42,6 +42,14 @@ const calculateTimeRemaining = () => {
   return (calculators[props.format] || calculators.seconds)()
 }
 
+// Calculer le temps total restant en millisecondes
+const getTotalTimeRemaining = () => {
+  if (!props.targetDate) return 0
+  const now = new Date().getTime()
+  const target = props.targetDate.getTime()
+  return Math.max(0, target - now)
+}
+
 // Mettre à jour la valeur en fonction de la date cible
 const updateFromTargetDate = () => {
   if (props.targetDate) {
@@ -49,10 +57,15 @@ const updateFromTargetDate = () => {
   }
 }
 
+// Nombre de chiffres à afficher (2 ou 3)
+const digits = computed(() => {
+  return currentValue.value > 99 ? 3 : 2
+})
+
 // Formater la valeur pour l'affichage
 const formattedValue = computed(() => {
-  const value = currentValue.value
-  return value < 10 ? `0${value}` : `${value}`
+  const value = Math.min(999, Math.max(0, currentValue.value))
+  return value.toString().padStart(digits.value, '0')
 })
 
 // Valeur pour l'attribut aria-label
@@ -74,7 +87,8 @@ const startCountdown = () => {
   intervalId.value = window.setInterval(() => {
     if (props.targetDate) {
       updateFromTargetDate()
-      if (currentValue.value === 0) {
+      // Vérifier si le temps total restant est 0, pas juste la valeur affichée
+      if (getTotalTimeRemaining() === 0) {
         emit("end")
         stopCountdown()
       }
@@ -150,7 +164,8 @@ onBeforeUnmount(() => {
 })
 
 const cssVars = computed(() => ({
-  '--value': `${currentValue}`
+  '--value': Math.min(999, Math.max(0, currentValue.value)),
+  '--digits': digits.value
 }))
 </script>
 
@@ -160,8 +175,6 @@ const cssVars = computed(() => ({
     aria-live="polite"
     :aria-label="ariaLabel"
   >
-    <span :style="cssVars">
-      <slot>{{ formattedValue }}</slot>
-    </span>
+    <span :style="cssVars">{{ formattedValue }}</span>
   </span>
 </template> 
