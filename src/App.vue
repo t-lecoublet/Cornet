@@ -821,18 +821,20 @@ const drawerItems = [
           <!-- Join -->
           <DuCard dash class="mb-6" title="DuJoin">
             <p class="text-base-content/70 mb-4">Group elements together visually.</p>
-            <div class="space-x-4 space-y-4">
+              <DuJoin>
+                <DuInputField placeholder="Email" />
+                <DuButton>Subscribe</DuButton>
+              </DuJoin>
               <DuJoin>
                 <DuButton class="join-item">Button 1</DuButton>
                 <DuButton class="join-item">Button 2</DuButton>
                 <DuButton class="join-item">Button 3</DuButton>
               </DuJoin>
-              <DuJoin direction="vertical">
+              <DuJoin direction="vertical" class="w-24">
                 <DuButton class="join-item" variant="primary">Top</DuButton>
                 <DuButton class="join-item" variant="secondary">Middle</DuButton>
                 <DuButton class="join-item" variant="accent">Bottom</DuButton>
               </DuJoin>
-            </div>
           </DuCard>
 
           <!-- Drawer -->
@@ -862,11 +864,11 @@ const drawerItems = [
               id="icon-drawer" 
               alwaysOpenOnLarge 
               iconOnly 
-              class="h-72 rounded-box overflow-hidden z-9"
+              class="h-40 rounded-box overflow-hidden z-9"
             >
               <template #content>
                 <!-- Navbar -->
-                <DuNavbar customClass="bg-base-300">
+                <DuNavbar class="bg-base-300">
                   <template #start>
                     <DuButton as="label" for="icon-drawer" aria-label="open sidebar" ghost square>
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor" class="inline-block size-5">
