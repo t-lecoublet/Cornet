@@ -53,6 +53,7 @@ const props = withDefaults(
 )
 
 const isInDropdownTrigger = inject('isDropdownTrigger', false)
+const inJoin = inject("isInJoin", false)
 const filterName = inject('filterName', undefined)
 
 const { sizeClass } = useSizeMapping(props, 'btn')
@@ -139,6 +140,7 @@ const buttonAttributes = computed(() => {
       squareClass,
       circleClass,
       blockClass,
+      inJoin && 'join-item',
     ]"
     :aria-label="props.label"
     :disabled="props.disabled"

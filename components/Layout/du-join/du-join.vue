@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed } from "vue";
+import { computed, provide } from "vue";
 import { type JoinProps } from "./du-join.types";
 
 const props = withDefaults(
@@ -20,6 +20,8 @@ const directionClass = computed(() => {
       return "";
   }
 });
+
+provide("isInJoin", true);
 </script>
 
 <template>

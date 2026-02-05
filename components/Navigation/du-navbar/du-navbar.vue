@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { type NavbarProps } from './du-navbar.types';
 
-// Le composant n'a pas besoin de propriétés pour l'instant
 defineProps<NavbarProps>();
 </script>
 

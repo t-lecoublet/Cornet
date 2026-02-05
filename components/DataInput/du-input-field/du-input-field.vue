@@ -22,6 +22,7 @@ const ghostClass = computed(() => (props.ghost ? "input-ghost" : ""))
 const invalidClass = computed(() => (props.invalid ? "input-bordered focus:invalid:input-error" : ""))
 
 const isInput = inject("isInInput", false)
+const inJoin = inject("isInJoin", false)
 </script>
 
 <template>
@@ -29,7 +30,7 @@ const isInput = inject("isInInput", false)
     :disabled="disabled"
     :type="type"
     :placeholder="placeholder"
-    :class="[!isInput && 'input', colorClass, sizeClass, ghostClass, invalidClass, props.class]"
+    :class="[!isInput && 'input', colorClass, sizeClass, ghostClass, invalidClass, props.class, inJoin && 'join-item']"
     :list="suggestionName"
     :required="required"
     :pattern="pattern"
