@@ -18,7 +18,10 @@ export interface DRAWERProps {
     alwaysOpenOnLarge?: boolean
     modelValue?: boolean
     sidebarClass?: string
+    sidebarWrapperClass?: string
     contentClass?: string
     overlayClass?: string
     items?: DRAWERItem[]
+    /** Enable icon-only collapsible mode with is-drawer-open/is-drawer-close variants */
+    iconOnly?: boolean
 }

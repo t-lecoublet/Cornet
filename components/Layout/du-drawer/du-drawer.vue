@@ -14,9 +14,12 @@ const props = withDefaults(
         alwaysOpenOnLarge?: boolean
         modelValue?: boolean
         sidebarClass?: string
+        sidebarWrapperClass?: string
         contentClass?: string
         overlayClass?: string
         items?: DRAWERItem[]
+        /** Enable icon-only collapsible mode with is-drawer-open/is-drawer-close variants */
+        iconOnly?: boolean
     }>(),
     {
         id: undefined,
@@ -26,9 +29,11 @@ const props = withDefaults(
         alwaysOpenOnLarge: false,
         modelValue: false,
         sidebarClass: '',
+        sidebarWrapperClass: '',
         contentClass: '',
         overlayClass: '',
         items: undefined,
+        iconOnly: false,
     },
 )
 
@@ -62,8 +67,28 @@ const drawerSideClasses = computed(() => {
         classes.push('max-lg:z-[1002]')
     }
 
+    if (props.iconOnly) {
+        classes.push('is-drawer-close:overflow-visible')
+    }
+
     if (props.sidebarClass) {
         classes.push(props.sidebarClass)
+    }
+
+    return classes
+})
+
+const sidebarWrapperClasses = computed(() => {
+    const classes = ['text-base-content', 'h-full', 'min-h-full']
+
+    if (props.iconOnly) {
+        classes.push('flex', 'flex-col', 'items-start', 'bg-base-200')
+        classes.push('is-drawer-close:w-14', 'is-drawer-open:w-64')
+        classes.push('transition-all', 'duration-200')
+    }
+
+    if (props.sidebarWrapperClass) {
+        classes.push(props.sidebarWrapperClass)
     }
 
     return classes
@@ -139,7 +164,7 @@ defineExpose({
         <div :class="drawerSideClasses">
             <label :for="drawerId" aria-label="close sidebar" :class="drawerOverlayClasses"></label>
 
-            <div class="text-base-content h-full p-4">
+            <div :class="sidebarWrapperClasses">
                 <!-- Dynamic items mode -->
                 <template v-if="items">
                     <!-- Forward menu customization slots (item, title, submenu, indexed) to DuMenu -->

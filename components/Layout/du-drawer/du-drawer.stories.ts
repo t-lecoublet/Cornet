@@ -18,7 +18,9 @@ const meta: Meta<typeof DuDrawer> = {
         open: { control: 'boolean' },
         responsive: { control: 'boolean' },
         alwaysOpenOnLarge: { control: 'boolean' },
+        iconOnly: { control: 'boolean' },
         sidebarClass: { control: 'text' },
+        sidebarWrapperClass: { control: 'text' },
         contentClass: { control: 'text' },
         overlayClass: { control: 'text' },
     },
@@ -434,6 +436,94 @@ export const CustomClasses: Story = {
         docs: {
             source: {
                 code: customClassesSetupStr + '\n\n' + customClassesTplStr,
+            },
+        },
+    },
+}
+
+const iconOnlyTplStr = `
+<DuDrawer id="icon-only-drawer" alwaysOpenOnLarge iconOnly>
+  <template #content>
+    <DuNavbar customClass="bg-base-300">
+      <template #start>
+        <DuButton as="label" for="icon-only-drawer" aria-label="toggle sidebar" variant="ghost" square>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor" class="inline-block size-5">
+            <path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path>
+            <path d="M9 4v16"></path>
+            <path d="M14 10l2 2l-2 2"></path>
+          </svg>
+        </DuButton>
+        <span class="px-4">Navbar Title</span>
+      </template>
+    </DuNavbar>
+    <div class="p-4">Page Content</div>
+  </template>
+  
+  <template #sidebar>
+    <DuMenu class="w-full grow">
+      <li>
+        <button class="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Home">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor" class="inline-block size-5">
+            <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path>
+            <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          </svg>
+          <span class="is-drawer-close:hidden">Home</span>
+        </button>
+      </li>
+      <li>
+        <button class="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Analytics">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor" class="inline-block size-5">
+            <path d="M3 3v18h18"></path>
+            <path d="M20 18v3"></path>
+            <path d="M16 16v5"></path>
+            <path d="M12 13v8"></path>
+            <path d="M8 21v-6"></path>
+          </svg>
+          <span class="is-drawer-close:hidden">Analytics</span>
+        </button>
+      </li>
+      <li>
+        <button class="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Settings">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor" class="inline-block size-5">
+            <path d="M20 7h-9"></path>
+            <path d="M14 17H5"></path>
+            <circle cx="17" cy="17" r="3"></circle>
+            <circle cx="7" cy="7" r="3"></circle>
+          </svg>
+          <span class="is-drawer-close:hidden">Settings</span>
+        </button>
+      </li>
+    </DuMenu>
+  </template>
+</DuDrawer>
+`
+
+const iconOnlySetupStr = `
+<script setup>
+// Icon-only collapsible drawer
+// Uses is-drawer-close: and is-drawer-open: variants
+// - is-drawer-close:hidden hides text when closed
+// - is-drawer-close:tooltip shows tooltip when closed
+// - Sidebar width transitions between w-14 (closed) and w-64 (open)
+</script>
+`
+
+export const IconOnlyCollapsible: Story = {
+    args: {
+        alwaysOpenOnLarge: true,
+        iconOnly: true,
+    },
+    render: (args) => ({
+        components: { DuDrawer, DuButton, DuMenu, DuNavbar },
+        setup() {
+            return { args }
+        },
+        template: iconOnlyTplStr,
+    }),
+    parameters: {
+        docs: {
+            source: {
+                code: iconOnlySetupStr + '\n\n' + iconOnlyTplStr,
             },
         },
     },
