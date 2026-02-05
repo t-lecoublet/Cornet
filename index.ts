@@ -12,6 +12,7 @@ export { default as DuAccordion } from './components/DataDisplay/du-accordion/du
 export { default as DuAvatar } from './components/DataDisplay/du-avatar/du-avatar.vue';
 export { default as DuCard } from './components/DataDisplay/du-card/du-card.vue';
 export { default as DuCarousel } from './components/DataDisplay/du-carousel/du-carousel.vue';
+export { default as DuCarouselItem } from './components/DataDisplay/du-carousel/du-carousel-item.vue';
 export { default as DuChat } from './components/DataDisplay/du-chat/du-chat.vue';
 export { default as DuCollapse } from './components/DataDisplay/du-collapse/du-collapse.vue';
 export { default as DuCountdown } from './components/DataDisplay/du-countdown/du-countdown.vue';

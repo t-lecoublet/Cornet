@@ -1,15 +1,18 @@
 <script setup lang="ts">
 import { computed } from "vue"
-import { type CAROUSELPosition, type CAROUSELDirection } from './du-carousel.types'
+import { type CarouselItem } from './du-carousel.types'
+import DuCarouselItem from './du-carousel-item.vue'
 
 const props = withDefaults(
   defineProps<{
+    items?: CarouselItem[]
     start?: boolean
     center?: boolean
     end?: boolean
     vertical?: boolean
   }>(),
   {
+    items: undefined,
     start: true,
     center: false,
     end: false,
@@ -20,16 +23,24 @@ const props = withDefaults(
 const positionClass = computed(() => {
   if (props.center) return "carousel-center"
   if (props.end) return "carousel-end"
-  return "carousel-start" // default position
-})
-
-const directionClass = computed(() => {
-  return props.vertical ? "carousel-vertical" : "carousel-horizontal"
+  if (props.start) return "carousel-start"
+  return null
 })
 </script>
 
 <template>
-  <div :class="['carousel', positionClass, directionClass]">
-    <slot></slot>
+  <div :class="['carousel', positionClass, { 'carousel-vertical': vertical }]">
+    <template v-if="items && items.length">
+      <DuCarouselItem
+        v-for="(item, index) in items"
+        :key="item.id ?? index"
+        :id="item.id"
+        :class="item.customClass"
+      >
+        <img v-if="item.src" :src="item.src" :alt="item.alt ?? `Slide ${index + 1}`" />
+        <template v-else-if="item.content">{{ item.content }}</template>
+      </DuCarouselItem>
+    </template>
+    <slot v-else></slot>
   </div>
 </template> 

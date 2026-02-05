@@ -4,10 +4,12 @@ export const CAROUSEL_POSITIONS = [
   'carousel-end',
 ] as const
 
-export const CAROUSEL_DIRECTIONS = [
-  'carousel-horizontal',
-  'carousel-vertical',
-] as const
-
 export type CAROUSELPosition = (typeof CAROUSEL_POSITIONS)[number]
-export type CAROUSELDirection = (typeof CAROUSEL_DIRECTIONS)[number] 
+
+export interface CarouselItem {
+  id?: string
+  src?: string
+  alt?: string
+  content?: string
+  customClass?: string
+} 
