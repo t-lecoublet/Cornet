@@ -28,7 +28,7 @@ const roundedClass = computed(() => {
   return props.rounded ? "rounded-box" : "[&_li>*]:rounded-none p-0";
 });
 const inDropdownClass = computed(() => {
-  return isInDropdownTrigger ? "bg-base-100 shadow-sm" : "bg-base-200";
+  return isInDropdownTrigger ? "" : "bg-base-200";
 });
 
 const ariaOrientation = computed(() => {
