@@ -1,5 +1,10 @@
 @import "tailwindcss";
 @import "daisyui-vue-kit/css";
 @plugin "daisyui" {
-  themes: caramellatte --default;
+  themes: all;
+}
+
+
+.card-dash {
+  --border: 2px;
 }

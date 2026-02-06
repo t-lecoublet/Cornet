@@ -195,10 +195,74 @@ const drawerItems = [
   { label: 'Analytics' },
   { label: 'Settings' },
 ]
+
+const themesItems = [
+  { name: 'Default', value: 'default' },
+  { name: 'Light', value: 'light' },
+  { name: 'Dark', value: 'dark' },
+  { name: 'Cupcake', value: 'cupcake' },
+  { name: 'Bumblebee', value: 'bumblebee' },
+  { name: 'Emerald', value: 'emerald' },
+  { name: 'Corporate', value: 'corporate' },
+  { name: 'Synthwave', value: 'synthwave' },
+  { name: 'Retro', value: 'retro' },
+  { name: 'Cyberpunk', value: 'cyberpunk' },
+  { name: 'Valentine', value: 'valentine' },
+  { name: 'Halloween', value: 'halloween' },
+  { name: 'Garden', value: 'garden' },
+  { name: 'Forest', value: 'forest' },
+  { name: 'Aqua', value: 'aqua' },
+  { name: 'Lofi', value: 'lofi' },
+  { name: 'Pastel', value: 'pastel' },
+  { name: 'Fantasy', value: 'fantasy' },
+  { name: 'Wireframe', value: 'wireframe' },
+  { name: 'Black', value: 'black' },
+  { name: 'Luxury', value: 'luxury' },
+  { name: 'Dracula', value: 'dracula' },
+  { name: 'CMYK', value: 'cmyk' },
+  { name: 'Autumn', value: 'autumn' },
+  { name: 'Business', value: 'business' },
+  { name: 'Acid', value: 'acid' },
+  { name: 'Lemonade', value: 'lemonade' },
+  { name: 'Night', value: 'night' },
+  { name: 'Coffee', value: 'coffee' },
+  { name: 'Winter', value: 'winter' },
+  { name: 'Dim', value: 'dim' },
+  { name: 'Nord', value: 'nord' },
+  { name: 'Sunset', value: 'sunset' },
+  { name: 'Caramel Latte', value: 'caramellatte' },
+  { name: 'Abyss', value: 'abyss' },
+  { name: 'Silk', value: 'silk' },
+]
 </script>
 
 <template>
   <div class="min-h-screen bg-base-100">
+    <div class="fixed top-0 right-0 m-4 z-9999">
+      <DuDropdown placement="end">
+        <template #trigger>
+          <DuButton size="sm">
+            Theme
+            <svg width="12px" height="12px" class="inline-block h-2 w-2 fill-current opacity-60"
+              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 2048">
+              <path d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"></path>
+            </svg>
+          </DuButton>
+        </template>
+        <div
+          class="bg-base-100 overflow-x-clip overflow-y-scroll max-h-[50dvh] ring-1 ring-base-300 rounded-box mt-1 w-max">
+          <DuMenu :items="themesItems">
+            <template #item="{ item, index }">
+              <li>
+                <input type="radio" name="theme-dropdown" :data-theme="item.value"
+                  class="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start" :aria-label="item.name"
+                  :value="item.value" />
+              </li>
+            </template>
+          </DuMenu>
+        </div>
+      </DuDropdown>
+    </div>
     <!-- Hero Section -->
     <div class="hero min-h-[50vh] bg-base-100">
       <div class="hero-content text-center">
@@ -686,7 +750,8 @@ const drawerItems = [
         <div class="grid md:grid-cols-2 gap-6 mb-6">
           <DuCard dash title="DuTextArea">
             <p class="text-base-content/70 mb-4">Multi-line text input.</p>
-            <DuTextArea v-model="textAreaValue" class="w-full" placeholder="Write your message here..." variant="primary" />
+            <DuTextArea v-model="textAreaValue" class="w-full" placeholder="Write your message here..."
+              variant="primary" />
           </DuCard>
 
           <DuCard dash title="DuFileInput">
