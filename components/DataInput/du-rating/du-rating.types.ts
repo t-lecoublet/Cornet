@@ -1,5 +1,8 @@
 import { type Size } from "../../../composables/useSizeProps";
 
+
+export const RATING_SIZES = ["rating-xs", "rating-sm", "rating-md", "rating-lg", "rating-xl"] as const;
+export type RatingSize = (typeof RATING_SIZES)[number];
 export interface RatingItem {
   value: number;
   checked?: boolean;
@@ -20,6 +23,7 @@ export interface RatingProps {
   shape?: RatingShape;
   color?: string;
   customClass?: string;
+
 }
 
 export interface RatingItemProps {
@@ -28,7 +32,7 @@ export interface RatingItemProps {
   disabled?: boolean;
   shape?: RatingShape;
   color?: string;
-  halfMask?: "1" | "2";
+  halfMask?: 1 | 2;
   customClass?: string;
 }
 

@@ -41,7 +41,7 @@ const maskClass = computed(() => {
   const classes = ["mask", shapeClass.value, props.color];
   
   if (props.halfMask) {
-    classes.push(`mask-half-${props.halfMask}`);
+    classes.push((props.halfMask == 1)?`mask-half-1`:`mask-half-2`);
   }
   
   if (props.customClass) {

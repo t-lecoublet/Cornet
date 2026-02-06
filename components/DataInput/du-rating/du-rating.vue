@@ -14,10 +14,10 @@ const props = withDefaults(
     halfStar: false,
     clearable: false,
     disabled: false,
-    size: "default",
     shape: "star-2",
     color: "bg-secondary",
     customClass: "",
+    size: "md"
   },
 );
 
@@ -89,7 +89,7 @@ defineExpose({
         :checked="internalValue === item.value"
         :shape="shape"
         :color="color"
-        :half-mask="(halfStar && index % 2 === 0) ? '1' : (halfStar && index % 2 === 1) ? '2' : undefined"
+        :half-mask="(halfStar && index % 2 === 0) ? 1 : (halfStar && index % 2 === 1) ? 2 : undefined"
         :disabled="disabled"
         @change="handleChange"
       />
@@ -105,7 +105,7 @@ defineExpose({
         :checked="internalValue === i - 0.5"
         :shape="shape"
         :color="color"
-        half-mask="1"
+        :half-mask="1"
         :disabled="disabled"
         @change="handleChange"
       />
@@ -115,7 +115,7 @@ defineExpose({
         :checked="internalValue === i"
         :shape="shape"
         :color="color"
-        :half-mask="halfStar ? '2' : undefined"
+        :half-mask="halfStar ? 2 : undefined"
         :disabled="disabled"
         @change="handleChange"
       />
