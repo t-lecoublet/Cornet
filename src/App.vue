@@ -681,7 +681,7 @@ const drawerItems = [
 
           <DuCard dash title="DuFileInput">
             <p class="text-base-content/70 mb-4">File upload input.</p>
-            <div class="space-y-4">
+            <div class="flex flex-wrap gap-4">
               <DuFileInput variant="primary" />
               <DuFileInput variant="secondary" ghost />
             </div>

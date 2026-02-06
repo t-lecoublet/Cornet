@@ -12,14 +12,14 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",
-    "daisyui": "^5.5.17",
+    "daisyui": "^5.5.18",
     "daisyui-vue-kit": "file:lib",
     "tailwindcss": "^4.1.18",
     "vue": "^3.5.13"
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.5",
-    "@types/node": "^22.19.7",
+    "@types/node": "^22.19.9",
     "@vitejs/plugin-vue": "^5.2.4",
     "@vue/tsconfig": "^0.7.0",
     "npm-run-all2": "^7.0.2",
