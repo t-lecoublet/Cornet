@@ -203,7 +203,8 @@ const drawerItems = [
     <div class="hero min-h-[50vh] bg-base-100">
       <div class="hero-content text-center">
         <div class="max-w-3xl">
-          <h1 class="text-5xl font-bold bg-linear-to-r from-primary via-success to-secondary bg-clip-text text-transparent pb-2">
+          <h1
+            class="text-5xl font-bold bg-linear-to-r from-primary via-success to-secondary bg-clip-text text-transparent pb-2">
             DaisyUI Vue Kit
           </h1>
           <p class="py-6 text-lg text-base-content/70">
@@ -346,14 +347,23 @@ const drawerItems = [
               <DuAvatar size="md" rounded="full" ring ring-color="ring-primary">
                 <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=3" alt="avatar" />
               </DuAvatar>
-              <DuAvatar size="lg" rounded="full" online>
+              <DuAvatar size="md" rounded="full" online>
                 <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=4" alt="avatar" />
               </DuAvatar>
-              <DuAvatar size="md" mask="hexagon">
+              <DuAvatar size="lg" mask="hexagon">
                 <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=5" alt="avatar" />
               </DuAvatar>
               <DuAvatar placeholder rounded="full" size="md">
                 <span class="text-xl">AB</span>
+              </DuAvatar>
+              <DuAvatar size="md" mask="diamond">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=6" alt="avatar" />
+              </DuAvatar>
+              <DuAvatar size="sm" mask="heart">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=7" alt="avatar" />
+              </DuAvatar>
+              <DuAvatar size="xs" mask="parallelogram">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=8" alt="avatar" />
               </DuAvatar>
             </div>
           </DuCard>
@@ -665,7 +675,7 @@ const drawerItems = [
           <DuCard dash title="DuRating">
             <p class="text-base-content/70 mb-4">Star rating input.</p>
             <div class="space-y-4">
-              <DuRating v-model="ratingValue" :count="5" name="demo-rating" />
+              <DuRating halfStar v-model="ratingValue" :count="5" name="demo-rating" />
               <p class="text-sm">Rating: {{ ratingValue }} / 5</p>
               <DuRating :count="5" name="demo-rating-2" shape="heart" color="bg-red-500" />
             </div>
@@ -676,7 +686,7 @@ const drawerItems = [
         <div class="grid md:grid-cols-2 gap-6 mb-6">
           <DuCard dash title="DuTextArea">
             <p class="text-base-content/70 mb-4">Multi-line text input.</p>
-            <DuTextArea v-model="textAreaValue" placeholder="Write your message here..." variant="primary" />
+            <DuTextArea v-model="textAreaValue" class="w-full" placeholder="Write your message here..." variant="primary" />
           </DuCard>
 
           <DuCard dash title="DuFileInput">
@@ -821,20 +831,20 @@ const drawerItems = [
           <!-- Join -->
           <DuCard dash class="mb-6" title="DuJoin">
             <p class="text-base-content/70 mb-4">Group elements together visually.</p>
-              <DuJoin>
-                <DuInputField placeholder="Email" />
-                <DuButton>Subscribe</DuButton>
-              </DuJoin>
-              <DuJoin>
-                <DuButton class="join-item">Button 1</DuButton>
-                <DuButton class="join-item">Button 2</DuButton>
-                <DuButton class="join-item">Button 3</DuButton>
-              </DuJoin>
-              <DuJoin direction="vertical" class="w-24">
-                <DuButton class="join-item" variant="primary">Top</DuButton>
-                <DuButton class="join-item" variant="secondary">Middle</DuButton>
-                <DuButton class="join-item" variant="accent">Bottom</DuButton>
-              </DuJoin>
+            <DuJoin>
+              <DuInputField placeholder="Email" />
+              <DuButton>Subscribe</DuButton>
+            </DuJoin>
+            <DuJoin>
+              <DuButton class="join-item">Button 1</DuButton>
+              <DuButton class="join-item">Button 2</DuButton>
+              <DuButton class="join-item">Button 3</DuButton>
+            </DuJoin>
+            <DuJoin direction="vertical" class="w-24">
+              <DuButton class="join-item" variant="primary">Top</DuButton>
+              <DuButton class="join-item" variant="secondary">Middle</DuButton>
+              <DuButton class="join-item" variant="accent">Bottom</DuButton>
+            </DuJoin>
           </DuCard>
 
           <!-- Drawer -->
@@ -860,19 +870,17 @@ const drawerItems = [
                 </div>
               </template>
             </DuDrawer>
-            <DuDrawer 
-              id="icon-drawer" 
-              alwaysOpenOnLarge 
-              iconOnly 
-              class="h-40 rounded-box overflow-hidden z-9"
-            >
+            <DuDrawer id="icon-drawer" alwaysOpenOnLarge iconOnly class="h-40 rounded-box overflow-hidden z-9">
               <template #content>
                 <!-- Navbar -->
                 <DuNavbar class="bg-base-300">
                   <template #start>
                     <DuButton as="label" for="icon-drawer" aria-label="open sidebar" ghost square>
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor" class="inline-block size-5">
-                        <path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path>
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linejoin="round"
+                        stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor"
+                        class="inline-block size-5">
+                        <path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z">
+                        </path>
                         <path d="M9 4v16"></path>
                         <path d="M14 10l2 2l-2 2"></path>
                       </svg>
@@ -883,15 +891,19 @@ const drawerItems = [
                 <!-- Page content -->
                 <div class="p-4 text-base-content/70">Page Content</div>
               </template>
-              
+
               <template #sidebar>
                 <DuMenu class="w-full grow">
                   <!-- Home -->
                   <li>
                     <button class="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Home">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor" class="inline-block size-5">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linejoin="round"
+                        stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor"
+                        class="inline-block size-5">
                         <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path>
-                        <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <path
+                          d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z">
+                        </path>
                       </svg>
                       <span class="is-drawer-close:hidden">Home</span>
                     </button>
@@ -899,7 +911,9 @@ const drawerItems = [
                   <!-- Analytics -->
                   <li>
                     <button class="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Analytics">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor" class="inline-block size-5">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linejoin="round"
+                        stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor"
+                        class="inline-block size-5">
                         <path d="M3 3v18h18"></path>
                         <path d="M20 18v3"></path>
                         <path d="M16 16v5"></path>
@@ -912,7 +926,9 @@ const drawerItems = [
                   <!-- Settings -->
                   <li>
                     <button class="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Settings">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor" class="inline-block size-5">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linejoin="round"
+                        stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor"
+                        class="inline-block size-5">
                         <path d="M20 7h-9"></path>
                         <path d="M14 17H5"></path>
                         <circle cx="17" cy="17" r="3"></circle>
