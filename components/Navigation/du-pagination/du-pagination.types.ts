@@ -19,4 +19,5 @@ export interface PaginationProps {
   manual?: boolean;
   showEllipsis?: boolean;
   maxPages?: number;
+  soft?: boolean;
 } 

@@ -24,6 +24,7 @@ const props = withDefaults(
     manual: false,
     showEllipsis: true,
     maxPages: 0,
+    soft: false,
   },
 );
 
@@ -39,6 +40,10 @@ const outlineClass = computed(() => {
   return props.outline ? "btn-outline" : "";
 });
 
+const softClass = computed(() => {
+  return props.soft ? "btn-soft" : "";
+});
+
 const pages = computed(() => {
   const result: (number | string)[] = [];
   const current = props.modelValue;
@@ -46,7 +51,7 @@ const pages = computed(() => {
   if (props.maxPages > 0) {
     const maxPagesHalf = Math.floor(props.maxPages / 2);
     let startPage = Math.max(1, current - maxPagesHalf);
-    let endPage = Math.min(totalPages.value, startPage + props.maxPages - 1);
+    const endPage = Math.min(totalPages.value, startPage + props.maxPages - 1);
 
     if (endPage - startPage + 1 < props.maxPages) {
       startPage = Math.max(1, endPage - props.maxPages + 1);
@@ -98,79 +103,54 @@ function changePage(page: number | string) {
     </template>
 
     <template v-else>
-      <button
-        v-if="showFirst"
-        class="join-item btn"
-        :class="[
-          sizeClass,
-          colorClass,
-          outlineClass,
-          { 'btn-disabled': modelValue <= 1 },
-        ]"
-        @click="changePage(1)"
-        :disabled="modelValue <= 1"
-      >
+      <button v-if="showFirst" class="join-item btn" :class="[
+        sizeClass,
+        colorClass,
+        outlineClass,
+        softClass,
+        { 'btn-disabled': modelValue <= 1 },
+      ]" @click="changePage(1)" :disabled="modelValue <= 1">
         <slot name="first">{{ firstLabel }}</slot>
       </button>
 
-      <button
-        v-if="showPrevious"
-        class="join-item btn"
-        :class="[
-          sizeClass,
-          colorClass,
-          outlineClass,
-          { 'btn-disabled': modelValue <= 1 },
-        ]"
-        @click="changePage(modelValue - 1)"
-        :disabled="modelValue <= 1"
-      >
+      <button v-if="showPrevious" class="join-item btn" :class="[
+        sizeClass,
+        colorClass,
+        outlineClass,
+        softClass,
+        { 'btn-disabled': modelValue <= 1 },
+      ]" @click="changePage(modelValue - 1)" :disabled="modelValue <= 1">
         <slot name="previous">{{ previousLabel }}</slot>
       </button>
 
-      <button
-        v-for="page in pages"
-        :key="page"
-        class="join-item btn"
-        :class="[
-          sizeClass,
-          colorClass,
-          outlineClass,
-          { 'btn-active': page === modelValue },
-          { 'btn-disabled': page === '...' },
-        ]"
-        @click="changePage(page)"
-      >
+      <button v-for="page in pages" :key="page" class="join-item btn" :class="[
+        sizeClass,
+        colorClass,
+        outlineClass,
+        softClass,
+        { 'btn-active': page === modelValue },
+        { 'btn-disabled': page === '...' },
+      ]" @click="changePage(page)">
         <slot :name="`page-${page}`">{{ page }}</slot>
       </button>
 
-      <button
-        v-if="showNext"
-        class="join-item btn"
-        :class="[
-          sizeClass,
-          colorClass,
-          outlineClass,
-          { 'btn-disabled': modelValue >= totalPages },
-        ]"
-        @click="changePage(modelValue + 1)"
-        :disabled="modelValue >= totalPages"
-      >
+      <button v-if="showNext" class="join-item btn" :class="[
+        sizeClass,
+        colorClass,
+        outlineClass,
+        softClass,
+        { 'btn-disabled': modelValue >= totalPages },
+      ]" @click="changePage(modelValue + 1)" :disabled="modelValue >= totalPages">
         <slot name="next">{{ nextLabel }}</slot>
       </button>
 
-      <button
-        v-if="showLast"
-        class="join-item btn"
-        :class="[
-          sizeClass,
-          colorClass,
-          outlineClass,
-          { 'btn-disabled': modelValue >= totalPages },
-        ]"
-        @click="changePage(totalPages)"
-        :disabled="modelValue >= totalPages"
-      >
+      <button v-if="showLast" class="join-item btn" :class="[
+        sizeClass,
+        colorClass,
+        outlineClass,
+        { 'btn-disabled': modelValue >= totalPages },
+        softClass,
+      ]" @click="changePage(totalPages)" :disabled="modelValue >= totalPages">
         <slot name="last">{{ lastLabel }}</slot>
       </button>
     </template>
@@ -178,14 +158,19 @@ function changePage(page: number | string) {
 </template>
 
 <style scoped>
-.btn.btn-disabled {
-  background-color: color-mix(in oklab, var(--btn-bg) 100%, transparent);
-  --btn-fg: color-mix(in oklch, var(--color-base-content) 50%, #0000);
+/* .btn.btn-disabled {
+  background-color: color-mix(in oklab, var(--btn-bg) 75%, var(--color-base-100));
+  --btn-fg: color-mix(in oklch, var(--btn-fg) 50%, var(--color-base-content));
+} */
+
+.btn.btn-active {
+  --btn-bg: color-mix(in oklab, var(--btn-color) 50%, var(--color-base-100));
+  --btn-fg: color-mix(in oklch, var(--color-base-content) 90%, #0000);
 }
 
-.btn.btn-outline.btn-disabled {
+/* .btn.btn-outline.btn-disabled {
   --btn-bg: #0000;
   --btn-fg: color-mix(in oklch, var(--btn-color) 35%, #0000);
   --btn-border: var(--btn-color);
-}
-</style> 
+} */
+</style>
