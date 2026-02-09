@@ -20,23 +20,23 @@ const { colorClass } = useVariantMapping(props, 'input')
 
 const computedInputClass = computed(() => {
     const classes = ['input', 'input-bordered', 'w-full', 'focus:invalid:input-error']
-    
+
     if (props.size !== 'default' && sizeClass.value) {
         classes.push(sizeClass.value)
     }
-    
+
     if (props.variant !== 'default' && colorClass.value !== 'input-default') {
         classes.push(colorClass.value)
     }
-    
+
     if (props.ghost) {
         classes.push('input-ghost')
     }
-    
+
     if (props.customClass) {
         classes.push(props.customClass)
     }
-    
+
     return classes.join(' ')
 })
 
@@ -134,16 +134,16 @@ function selectValue(val: any) {
 
 function onInput(e: Event) {
     const val = (e.target as HTMLInputElement).value
-    
+
     // En mode simple, commencer l'édition dès qu'on tape
     if (!props.multiple) {
         isEditing.value = true
     }
-    
+
     if (props.multiple) {
         // Reconstruit la partie des valeurs sélectionnées
         const selectedPart = selectedValues.value.map((v) => v.name).join(", ")
-        
+
         // Extrait la query en retirant la partie des valeurs sélectionnées
         let newQuery = ""
         if (selectedPart && val.startsWith(selectedPart)) {
@@ -161,12 +161,12 @@ function onInput(e: Event) {
             // Aucune valeur sélectionnée, tout l'input est la query
             newQuery = val
         }
-        
+
         // Vérifie si on tape une virgule pour ajouter une nouvelle valeur
         if (newQuery.includes(",")) {
             const parts = newQuery.split(",").map((p) => p.trim()).filter(Boolean)
             const lastPart = parts.pop()
-            
+
             for (const part of parts) {
                 const match = props.listValues.find(
                     (o) => o.name.toLowerCase() === part.toLowerCase()
@@ -189,7 +189,7 @@ function onInput(e: Event) {
             updateModel()
         }
     }
-    
+
     open.value = true
     highlightedIndex.value = 0
 }
@@ -317,9 +317,9 @@ onBeforeUnmount(() => {
 <template>
     <div ref="root" class="relative" role="combobox" :aria-expanded="open" :aria-owns="listId" @focus="onFocus">
         <input :id="id" :name="name" :type="props.type" :required="props.required" :pattern="props.pattern"
-            :placeholder="placeholder" :class="computedInputClass" :disabled="props.disabled"
-            autocomplete="off" :value="inputValue" @input="onInput" @focus="open = true"
-            @keydown="onKeydown" aria-autocomplete="list" :aria-controls="listId" />
+            :placeholder="placeholder" :class="computedInputClass" :disabled="props.disabled" autocomplete="off"
+            :value="inputValue" @input="onInput" @focus="open = true" @keydown="onKeydown" aria-autocomplete="list"
+            :aria-controls="listId" />
 
         <transition enter-active-class="transition ease-out duration-100" enter-from-class="opacity-0 scale-95"
             enter-to-class="opacity-100 scale-100" leave-active-class="transition ease-in duration-75"
@@ -338,11 +338,12 @@ onBeforeUnmount(() => {
                 </li>
 
                 <li v-for="(val, i) in filteredValues" :key="val.id" class="block w-full rounded-box" :class="{
-                    'bg-neutral text-neutral-content': isSelected(val),
+                    'bg-primary text-primary-content': isSelected(val),
                     'bg-base-300': highlightedIndex === (props.addOption && queryValue ? i + 1 : i) && !isSelected(val),
-                    'bg-neutral/50': isSelected(val) && highlightedIndex === (props.addOption && queryValue ? i + 1 : i)
+                    'bg-primary/75': isSelected(val) && highlightedIndex === (props.addOption && queryValue ? i + 1 : i)
                 }" role="option" :aria-selected="(highlightedIndex === (props.addOption && queryValue ? i + 1 : i))"
-                    @mousedown="selectValue(val)">
+                    @mousedown="selectValue(val)"
+                    @mouseover.prevent="highlightedIndex = (props.addOption && queryValue ? i + 1 : i)">
                     <a class="flex items-center gap-3 py-2 px-3">
                         <slot name="option" :option="val" :index="i">
                             {{ val.name }}

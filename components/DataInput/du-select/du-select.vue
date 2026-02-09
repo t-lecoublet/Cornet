@@ -220,7 +220,7 @@ function onClickOutside(e: Event) {
 function onFocusOut(e: FocusEvent) {
     setTimeout(() => {
         if (!root.value) return
-        
+
         // Check if the new focus target is outside our component
         const activeElement = document.activeElement
         if (!activeElement || !root.value.contains(activeElement)) {
@@ -250,14 +250,9 @@ const selectedOption = computed(() => optionFromValue(selectedSingle.value))
 
 <template>
     <div class="relative" ref="root" @keydown="onKeydown">
-        <div class="input input-bordered min-h-[2.5rem] flex items-center gap-2 cursor-text w-full overflow-x-clip" 
-            :class="[colorClass, sizeClass, ghostClass, { 'input-disabled': disabled }]"
-            tabindex="0"
-            role="combobox" 
-            :aria-expanded="open" 
-            :aria-controls="listId" 
-            @click="focusToggle" 
-            @focus="onFocus">
+        <div class="input input-bordered min-h-[2.5rem] flex items-center gap-2 cursor-text w-full overflow-x-clip"
+            :class="[colorClass, sizeClass, ghostClass, { 'input-disabled': disabled }]" tabindex="0" role="combobox"
+            :aria-expanded="open" :aria-controls="listId" @click="focusToggle" @focus="onFocus">
             <template v-if="multiple">
                 <template v-for="(val, idx) in selectedValues" :key="valKey(val, idx)">
                     <slot name="tag" :value="optionFromValue(val)" :index="idx">
@@ -284,7 +279,7 @@ const selectedOption = computed(() => optionFromValue(selectedSingle.value))
                     <input ref="searchInput" v-model="query" @focus="open = true" @input="onQuery"
                         class="input input-ghost flex-1 min-w-[6rem] !outline-none pl-0"
                         :class="{ ' placeholder:!text-base-content': selectedOption }"
-                        :placeholder="selectedOption ? labelFromOption(selectedOption) : placeholder" 
+                        :placeholder="selectedOption ? labelFromOption(selectedOption) : placeholder"
                         aria-autocomplete="list" />
                 </template>
                 <template v-else>
@@ -302,53 +297,47 @@ const selectedOption = computed(() => optionFromValue(selectedSingle.value))
             </button>
         </div>
 
-        <transition
-            enter-active-class="transition ease-out duration-100"
-            enter-from-class="opacity-0 scale-95"
-            enter-to-class="opacity-100 scale-100"
-            leave-active-class="transition ease-in duration-75"
-            leave-from-class="opacity-100 scale-100"
-            leave-to-class="opacity-0 scale-95"
-        >
-            <div v-if="open" class="absolute dropdown-content menu flex-nowrap bg-base-100 rounded-box shadow mt-1 w-full z-50 p-0"
+        <transition enter-active-class="transition ease-out duration-100" enter-from-class="opacity-0 scale-95"
+            enter-to-class="opacity-100 scale-100" leave-active-class="transition ease-in duration-75"
+            leave-from-class="opacity-100 scale-100" leave-to-class="opacity-0 scale-95">
+            <div v-if="open"
+                class="absolute dropdown-content menu flex-nowrap bg-base-100 rounded-box shadow mt-1 w-full z-50 p-0"
                 role="listbox" :id="listId">
-            <!-- optional internal search at top of dropdown -->
-            <div v-if="searchable && searchableInside" class="p-2">
-                <input v-model="query" ref="searchInputInside" class="input input-bordered w-full"
-                    :placeholder="searchPlaceholder" @input="onQuery" />
+                <!-- optional internal search at top of dropdown -->
+                <div v-if="searchable && searchableInside" class="p-2">
+                    <input v-model="query" ref="searchInputInside" class="input input-bordered w-full"
+                        :placeholder="searchPlaceholder" @input="onQuery" />
+                </div>
+
+                <div class="block max-h-[18rem] overflow-auto">
+                    <ul class="block m-0 p-2">
+                        <li v-for="(opt, i) in filteredOptions" :key="keyForOption(opt, i)"
+                            class="block w-full rounded-box"
+                            :class="[{ 'bg-primary text-primary-content': isSelected(opt), 'bg-base-300': i === highlightedIndex, 'bg-primary/75': isSelected(opt) && i === highlightedIndex }, 'cursor-pointer']"
+                            role="option" :aria-selected="isSelected(opt)" @mousedown.prevent="handleOptionClick(opt)"
+                            @mouseover.prevent="highlightedIndex = i">
+                            <a class="flex items-center gap-3 py-2 px-3 !text-balance">
+                                <input v-if="checkboxes" type="checkbox" class="checkbox checkbox-sm"
+                                    :checked="isSelected(opt)" @change.stop.prevent="toggleOption(opt)" tabindex="-1" />
+                                <slot name="option" :option="opt" :index="i">
+                                    {{ labelFromOption(opt) }}
+                                </slot>
+                            </a>
+                        </li>
+
+                        <li v-if="filteredOptions.length === 0" class="p-2 text-sm text-gray-500">
+                            <slot name="no-options">Aucune option trouvée</slot>
+                        </li>
+                    </ul>
+                </div>
+
+
             </div>
-
-            <div class="block max-h-[18rem] overflow-auto">
-                <ul class="block m-0 p-2">
-                    <li v-for="(opt, i) in filteredOptions" :key="keyForOption(opt, i)" class="block w-full rounded-box"
-                        :class="[{ 'bg-neutral text-neutral-content': isSelected(opt), 'bg-base-300': i === highlightedIndex, 'bg-neutral/50': isSelected(opt) && i === highlightedIndex }, 'cursor-pointer']"
-                        role="option" 
-                        :aria-selected="isSelected(opt)"
-                        @mousedown.prevent="handleOptionClick(opt)">
-                        <a class="flex items-center gap-3 py-2 px-3 !text-balance">
-                            <input v-if="checkboxes" type="checkbox" class="checkbox checkbox-sm"
-                                :checked="isSelected(opt)" @change.stop.prevent="toggleOption(opt)"
-                                tabindex="-1" />
-                            <slot name="option" :option="opt" :index="i">
-                                {{ labelFromOption(opt) }}
-                            </slot>
-                        </a>
-                    </li>
-
-                    <li v-if="filteredOptions.length === 0" class="p-2 text-sm text-gray-500">
-                        <slot name="no-options">Aucune option trouvée</slot>
-                    </li>
-                </ul>
-            </div>
-
-
-        </div>
         </transition>
     </div>
 </template>
 
 <style scoped>
-
 .dropdown-content.menu {
     @supports (scrollbar-color: auto) {
 
