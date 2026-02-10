@@ -3,17 +3,17 @@ paths:
   - "components/DataDisplay/**"
 ---
 
-# Composants Data Display
+# Data Display Components
 
 ## DuAccordion
 
-**Fichiers :** `components/DataDisplay/du-accordion/du-accordion.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/DataDisplay/du-accordion/du-accordion.vue` | `.types.ts` | `.stories.ts`
 
-**Props :**
+**Props:**
 - `customClass?`: string
 - `items?`: ACCORDIONItem[]
 - `modifier?`: `'collapse-arrow'` | `'collapse-plus'` | `'collapse-open'` | `'collapse-close'`
-- `name?`: string - Nom du groupe pour exclusivité
+- `name?`: string - Group name for exclusive behavior
 
 **Types :**
 ```typescript
@@ -30,9 +30,9 @@ export type ACCORDIONModifier = (typeof ACCORDION_MODIFIERS)[number]
 
 ## DuAvatar
 
-**Fichiers :** `components/DataDisplay/du-avatar/du-avatar.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/DataDisplay/du-avatar/du-avatar.vue` | `.types.ts` | `.stories.ts`
 
-**Props :**
+**Props:**
 - `size?`: Size
 - `variant?`: Variant
 - `rounded?`: Rounded (`'default'` | `'rounded'` | `'full'` | `'xs'` | `'sm'` | `'md'` | `'lg'` | `'xl'`)
@@ -48,9 +48,9 @@ export type ACCORDIONModifier = (typeof ACCORDION_MODIFIERS)[number]
 
 ## DuBadge
 
-**Fichiers :** `components/DataDisplay/du-badge/du-badge.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/DataDisplay/du-badge/du-badge.vue` | `.types.ts` | `.stories.ts`
 
-**Props :**
+**Props:**
 - `size?`: Size
 - `variant?`: Variant
 - `outline?`: boolean
@@ -63,24 +63,24 @@ export type ACCORDIONModifier = (typeof ACCORDION_MODIFIERS)[number]
 
 ## DuCard
 
-**Fichiers :** `components/DataDisplay/du-card/du-card.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/DataDisplay/du-card/du-card.vue` | `.types.ts` | `.stories.ts`
 
-**Props :**
+**Props:**
 - `title?`: string
 - `size?`: Size
 - `bordered?`: boolean
 - `dash?`: boolean
-- `side?`: boolean - Disposition horizontale
-- `responsive?`: boolean - Side sur grands écrans
-- `imageFull?`: boolean - Image en arrière-plan
+- `side?`: boolean - Horizontal layout
+- `responsive?`: boolean - Side on large screens
+- `imageFull?`: boolean - Background image
 
 ---
 
 ## DuCarousel / DuCarouselItem
 
-**Fichiers :** `components/DataDisplay/du-carousel/du-carousel.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/DataDisplay/du-carousel/du-carousel.vue` | `.types.ts` | `.stories.ts`
 
-**Props DuCarousel :**
+**Props DuCarousel:**
 - `start?`: boolean
 - `center?`: boolean
 - `end?`: boolean
@@ -90,9 +90,9 @@ export type ACCORDIONModifier = (typeof ACCORDION_MODIFIERS)[number]
 
 ## DuChat
 
-**Fichiers :** `components/DataDisplay/du-chat/du-chat.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/DataDisplay/du-chat/du-chat.vue` | `.types.ts` | `.stories.ts`
 
-**Props :**
+**Props:**
 - `items?`: ChatItem[]
 - `placement?`: `'start'` | `'end'`
 - `customClass?`: string
@@ -114,11 +114,11 @@ export interface ChatItem {
 
 ## DuCollapse
 
-**Fichiers :** `components/DataDisplay/du-collapse/du-collapse.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/DataDisplay/du-collapse/du-collapse.vue` | `.types.ts` | `.stories.ts`
 
-Similaire à DuAccordion mais pour des items individuels.
+Similar to DuAccordion but for individual items.
 
-**Props :**
+**Props:**
 - `customClass?`: string
 - `items?`: COLLAPSEItem[]
 - `modifier?`: `'collapse-arrow'` | `'collapse-plus'` | `'collapse-open'` | `'collapse-close'`
@@ -137,9 +137,9 @@ export interface COLLAPSEItem {
 
 ## DuCountdown / DuCountdownGroup
 
-**Fichiers :** `components/DataDisplay/du-countdown/du-countdown.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/DataDisplay/du-countdown/du-countdown.vue` | `.types.ts` | `.stories.ts`
 
-**Props :**
+**Props:**
 - `value?`: number
 - `targetDate?`: Date
 - `format?`: `'days'` | `'hours'` | `'minutes'` | `'seconds'`
@@ -151,11 +151,11 @@ export interface COLLAPSEItem {
 
 ## DuDiff
 
-**Fichiers :** `components/DataDisplay/du-diff/du-diff.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/DataDisplay/du-diff/du-diff.vue` | `.types.ts` | `.stories.ts`
 
-Comparaison visuelle avant/après.
+Before/after visual comparison.
 
-**Props :**
+**Props:**
 - `item1?`: string
 - `item2?`: string
 - `aspectRatio?`: `'aspect-16/9'` | `'aspect-4/3'` | `'aspect-1/1'` | `'aspect-video'` | `'aspect-square'` | string | null
@@ -164,31 +164,31 @@ Comparaison visuelle avant/après.
 
 ## DuKbd
 
-**Fichiers :** `components/DataDisplay/du-kbd/du-kbd.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/DataDisplay/du-kbd/du-kbd.vue` | `.types.ts` | `.stories.ts`
 
-Affichage de touches de clavier.
+Keyboard key display.
 
-**Props :**
+**Props:**
 - `size?`: Size
 
 ---
 
 ## DuList
 
-**Fichiers :** `components/DataDisplay/du-list/du-list.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/DataDisplay/du-list/du-list.vue` | `.types.ts` | `.stories.ts`
 
-**Props :**
+**Props:**
 - `class?`: string
 
 ---
 
 ## DuStat
 
-**Fichiers :** `components/DataDisplay/du-stat/du-stat.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/DataDisplay/du-stat/du-stat.vue` | `.types.ts` | `.stories.ts`
 
-Statistique individuelle.
+Individual statistic.
 
-**Props :**
+**Props:**
 - `figureClass?`: string
 - `valueClass?`: string
 - `descClass?`: string
@@ -213,11 +213,11 @@ export interface STATItem {
 
 ## DuStats
 
-**Fichiers :** `components/DataDisplay/du-stats/du-stats.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/DataDisplay/du-stats/du-stats.vue` | `.types.ts` | `.stories.ts`
 
-Groupe de statistiques.
+Statistics group.
 
-**Props :**
+**Props:**
 - `items?`: STATSItem[]
 - `vertical?`: boolean
 - `shadow?`: boolean
@@ -226,25 +226,25 @@ Groupe de statistiques.
 
 ## DuStatus
 
-**Fichiers :** `components/DataDisplay/du-status/du-status.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/DataDisplay/du-status/du-status.vue` | `.types.ts` | `.stories.ts`
 
-Indicateur de statut (point coloré).
+Status indicator (colored dot).
 
-**Props :**
+**Props:**
 - `size?`: Size
 - `variant?`: Variant
-- `ping?`: boolean - Animation ping
-- `bounce?`: boolean - Animation rebond
+- `ping?`: boolean - Ping animation
+- `bounce?`: boolean - Bounce animation
 
 ---
 
 ## DuTable
 
-**Fichiers :** `components/DataDisplay/du-table/du-table.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/DataDisplay/du-table/du-table.vue` | `.types.ts` | `.stories.ts`
 
-> **Composant complexe** : Supporte les slots personnalisés par cellule (`#cell-{columnKey}="{ row }"`).
+> **Complex component**: Supports custom slots per cell (`#cell-{columnKey}="{ row }"`).
 
-**Props :**
+**Props:**
 - `columns?`: TABLEColumn[]
 - `rows?`: TABLERow[]
 - `zebra?`: boolean
@@ -274,9 +274,9 @@ export interface TABLERow {
 
 ## DuTimeline
 
-**Fichiers :** `components/DataDisplay/du-timeline/du-timeline.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/DataDisplay/du-timeline/du-timeline.vue` | `.types.ts` | `.stories.ts`
 
-**Props :**
+**Props:**
 - `items?`: TIMELINEItem[]
 - `direction?`: `'timeline-vertical'` | `'timeline-horizontal'`
 - `modifier?`: `'timeline-snap-icon'` | `'timeline-box'` | `'timeline-compact'`

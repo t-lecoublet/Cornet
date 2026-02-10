@@ -1,30 +1,30 @@
-# Vue d'ensemble du projet Cornet
+# Cornet Project Overview
 
 ## Architecture
 
 ```
 lib/
-├── index.ts                    # Exports principaux (composants + composables)
-├── index.css                   # Styles globaux
-├── plugin-vite.ts              # Plugin Vite pour l'intégration
-├── package.json                # Dépendances (peerDependencies)
-├── cornet-llm.txt              # Documentation complète des composants (legacy)
+├── index.ts                    # Main exports (components + composables)
+├── index.css                   # Global styles
+├── plugin-vite.ts              # Vite plugin for integration
+├── package.json                # Dependencies (peerDependencies)
+├── cornet-llm.txt              # Complete component documentation (legacy)
 ├── types/
-│   └── index.ts                # Auto-généré : exports de tous les types
+│   └── index.ts                # Auto-generated: all type exports
 ├── composables/
-│   ├── useSizeProps.ts         # Mapping des tailles -> classes CSS
-│   └── useVariantProps.ts      # Mapping des variantes -> classes CSS
+│   ├── useSizeProps.ts         # Size mapping -> CSS classes
+│   └── useVariantProps.ts      # Variant mapping -> CSS classes
 ├── components/
-│   ├── Actions/                # 5 composants : boutons, modals, dropdowns
-│   ├── DataDisplay/            # 18 composants : cartes, tables, badges, avatars
-│   ├── DataInput/              # 13 composants : inputs, selects, checkboxes
-│   ├── Feedback/               # 7 composants : alertes, loading, tooltips
-│   ├── Layout/                 # 2 composants : drawer, join
-│   └── Navigation/             # 10 composants : menus, pagination, tabs
-└── build-scripts/              # Scripts de build et génération
+│   ├── Actions/                # 5 components: buttons, modals, dropdowns
+│   ├── DataDisplay/            # 18 components: cards, tables, badges, avatars
+│   ├── DataInput/              # 13 components: inputs, selects, checkboxes
+│   ├── Feedback/               # 7 components: alerts, loading, tooltips
+│   ├── Layout/                 # 2 components: drawer, join
+│   └── Navigation/             # 10 components: menus, pagination, tabs
+└── build-scripts/              # Build and generation scripts
 ```
 
-## Composants par catégorie (55 total)
+## Components by category (55 total)
 
 ### Actions (5)
 DuButton, DuDropdown, DuModal, DuSwap, DuFab
@@ -44,7 +44,7 @@ DuDrawer, DuJoin
 ### Navigation (10)
 DuBreadcrumbs, DuButtonLink, DuDock, DuLink, DuMenu, DuNavbar, DuPagination, DuStepItem, DuSteps, DuTabs
 
-## Dépendances clés (peerDependencies)
+## Key dependencies (peerDependencies)
 
 - `vue` >= 3.3.11
 - `daisyui` >= 5.5.18
@@ -53,19 +53,19 @@ DuBreadcrumbs, DuButtonLink, DuDock, DuLink, DuMenu, DuNavbar, DuPagination, DuS
 - `vite` >= 6.4.1
 - `@tailwindcss/vite` >= 4.1.18
 
-## Exports du package
+## Package exports
 
-| Export | Fichier | Description |
+| Export | File | Description |
 |--------|---------|-------------|
-| `.` | `index.ts` | Tous les composants et composables |
-| `./plugin-vite` | `plugin-vite.ts` | Plugin Vite |
+| `.` | `index.ts` | All components and composables |
+| `./plugin-vite` | `plugin-vite.ts` | Vite plugin |
 | `./css` | `index.css` | Styles |
-| `./types` | `types/index.ts` | Tous les types TypeScript |
+| `./types` | `types/index.ts` | All TypeScript types |
 
-## Règles de contribution
+## Contribution rules
 
-- Ne jamais créer de fichier composant sans les 3 fichiers associés (.vue, .types.ts, .stories.ts)
-- Toujours exporter le nouveau composant dans `index.ts`
-- Les types doivent être dans le fichier `.types.ts`, pas dans le `.vue`
-- Utiliser les composables `useSizeMapping` et `useVariantMapping` pour les props communes
-- Respecter les conventions DaisyUI pour les noms de classes CSS
+- Never create a component file without the 3 associated files (.vue, .types.ts, .stories.ts)
+- Always export the new component in `index.ts`
+- Types must be in the `.types.ts` file, not in the `.vue` file
+- Use `useSizeMapping` and `useVariantMapping` composables for common props
+- Follow DaisyUI conventions for CSS class names

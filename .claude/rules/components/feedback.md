@@ -3,13 +3,13 @@ paths:
   - "components/Feedback/**"
 ---
 
-# Composants Feedback
+# Feedback Components
 
 ## DuAlert
 
-**Fichiers :** `components/Feedback/du-alert/du-alert.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/Feedback/du-alert/du-alert.vue` | `.types.ts` | `.stories.ts`
 
-**Props :**
+**Props:**
 - `variant?`: `'default'` | `'success'` | `'error'` | `'warning'` | `'info'`
 - `direction?`: `'default'` | `'vertical'` | `'horizontal'` | `'responsive'`
 - `soft?`: boolean
@@ -58,35 +58,35 @@ paths:
 
 ## DuSkeleton
 
-**Fichiers :** `components/Feedback/du-skeleton/du-skeleton.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/Feedback/du-skeleton/du-skeleton.vue` | `.types.ts` | `.stories.ts`
 
-Placeholder de chargement. La forme est contrôlée par les classes CSS.
+Loading placeholder. Shape is controlled by CSS classes.
 
-**Props :**
+**Props:**
 - `class?`: string
 
 ---
 
 ## DuToast
 
-**Fichiers :** `components/Feedback/du-toast/du-toast.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/Feedback/du-toast/du-toast.vue` | `.types.ts` | `.stories.ts`
 
-Conteneur de notifications positionnées.
+Positioned notification container.
 
-**Props :**
+**Props:**
 - `horizontalPosition?`: `'start'` | `'center'` | `'end'`
 - `verticalPosition?`: `'top'` | `'middle'` | `'bottom'`
-- `to?`: string - Cible de téléportation
+- `to?`: string - Teleport target
 
 ---
 
 ## DuTooltip
 
-**Fichiers :** `components/Feedback/du-tooltip/du-tooltip.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/Feedback/du-tooltip/du-tooltip.vue` | `.types.ts` | `.stories.ts`
 
-**Props :**
+**Props:**
 - `variant?`: Variant
-- `dataTip?`: string - Contenu du tooltip
-- `open?`: boolean - Toujours visible
+- `dataTip?`: string - Tooltip content
+- `open?`: boolean - Always visible
 - `position?`: `'top'` | `'right'` | `'bottom'` | `'left'`
 - `responsive?`: boolean

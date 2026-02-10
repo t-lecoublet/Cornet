@@ -3,13 +3,13 @@ paths:
   - "components/Actions/**"
 ---
 
-# Composants Actions
+# Action Components
 
 ## DuButton
 
-**Fichiers :** `components/Actions/du-button/du-button.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/Actions/du-button/du-button.vue` | `.types.ts` | `.stories.ts`
 
-**Props :**
+**Props:**
 - `size?`: Size
 - `variant?`: Variant
 - `outline?`: boolean
@@ -81,15 +81,15 @@ export type MODALPlacement = (typeof MODAL_PLACEMENTS)[number]
 
 ## DuSwap
 
-**Fichiers :** `components/Actions/du-swap/du-swap.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/Actions/du-swap/du-swap.vue` | `.types.ts` | `.stories.ts`
 
-Bascule entre deux états avec animations.
+Toggle between two states with animations.
 
-**Props :**
+**Props:**
 - `useCheckbox?`: boolean
 - `modelValue?`: boolean (v-model)
-- `rotate?`: boolean - Animation de rotation
-- `flip?`: boolean - Animation de retournement
+- `rotate?`: boolean - Rotation animation
+- `flip?`: boolean - Flip animation
 
 **Types :**
 ```typescript
@@ -101,11 +101,11 @@ export type SWAPProperty = (typeof SWAP_PROPERTIES)[number]
 
 ## DuFab
 
-**Fichiers :** `components/Actions/du-fab/du-fab.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/Actions/du-fab/du-fab.vue` | `.types.ts` | `.stories.ts`
 
-Bouton d'action flottant (Floating Action Button).
+Floating Action Button.
 
-**Props :**
+**Props:**
 - `items?`: FABItem[]
 - `modifier?`: `'fab-flower'`
 - `customClass?`: string

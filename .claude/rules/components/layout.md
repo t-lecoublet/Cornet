@@ -3,15 +3,15 @@ paths:
   - "components/Layout/**"
 ---
 
-# Composants Layout
+# Layout Components
 
 ## DuDrawer
 
-**Fichiers :** `components/Layout/du-drawer/du-drawer.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/Layout/du-drawer/du-drawer.vue` | `.types.ts` | `.stories.ts`
 
-> **Composant complexe** : Gestion responsive et overlay. Lire le source complet avant modification.
+> **Complex component**: Responsive management and overlay. Read the complete source before modifying.
 
-**Props :**
+**Props:**
 - `id?`: string
 - `position?`: `'start'` | `'end'`
 - `open?`: boolean
@@ -34,18 +34,18 @@ export interface DRAWERItem extends MenuItem {
 }
 ```
 
-**Note :** DRAWERItem étend MenuItem de DuMenu. Toute modification de MenuItem impacte aussi DuDrawer.
+**Note:** DRAWERItem extends MenuItem from DuMenu. Any modification to MenuItem also impacts DuDrawer.
 
 ---
 
 ## DuJoin
 
-**Fichiers :** `components/Layout/du-join/du-join.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/Layout/du-join/du-join.vue` | `.types.ts` | `.stories.ts`
 
-Groupe d'éléments joints sans espacement (boutons groupés, input + bouton, etc.)
+Group of joined elements without spacing (grouped buttons, input + button, etc.)
 
-**Props :**
-- `as?`: string - Type d'élément HTML conteneur
+**Props:**
+- `as?`: string - Container HTML element type
 - `direction?`: `'horizontal'` | `'vertical'`
 
-**Usage :** Les enfants doivent avoir la classe `join-item` pour être correctement joints.
+**Usage:** Children must have the `join-item` class to be properly joined.

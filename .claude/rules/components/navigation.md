@@ -3,15 +3,15 @@ paths:
   - "components/Navigation/**"
 ---
 
-# Composants Navigation
+# Navigation Components
 
 ## DuMenu
 
-**Fichiers :** `components/Navigation/du-menu/du-menu.vue` | `du-menu-item.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/Navigation/du-menu/du-menu.vue` | `du-menu-item.vue` | `.types.ts` | `.stories.ts`
 
-> **Composant complexe** : Gestion des sous-menus et slots personnalisés. Lire `du-menu.vue` ET `du-menu-item.vue`.
+> **Complex component**: Submenu management and custom slots. Read `du-menu.vue` AND `du-menu-item.vue`.
 
-**Props :**
+**Props:**
 - `direction?`: `'default'` | `'vertical'` | `'horizontal'` | `'responsive'`
 - `size?`: Size
 - `rounded?`: boolean
@@ -36,22 +36,22 @@ export interface MenuItem {
 }
 ```
 
-**Note :** MenuItem est aussi utilisé par DuDrawer (Layout).
+**Note:** MenuItem is also used by DuDrawer (Layout).
 
 ---
 
 ## DuPagination
 
-**Fichiers :** `components/Navigation/du-pagination/du-pagination.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/Navigation/du-pagination/du-pagination.vue` | `.types.ts` | `.stories.ts`
 
-> **Composant complexe** : Logique de calcul de pages et ellipsis.
+> **Complex component**: Page calculation logic and ellipsis.
 
-**Props :**
-- `modelValue?`: number (v-model, page actuelle)
-- `total`: number (requis, nombre total d'items)
-- `perPage?`: number (défaut: 10)
-- `showNext?`: boolean (défaut: true)
-- `showPrevious?`: boolean (défaut: true)
+**Props:**
+- `modelValue?`: number (v-model, current page)
+- `total`: number (required, total number of items)
+- `perPage?`: number (default: 10)
+- `showNext?`: boolean (default: true)
+- `showPrevious?`: boolean (default: true)
 - `showFirst?`: boolean
 - `showLast?`: boolean
 - `size?`: Size
@@ -62,19 +62,19 @@ export interface MenuItem {
 - `variant?`: Variant
 - `outline?`: boolean
 - `soft?`: boolean
-- `manual?`: boolean - Pas de calcul automatique
-- `showEllipsis?`: boolean (défaut: true)
+- `manual?`: boolean - No automatic calculation
+- `showEllipsis?`: boolean (default: true)
 - `maxPages?`: number
 
 ---
 
 ## DuTabs
 
-**Fichiers :** `components/Navigation/du-tabs/du-tabs.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/Navigation/du-tabs/du-tabs.vue` | `.types.ts` | `.stories.ts`
 
-> **Composant complexe** : Gestion des contenus dynamiques. Slots disponibles : `#tab-{index}`, `#content-{index}`.
+> **Complex component**: Dynamic content management. Available slots: `#tab-{index}`, `#content-{index}`.
 
-**Props :**
+**Props:**
 - `size?`: Size
 - `items?`: TabItem[]
 - `type?`: `'lift'` | `'border'` | `'box'`
@@ -98,10 +98,10 @@ export interface TabItem {
 
 ## DuBreadcrumbs
 
-**Fichiers :** `components/Navigation/du-breadcrumbs/du-breadcrumbs.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/Navigation/du-breadcrumbs/du-breadcrumbs.vue` | `.types.ts` | `.stories.ts`
 
-**Props :**
-- `items`: BreadcrumbItem[] (requis)
+**Props:**
+- `items`: BreadcrumbItem[] (required)
 - `separator?`: string
 
 **Types :**
@@ -117,11 +117,11 @@ export interface BreadcrumbItem {
 
 ## DuButtonLink
 
-**Fichiers :** `components/Navigation/du-button-link/du-button-link.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/Navigation/du-button-link/du-button-link.vue` | `.types.ts` | `.stories.ts`
 
-Bouton stylisé comme lien de navigation (utilise `<a>` ou `<RouterLink>`).
+Button styled as navigation link (uses `<a>` or `<RouterLink>`).
 
-**Props :**
+**Props:**
 - `size?`: Size
 - `variant?`: Variant
 - `outline?`: boolean
@@ -139,11 +139,11 @@ Bouton stylisé comme lien de navigation (utilise `<a>` ou `<RouterLink>`).
 
 ## DuDock
 
-**Fichiers :** `components/Navigation/du-dock/du-dock.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/Navigation/du-dock/du-dock.vue` | `.types.ts` | `.stories.ts`
 
-Barre de navigation fixe en bas (style macOS dock).
+Fixed navigation bar at the bottom (macOS dock style).
 
-**Props :**
+**Props:**
 - `size?`: Size
 - `items?`: DockItem[]
 - `reverseTheme?`: boolean
@@ -175,25 +175,25 @@ export interface DockItem {
 
 ## DuNavbar
 
-**Fichiers :** `components/Navigation/du-navbar/du-navbar.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/Navigation/du-navbar/du-navbar.vue` | `.types.ts` | `.stories.ts`
 
-Barre de navigation. Pas de props spécifiques, utilise des slots : `#start`, `#center`, `#end`.
+Navigation bar. No specific props, uses slots: `#start`, `#center`, `#end`.
 
 ---
 
 ## DuSteps / DuStepItem
 
-**Fichiers :** `components/Navigation/du-steps/du-steps.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/Navigation/du-steps/du-steps.vue` | `.types.ts` | `.stories.ts`
 
-**Props DuSteps :**
+**Props DuSteps:**
 - `items?`: StepItem[]
 - `direction?`: `'steps-vertical'` | `'steps-horizontal'`
 - `customClass?`: string
 - `responsive?`: boolean
-- `activeSteps?`: number[] - Indices des étapes actives
+- `activeSteps?`: number[] - Indices of active steps
 - `variant?`: Variant
 
-**Props DuStepItem :**
+**Props DuStepItem:**
 - `label?`: string
 - `active?`: boolean
 - `customClass?`: string

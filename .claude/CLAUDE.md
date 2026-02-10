@@ -1,51 +1,51 @@
 # Cornet - DaisyUI Vue Kit
 
-Bibliothèque de composants Vue 3 basée sur DaisyUI 5 et Tailwind CSS 4.
+Vue 3 component library based on DaisyUI 5 and Tailwind CSS 4.
 
-## Documentation complète des composants
+## Complete component documentation
 
 @cornet-llm.txt
 
-## Conventions de nommage
+## Naming conventions
 
-- Tous les composants sont préfixés `Du` : DuButton, DuModal, DuSelect
-- Types TypeScript en UPPERCASE : `{COMPONENT}Props`, `{COMPONENT}Size`, `{COMPONENT}Variant`
-- Constantes de types en UPPERCASE : `BUTTON_SIZES`, `MODAL_PLACEMENTS`
-- Fichiers : `du-{name}.vue`, `du-{name}.types.ts`, `du-{name}.stories.ts`
+- All components are prefixed with `Du`: DuButton, DuModal, DuSelect
+- TypeScript types in UPPERCASE: `{COMPONENT}Props`, `{COMPONENT}Size`, `{COMPONENT}Variant`
+- Type constants in UPPERCASE: `BUTTON_SIZES`, `MODAL_PLACEMENTS`
+- Files: `du-{name}.vue`, `du-{name}.types.ts`, `du-{name}.stories.ts`
 
-## Structure des fichiers composants
+## Component file structure
 
 ```
 components/{Category}/du-{name}/
-├── du-{name}.vue           # Composant Vue
-├── du-{name}.types.ts      # Types TypeScript
-└── du-{name}.stories.ts    # Stories Storybook
+├── du-{name}.vue           # Vue component
+├── du-{name}.types.ts      # TypeScript types
+└── du-{name}.stories.ts    # Storybook stories
 ```
 
-**Catégories :** Actions, DataDisplay, DataInput, Feedback, Layout, Navigation
+**Categories:** Actions, DataDisplay, DataInput, Feedback, Layout, Navigation
 
-## Props communes à la plupart des composants
+## Common props for most components
 
 - `size`: Size = `'default'` | `'xs'` | `'sm'` | `'md'` | `'lg'` | `'xl'`
 - `variant`: Variant = `'default'` | `'neutral'` | `'primary'` | `'secondary'` | `'accent'` | `'info'` | `'success'` | `'warning'` | `'error'`
-- `customClass`: string - Classes CSS personnalisées
-- `disabled`: boolean - Désactivation du composant
+- `customClass`: string - Custom CSS classes
+- `disabled`: boolean - Component disabled state
 
-## Avant toute modification de composant
+## Before modifying any component
 
-1. Lire TOUJOURS le fichier source `.vue` complet
-2. Vérifier le fichier `.types.ts` associé
-3. Consulter les stories `.stories.ts` pour comprendre les cas d'usage
-4. Modifier dans cet ordre : types -> composant -> stories
+1. ALWAYS read the complete `.vue` source file
+2. Check the associated `.types.ts` file
+3. Review the `.stories.ts` stories to understand use cases
+4. Modify in this order: types -> component -> stories
 
 ## Exports
 
-- **Point d'entrée principal :** `index.ts` exporte tous les composants et composables
-- **Types :** `types/index.ts` exporte tous les types (auto-généré)
-- **CSS :** `index.css`
-- **Plugin Vite :** `plugin-vite.ts`
+- **Main entry point:** `index.ts` exports all components and composables
+- **Types:** `types/index.ts` exports all types (auto-generated)
+- **CSS:** `index.css`
+- **Vite Plugin:** `plugin-vite.ts`
 
-## Stack technique
+## Tech stack
 
 - Vue 3.3+ (Composition API, `<script setup>`)
 - TypeScript 5.8+

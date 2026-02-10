@@ -3,13 +3,13 @@ paths:
   - "components/DataInput/**"
 ---
 
-# Composants Data Input
+# Data Input Components
 
 ## DuInputField
 
-**Fichiers :** `components/DataInput/du-input-field/du-input-field.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/DataInput/du-input-field/du-input-field.vue` | `.types.ts` | `.stories.ts`
 
-**Props :**
+**Props:**
 - `type?`: INPUTFIELDType (`'text'` | `'password'` | `'email'` | `'number'` | `'date'` | `'datetime-local'` | `'week'` | `'month'` | `'tel'` | `'url'` | `'search'` | `'time'`)
 - `placeholder?`: string
 - `size?`: Size
@@ -30,11 +30,11 @@ paths:
 
 ## DuSelect
 
-**Fichiers :** `components/DataInput/du-select/du-select.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/DataInput/du-select/du-select.vue` | `.types.ts` | `.stories.ts`
 
-> **Composant complexe** : Logique de recherche, multi-sélection, gestion d'objets. Lire le source complet avant modification.
+> **Complex component**: Search logic, multi-selection, object management. Read the complete source before modifying.
 
-**Props :**
+**Props:**
 - `ghost?`: boolean
 - `variant?`: Variant
 - `size?`: Size
@@ -42,32 +42,32 @@ paths:
 - `multiple?`: boolean
 - `modelValue?`: any (v-model)
 - `placeholder?`: string
-- `search?`: boolean - Recherche externe
-- `searchable?`: boolean - Recherche activée
-- `searchableInside?`: boolean - Recherche intégrée dans le dropdown
+- `search?`: boolean - External search
+- `searchable?`: boolean - Search enabled
+- `searchableInside?`: boolean - Search integrated in dropdown
 - `searchPlaceholder?`: string
 - `searchNoResultsText?`: string
 - `options?`: any[]
 - `checkboxes?`: boolean
 - `closeOnSelect?`: boolean
-- `trackBy?`: string - Propriété clé pour les objets
-- `labelBy?`: string - Propriété label pour les objets
-- `returnObject?`: boolean - Retourner l'objet complet
+- `trackBy?`: string - Key property for objects
+- `labelBy?`: string - Label property for objects
+- `returnObject?`: boolean - Return complete object
 
 ---
 
 ## DuSearch
 
-**Fichiers :** `components/DataInput/du-search/du-search.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/DataInput/du-search/du-search.vue` | `.types.ts` | `.stories.ts`
 
-> **Composant complexe** : Auto-complétion, multi-sélection.
+> **Complex component**: Autocomplete, multi-selection.
 
-**Props :**
+**Props:**
 - `modelValue?`: any | any[] (v-model)
-- `name`: string (requis)
-- `id`: string (requis)
+- `name`: string (required)
+- `id`: string (required)
 - `placeholder?`: string
-- `listValues`: SearchOption[] (requis)
+- `listValues`: SearchOption[] (required)
 - `limit?`: number
 - `addOption?`: boolean
 - `type?`: string
@@ -174,11 +174,11 @@ export interface RatingItem {
 
 ## DuFilter
 
-**Fichiers :** `components/DataInput/du-filter/du-filter.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/DataInput/du-filter/du-filter.vue` | `.types.ts` | `.stories.ts`
 
-Groupe de boutons filtres.
+Filter button group.
 
-**Props :**
+**Props:**
 - `items?`: FilterItem[]
 - `name?`: string
 - `buttonsArgs?`: FilterButtonArgs
@@ -243,11 +243,11 @@ export interface FilterButtonArgs {
 
 ## DuLabelInputValidator
 
-**Fichiers :** `components/DataInput/du-label-input-validator/du-label-input-validator.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/DataInput/du-label-input-validator/du-label-input-validator.vue` | `.types.ts` | `.stories.ts`
 
-Combo label + input avec validation HTML5 intégrée.
+Label + input combo with built-in HTML5 validation.
 
-**Props :**
+**Props:**
 - `type?`: LABELProps["type"]
 - `pattern?`: string
 - `minlength?`: number

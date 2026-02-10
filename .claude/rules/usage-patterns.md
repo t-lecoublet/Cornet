@@ -1,39 +1,39 @@
-# Patterns d'utilisation Cornet
+# Cornet Usage Patterns
 
-## Formulaires
+## Forms
 
-### Champ avec label et validation
+### Field with label and validation
 
 ```vue
 <DuLabelInputValidator
   type="label"
   inputType="email"
-  placeholder="votre@email.com"
+  placeholder="your@email.com"
   required
   pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-  title="Email invalide"
+  title="Invalid email"
   v-model="email"
 >
   Email
 </DuLabelInputValidator>
 ```
 
-### Label + Input simple
+### Label + Simple Input
 
 ```vue
 <DuLabel type="label">
-  Nom
+  Name
   <DuInputField type="text" v-model="name" required />
 </DuLabel>
 ```
 
-### Select avec objets et recherche
+### Select with objects and search
 
 ```vue
 <DuSelect
   v-model="selected"
   :options="items"
-  placeholder="Choisir..."
+  placeholder="Choose..."
   trackBy="id"
   labelBy="name"
   returnObject
@@ -41,7 +41,7 @@
 />
 ```
 
-### Select multi avec checkboxes
+### Multi-select with checkboxes
 
 ```vue
 <DuSelect
@@ -55,7 +55,7 @@
 />
 ```
 
-### Search avec auto-complétion
+### Search with autocomplete
 
 ```vue
 <DuSearch
@@ -67,13 +67,13 @@
 />
 ```
 
-### Groupe radio / checkbox
+### Radio / Checkbox group
 
 ```vue
 <!-- Radios -->
 <label class="flex items-center gap-2">
   <DuRadio name="plan" value="free" v-model="plan" variant="primary" />
-  Gratuit
+  Free
 </label>
 
 <!-- Checkbox -->
@@ -87,15 +87,15 @@
 
 ## Navigation
 
-### Menu avec sous-menus
+### Menu with submenus
 
 ```vue
 <DuMenu
   :items="[
     { label: 'Dashboard', value: 'dash', href: '/' },
-    { label: 'Produits', subItems: [
-      { label: 'Liste', href: '/products' },
-      { label: 'Ajouter', href: '/products/add' }
+    { label: 'Products', subItems: [
+      { label: 'List', href: '/products' },
+      { label: 'Add', href: '/products/add' }
     ]},
     { label: 'Admin', disabled: true }
   ]"
@@ -119,12 +119,12 @@
 />
 ```
 
-### Tabs avec contenu
+### Tabs with content
 
 ```vue
 <DuTabs :items="tabs" type="border">
-  <template #content-0>Contenu tab 1</template>
-  <template #content-1>Contenu tab 2</template>
+  <template #content-0>Tab 1 content</template>
+  <template #content-1>Tab 2 content</template>
 </DuTabs>
 ```
 
@@ -134,7 +134,7 @@
 <DuSteps
   :items="[
     { label: 'Info', dataContent: '1' },
-    { label: 'Paiement', dataContent: '2' },
+    { label: 'Payment', dataContent: '2' },
     { label: 'Confirmation', dataContent: '3' }
   ]"
   :activeSteps="[0, 1]"
@@ -147,17 +147,17 @@
 
 ## Feedback
 
-### Alert avec variantes
+### Alert with variants
 
 ```vue
-<!-- Succès auto-dismiss -->
+<!-- Success auto-dismiss -->
 <DuAlert variant="success" dismissible autoDismissible icon>
-  Opération réussie !
+  Operation successful!
 </DuAlert>
 
-<!-- Erreur soft -->
+<!-- Soft error -->
 <DuAlert variant="error" soft icon>
-  Une erreur est survenue.
+  An error occurred.
 </DuAlert>
 ```
 
@@ -185,15 +185,15 @@
 <DuProgress :value="75" :max="100" variant="primary" />
 ```
 
-### Modal de confirmation
+### Confirmation modal
 
 ```vue
 <DuModal v-model:open="isOpen" closeButton closeOnEscape placement="middle">
   <h3 class="font-bold text-lg">Confirmation</h3>
-  <p>Êtes-vous sûr ?</p>
+  <p>Are you sure?</p>
   <div class="flex gap-2 justify-end">
-    <DuButton @click="isOpen = false" variant="neutral">Annuler</DuButton>
-    <DuButton @click="confirm" variant="primary">Confirmer</DuButton>
+    <DuButton @click="isOpen = false" variant="neutral">Cancel</DuButton>
+    <DuButton @click="confirm" variant="primary">Confirm</DuButton>
   </div>
 </DuModal>
 ```
@@ -202,7 +202,7 @@
 
 ## Layout
 
-### Drawer responsive
+### Responsive drawer
 
 ```vue
 <DuDrawer v-model="drawerOpen" position="start" responsive :items="menuItems">
@@ -217,12 +217,12 @@
 </DuDrawer>
 ```
 
-### Éléments joints
+### Joined elements
 
 ```vue
-<!-- Input + bouton -->
+<!-- Input + button -->
 <DuJoin direction="horizontal">
-  <DuInputField v-model="query" placeholder="Rechercher..." class="join-item" />
+  <DuInputField v-model="query" placeholder="Search..." class="join-item" />
   <DuButton variant="primary" class="join-item">Go</DuButton>
 </DuJoin>
 ```
@@ -234,7 +234,7 @@
   <DuCard v-for="item in items" :key="item.id" :title="item.title" bordered>
     <p>{{ item.description }}</p>
     <template #actions>
-      <DuButton variant="primary" size="sm">Détail</DuButton>
+      <DuButton variant="primary" size="sm">Details</DuButton>
     </template>
   </DuCard>
 </div>
@@ -242,9 +242,9 @@
 
 ---
 
-## Bonnes pratiques
+## Best Practices
 
-### Toujours utiliser v-model
+### Always use v-model
 
 ```vue
 <!-- Correct -->
@@ -252,19 +252,19 @@
 <DuSelect v-model="selected" />
 <DuCheckbox v-model="checked" />
 
-<!-- Incorrect : pas de binding -->
+<!-- Incorrect: no binding -->
 <DuInputField />
 ```
 
-### Désactiver les boutons pendant les actions async
+### Disable buttons during async actions
 
 ```vue
 <DuButton :disabled="loading" variant="primary" @click="submit">
-  {{ loading ? 'Chargement...' : 'Envoyer' }}
+  {{ loading ? 'Loading...' : 'Submit' }}
 </DuButton>
 ```
 
-### Typer les données avec les interfaces du kit
+### Type data with kit interfaces
 
 ```typescript
 import type { MenuItem } from 'daisyui-vue-kit/types'
@@ -273,26 +273,26 @@ import type { SearchOption } from 'daisyui-vue-kit/types'
 const items: MenuItem[] = [{ label: 'Home', href: '/' }]
 ```
 
-### Toujours wrapper les inputs avec DuLabel
+### Always wrap inputs with DuLabel
 
 ```vue
-<!-- Correct : accessible -->
+<!-- Correct: accessible -->
 <DuLabel type="label">
   Email
   <DuInputField type="email" v-model="email" />
 </DuLabel>
 
-<!-- Incorrect : pas de label -->
+<!-- Incorrect: no label -->
 <DuInputField type="email" v-model="email" />
 ```
 
-### Utiliser `customClass` plutôt que de modifier le composant
+### Use `customClass` instead of modifying the component
 
 ```vue
-<!-- Correct : classes personnalisées via prop -->
+<!-- Correct: custom classes via prop -->
 <DuButton customClass="shadow-xl hover:scale-105" variant="primary">
-  Stylisé
+  Styled
 </DuButton>
 
-<!-- Incorrect : surcharge directe des styles internes -->
+<!-- Incorrect: direct override of internal styles -->
 ```
