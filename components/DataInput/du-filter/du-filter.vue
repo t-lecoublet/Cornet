@@ -24,7 +24,7 @@ provide("filterName", filterName);
       customClass="btn filter-reset"
       v-bind="props.buttonsArgs"
       :checked="true"
-      label="All"
+      label="×"
     />
 
     <!-- Dynamic items mode -->
