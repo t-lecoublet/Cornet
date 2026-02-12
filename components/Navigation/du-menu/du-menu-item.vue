@@ -104,13 +104,16 @@ const isActive = computed(() => {
     <template v-else>
       <li>
         <a :role="item.disabled ? undefined : 'option'"
-          :href="item.href" 
-          :class="{ 
+          :href="item.href"
+          :class="{
             'menu-disabled': item.disabled,
             'menu-active': isActive
-          }" 
+          }"
           @click.stop="item.onClick && item.onClick()"
         >
+          <component :is="item.icon" v-if="typeof item.icon === 'object'" />
+          <img v-else-if="typeof item.icon === 'string' && item.icon.startsWith('http')" :src="item.icon" :alt="item.label" class="w-5 h-5" />
+          <div v-else-if="typeof item.icon === 'string'" v-html="item.icon"></div>
           {{ item.label }}
         </a>
         <ul role="listbox">
@@ -141,18 +144,21 @@ const isActive = computed(() => {
     <template v-else>
       <li :class="{ 'menu-disabled': item.disabled }">
         <a :role="item.disabled ? undefined : 'option'"
-          :href="item.href" 
+          :href="item.href"
           :class="{ 'menu-active': isActive }"
           @click.stop="item.onClick && item.onClick()"
         >
           <!-- Checkbox pour sélection multiple -->
-          <input 
-            v-if="item.multiple && item.value !== undefined" 
-            type="checkbox" 
-            class="invisible w-0 h-0 overflow-clip" 
-            :checked="item.checked" 
+          <input
+            v-if="item.multiple && item.value !== undefined"
+            type="checkbox"
+            class="invisible w-0 h-0 overflow-clip"
+            :checked="item.checked"
             disabled
           >
+          <component :is="item.icon" v-if="typeof item.icon === 'object'" />
+          <img v-else-if="typeof item.icon === 'string' && item.icon.startsWith('http')" :src="item.icon" :alt="item.label" class="w-5 h-5" />
+          <div v-else-if="typeof item.icon === 'string'" v-html="item.icon"></div>
           {{ item.label }}
         </a>
       </li>

@@ -1,3 +1,4 @@
+import type { Component } from "vue";
 import { type Size } from "../../../composables/useSizeProps";
 
 export const DU_MENU_DIRECTIONS = ["default", "vertical", "horizontal", "responsive"] as const;
@@ -13,7 +14,8 @@ export interface MenuItem {
   onClick?: () => void;
   checked?: boolean;
   multiple?: boolean;
-  active?: boolean; // Nouvelle propriété pour marquer un item comme actif
+  active?: boolean;
+  icon?: Component | string | object | unknown;
 }
 
 export interface MenuProps {
