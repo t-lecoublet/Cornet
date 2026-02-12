@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { ref, computed, nextTick, onMounted, onBeforeUnmount, watch } from "vue"
+import { ref, computed, reactive, nextTick, onMounted, onBeforeUnmount, watch } from "vue"
 import { useSizeMapping, type Size } from "../../../composables/useSizeProps"
 import { useVariantMapping, type Variant } from "../../../composables/useVariantProps"
 import type { SEARCHProps, SearchOption } from "./du-search.types"
 
 const props = withDefaults(defineProps<SEARCHProps>(), {
     size: "default",
+    subSize: undefined,
     variant: "default",
     type: "text",
     ghost: false,
@@ -16,6 +17,8 @@ const props = withDefaults(defineProps<SEARCHProps>(), {
 })
 
 const { sizeClass } = useSizeMapping(props, 'input')
+const subSizeProps = reactive({ get size(): Size { return props.subSize ?? props.size } })
+const { sizeClass: subSizeClass } = useSizeMapping(subSizeProps, 'menu')
 const { colorClass } = useVariantMapping(props, 'input')
 
 const computedInputClass = computed(() => {
@@ -325,15 +328,16 @@ onBeforeUnmount(() => {
             enter-to-class="opacity-100 scale-100" leave-active-class="transition ease-in duration-75"
             leave-from-class="opacity-100 scale-100" leave-to-class="opacity-0 scale-95">
             <ul v-if="open" :id="listId"
-                class=" dropdown-content absolute mt-1 max-h-60 w-full overflow-auto rounded-box bg-base-100 shadow z-50 menu flex-nowrap p-2"
+                class=" dropdown-content absolute mt-1 max-h-60 w-full overflow-auto rounded-box bg-base-100 shadow z-50 menu flex-nowrap"
+                :class="[subSizeClass]"
                 role="listbox">
-                <li v-if="props.addOption && queryValue" class="cursor-pointer rounded px-3 py-2" :class="{
+                <li v-if="props.addOption && queryValue" class="cursor-pointer rounded" :class="{
                     'bg-base-300': highlightedIndex === 0
                 }" role="option" :aria-selected="(highlightedIndex === 0)" @mousedown="selectValue(queryValue)">
                     <slot name="add-option" :query="query">Ajouter "{{ query }}"</slot>
                 </li>
 
-                <li v-if="!props.addOption && filteredValues.length === 0" class="px-3 py-2 text-sm text-gray-400">
+                <li v-if="!props.addOption && filteredValues.length === 0" class=" text-gray-400">
                     <slot name="no-results">Aucun résultat</slot>
                 </li>
 
@@ -344,7 +348,7 @@ onBeforeUnmount(() => {
                 }" role="option" :aria-selected="(highlightedIndex === (props.addOption && queryValue ? i + 1 : i))"
                     @mousedown="selectValue(val)"
                     @mouseover.prevent="highlightedIndex = (props.addOption && queryValue ? i + 1 : i)">
-                    <a class="flex items-center gap-3 py-2 px-3">
+                    <a class="flex items-center gap-3">
                         <slot name="option" :option="val" :index="i">
                             {{ val.name }}
                         </slot>

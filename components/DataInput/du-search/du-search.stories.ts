@@ -11,6 +11,11 @@ const meta: Meta<typeof DuSearch> = {
   argTypes: {
     ...useVariantStoriesControl as ArgTypes,
     ...useSizeStoriesControl as ArgTypes,
+    subSize: {
+      control: { type: 'select' },
+      options: ['default', 'xs', 'sm', 'md', 'lg', 'xl'],
+      description: 'Size of the dropdown menu (defaults to size)',
+    },
     addOption: { control: { type: "boolean" } },
     required: { control: { type: "boolean" } },
     multiple: { control: { type: "boolean" } },
@@ -203,6 +208,41 @@ export const Sizes: Story = {
       { id: 1, name: "Option 1" },
       { id: 2, name: "Option 2" },
       { id: 3, name: "Option 3" },
+    ],
+  },
+}
+
+// SUBSIZE (MENU SIZE)
+export const SubSize: Story = {
+  render: (args: any) => ({
+    components: { DuSearch },
+    setup() {
+      const selectedValue = ref(null)
+      return { args, selectedValue }
+    },
+    template: `
+      <div class="flex flex-col gap-6 w-72">
+        <div>
+          <div class="text-xs text-gray-500 mb-1">Large input, small menu</div>
+          <DuSearch v-model="selectedValue" v-bind="args" size="lg" subSize="sm" placeholder="Large input" />
+        </div>
+        <div>
+          <div class="text-xs text-gray-500 mb-1">Small input, large menu</div>
+          <DuSearch v-model="selectedValue" v-bind="args" size="sm" subSize="lg" placeholder="Small input" />
+        </div>
+        <div>
+          <div class="text-xs text-gray-500 mb-1">Medium input, xs menu</div>
+          <DuSearch v-model="selectedValue" v-bind="args" size="md" subSize="xs" placeholder="Medium input" />
+        </div>
+      </div>
+    `,
+  }),
+  args: {
+    listValues: [
+      { id: 1, name: "Option 1" },
+      { id: 2, name: "Option 2" },
+      { id: 3, name: "Option 3" },
+      { id: 4, name: "Option 4" },
     ],
   },
 }

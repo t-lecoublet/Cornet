@@ -25,6 +25,7 @@ export interface SEARCHProps {
   pattern?: string
   multiple?: boolean
   size?: Size
+  subSize?: Size
   variant?: Variant
   ghost?: boolean
   disabled?: boolean
