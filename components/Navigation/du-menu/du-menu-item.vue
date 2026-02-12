@@ -42,14 +42,8 @@ const isActive = computed(() => {
     <template v-if="$slots[`title-${idx}`]">
       <slot :name="`title-${idx}`" :item="item" :index="index" />
       <ul role="listbox">
-        <du-menu-item
-          v-for="(sub, subIndex) in item.subItems"
-          :key="subIndex"
-          :item="sub"
-          :index="subIndex"
-          :parent-index="idx"
-          v-bind="$attrs"
-        >
+        <du-menu-item v-for="(sub, subIndex) in item.subItems" :key="subIndex" :item="sub" :index="subIndex"
+          :parent-index="idx" v-bind="$attrs">
           <template v-for="(_, name) in $slots" #[name]="slotProps">
             <slot :name="name" v-bind="slotProps" />
           </template>
@@ -59,14 +53,8 @@ const isActive = computed(() => {
     <template v-else-if="$slots.title">
       <slot name="title" :item="item" :index="index" />
       <ul role="listbox">
-        <du-menu-item
-          v-for="(sub, subIndex) in item.subItems"
-          :key="subIndex"
-          :item="sub"
-          :index="subIndex"
-          :parent-index="idx"
-          v-bind="$attrs"
-        >
+        <du-menu-item v-for="(sub, subIndex) in item.subItems" :key="subIndex" :item="sub" :index="subIndex"
+          :parent-index="idx" v-bind="$attrs">
           <template v-for="(_, name) in $slots" #[name]="slotProps">
             <slot :name="name" v-bind="slotProps" />
           </template>
@@ -77,14 +65,8 @@ const isActive = computed(() => {
       <li>
         <h2 class="menu-title">{{ item.label }}</h2>
         <ul role="listbox">
-          <du-menu-item
-            v-for="(sub, subIndex) in item.subItems"
-            :key="subIndex"
-            :item="sub"
-            :index="subIndex"
-            :parent-index="idx"
-            v-bind="$attrs"
-          >
+          <du-menu-item v-for="(sub, subIndex) in item.subItems" :key="subIndex" :item="sub" :index="subIndex"
+            :parent-index="idx" v-bind="$attrs">
             <template v-for="(_, name) in $slots" #[name]="slotProps">
               <slot :name="name" v-bind="slotProps" />
             </template>
@@ -103,28 +85,20 @@ const isActive = computed(() => {
     </template>
     <template v-else>
       <li>
-        <a :role="item.disabled ? undefined : 'option'"
-          :href="item.href"
-          :class="{
-            'menu-disabled': item.disabled,
-            'menu-active': isActive
-          }"
-          @click.stop="item.onClick && item.onClick()"
-        >
+        <a :role="item.disabled ? undefined : 'option'" :href="item.href" :class="{
+          'menu-disabled': item.disabled,
+          'menu-active': isActive
+        }" @click.stop="item.onClick && item.onClick()">
           <component :is="item.icon" v-if="typeof item.icon === 'object'" />
-          <img v-else-if="typeof item.icon === 'string' && item.icon.startsWith('http')" :src="item.icon" :alt="item.label" class="w-5 h-5" />
+          <img v-else-if="typeof item.icon === 'string' && item.icon.startsWith('http')" :src="item.icon"
+            :alt="item.label" class="w-5 h-5" />
           <div v-else-if="typeof item.icon === 'string'" v-html="item.icon"></div>
           {{ item.label }}
+          <slot name="additional" :item="item" :index="index"></slot>
         </a>
         <ul role="listbox">
-          <du-menu-item
-            v-for="(sub, subIndex) in item.subItems"
-            :key="subIndex"
-            :item="sub"
-            :index="subIndex"
-            :parent-index="idx"
-            v-bind="$attrs"
-          >
+          <du-menu-item v-for="(sub, subIndex) in item.subItems" :key="subIndex" :item="sub" :index="subIndex"
+            :parent-index="idx" v-bind="$attrs">
             <template v-for="(_, name) in $slots" #[name]="slotProps">
               <slot :name="name" v-bind="slotProps" />
             </template>
@@ -143,23 +117,17 @@ const isActive = computed(() => {
     </template>
     <template v-else>
       <li :class="{ 'menu-disabled': item.disabled }">
-        <a :role="item.disabled ? undefined : 'option'"
-          :href="item.href"
-          :class="{ 'menu-active': isActive }"
-          @click.stop="item.onClick && item.onClick()"
-        >
+        <a :role="item.disabled ? undefined : 'option'" :href="item.href" :class="{ 'menu-active': isActive }"
+          @click.stop="item.onClick && item.onClick()">
           <!-- Checkbox pour sélection multiple -->
-          <input
-            v-if="item.multiple && item.value !== undefined"
-            type="checkbox"
-            class="invisible w-0 h-0 overflow-clip"
-            :checked="item.checked"
-            disabled
-          >
+          <input v-if="item.multiple && item.value !== undefined" type="checkbox"
+            class="invisible w-0 h-0 overflow-clip" :checked="item.checked" disabled>
           <component :is="item.icon" v-if="typeof item.icon === 'object'" />
-          <img v-else-if="typeof item.icon === 'string' && item.icon.startsWith('http')" :src="item.icon" :alt="item.label" class="w-5 h-5" />
+          <img v-else-if="typeof item.icon === 'string' && item.icon.startsWith('http')" :src="item.icon"
+            :alt="item.label" class="w-5 h-5" />
           <div v-else-if="typeof item.icon === 'string'" v-html="item.icon"></div>
           {{ item.label }}
+          <slot name="additional" :item="item" :index="index"></slot>
         </a>
       </li>
     </template>
