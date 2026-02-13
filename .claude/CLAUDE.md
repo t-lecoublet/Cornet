@@ -2,6 +2,10 @@
 
 Vue 3 component library based on DaisyUI 5 and Tailwind CSS 4.
 
+## All rules
+
+All rules are in the `./rules/` directory next to this file. Each rule has a `.md`. Each component rule has a `.md` file in the `rules/components/` directory.
+
 ## Complete component documentation
 
 @cornet-llm.txt
