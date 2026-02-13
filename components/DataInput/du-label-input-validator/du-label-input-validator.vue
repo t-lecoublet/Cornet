@@ -3,6 +3,8 @@ import DuInputField from "../du-input-field/du-input-field.vue";
 import DuLabel from "../du-label/du-label.vue";
 import { type LabelInputValidatorProps } from "./du-label-input-validator.types";
 
+const model = defineModel();
+
 const props = withDefaults(defineProps<LabelInputValidatorProps>(), {
   type: "floating-label",
   pattern: "[A-Za-z][A-Za-z0-9\\-]*",
@@ -17,6 +19,7 @@ const props = withDefaults(defineProps<LabelInputValidatorProps>(), {
   <DuLabel :class="[type, 'validator']">
     <slot name="before"></slot>
     <DuInputField
+      v-model="model"
       :required="required"
       :pattern="pattern"
       :minlength="minlength"
