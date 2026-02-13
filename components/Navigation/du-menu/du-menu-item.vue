@@ -12,6 +12,24 @@ const slots = defineSlots();
 
 const idx = computed(() => props.parentIndex ? `${props.parentIndex}-${props.index}` : `${props.index}`);
 
+const ROUTER_COMPONENTS = ['RouterLink', 'router-link', 'NuxtLink', 'nuxt-link'];
+
+const linkTag = computed(() => props.item.as || 'a');
+
+const isRouterComponent = computed(() => {
+  const tag = props.item.as;
+  if (!tag) return false;
+  if (typeof tag === 'string') return ROUTER_COMPONENTS.includes(tag);
+  return tag.name ? ROUTER_COMPONENTS.includes(tag.name) : false;
+});
+
+const linkProps = computed(() => {
+  if (isRouterComponent.value) {
+    return { to: props.item.href };
+  }
+  return { href: props.item.href };
+});
+
 // Détermine si l'item est actif (sélectionné)
 const isActive = computed(() => {
   if (props.item.multiple) {
@@ -85,7 +103,7 @@ const isActive = computed(() => {
     </template>
     <template v-else>
       <li>
-        <a :role="item.disabled ? undefined : 'option'" :href="item.href" :class="{
+        <component :is="linkTag" :role="item.disabled ? undefined : 'option'" v-bind="linkProps" :class="{
           'menu-disabled': item.disabled,
           'menu-active': isActive
         }" @click.stop="item.onClick && item.onClick()">
@@ -95,7 +113,7 @@ const isActive = computed(() => {
           <div v-else-if="typeof item.icon === 'string'" v-html="item.icon"></div>
           {{ item.label }}
           <slot name="additional" :item="item" :index="index"></slot>
-        </a>
+        </component>
         <ul role="listbox">
           <du-menu-item v-for="(sub, subIndex) in item.subItems" :key="subIndex" :item="sub" :index="subIndex"
             :parent-index="idx" v-bind="$attrs">
@@ -117,7 +135,7 @@ const isActive = computed(() => {
     </template>
     <template v-else>
       <li :class="{ 'menu-disabled': item.disabled }">
-        <a :role="item.disabled ? undefined : 'option'" :href="item.href" :class="{ 'menu-active': isActive }"
+        <component :is="linkTag" :role="item.disabled ? undefined : 'option'" v-bind="linkProps" :class="{ 'menu-active': isActive }"
           @click.stop="item.onClick && item.onClick()">
           <!-- Checkbox pour sélection multiple -->
           <input v-if="item.multiple && item.value !== undefined" type="checkbox"
@@ -128,7 +146,7 @@ const isActive = computed(() => {
           <div v-else-if="typeof item.icon === 'string'" v-html="item.icon"></div>
           {{ item.label }}
           <slot name="additional" :item="item" :index="index"></slot>
-        </a>
+        </component>
       </li>
     </template>
   </template>

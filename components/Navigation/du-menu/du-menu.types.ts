@@ -7,6 +7,7 @@ export type MenuDirection = (typeof DU_MENU_DIRECTIONS)[number];
 export interface MenuItem {
   label: string;
   href?: string;
+  as?: string | Component;
   disabled?: boolean;
   isTitle?: boolean;
   subItems?: MenuItem[];
