@@ -2,6 +2,8 @@
 import { computed } from "vue";
 import { type BreadcrumbsProps } from './du-breadcrumbs.types';
 
+const ROUTER_COMPONENTS = ['RouterLink', 'router-link', 'NuxtLink', 'nuxt-link'];
+
 const props = withDefaults(
   defineProps<BreadcrumbsProps>(),
   {
@@ -15,7 +17,23 @@ const separatorClass = computed(() => {
 
 const cssVars = computed(() => ({
   '--separator': props.separator
-}))
+}));
+
+const linkTag = computed(() => props.as || 'a');
+
+const isRouterComponent = computed(() => {
+  const tag = props.as;
+  if (!tag) return false;
+  if (typeof tag === 'string') return ROUTER_COMPONENTS.includes(tag);
+  return tag.name ? ROUTER_COMPONENTS.includes(tag.name) : false;
+});
+
+function linkProps(href: string) {
+  if (isRouterComponent.value) {
+    return { to: href };
+  }
+  return { href };
+}
 </script>
 
 <template>
@@ -26,10 +44,10 @@ const cssVars = computed(() => ({
   >
     <ul>
       <li v-for="(item, index) in items" :key="index">
-        <a :href="item.href" v-if="item.href">
+        <component :is="linkTag" v-if="item.href" v-bind="linkProps(item.href)">
           <span v-if="item.icon" class="mr-1">{{ item.icon }}</span>
           {{ item.label }}
-        </a>
+        </component>
         <span v-else>
           <span v-if="item.icon" class="mr-1">{{ item.icon }}</span>
           {{ item.label }}
