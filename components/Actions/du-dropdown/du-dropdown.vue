@@ -1,19 +1,18 @@
 <script setup lang="ts">
 import { computed, provide } from 'vue'
-import { type DROPDOWNPlacement } from './du-dropdown.types'
 
 const props = withDefaults(
   defineProps<{
     hover?: boolean
     open?: boolean
     placement?:
-      | 'start'
-      | 'center'
-      | 'end'
-      | 'top'
-      | 'bottom'
-      | 'left'
-      | 'right'
+    | 'start'
+    | 'center'
+    | 'end'
+    | 'top'
+    | 'bottom'
+    | 'left'
+    | 'right'
   }>(),
   {
     hover: false,
@@ -62,4 +61,4 @@ const openClass = computed(() => {
       <slot></slot>
     </div>
   </div>
-</template> 
+</template>

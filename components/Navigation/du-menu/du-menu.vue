@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, inject } from "vue";
-import { type MenuProps } from './du-menu.types';
+import { type MenuProps, type MenuItem } from './du-menu.types';
 import { useSizeMapping } from "../../../composables/useSizeProps";
 import DuMenuItem from './du-menu-item.vue';
 
@@ -12,6 +12,21 @@ const props = withDefaults(
     rounded: true,
   },
 );
+
+const emit = defineEmits<{
+  itemClick: [item: MenuItem];
+  subItemClick: [item: MenuItem];
+}>();
+
+function handleItemClick(item: MenuItem) {
+  props.onItemClick?.(item);
+  emit('itemClick', item);
+}
+
+function handleSubItemClick(item: MenuItem) {
+  props.onSubItemClick?.(item);
+  emit('subItemClick', item);
+}
 
 const isInDropdownTrigger = inject("isDropdownTrigger", false);
 
@@ -46,6 +61,8 @@ const ariaOrientation = computed(() => {
         :key="index"
         :item="item"
         :index="index"
+        :onItemClick="handleItemClick"
+        :onSubItemClick="handleSubItemClick"
       >
         <!-- Transmission de tous les slots au composant enfant -->
         <template v-for="(_, name) in $slots" #[name]="slotProps">
