@@ -146,8 +146,8 @@ const searchOptions = [
 ]
 
 const filterItems = [
-  { title: 'All', checked: true },
-  { title: 'Active' },
+  { title: 'All' },
+  { title: 'Active', checked: true },
   { title: 'Completed' },
 ]
 
@@ -267,12 +267,9 @@ const themesItems = [
     <div class="hero min-h-[50vh] bg-base-100">
       <div class="hero-content text-center">
         <div class="max-w-3xl">
-          <h1
-            class="text-5xl font-bold bg-linear-to-r from-primary via-success to-secondary bg-clip-text text-transparent pb-2">
-            DaisyUI Vue Kit
-          </h1>
+          <img src="/logoLong.svg" alt="DaisyUI Vue Kit Logo" class="h-32 mx-auto mb-6" />
           <p class="py-6 text-lg text-base-content/70">
-            A comprehensive Vue 3 component library built on DaisyUI & Tailwind CSS.
+            Cornet, a comprehensive Vue 3 component library built on DaisyUI & Tailwind CSS.
           </p>
         </div>
       </div>
@@ -714,14 +711,18 @@ const themesItems = [
         <div class="grid md:grid-cols-2 gap-6 mb-6">
           <DuCard dash title="DuSelect">
             <p class="text-base-content/70 mb-4">Dropdown select with search support.</p>
-            <DuSelect v-model="selectValue" :options="selectOptions" placeholder="Choose an option" track-by="id"
-              label-by="name" />
+            <DuSelect size="lg" v-model="selectValue" :options="selectOptions" placeholder="Choose an option" track-by="id" label-by="name" />
+            <DuSelect size="md" v-model="selectValue" :options="selectOptions" placeholder="Choose an option" track-by="id" label-by="name" />
+            <DuSelect size="sm" v-model="selectValue" :options="selectOptions" placeholder="Choose an option" track-by="id" label-by="name" />
+            <DuSelect size="xs" v-model="selectValue" :options="selectOptions" placeholder="Choose an option" track-by="id" label-by="name" />
           </DuCard>
 
           <DuCard dash title="DuSearch">
             <p class="text-base-content/70 mb-4">Search input with autocomplete.</p>
-            <DuSearch v-model="searchValue" name="framework-search" id="framework-search" :list-values="searchOptions"
-              placeholder="Search frameworks..." />
+            <DuSearch size="lg" v-model="searchValue" name="framework-search" id="framework-search" :list-values="searchOptions" placeholder="Search frameworks..." />
+            <DuSearch size="md" v-model="searchValue" name="framework-search" id="framework-search" :list-values="searchOptions" placeholder="Search frameworks..." />
+            <DuSearch size="sm" v-model="searchValue" name="framework-search" id="framework-search" :list-values="searchOptions" placeholder="Search frameworks..." />
+            <DuSearch size="xs" v-model="searchValue" name="framework-search" id="framework-search" :list-values="searchOptions" placeholder="Search frameworks..." />
           </DuCard>
         </div>
 

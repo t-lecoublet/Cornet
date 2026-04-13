@@ -3,8 +3,44 @@
 @plugin "daisyui" {
   themes: all;
 }
+@plugin "daisyui/theme" {
+  name: 'cma';
+  default: true;
+  prefersdark: true;
+  --color-base-100: oklch(100% 0 0);
+  --color-base-200: oklch(98% 0 0);
+  --color-base-300: oklch(95% 0 0);
+  --color-base-content: oklch(21% 0.006 285.885);
+  --color-primary: oklch(29.68% 0.2057 264.05);
+  --color-primary-content: oklch(97% 0.013 236.62);
+  --color-secondary: oklch(45.42% 0.1959 267.35);
+  --color-secondary-content: oklch(96% 0.018 272.314);
+  --color-accent: oklch(92.08% 0.0364 272.07);
+  --color-accent-content: oklch(29.68% 0.2057 264.05);
+  --color-neutral: oklch(29% 0.066 243.157);
+  --color-neutral-content: oklch(92% 0.004 286.32);
+  --color-info: oklch(51.47% 0.1794 256.54);
+  --color-info-content: oklch(100% 0 0);
+  --color-success: oklch(49.62% 0.1223 151.22);
+  --color-success-content: oklch(100% 0 0);
+  --color-warning: oklch(52.67% 0.161 41.34);
+  --color-warning-content: oklch(100% 0 0);
+  --color-error: oklch(53.58% 0.2183 29.48);
+  --color-error-content: oklch(100% 0 0);
+  --radius-selector: 0.1rem;
+  --radius-field: 0.1rem;
+  --radius-box: 0.1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
+}
 
-
-.card-dash {
-  --border: 2px;
+@layer utilities {
+  .card-dash {
+    @layer daisyui.l1.l2 {
+      border: calc(var(--border) * 2) dashed var(--color-base-300);
+    }
+  }
 }
