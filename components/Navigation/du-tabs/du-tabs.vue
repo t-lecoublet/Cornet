@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { type TabsProps } from './du-tabs.types';
+import { type TabsProps, type TabItem } from './du-tabs.types';
 import { useSizeMapping } from "../../../composables/useSizeProps";
 
 const props = withDefaults(
@@ -11,8 +11,18 @@ const props = withDefaults(
     type: undefined,
     bottom: false,
     name: "my_tabs",
+    modelValue: undefined,
   },
 );
+
+const emit = defineEmits<{
+  'update:modelValue': [index: number]
+}>();
+
+function handleTabClick(index: number, item: TabItem) {
+  emit('update:modelValue', index);
+  item.onClick?.();
+}
 
 const { sizeClass } = useSizeMapping(props, "tabs");
 
@@ -38,7 +48,7 @@ const typeClass = computed(() => {
 
     <template v-else-if="items">
       <template v-for="(item, index) in items" :key="index">
-        <label :class="['tab', item.class]" @click="item.onClick">
+        <label :class="['tab', item.class]" @click="handleTabClick(index, item)">
           <input type="radio" :name="props.name" :checked="item.active" />
           <template v-if="item.label || $slots.tab">
             <slot name="tab" :item="item" :index="index">

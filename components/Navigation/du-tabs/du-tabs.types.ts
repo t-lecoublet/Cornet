@@ -19,4 +19,5 @@ export interface TabsProps {
   type?: TabsType;
   bottom?: boolean;
   name?: string;
+  modelValue?: number;
 } 
