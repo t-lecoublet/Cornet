@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { DuButton, DuBadge, DuCard, DuNavbar, DuTabs } from 'daisyui-vue-kit'
+import CodeBlock from '@/components/CodeBlock.vue'
 
 // ─── SVG icon paths (Heroicons 24 outline) ───────────────
 const icons = {
@@ -349,19 +350,19 @@ export default defineConfig({
               <template #content-0>
                 <div class="pt-3">
                   <p class="text-sm text-base-content/55 mb-2">{{ installMethods[0].description }}</p>
-                  <pre class="bg-base-200 border border-base-300 rounded-xl px-5 py-3.5 text-sm font-mono text-base-content overflow-x-auto">{{ installMethods[0].code }}</pre>
+                  <CodeBlock :code="installMethods[0].code" />
                 </div>
               </template>
               <template #content-1>
                 <div class="pt-3">
                   <p class="text-sm text-base-content/55 mb-2">{{ installMethods[1].description }}</p>
-                  <pre class="bg-base-200 border border-base-300 rounded-xl px-5 py-3.5 text-sm font-mono text-base-content overflow-x-auto">{{ installMethods[1].code }}</pre>
+                  <CodeBlock :code="installMethods[1].code" />
                 </div>
               </template>
               <template #content-2>
                 <div class="pt-3">
                   <p class="text-sm text-base-content/55 mb-2">{{ installMethods[2].description }}</p>
-                  <pre class="bg-base-200 border border-base-300 rounded-xl px-5 py-3.5 text-sm font-mono text-base-content overflow-x-auto">{{ installMethods[2].code }}</pre>
+                  <CodeBlock :code="installMethods[2].code" />
                 </div>
               </template>
             </DuTabs>
@@ -380,7 +381,7 @@ export default defineConfig({
           </div>
           <div class="flex-1">
             <p class="font-semibold mb-2">{{ step.label }}</p>
-            <pre class="bg-base-200 border border-base-300 rounded-xl px-5 py-3.5 text-sm font-mono text-base-content overflow-x-auto">{{ step.code }}</pre>
+            <CodeBlock :code="step.code" />
           </div>
         </div>
 
@@ -396,7 +397,7 @@ export default defineConfig({
             <p class="text-sm text-base-content/60 mb-3">
               Every component ships with Storybook stories. Run them locally to browse all variants, sizes and props interactively.
             </p>
-            <pre class="bg-base-200 border border-base-300 rounded-xl px-4 py-3 text-sm font-mono text-base-content overflow-x-auto">npx storybook dev</pre>
+            <CodeBlock code="npx storybook dev" />
           </DuCard>
         </div>
 
