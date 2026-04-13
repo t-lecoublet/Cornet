@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { DuButton, DuBadge, DuCard, DuNavbar, DuTabs } from 'daisyui-vue-kit'
 
 // ─── SVG icon paths (Heroicons 24 outline) ───────────────
@@ -117,6 +117,8 @@ npm install ./lib`,
     code: 'git clone git@gitlab.limos.fr:hub-isima/daisyui-vue-kit-nuxt-starter.git',
   },
 ]
+
+const selectedTab = ref(1)
 
 const installTabs = computed(() =>
   installMethods.map((m, i) => ({
@@ -343,7 +345,7 @@ export default defineConfig({
           <div class="shrink-0 w-10 h-10 rounded-xl bg-primary text-primary-content flex items-center justify-center font-mono font-bold text-sm">01</div>
           <div class="flex-1">
             <p class="font-semibold mb-3">Add the library — choose your setup</p>
-            <DuTabs :items="installTabs" type="box" name="install_tabs">
+            <DuTabs v-model="selectedTab" :items="installTabs" type="box" name="install_tabs">
               <template #content-0>
                 <div class="pt-3">
                   <p class="text-sm text-base-content/55 mb-2">{{ installMethods[0].description }}</p>
@@ -366,8 +368,9 @@ export default defineConfig({
           </div>
         </div>
 
-        <!-- Steps 02–04: common post-install -->
+        <!-- Steps 02–04: only needed for existing project setup -->
         <div
+          v-if="selectedTab === 1"
           v-for="step in postSteps"
           :key="step.n"
           class="flex gap-5 items-start"
