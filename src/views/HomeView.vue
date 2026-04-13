@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { RouterLink } from 'vue-router'
 import { DuButton, DuBadge, DuCard, DuNavbar, DuTabs } from 'daisyui-vue-kit'
 import CodeBlock from '@/components/CodeBlock.vue'
 
@@ -173,7 +174,7 @@ export default defineConfig({
       <template #center>
         <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-base-content/70">
           <a href="#flavors" class="hover:text-primary transition-colors">Components</a>
-          <a href="#quickstart" class="hover:text-primary transition-colors">Docs</a>
+          <RouterLink to="/docs" class="hover:text-primary transition-colors">Docs</RouterLink>
         </nav>
       </template>
       <template #end>
@@ -221,7 +222,7 @@ export default defineConfig({
               <path stroke-linecap="round" stroke-linejoin="round" :d="icons.arrowRight" />
             </svg>
           </DuButton>
-          <DuButton variant="neutral" size="lg" outline tag="a" href="#flavors">
+          <DuButton variant="neutral" size="lg" outline tag="RouterLink" to="/docs">
             Browse components
           </DuButton>
         </div>
@@ -418,7 +419,7 @@ export default defineConfig({
             </svg>
             GitLab
           </DuButton>
-          <DuButton size="lg" customClass="bg-white/15 border-white/30 text-primary-content hover:bg-white/25 border" tag="a" href="#quickstart">
+          <DuButton size="lg" customClass="bg-white/15 border-white/30 text-primary-content hover:bg-white/25 border" tag="RouterLink" to="/docs">
             <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" :d="icons.book" />
             </svg>
