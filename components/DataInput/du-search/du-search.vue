@@ -348,7 +348,7 @@ onBeforeUnmount(() => {
                 }" role="option" :aria-selected="(highlightedIndex === (props.addOption && queryValue ? i + 1 : i))"
                     @mousedown="selectValue(val)"
                     @mouseover.prevent="highlightedIndex = (props.addOption && queryValue ? i + 1 : i)">
-                    <a class="flex items-center gap-3">
+                    <a class="flex items-center gap-3 bg-transparent">
                         <slot name="option" :option="val" :index="i">
                             {{ val.name }}
                         </slot>

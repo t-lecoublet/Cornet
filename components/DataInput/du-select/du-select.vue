@@ -27,7 +27,8 @@ const props = withDefaults(defineProps<SELECTProps>(), {
 const emit = defineEmits(['update:modelValue', 'select', 'remove', 'open', 'close'])
 
 const { colorClass } = useVariantMapping(props, "select")
-const { sizeClass } = useSizeMapping(props, "select")
+const { sizeClass: inputSizeClass } = useSizeMapping(props, "input")
+const { sizeClass: subMenuSizeClass } = useSizeMapping(props, "menu")
 const ghostClass = computed(() => (props.ghost ? "select-ghost" : ""))
 
 const root = ref<HTMLElement | null>(null)
@@ -250,8 +251,8 @@ const selectedOption = computed(() => optionFromValue(selectedSingle.value))
 
 <template>
     <div class="relative" ref="root" @keydown="onKeydown">
-        <div class="input input-bordered min-h-[2.5rem] flex items-center gap-2 cursor-text w-full overflow-x-clip"
-            :class="[colorClass, sizeClass, ghostClass, { 'input-disabled': disabled }]" tabindex="0" role="combobox"
+        <div class="input input-bordered flex items-center gap-2 cursor-text w-full overflow-x-clip"
+            :class="[colorClass, inputSizeClass, ghostClass, { 'input-disabled': disabled }]" tabindex="0" role="combobox"
             :aria-expanded="open" :aria-controls="listId" @click="focusToggle" @focus="onFocus">
             <template v-if="multiple">
                 <template v-for="(val, idx) in selectedValues" :key="valKey(val, idx)">
@@ -289,12 +290,12 @@ const selectedOption = computed(() => optionFromValue(selectedSingle.value))
                 </template>
             </template>
 
-            <button class="btn btn-ghost btn-sm !outline-none" type="button" @click.stop="toggle">
+            <div class="btn btn-ghost btn-sm outline-none! h-4/5" type="button" @click.stop="toggle">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
-            </button>
+            </div>
         </div>
 
         <transition enter-active-class="transition ease-out duration-100" enter-from-class="opacity-0 scale-95"
@@ -302,21 +303,21 @@ const selectedOption = computed(() => optionFromValue(selectedSingle.value))
             leave-from-class="opacity-100 scale-100" leave-to-class="opacity-0 scale-95">
             <div v-if="open"
                 class="absolute dropdown-content menu flex-nowrap bg-base-100 rounded-box shadow mt-1 w-full z-50 p-0"
-                role="listbox" :id="listId">
+                role="listbox" :id="listId" :class="[subMenuSizeClass]">
                 <!-- optional internal search at top of dropdown -->
                 <div v-if="searchable && searchableInside" class="p-2">
                     <input v-model="query" ref="searchInputInside" class="input input-bordered w-full"
                         :placeholder="searchPlaceholder" @input="onQuery" />
                 </div>
 
-                <div class="block max-h-[18rem] overflow-auto">
+                <div class="block max-h-72 overflow-auto">
                     <ul class="block m-0 p-2">
                         <li v-for="(opt, i) in filteredOptions" :key="keyForOption(opt, i)"
                             class="block w-full rounded-box"
                             :class="[{ 'bg-primary text-primary-content': isSelected(opt), 'bg-base-300': i === highlightedIndex, 'bg-primary/75': isSelected(opt) && i === highlightedIndex }, 'cursor-pointer']"
                             role="option" :aria-selected="isSelected(opt)" @mousedown.prevent="handleOptionClick(opt)"
                             @mouseover.prevent="highlightedIndex = i">
-                            <a class="flex items-center gap-3 py-2 px-3 !text-balance">
+                            <a class="flex items-center gap-3 py-2 px-3 text-balance! bg-transparent">
                                 <input v-if="checkboxes" type="checkbox" class="checkbox checkbox-sm"
                                     :checked="isSelected(opt)" @change.stop.prevent="toggleOption(opt)" tabindex="-1" />
                                 <slot name="option" :option="opt" :index="i">
