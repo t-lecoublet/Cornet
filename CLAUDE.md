@@ -1,0 +1,1 @@
+@lib/.claude/CLAUDE.md

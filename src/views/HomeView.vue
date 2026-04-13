@@ -1,0 +1,439 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+import { DuButton, DuBadge, DuCard } from 'daisyui-vue-kit'
+
+// SVG icon paths (24x24 outline, Heroicons style)
+const icons = {
+  // Sparkles — new project
+  sparkles: 'M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z',
+  // Folder open — existing project
+  folder: 'M3.75 9.776c.112-.017.227-.026.344-.026h15.812c.117 0 .232.009.344.026m-16.5 0a2.25 2.25 0 0 0-1.883 2.542l.857 6a2.25 2.25 0 0 0 2.227 1.932H19.05a2.25 2.25 0 0 0 2.227-1.932l.857-6a2.25 2.25 0 0 0-1.883-2.542m-16.5 0V6A2.25 2.25 0 0 1 6 3.75h3.879a1.5 1.5 0 0 1 1.06.44l2.122 2.12a1.5 1.5 0 0 0 1.06.44H18A2.25 2.25 0 0 1 20.25 9v.776',
+  // Cube (Nuxt layers)
+  cube: 'M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9',
+  // Book open — Storybook
+  book: 'M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25',
+  // Arrow right
+  arrowRight: 'M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3',
+  // GitLab/Git branch
+  git: 'M6 3v12m0 0a3 3 0 1 0 3 3m-3-3a3 3 0 0 0 3 3m0 0V9m0 0a3 3 0 1 0 3-3m-3 3a3 3 0 0 1 3-3m0 0V3',
+  // Puzzle piece — components
+  puzzle: 'M14.25 6.087c0-.355.186-.676.401-.959.221-.29.349-.634.349-1.003 0-1.036-1.007-1.875-2.25-1.875s-2.25.84-2.25 1.875c0 .369.128.713.349 1.003.215.283.401.604.401.959v0a.64.64 0 0 1-.657.643 48.39 48.39 0 0 1-4.163-.3c.186 1.613.293 3.25.315 4.907a.656.656 0 0 1-.658.663v0c-.355 0-.676-.186-.959-.401a1.647 1.647 0 0 0-1.003-.349c-1.036 0-1.875 1.007-1.875 2.25s.84 2.25 1.875 2.25c.369 0 .713-.128 1.003-.349.283-.215.604-.401.959-.401v0c.31 0 .555.26.532.57a48.039 48.039 0 0 1-.642 5.056c1.518.19 3.058.309 4.616.354a.64.64 0 0 0 .657-.643v0c0-.355-.186-.676-.401-.959a1.647 1.647 0 0 1-.349-1.003c0-1.035 1.008-1.875 2.25-1.875 1.243 0 2.25.84 2.25 1.875 0 .369-.128.713-.349 1.003-.215.283-.401.604-.401.959v0c0 .333.277.599.61.58a48.1 48.1 0 0 0 5.427-.63 48.05 48.05 0 0 0 .582-4.717.532.532 0 0 0-.533-.57v0c-.355 0-.676.186-.959.401-.29.221-.634.349-1.003.349-1.035 0-1.875-1.007-1.875-2.25s.84-2.25 1.875-2.25c.37 0 .713.128 1.003.349.283.215.604.401.959.401v0a.656.656 0 0 0 .658-.663 48.422 48.422 0 0 0-.37-5.36c-1.886.342-3.81.574-5.766.689a.578.578 0 0 1-.61-.58v0Z',
+}
+
+const flavors = [
+  {
+    name: 'Actions',
+    count: 5,
+    color: 'bg-primary/10 border-primary/20',
+    tag: 'text-primary',
+    components: ['DuButton', 'DuModal', 'DuDropdown', 'DuSwap', 'DuFab'],
+    // cursor icon
+    iconPath: 'M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672Zm-7.518-.267A8.25 8.25 0 1 1 20.25 10.5M8.288 14.212A5.25 5.25 0 1 1 17.25 10.5',
+  },
+  {
+    name: 'Data Display',
+    count: 18,
+    color: 'bg-secondary/10 border-secondary/20',
+    tag: 'text-secondary',
+    components: ['DuCard', 'DuTable', 'DuBadge', 'DuAvatar', 'DuAccordion'],
+    iconPath: 'M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 0 1-1.125-1.125M3.375 19.5h7.5c.621 0 1.125-.504 1.125-1.125m-9.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-7.5A1.125 1.125 0 0 1 12 18.375m9.75-12.75c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125m19.5 0v1.5c0 .621-.504 1.125-1.125 1.125M2.25 5.625v1.5c0 .621.504 1.125 1.125 1.125m0 0h17.25m-17.25 0h7.5c.621 0 1.125.504 1.125 1.125M3.375 8.25c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m17.25-3.75h-7.5c-.621 0-1.125.504-1.125 1.125m8.625-1.125c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-1.5-3.75-3.75 3.75',
+  },
+  {
+    name: 'Data Input',
+    count: 13,
+    color: 'bg-accent/10 border-accent/20',
+    tag: 'text-accent',
+    components: ['DuInputField', 'DuSelect', 'DuCheckbox', 'DuRadio', 'DuRange'],
+    iconPath: 'M16.862 4.487l1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10',
+  },
+  {
+    name: 'Feedback',
+    count: 7,
+    color: 'bg-warning/10 border-warning/20',
+    tag: 'text-base-content/70',
+    components: ['DuAlert', 'DuToast', 'DuLoading', 'DuProgress', 'DuTooltip'],
+    iconPath: 'M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0',
+  },
+  {
+    name: 'Layout',
+    count: 2,
+    color: 'bg-neutral/10 border-neutral/20',
+    tag: 'text-neutral',
+    components: ['DuDrawer', 'DuJoin'],
+    iconPath: 'M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z',
+  },
+  {
+    name: 'Navigation',
+    count: 10,
+    color: 'bg-info/10 border-info/20',
+    tag: 'text-info',
+    components: ['DuNavbar', 'DuTabs', 'DuMenu', 'DuPagination', 'DuSteps'],
+    iconPath: 'M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z',
+  },
+]
+
+const whys = [
+  {
+    headline: 'Ready out of the box',
+    body: '55 components covering every UI need — from simple buttons to complex data tables.',
+    iconPath: icons.puzzle,
+  },
+  {
+    headline: 'Fully typed',
+    body: 'Every prop, size and variant is typed with TypeScript. Your IDE will thank you.',
+    iconPath: 'M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5',
+  },
+  {
+    headline: 'DaisyUI 5 + Tailwind 4',
+    body: 'Built on the latest versions. No legacy baggage, just clean modern CSS.',
+    iconPath: 'M9.53 16.122a3 3 0 0 0-5.78 1.128 2.25 2.25 0 0 1-2.4 2.245 4.5 4.5 0 0 0 8.4-2.245c0-.399-.078-.78-.22-1.128Zm0 0a15.998 15.998 0 0 0 3.388-1.62m-5.043-.025a15.994 15.994 0 0 1 1.622-3.395m3.42 3.42a15.995 15.995 0 0 0 4.764-4.648l3.876-5.814a1.151 1.151 0 0 0-1.597-1.597L14.146 6.32a15.996 15.996 0 0 0-4.649 4.763m3.42 3.42a6.776 6.776 0 0 0-3.42-3.42',
+  },
+  {
+    headline: '35+ themes',
+    body: 'Switch themes at runtime. Light, dark, or your own custom palette — it just works.',
+    iconPath: 'M4.098 19.902a3.75 3.75 0 0 0 5.304 0l6.401-6.402M6.75 21A3.75 3.75 0 0 1 3 17.25V4.125C3 3.504 3.504 3 4.125 3h5.25c.621 0 1.125.504 1.125 1.125v4.072M6.75 21a3.75 3.75 0 0 0 3.75-3.75V8.197M6.75 21h13.125c.621 0 1.125-.504 1.125-1.125v-5.25c0-.621-.504-1.125-1.125-1.125h-4.072M10.5 8.197l2.88-2.88c.438-.439 1.15-.439 1.59 0l3.712 3.713c.44.44.44 1.152 0 1.59l-2.879 2.88M6.75 17.25h.008v.008H6.75v-.008Z',
+  },
+]
+
+const installMethods = [
+  {
+    id: 'new',
+    label: 'New project',
+    iconPath: icons.sparkles,
+    description: 'Clone the full repo — Vite + Vue already wired up.',
+    code: 'git clone --recurse-submodules \\\n  git@gitlab.limos.fr:hub-isima/daisyui-vue-kit.git',
+  },
+  {
+    id: 'existing',
+    label: 'Existing project',
+    iconPath: icons.folder,
+    description: 'Add only the lib as a Git submodule, no npm publish needed.',
+    code: `git submodule add -b lib \\
+  git@gitlab.limos.fr:hub-isima/daisyui-vue-kit.git lib
+git submodule update --init --recursive
+npm install ./lib`,
+  },
+  {
+    id: 'nuxt',
+    label: 'Nuxt',
+    iconPath: icons.cube,
+    description: 'Grab our ready-made Nuxt starter instead.',
+    code: 'git clone git@gitlab.limos.fr:hub-isima/daisyui-vue-kit-nuxt-starter.git',
+  },
+]
+
+const selectedMethod = ref('existing')
+
+const postSteps = [
+  {
+    n: '02',
+    label: 'Add the Vite plugin',
+    code: `// vite.config.ts
+import vueDaisyUI from 'daisyui-vue-kit/plugin-vite'
+
+export default defineConfig({
+  plugins: [vueDaisyUI({ showOutput: true }), vue(), tailwindcss()]
+})`,
+  },
+  {
+    n: '03',
+    label: 'Import the CSS',
+    code: `/* your main CSS file */
+@import "tailwindcss";
+@import "daisyui-vue-kit/css";
+@plugin "daisyui";`,
+  },
+  {
+    n: '04',
+    label: 'Use a component',
+    code: `import { DuButton } from 'daisyui-vue-kit'
+
+<DuButton variant="primary">Hello!</DuButton>`,
+  },
+]
+</script>
+
+<template>
+  <div class="min-h-screen bg-base-100 text-base-content">
+
+    <!-- ─── Navbar ──────────────────────────────────────── -->
+    <header class="sticky top-0 z-50 bg-base-100/80 backdrop-blur border-b border-base-300">
+      <div class="container mx-auto px-6 h-16 flex items-center justify-between">
+        <a href="/" class="flex items-center">
+          <img src="/logo.svg" alt="Cornet" class="h-10 w-auto" />
+        </a>
+        <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-base-content/70">
+          <a href="#flavors" class="hover:text-primary transition-colors">Components</a>
+          <a href="#quickstart" class="hover:text-primary transition-colors">Docs</a>
+        </nav>
+        <div class="flex items-center gap-2">
+          <DuButton variant="neutral" size="sm" outline tag="a" href="https://gitlab.limos.fr/hub-isima/daisyui-vue-kit" target="_blank">
+            GitLab
+          </DuButton>
+          <DuButton variant="primary" size="sm" tag="a" href="#quickstart">
+            Get started
+            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" :d="icons.arrowRight" />
+            </svg>
+          </DuButton>
+        </div>
+      </div>
+    </header>
+
+    <!-- ─── Hero ────────────────────────────────────────── -->
+    <section class="relative overflow-hidden pt-16 pb-24">
+      <div class="absolute -top-32 -left-32 w-125 h-125 rounded-full bg-primary/10 blur-3xl pointer-events-none" />
+      <div class="absolute -bottom-24 -right-24 w-100 h-100 rounded-full bg-secondary/10 blur-3xl pointer-events-none" />
+
+      <div class="container mx-auto px-6 flex flex-col items-center text-center gap-10 relative">
+
+        <img src="/logoLong.svg" alt="Cornet – daisyUI + Vue" class="w-full max-w-xl" />
+
+        <div class="max-w-2xl space-y-4">
+          <h1 class="text-4xl md:text-5xl font-black leading-tight">
+            <span class="text-primary">Cornet</span>,
+            the sweetest way to build
+            <span class="text-secondary">Vue 3</span> UIs.
+          </h1>
+          <p class="text-lg text-base-content/60">
+            55 beautifully crafted components, powered by
+            <span class="text-primary font-semibold">daisyUI 5</span>
+            &amp;
+            <span class="text-primary font-semibold">Tailwind CSS 4</span>.
+            Pick your flavors. Stack your scoops. Ship faster.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-3 justify-center">
+          <DuButton variant="primary" size="lg" customClass="shadow-md" tag="a" href="#quickstart">
+            Get started
+            <svg class="w-4 h-4 ml-1.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" :d="icons.arrowRight" />
+            </svg>
+          </DuButton>
+          <DuButton variant="neutral" size="lg" outline tag="a" href="#flavors">
+            Browse components
+          </DuButton>
+        </div>
+
+        <!-- Install snippet -->
+        <div class="flex items-center gap-3 bg-base-200 border border-base-300 rounded-2xl px-6 py-3 font-mono text-sm shadow-inner">
+          <svg class="w-4 h-4 text-base-content/40 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" :d="icons.git" />
+          </svg>
+          <span class="text-primary font-semibold">git submodule add</span>
+          <span class="text-base-content truncate">git@gitlab.limos.fr:hub-isima/daisyui-vue-kit.git lib</span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ─── Stats ────────────────────────────────────────── -->
+    <div class="border-y border-base-300 bg-base-200/60">
+      <div class="container mx-auto px-6 py-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+        <div>
+          <div class="text-4xl font-black text-primary">55</div>
+          <div class="text-sm text-base-content/50 mt-1">Components</div>
+        </div>
+        <div>
+          <div class="text-4xl font-black text-secondary">6</div>
+          <div class="text-sm text-base-content/50 mt-1">Categories</div>
+        </div>
+        <div>
+          <div class="text-4xl font-black text-accent">35+</div>
+          <div class="text-sm text-base-content/50 mt-1">Themes</div>
+        </div>
+        <div>
+          <div class="text-4xl font-black text-primary">100%</div>
+          <div class="text-sm text-base-content/50 mt-1">TypeScript</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Flavors / Categories ──────────────────────────── -->
+    <section id="flavors" class="container mx-auto px-6 py-24">
+      <div class="text-center mb-14">
+        <DuBadge variant="primary" customClass="mb-4">55 components · 6 categories</DuBadge>
+        <h2 class="text-4xl font-black mb-3">Pick your flavors</h2>
+        <p class="text-base-content/55 max-w-md mx-auto">
+          Every category is a scoop. Mix and match to build the UI you need.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div
+          v-for="flavor in flavors"
+          :key="flavor.name"
+          class="group border rounded-2xl p-5 transition-all hover:shadow-md hover:-translate-y-0.5 cursor-default"
+          :class="flavor.color"
+        >
+          <div class="flex items-start justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 shrink-0" :class="flavor.tag" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" :d="flavor.iconPath" />
+              </svg>
+              <h3 class="font-bold text-base">{{ flavor.name }}</h3>
+            </div>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-base-100/60" :class="flavor.tag">
+              {{ flavor.count }}
+            </span>
+          </div>
+          <div class="flex flex-wrap gap-1.5">
+            <span
+              v-for="comp in flavor.components"
+              :key="comp"
+              class="text-xs font-mono px-2 py-0.5 rounded-full bg-base-100/80 text-base-content/60 group-hover:text-base-content/80 transition-colors"
+            >
+              {{ comp }}
+            </span>
+            <span v-if="flavor.count > flavor.components.length" class="text-xs text-base-content/35 px-1">
+              +{{ flavor.count - flavor.components.length }} more
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Why Cornet ────────────────────────────────────── -->
+    <section class="bg-base-200/50 border-y border-base-300 py-24">
+      <div class="container mx-auto px-6">
+        <div class="text-center mb-14">
+          <h2 class="text-4xl font-black mb-3">Why Cornet?</h2>
+          <p class="text-base-content/55 max-w-sm mx-auto">
+            Because great UIs deserve a solid cone to hold them together.
+          </p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          <DuCard
+            v-for="(why, i) in whys"
+            :key="why.headline"
+            bordered
+            customClass="hover:shadow-lg transition-shadow"
+          >
+            <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+              <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" :d="why.iconPath" />
+              </svg>
+            </div>
+            <div class="text-xs font-mono text-primary/40 mb-1">0{{ i + 1 }}</div>
+            <h3 class="font-bold text-base mb-2">{{ why.headline }}</h3>
+            <p class="text-sm text-base-content/55">{{ why.body }}</p>
+          </DuCard>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Quick Start ───────────────────────────────────── -->
+    <section id="quickstart" class="container mx-auto px-6 py-24">
+      <div class="text-center mb-14">
+        <h2 class="text-4xl font-black mb-3">First scoop in 4 steps</h2>
+        <p class="text-base-content/55 max-w-sm mx-auto">
+          No npm publish, no registry — just Git. Pick your setup and go.
+        </p>
+      </div>
+
+      <div class="max-w-2xl mx-auto space-y-8">
+
+        <!-- Step 01: pick install method -->
+        <div class="flex gap-5 items-start">
+          <div class="shrink-0 w-10 h-10 rounded-xl bg-primary text-primary-content flex items-center justify-center font-mono font-bold text-sm">01</div>
+          <div class="flex-1">
+            <p class="font-semibold mb-3">Add the library — choose your setup</p>
+            <div class="flex flex-wrap gap-2 mb-4">
+              <button
+                v-for="m in installMethods"
+                :key="m.id"
+                class="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-lg border font-medium transition-all"
+                :class="selectedMethod === m.id
+                  ? 'bg-primary text-primary-content border-primary'
+                  : 'bg-base-100 border-base-300 text-base-content/60 hover:border-primary/40'"
+                @click="selectedMethod = m.id"
+              >
+                <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" :d="m.iconPath" />
+                </svg>
+                {{ m.label }}
+              </button>
+            </div>
+            <template v-for="m in installMethods" :key="m.id">
+              <div v-if="selectedMethod === m.id">
+                <p class="text-sm text-base-content/55 mb-2">{{ m.description }}</p>
+                <pre class="bg-base-200 border border-base-300 rounded-xl px-5 py-3.5 text-sm font-mono text-base-content overflow-x-auto">{{ m.code }}</pre>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <!-- Steps 02–04: common post-install -->
+        <div
+          v-for="step in postSteps"
+          :key="step.n"
+          class="flex gap-5 items-start"
+        >
+          <div class="shrink-0 w-10 h-10 rounded-xl bg-primary text-primary-content flex items-center justify-center font-mono font-bold text-sm">
+            {{ step.n }}
+          </div>
+          <div class="flex-1">
+            <p class="font-semibold mb-2">{{ step.label }}</p>
+            <pre class="bg-base-200 border border-base-300 rounded-xl px-5 py-3.5 text-sm font-mono text-base-content overflow-x-auto">{{ step.code }}</pre>
+          </div>
+        </div>
+
+        <!-- Storybook callout -->
+        <div class="flex gap-5 items-start">
+          <div class="shrink-0 w-10 h-10 rounded-xl bg-secondary/15 border border-secondary/25 flex items-center justify-center">
+            <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" :d="icons.book" />
+            </svg>
+          </div>
+          <div class="flex-1 bg-secondary/8 border border-secondary/20 rounded-xl px-5 py-4">
+            <p class="font-semibold mb-1">Explore with Storybook</p>
+            <p class="text-sm text-base-content/60 mb-3">
+              Every component ships with Storybook stories. Run them locally to browse all variants, sizes and props interactively.
+            </p>
+            <pre class="bg-base-200 border border-base-300 rounded-xl px-4 py-3 text-sm font-mono text-base-content overflow-x-auto">npx storybook dev</pre>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ─── CTA banner ───────────────────────────────────── -->
+    <div class="bg-primary text-primary-content py-16">
+      <div class="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div>
+          <h2 class="text-2xl font-black mb-1">Ready for your first scoop?</h2>
+          <p class="text-primary-content/70 text-sm">Cornet is open source and free to use.</p>
+        </div>
+        <div class="flex gap-3">
+          <DuButton variant="neutral" size="lg" customClass="bg-primary-content text-primary border-0 hover:bg-primary-content/90" tag="a" href="https://gitlab.limos.fr/hub-isima/daisyui-vue-kit" target="_blank">
+            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" :d="icons.git" />
+            </svg>
+            GitLab
+          </DuButton>
+          <DuButton size="lg" customClass="bg-white/15 border-white/30 text-primary-content hover:bg-white/25 border" tag="a" href="#quickstart">
+            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" :d="icons.book" />
+            </svg>
+            Documentation
+          </DuButton>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Footer ───────────────────────────────────────── -->
+    <footer class="bg-base-200 border-t border-base-300 py-8">
+      <div class="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <img src="/logo.svg" alt="Cornet" class="h-7" />
+          <span class="text-sm text-base-content/50">Vue 3 component library for DaisyUI</span>
+        </div>
+        <div class="text-xs text-base-content/35">
+          Built with Vue 3 · DaisyUI 5 · Tailwind CSS 4
+        </div>
+      </div>
+    </footer>
+
+  </div>
+</template>
