@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import type { DocClassnames } from '@/types/docs'
 
 const props = defineProps<{ classnames: DocClassnames }>()
@@ -19,6 +19,12 @@ const tabs = computed(() => {
 
 const active = ref(tabs.value[0]?.key ?? 'component')
 const rows = computed(() => props.classnames[active.value] ?? [])
+
+watch(tabs, (newTabs) => {
+  if (!newTabs.find(t => t.key === active.value)) {
+    active.value = newTabs[0]?.key ?? 'component'
+  }
+})
 </script>
 
 <template>

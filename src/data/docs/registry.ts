@@ -121,7 +121,7 @@ export const docsRegistry: Record<string, DocPageData> = {
 
   // Navigation
   '/docs/navigation/breadcrumbs': breadcrumbs,
-  '/docs/navigation/button-link': buttonLink,
+  // '/docs/navigation/button-link': buttonLink,
   '/docs/navigation/dock': dock,
   '/docs/navigation/link': link,
   '/docs/navigation/menu': menu,
@@ -215,7 +215,7 @@ export const docsNav: NavCategory[] = [
     category: 'Navigation',
     items: [
       { label: 'Breadcrumbs', path: '/docs/navigation/breadcrumbs' },
-      { label: 'ButtonLink', path: '/docs/navigation/button-link' },
+      // { label: 'ButtonLink', path: '/docs/navigation/button-link' },
       { label: 'Dock', path: '/docs/navigation/dock' },
       { label: 'Link', path: '/docs/navigation/link' },
       { label: 'Menu', path: '/docs/navigation/menu' },
