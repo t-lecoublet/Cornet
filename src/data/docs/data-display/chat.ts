@@ -2,7 +2,7 @@ import type { DocPageData } from '@/types/docs'
 
 export default {
   title: 'Chat',
-  description: 'Chat bubbles are used to show messages in a conversation.',
+  description: 'Chat bubbles are used to show messages in a conversation. DuChat wraps DuChatItem elements and sets a default placement. Each DuChatItem supports named slots for image, header, message, and footer.',
   category: 'Data Display',
   source: 'https://daisyui.com/components/chat/',
   sections: [
@@ -17,40 +17,54 @@ export default {
   </div>
 </div>`,
       code: `<DuChat>
-  <DuChatItem side="start">Hello there!</DuChatItem>
-  <DuChatItem side="end" variant="primary">Hi! How are you?</DuChatItem>
+  <DuChatItem placement="start">Hello there!</DuChatItem>
+  <DuChatItem placement="end" variant="primary">Hi! How are you?</DuChatItem>
 </DuChat>`,
     },
     {
       title: 'With avatar and metadata',
+      description: 'Use named slots (`#image`, `#header`, `#footer`) to add avatar, sender name, and delivery status.',
       code: `<DuChat>
-  <DuChatItem
-    side="start"
-    avatar="https://i.pravatar.cc/32"
-    name="Alice"
-    time="12:45"
-  >
-    Can you send me the file?
+  <DuChatItem placement="start">
+    <template #image>
+      <img src="https://i.pravatar.cc/32" alt="Alice" />
+    </template>
+    <template #header>Alice <time class="text-xs opacity-50">12:45</time></template>
+    <template #message>Can you send me the file?</template>
   </DuChatItem>
-  <DuChatItem
-    side="end"
-    name="You"
-    time="12:46"
-    variant="primary"
-    :footer="{ text: 'Delivered', status: 'delivered' }"
-  >
-    Sure, here it is!
+
+  <DuChatItem placement="end" variant="primary">
+    <template #header>You <time class="text-xs opacity-50">12:46</time></template>
+    <template #message>Sure, here it is!</template>
+    <template #footer>Delivered</template>
   </DuChatItem>
 </DuChat>`,
     },
     {
       title: 'Bubble variants',
+      preview: `<div class="flex flex-col gap-2 w-72">
+  <div class="chat chat-start"><div class="chat-bubble chat-bubble-info">Info message</div></div>
+  <div class="chat chat-start"><div class="chat-bubble chat-bubble-success">Success message</div></div>
+  <div class="chat chat-start"><div class="chat-bubble chat-bubble-warning">Warning message</div></div>
+  <div class="chat chat-start"><div class="chat-bubble chat-bubble-error">Error message</div></div>
+</div>`,
       code: `<DuChat>
-  <DuChatItem side="start" variant="info">Info message</DuChatItem>
-  <DuChatItem side="start" variant="success">Success message</DuChatItem>
-  <DuChatItem side="start" variant="warning">Warning message</DuChatItem>
-  <DuChatItem side="start" variant="error">Error message</DuChatItem>
+  <DuChatItem placement="start" variant="info">Info message</DuChatItem>
+  <DuChatItem placement="start" variant="success">Success message</DuChatItem>
+  <DuChatItem placement="start" variant="warning">Warning message</DuChatItem>
+  <DuChatItem placement="start" variant="error">Error message</DuChatItem>
 </DuChat>`,
+    },
+    {
+      title: 'Dynamic items',
+      description: 'Pass an `items` array to DuChat to render programmatically.',
+      code: `<DuChat
+  :items="[
+    { message: 'Hello!', placement: 'start' },
+    { message: 'Hey, how are you?', placement: 'end', variant: 'chat-bubble-primary' },
+    { message: 'Doing great, thanks!', placement: 'start' },
+  ]"
+/>`,
     },
   ],
 } satisfies DocPageData

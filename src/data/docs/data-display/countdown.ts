@@ -2,45 +2,75 @@ import type { DocPageData } from '@/types/docs'
 
 export default {
   title: 'Countdown',
-  description: 'Countdown component gives a live countdown with a smooth animation.',
+  description: 'Countdown gives a live animated countdown. Use DuCountdown for a single unit (seconds, minutes, hours, or days), or DuCountdownGroup for a full days/hours/minutes/seconds display tied to a target date.',
   category: 'Data Display',
   source: 'https://daisyui.com/components/countdown/',
   sections: [
     {
-      title: 'Basic',
+      title: 'Single value',
+      description: 'DuCountdown with a static `:value` prop.',
       preview: `<span class="countdown font-mono text-4xl">
   <span style="--value:47;"></span>
 </span>`,
       code: `<DuCountdown :value="47" />`,
     },
     {
-      title: 'Full time display (hours:minutes:seconds)',
-      preview: `<span class="countdown font-mono text-4xl">
-  <span style="--value:10;"></span>h
-  <span style="--value:24;"></span>m
-  <span style="--value:50;"></span>s
-</span>`,
-      code: `<DuCountdownGroup :hours="10" :minutes="24" :seconds="50" />`,
-    },
-    {
-      title: 'Live countdown',
+      title: 'Countdown from target date',
+      description: 'Pass a `targetDate` and a `format` to show the remaining days, hours, minutes, or seconds.',
       code: `<script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
-
-const seconds = ref(60)
-let timer: ReturnType<typeof setInterval>
-
-onMounted(() => {
-  timer = setInterval(() => {
-    if (seconds.value > 0) seconds.value--
-  }, 1000)
-})
-onUnmounted(() => clearInterval(timer))
+const deadline = new Date(Date.now() + 1000 * 60 * 60 * 3) // 3 hours from now
 </script>
 
 <template>
-  <DuCountdown :value="seconds" />
+  <div class="flex gap-4 font-mono text-4xl">
+    <div class="flex flex-col items-center">
+      <DuCountdown :targetDate="deadline" format="hours" />
+      <span class="text-sm">hours</span>
+    </div>
+    <div class="flex flex-col items-center">
+      <DuCountdown :targetDate="deadline" format="minutes" />
+      <span class="text-sm">min</span>
+    </div>
+    <div class="flex flex-col items-center">
+      <DuCountdown :targetDate="deadline" format="seconds" />
+      <span class="text-sm">sec</span>
+    </div>
+  </div>
 </template>`,
+    },
+    {
+      title: 'Full countdown group',
+      description: 'DuCountdownGroup renders days / hours / minutes / seconds all at once from a single `targetDate`.',
+      preview: `<div class="flex items-center gap-2 font-mono text-4xl">
+  <div class="flex flex-col items-center"><span class="countdown"><span style="--value:2;"></span></span><span class="text-xs mt-1">days</span></div>
+  <span class="text-xl">:</span>
+  <div class="flex flex-col items-center"><span class="countdown"><span style="--value:10;"></span></span><span class="text-xs mt-1">hours</span></div>
+  <span class="text-xl">:</span>
+  <div class="flex flex-col items-center"><span class="countdown"><span style="--value:24;"></span></span><span class="text-xs mt-1">min</span></div>
+  <span class="text-xl">:</span>
+  <div class="flex flex-col items-center"><span class="countdown"><span style="--value:50;"></span></span><span class="text-xs mt-1">sec</span></div>
+</div>`,
+      code: `<script setup lang="ts">
+const deadline = new Date('2025-12-31T23:59:59')
+</script>
+
+<template>
+  <DuCountdownGroup :targetDate="deadline" />
+</template>`,
+    },
+    {
+      title: 'Selective units',
+      description: 'Hide specific units with `showDays`, `showHours`, `showMinutes`, `showSeconds` props.',
+      code: `<DuCountdownGroup
+  :targetDate="deadline"
+  :showDays="false"
+  :labels="{ hours: 'h', minutes: 'm', seconds: 's' }"
+/>`,
+    },
+    {
+      title: 'End event',
+      description: 'Listen to the `@end` event when the countdown reaches zero.',
+      code: `<DuCountdown :value="seconds" @end="onCountdownEnd" />`,
     },
   ],
 } satisfies DocPageData

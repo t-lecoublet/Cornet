@@ -179,10 +179,10 @@ export default defineConfig({
       </template>
       <template #end>
         <div class="flex items-center gap-2 px-2">
-          <DuButton variant="neutral" size="sm" outline tag="a" href="https://gitlab.limos.fr/hub-isima/daisyui-vue-kit" target="_blank">
+          <DuButton variant="neutral" size="sm" outline as="a" href="https://gitlab.limos.fr/hub-isima/daisyui-vue-kit" target="_blank">
             GitLab
           </DuButton>
-          <DuButton variant="primary" size="sm" tag="a" href="#quickstart">
+          <DuButton variant="primary" size="sm" as="a" href="#quickstart">
             Get started
             <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" :d="icons.arrowRight" />
@@ -216,13 +216,13 @@ export default defineConfig({
         </div>
 
         <div class="flex flex-wrap gap-3 justify-center">
-          <DuButton variant="primary" size="lg" customClass="shadow-md" tag="a" href="#quickstart">
+          <DuButton variant="primary" size="lg" customClass="shadow-md" as="a" href="#quickstart">
             Get started
             <svg class="w-4 h-4 ml-1.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" :d="icons.arrowRight" />
             </svg>
           </DuButton>
-          <DuButton variant="neutral" size="lg" outline tag="RouterLink" to="/docs">
+          <DuButton variant="neutral" size="lg" outline as="RouterLink" to="/docs">
             Browse components
           </DuButton>
         </div>
@@ -413,13 +413,13 @@ export default defineConfig({
           <p class="text-primary-content/70 text-sm">Cornet is open source and free to use.</p>
         </div>
         <div class="flex gap-3">
-          <DuButton variant="neutral" size="lg" customClass="bg-primary-content text-primary border-0 hover:bg-primary-content/90" tag="a" href="https://gitlab.limos.fr/hub-isima/daisyui-vue-kit" target="_blank">
+          <DuButton variant="neutral" size="lg" customClass="bg-primary-content text-primary border-0 hover:bg-primary-content/90" as="a" href="https://gitlab.limos.fr/hub-isima/daisyui-vue-kit" target="_blank">
             <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" :d="icons.git" />
             </svg>
             GitLab
           </DuButton>
-          <DuButton size="lg" customClass="bg-white/15 border-white/30 text-primary-content hover:bg-white/25 border" tag="RouterLink" to="/docs">
+          <DuButton size="lg" customClass="bg-white/15 border-white/30 text-primary-content hover:bg-white/25 border" as="RouterLink" to="/docs">
             <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" :d="icons.book" />
             </svg>

@@ -2,7 +2,7 @@ import type { DocPageData } from '@/types/docs'
 
 export default {
   title: 'Radio',
-  description: 'Radio buttons allow the user to select one option from a set.',
+  description: 'Radio buttons allow the user to select one option from a set. DuRadio renders a styled `<input type="radio">`. The `name` and `value` HTML attributes are passed through via Vue\'s attribute fallthrough. Use `:checked` to control selection and `@change` to handle updates.',
   category: 'Data Input',
   source: 'https://daisyui.com/components/radio/',
   classnames: {
@@ -24,7 +24,8 @@ export default {
   },
   sections: [
     {
-      title: 'Basic',
+      title: 'Basic radio group',
+      description: '`name` and `value` are HTML attributes passed through to the native input. Use `:checked` and `@change` to manage state.',
       preview: `<div class="flex flex-col gap-2">
   <label class="flex items-center gap-2 text-sm">
     <input type="radio" name="plan" class="radio radio-primary" checked /> Free
@@ -36,18 +37,41 @@ export default {
     <input type="radio" name="plan" class="radio radio-primary" /> Enterprise
   </label>
 </div>`,
-      code: `<label class="flex items-center gap-2">
-  <DuRadio v-model="plan" name="plan" value="free" variant="primary" />
-  Free
-</label>
-<label class="flex items-center gap-2">
-  <DuRadio v-model="plan" name="plan" value="pro" variant="primary" />
-  Pro
-</label>
-<label class="flex items-center gap-2">
-  <DuRadio v-model="plan" name="plan" value="enterprise" variant="primary" />
-  Enterprise
-</label>`,
+      code: `<script setup lang="ts">
+const plan = ref('free')
+</script>
+
+<template>
+  <label class="flex items-center gap-2">
+    <DuRadio name="plan" value="free" :checked="plan === 'free'" @change="plan = 'free'" variant="primary" />
+    Free
+  </label>
+  <label class="flex items-center gap-2">
+    <DuRadio name="plan" value="pro" :checked="plan === 'pro'" @change="plan = 'pro'" variant="primary" />
+    Pro
+  </label>
+  <label class="flex items-center gap-2">
+    <DuRadio name="plan" value="enterprise" :checked="plan === 'enterprise'" @change="plan = 'enterprise'" variant="primary" />
+    Enterprise
+  </label>
+</template>`,
+    },
+    {
+      title: 'Variants',
+      preview: `<div class="flex items-center gap-3">
+  <input type="radio" class="radio radio-primary" checked />
+  <input type="radio" class="radio radio-secondary" checked />
+  <input type="radio" class="radio radio-accent" checked />
+  <input type="radio" class="radio radio-success" checked />
+  <input type="radio" class="radio radio-warning" checked />
+  <input type="radio" class="radio radio-error" checked />
+</div>`,
+      code: `<DuRadio variant="primary" :checked="true" />
+<DuRadio variant="secondary" :checked="true" />
+<DuRadio variant="accent" :checked="true" />
+<DuRadio variant="success" :checked="true" />
+<DuRadio variant="warning" :checked="true" />
+<DuRadio variant="error" :checked="true" />`,
     },
     {
       title: 'Sizes',
@@ -58,11 +82,16 @@ export default {
   <input type="radio" class="radio radio-lg radio-primary" checked />
   <input type="radio" class="radio radio-xl radio-primary" checked />
 </div>`,
-      code: `<DuRadio v-model="val" name="size" value="1" size="xs" />
-<DuRadio v-model="val" name="size" value="2" size="sm" />
-<DuRadio v-model="val" name="size" value="3" />
-<DuRadio v-model="val" name="size" value="4" size="lg" />
-<DuRadio v-model="val" name="size" value="5" size="xl" />`,
+      code: `<DuRadio size="xs" variant="primary" :checked="true" />
+<DuRadio size="sm" variant="primary" :checked="true" />
+<DuRadio variant="primary" :checked="true" />
+<DuRadio size="lg" variant="primary" :checked="true" />
+<DuRadio size="xl" variant="primary" :checked="true" />`,
+    },
+    {
+      title: 'Disabled',
+      code: `<DuRadio disabled :checked="true" variant="primary" />
+<DuRadio disabled variant="primary" />`,
     },
   ],
 } satisfies DocPageData

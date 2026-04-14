@@ -19,7 +19,7 @@ export default {
     },
     {
       title: 'Floating label',
-      code: `<DuLabel type="floating">
+      code: `<DuLabel type="floating-label">
   Name
   <DuInputField v-model="name" placeholder=" " />
 </DuLabel>`,

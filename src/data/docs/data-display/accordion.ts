@@ -2,45 +2,76 @@ import type { DocPageData } from '@/types/docs'
 
 export default {
   title: 'Accordion',
-  description: 'Accordion is used to show and hide content in a collapsible panel.',
+  description: 'Accordion is used to show and hide content in a collapsible panel. Uses a radio group so only one item can be open at a time.',
   category: 'Data Display',
   source: 'https://daisyui.com/components/accordion/',
+  classnames: {
+    modifier: [
+      { class: 'collapse-arrow', desc: 'Chevron arrow indicator' },
+      { class: 'collapse-plus', desc: 'Plus/minus indicator' },
+      { class: 'collapse-open', desc: 'Force open state' },
+      { class: 'collapse-close', desc: 'Force closed state' },
+    ],
+  },
   sections: [
     {
-      title: 'Basic',
-      preview: `<div class="join join-vertical w-72">
-  <div class="collapse collapse-arrow join-item border border-base-300">
-    <input type="radio" name="acc-1" checked />
+      title: 'Basic — slot mode',
+      description: 'Wrap DuAccordionItem elements inside DuAccordion. Share the same `name` to link items in a radio group.',
+      preview: `<div class="w-72">
+  <div class="collapse collapse-arrow bg-base-100 border border-base-300">
+    <input type="radio" name="demo-acc" checked />
     <div class="collapse-title font-semibold">What is Cornet?</div>
     <div class="collapse-content text-sm">A Vue 3 component library powered by DaisyUI 5.</div>
   </div>
-  <div class="collapse collapse-arrow join-item border border-base-300">
-    <input type="radio" name="acc-1" />
+  <div class="collapse collapse-arrow bg-base-100 border border-base-300">
+    <input type="radio" name="demo-acc" />
     <div class="collapse-title font-semibold">Is it free?</div>
-    <div class="collapse-content text-sm">Yes, Cornet is open source and free.</div>
+    <div class="collapse-content text-sm">Yes, open source and free.</div>
   </div>
 </div>`,
-      code: `<DuAccordion name="faq">
-  <DuAccordionItem title="What is Cornet?" :open="true">
+      code: `<DuAccordion name="faq" modifier="collapse-arrow">
+  <DuAccordionItem title="What is Cornet?" :checked="true">
     A Vue 3 component library powered by DaisyUI 5.
   </DuAccordionItem>
   <DuAccordionItem title="Is it free?">
-    Yes, Cornet is open source and free.
+    Yes, open source and free.
+  </DuAccordionItem>
+  <DuAccordionItem title="How do I install it?">
+    Add it as a git submodule and run npm install.
   </DuAccordionItem>
 </DuAccordion>`,
     },
     {
-      title: 'Arrow indicator',
-      code: `<DuAccordion name="arrow-acc" indicator="arrow">
+      title: 'Dynamic items mode',
+      description: 'Pass an `items` array directly to DuAccordion to render programmatically.',
+      code: `<DuAccordion
+  name="faq"
+  modifier="collapse-arrow"
+  :items="[
+    { title: 'What is Cornet?', content: 'A Vue 3 component library.' },
+    { title: 'Is it free?', content: 'Yes, open source.' },
+  ]"
+/>`,
+    },
+    {
+      title: 'Plus/minus indicator',
+      code: `<DuAccordion name="plus-faq" modifier="collapse-plus">
   <DuAccordionItem title="Section 1">Content 1</DuAccordionItem>
   <DuAccordionItem title="Section 2">Content 2</DuAccordionItem>
 </DuAccordion>`,
     },
     {
-      title: 'Plus/minus indicator',
-      code: `<DuAccordion name="plus-acc" indicator="plus">
-  <DuAccordionItem title="Section 1">Content 1</DuAccordionItem>
-  <DuAccordionItem title="Section 2">Content 2</DuAccordionItem>
+      title: 'Custom title slot',
+      code: `<DuAccordion name="custom-acc" modifier="collapse-arrow">
+  <DuAccordionItem>
+    <template #title>
+      <div class="flex items-center gap-2">
+        <span class="badge badge-primary badge-sm">NEW</span>
+        Custom title
+      </div>
+    </template>
+    Content here.
+  </DuAccordionItem>
 </DuAccordion>`,
     },
   ],

@@ -10,32 +10,32 @@ export default {
       { class: 'btn', desc: 'Base button class' },
     ],
     style: [
-      { class: 'btn-outline', desc: 'Transparent background with colored border' },
-      { class: 'btn-soft', desc: 'Low-contrast soft style' },
-      { class: 'btn-dash', desc: 'Dashed border style' },
-      { class: 'btn-ghost', desc: 'No background, inherits text color' },
-      { class: 'btn-link', desc: 'Looks like a hyperlink' },
-      { class: 'btn-wide', desc: 'Extra horizontal padding' },
-      { class: 'btn-block', desc: 'Full width button' },
-      { class: 'btn-circle', desc: 'Circular button (equal width/height)' },
-      { class: 'btn-square', desc: 'Square button (equal width/height)' },
+      { class: 'outline', desc: 'Transparent background with colored border' },
+      { class: 'soft', desc: 'Low-contrast soft style' },
+      { class: 'dash', desc: 'Dashed border style' },
+      { class: 'ghost', desc: 'No background, inherits text color' },
+      { class: 'link', desc: 'Looks like a hyperlink' },
+      { class: 'wide', desc: 'Extra horizontal padding' },
+      { class: 'block', desc: 'Full width button' },
+      { class: 'circle', desc: 'Circular button (equal width/height)' },
+      { class: 'square', desc: 'Square button (equal width/height)' },
     ],
     color: [
-      { class: 'btn-primary', desc: 'Primary color' },
-      { class: 'btn-secondary', desc: 'Secondary color' },
-      { class: 'btn-accent', desc: 'Accent color' },
-      { class: 'btn-neutral', desc: 'Neutral color' },
-      { class: 'btn-info', desc: 'Info color' },
-      { class: 'btn-success', desc: 'Success color' },
-      { class: 'btn-warning', desc: 'Warning color' },
-      { class: 'btn-error', desc: 'Error color' },
+      { class: 'primary', desc: 'Primary color' },
+      { class: 'secondary', desc: 'Secondary color' },
+      { class: 'accent', desc: 'Accent color' },
+      { class: 'neutral', desc: 'Neutral color' },
+      { class: 'info', desc: 'Info color' },
+      { class: 'success', desc: 'Success color' },
+      { class: 'warning', desc: 'Warning color' },
+      { class: 'error', desc: 'Error color' },
     ],
     size: [
-      { class: 'btn-xs', desc: 'Extra small' },
-      { class: 'btn-sm', desc: 'Small' },
-      { class: 'btn-md', desc: 'Medium', default: true },
-      { class: 'btn-lg', desc: 'Large' },
-      { class: 'btn-xl', desc: 'Extra large' },
+      { class: 'xs', desc: 'Extra small' },
+      { class: 'sm', desc: 'Small' },
+      { class: 'md', desc: 'Medium', default: true },
+      { class: 'lg', desc: 'Large' },
+      { class: 'xl', desc: 'Extra large' },
     ],
   },
   sections: [
@@ -135,11 +135,13 @@ export default {
 <DuButton variant="primary" disabled>Disabled</DuButton>`,
     },
     {
-      title: 'As link (tag)',
-      description: 'Use the `tag` prop to render the button as an anchor element.',
-      code: `<DuButton variant="primary" tag="a" href="/docs">Go to docs</DuButton>
-<!-- or with RouterLink -->
-<DuButton variant="primary" tag="RouterLink" to="/docs">Go to docs</DuButton>`,
+      title: 'As a link (as prop)',
+      description: 'Use the `as` prop to render the button as an anchor or RouterLink element.',
+      code: `<!-- Render as <a> tag -->
+<DuButton as="a" href="/docs" variant="primary">Go to docs</DuButton>
+
+<!-- Render as RouterLink (requires vue-router) -->
+<DuButton as="RouterLink" to="/docs" variant="primary">Go to docs</DuButton>`,
     },
     {
       title: 'Loading state',
