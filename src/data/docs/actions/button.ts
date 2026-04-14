@@ -174,10 +174,23 @@ export default {
   <span class="loading loading-spinner loading-sm"></span>
   Loading...
 </DuButton>`,
-      code: `<DuButton variant="primary" :disabled="loading">
-  <span v-if="loading" class="loading loading-spinner loading-sm" />
-  {{ loading ? 'Loading...' : 'Submit' }}
-</DuButton>`,
+      code: `<script setup lang="ts">
+import { ref } from 'vue'
+const loading = ref(false)
+
+async function handleSubmit() {
+  loading.value = true
+  await someAsyncOperation()
+  loading.value = false
+}
+</script>
+
+<template>
+  <DuButton variant="primary" :disabled="loading" @click="handleSubmit">
+    <span v-if="loading" class="loading loading-spinner loading-sm" />
+    {{ loading ? 'Loading...' : 'Submit' }}
+  </DuButton>
+</template>`,
     },
   ],
 } satisfies DocPageData

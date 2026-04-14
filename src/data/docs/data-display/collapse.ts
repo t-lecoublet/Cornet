@@ -79,7 +79,7 @@ export default {
   <DuCollapse
     modifier="collapse-arrow"
     :items="[
-      { title: 'Custom title', content: 'Default content.' },
+      { title: 'Custom title', content: 'Default content.', open: true },
       { title: 'Badge item', content: 'Special content.' },
     ]"
   >
@@ -89,13 +89,19 @@ export default {
         Badge item
       </div>
     </template>
+    <template #content-1>
+      <div class="flex flex-col gap-2">
+        <p>Special content with custom rendering.</p>
+        <DuButton variant="primary" size="sm">Action</DuButton>
+      </div>
+    </template>
   </DuCollapse>
 </div>`,
       code: `<DuCollapse
   modifier="collapse-arrow"
   :items="[
     { title: 'Custom title', content: 'Default content.' },
-    { title: 'Badge item', content: 'Special content.' },
+    { title: 'Badge item', content: '' },
   ]"
 >
   <template #title-1>
@@ -104,6 +110,50 @@ export default {
       Badge item
     </div>
   </template>
+  <template #content-1>
+    <div class="flex flex-col gap-2">
+      <p>Special content.</p>
+      <DuButton variant="primary" size="sm">Action</DuButton>
+    </div>
+  </template>
+</DuCollapse>`,
+    },
+    {
+      title: 'Manual mode (default slot)',
+      description: 'Use the default slot to build collapse items manually with full HTML control.',
+      preview: `<div class="flex flex-col gap-2 w-72">
+  <DuCollapse>
+    <div class="collapse collapse-arrow bg-base-100 border border-base-300">
+      <input type="checkbox" checked />
+      <div class="collapse-title font-medium">Manual item 1 (open)</div>
+      <div class="collapse-content">
+        <p>Custom HTML content with full control.</p>
+      </div>
+    </div>
+    <div class="collapse collapse-arrow bg-base-100 border border-base-300">
+      <input type="checkbox" />
+      <div class="collapse-title font-medium">Manual item 2</div>
+      <div class="collapse-content">
+        <p>Another custom collapse item.</p>
+      </div>
+    </div>
+  </DuCollapse>
+</div>`,
+      code: `<DuCollapse>
+  <div class="collapse collapse-arrow bg-base-100 border border-base-300">
+    <input type="checkbox" checked />
+    <div class="collapse-title font-medium">Manual item 1 (open)</div>
+    <div class="collapse-content">
+      <p>Custom HTML content.</p>
+    </div>
+  </div>
+  <div class="collapse collapse-arrow bg-base-100 border border-base-300">
+    <input type="checkbox" />
+    <div class="collapse-title font-medium">Manual item 2</div>
+    <div class="collapse-content">
+      <p>Another item.</p>
+    </div>
+  </div>
 </DuCollapse>`,
     },
   ],

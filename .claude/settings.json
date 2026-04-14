@@ -4,7 +4,8 @@
       "Bash(node -e \"const vue = require\\('./node_modules/vue/dist/vue.esm-bundler.js'\\); console.log\\(typeof vue.compile\\)\")",
       "Bash(node -e \"import\\('vue'\\).then\\(v => console.log\\(typeof v.compile, Object.keys\\(v\\).filter\\(k => k.toLowerCase\\(\\).includes\\('compile'\\)\\)\\)\\)\")",
       "Bash(node -e \"console.log\\(require\\('./node_modules/vue/package.json'\\).version\\)\")",
-      "Bash(node -e ':*)"
+      "Bash(node -e ':*)",
+      "Bash(read comp:*)"
     ]
   }
 }

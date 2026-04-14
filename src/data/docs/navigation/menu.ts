@@ -52,11 +52,11 @@ export default {
       title: 'Item slots (#item, #item-{index})',
       description: 'Customize individual items with slot props: item, index',
       preview: `<DuMenu
-  :items="items"
+  :items="[{ label: 'Dashboard', href: '/' }, { label: 'Settings', href: '/settings' }]"
   direction="vertical"
   class="w-64"
 >
-  <template #item="{ item, index }">
+  <template #item="{ item }">
     <li>
       <a :href="item.href" class="flex items-center gap-2">
         <span class="w-2 h-2 bg-success rounded-full"></span>
@@ -83,7 +83,7 @@ export default {
       title: 'Title slots (#title, #title-{index})',
       description: 'Customize title/section headers with slot props: item, index',
       preview: `<DuMenu
-  :items="items"
+  :items="[{ label: 'Navigation', isTitle: true }, { label: 'Dashboard', href: '/' }, { label: 'Actions', isTitle: true }, { label: 'Settings', href: '/settings' }]"
   direction="vertical"
   class="w-64"
 >
@@ -110,11 +110,11 @@ export default {
       title: 'Submenu slots (#submenu, #submenu-{index})',
       description: 'Customize items with submenus with slot props: item, index',
       preview: `<DuMenu
-  :items="items"
+  :items="[{ label: 'Home', href: '/' }, { label: 'Products', subItems: [{ label: 'List', href: '/products' }, { label: 'Add', href: '/products/new' }] }]"
   direction="vertical"
   class="w-64"
 >
-  <template #submenu="{ item, index }">
+  <template #submenu="{ item }">
     <li>
       <details open>
         <summary class="font-semibold text-accent">{{ item.label }}</summary>

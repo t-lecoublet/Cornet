@@ -125,8 +125,48 @@ export default {
       code: `<DuChat
   :items="[
     { message: 'Hello!', placement: 'start' },
-    { message: 'Hey, how are you?', placement: 'end', variant: 'chat-bubble-primary' },
+    { message: 'Hey, how are you?', placement: 'end', variant: 'primary' },
     { message: 'Doing great, thanks!', placement: 'start' },
+  ]"
+/>`,
+    },
+    {
+      title: 'Dynamic items with header/footer',
+      description: 'The `items` prop supports `image`, `header`, `footer`, and `variant` on each message.',
+      preview: `<DuChat
+  :items="[
+    {
+      message: 'Can you send me the file?',
+      placement: 'start',
+      image: 'https://i.pravatar.cc/32?img=1',
+      header: 'Alice',
+      footer: 'Delivered',
+    },
+    {
+      message: 'Sure, here it is!',
+      placement: 'end',
+      variant: 'primary',
+      header: 'You',
+      footer: 'Seen',
+    },
+  ]"
+/>`,
+      code: `<DuChat
+  :items="[
+    {
+      message: 'Can you send me the file?',
+      placement: 'start',
+      image: avatarUrl,
+      header: 'Alice',
+      footer: 'Delivered',
+    },
+    {
+      message: 'Sure, here it is!',
+      placement: 'end',
+      variant: 'primary',
+      header: 'You',
+      footer: 'Seen',
+    },
   ]"
 />`,
     },

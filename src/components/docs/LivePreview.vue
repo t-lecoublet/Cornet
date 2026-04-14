@@ -15,10 +15,12 @@ export default defineComponent({
   },
   components: duComponents,
   setup(props) {
-    return (...args: any[]) =>
-      compile(
+    return (...args: any[]) => {
+      const fn = compile(
         `<div class="flex items-center justify-center flex-wrap gap-3 min-h-20 w-full">${props.code}</div>`,
-      )(...args)
+      ) as unknown as (...a: any[]) => unknown
+      return fn(...args)
+    }
   },
 })
 </script>

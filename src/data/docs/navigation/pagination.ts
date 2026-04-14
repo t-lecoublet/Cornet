@@ -196,7 +196,14 @@ export default {
     {
       title: 'Basic',
       preview: `<DuPagination :modelValue="3" :total="100" :perPage="10" />`,
-      code: `<DuPagination v-model="page" :total="100" :perPage="10" />`,
+      code: `<script setup lang="ts">
+import { ref } from 'vue'
+const page = ref(1)
+</script>
+
+<template>
+  <DuPagination v-model="page" :total="100" :perPage="10" />
+</template>`,
     },
     {
       title: 'Without navigation buttons',

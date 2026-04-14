@@ -70,6 +70,36 @@ export default {
       code: `<DuCheckbox v-model="val" disabled />`,
     },
     {
+      title: 'Group (array binding)',
+      description: 'Bind multiple checkboxes to the same array ref using the `value` prop.',
+      preview: `<div class="flex flex-col gap-2">
+  <label class="flex items-center gap-2 cursor-pointer text-sm">
+    <DuCheckbox variant="primary" :checked="true" value="vue" /> Vue
+  </label>
+  <label class="flex items-center gap-2 cursor-pointer text-sm">
+    <DuCheckbox variant="primary" value="react" /> React
+  </label>
+  <label class="flex items-center gap-2 cursor-pointer text-sm">
+    <DuCheckbox variant="primary" value="angular" /> Angular
+  </label>
+</div>`,
+      code: `<script setup lang="ts">
+import { ref } from 'vue'
+const selected = ref(['vue'])
+const options = ['Vue', 'React', 'Angular', 'Svelte']
+</script>
+
+<template>
+  <div class="flex flex-col gap-2">
+    <label v-for="opt in options" :key="opt" class="flex items-center gap-2 cursor-pointer">
+      <DuCheckbox :value="opt" v-model="selected" variant="primary" />
+      {{ opt }}
+    </label>
+    <p class="text-sm mt-2 text-base-content/60">Selected: {{ selected.join(', ') }}</p>
+  </div>
+</template>`,
+    },
+    {
       title: 'Indeterminate',
       description: 'Use `indeterminate` prop to set the checkbox to an indeterminate state.',
       preview: `<DuCheckbox indeterminate />`,

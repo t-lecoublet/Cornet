@@ -84,5 +84,55 @@ export default {
   ]"
 />`,
     },
+    {
+      title: 'With navigation buttons',
+      description: 'Add prev/next anchors inside each DuCarouselItem using `id` attributes for scroll targeting.',
+      preview: `<DuCarousel class="w-72 rounded-xl">
+  <DuCarouselItem id="nav-slide1" class="relative w-full">
+    <div class="bg-primary/20 h-32 w-72 flex items-center justify-center rounded-xl font-bold text-lg">Slide 1</div>
+    <div class="absolute left-3 right-3 top-1/2 flex -translate-y-1/2 justify-between">
+      <a href="#nav-slide3" class="btn btn-circle btn-sm">❮</a>
+      <a href="#nav-slide2" class="btn btn-circle btn-sm">❯</a>
+    </div>
+  </DuCarouselItem>
+  <DuCarouselItem id="nav-slide2" class="relative w-full">
+    <div class="bg-secondary/20 h-32 w-72 flex items-center justify-center rounded-xl font-bold text-lg">Slide 2</div>
+    <div class="absolute left-3 right-3 top-1/2 flex -translate-y-1/2 justify-between">
+      <a href="#nav-slide1" class="btn btn-circle btn-sm">❮</a>
+      <a href="#nav-slide3" class="btn btn-circle btn-sm">❯</a>
+    </div>
+  </DuCarouselItem>
+  <DuCarouselItem id="nav-slide3" class="relative w-full">
+    <div class="bg-accent/20 h-32 w-72 flex items-center justify-center rounded-xl font-bold text-lg">Slide 3</div>
+    <div class="absolute left-3 right-3 top-1/2 flex -translate-y-1/2 justify-between">
+      <a href="#nav-slide2" class="btn btn-circle btn-sm">❮</a>
+      <a href="#nav-slide1" class="btn btn-circle btn-sm">❯</a>
+    </div>
+  </DuCarouselItem>
+</DuCarousel>`,
+      code: `<DuCarousel class="w-full rounded-xl">
+  <DuCarouselItem id="slide1" class="relative w-full">
+    <img src="/img1.jpg" class="w-full" />
+    <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 justify-between">
+      <a href="#slide3" class="btn btn-circle">❮</a>
+      <a href="#slide2" class="btn btn-circle">❯</a>
+    </div>
+  </DuCarouselItem>
+  <DuCarouselItem id="slide2" class="relative w-full">
+    <img src="/img2.jpg" class="w-full" />
+    <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 justify-between">
+      <a href="#slide1" class="btn btn-circle">❮</a>
+      <a href="#slide3" class="btn btn-circle">❯</a>
+    </div>
+  </DuCarouselItem>
+  <DuCarouselItem id="slide3" class="relative w-full">
+    <img src="/img3.jpg" class="w-full" />
+    <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 justify-between">
+      <a href="#slide2" class="btn btn-circle">❮</a>
+      <a href="#slide1" class="btn btn-circle">❯</a>
+    </div>
+  </DuCarouselItem>
+</DuCarousel>`,
+    },
   ],
 } satisfies DocPageData

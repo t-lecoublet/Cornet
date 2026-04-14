@@ -14,11 +14,28 @@ export interface DocClassnames {
   animation?: DocClassnameEntry[]
 }
 
+export interface DocProp {
+  title: string
+  description: string
+  type: string
+  default?: string
+  options?: string[]
+  required?: boolean
+}
+
+export interface DocSlot {
+  title: string
+  description: string
+  preview?: string
+  code?: string
+}
+
 export interface DocSection {
   title: string
   description?: string
-  preview?: string   // raw DaisyUI HTML (rendered via v-html)
-  code: string       // Vue/Cornet code example
+  preview?: string
+  code: string
+  script?: string
 }
 
 export interface DocPageData {
@@ -26,6 +43,8 @@ export interface DocPageData {
   description: string
   category: string
   source?: string
+  props?: DocProp[]
+  slots?: DocSlot[]
   classnames?: DocClassnames
   sections: DocSection[]
 }

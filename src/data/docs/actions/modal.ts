@@ -52,19 +52,19 @@ export default {
     {
       title: 'Slot #actions',
       description: 'Action buttons displayed at the bottom of the modal',
-      preview: `<DuModal v-model:open="isOpen" closeButton class="w-72">
+      preview: `<DuButton onclick="document.getElementById('modal-actions').showModal()">Open</DuButton>
+<DuModal id="modal-actions" closeButton class="w-72">
   <h3 class="font-bold text-lg mb-2">Confirm Action</h3>
   <p class="text-base-content/70 mb-4">Are you sure you want to continue?</p>
   <template #actions>
-    <DuButton variant="neutral" ghost @click="isOpen = false">Cancel</DuButton>
     <DuButton variant="primary">Confirm</DuButton>
   </template>
 </DuModal>`,
-      code: `<DuModal v-model:open="isOpen" closeButton>
-  <h3 class="font-bold text-lg mb-2">Confirm Action</h3>
-  <p>Are you sure you want to continue?</p>
+      code: `<DuModal closeButton>
+  <h3 class="font-bold text-lg mb-2">Title</h3>
+  <p>Content</p>
   <template #actions>
-    <DuButton variant="neutral" ghost @click="isOpen = false">Cancel</DuButton>
+    <DuButton variant="neutral">Cancel</DuButton>
     <DuButton variant="primary">Confirm</DuButton>
   </template>
 </DuModal>`,
@@ -82,15 +82,13 @@ export default {
   },
   sections: [
     {
-      title: 'Basic usage',
-      description: 'Bind `v-model:open` to a ref to control the modal.',
-      preview: `<div class="card bg-base-100 shadow-lg w-72 border border-base-300 rounded-xl p-4">
+      title: 'With v-model',
+      description: 'Use `v-model:open` to control modal state reactively — the Vue way.',
+      preview: `<DuButton onclick="document.getElementById('modal-vmodel').showModal()" variant="primary">Open</DuButton>
+<DuModal id="modal-vmodel" closeButton>
   <h3 class="font-bold text-lg mb-2">Hello!</h3>
-  <p class="text-base-content/70 text-sm">This is the modal content.</p>
-  <div class="mt-4 flex justify-end">
-    <DuButton size="sm">Close</DuButton>
-  </div>
-</div>`,
+  <p class="text-base-content/70">This modal is controlled via v-model.</p>
+</DuModal>`,
       code: `<script setup lang="ts">
 import { ref } from 'vue'
 const isOpen = ref(false)
@@ -98,99 +96,122 @@ const isOpen = ref(false)
 
 <template>
   <DuButton @click="isOpen = true" variant="primary">Open Modal</DuButton>
-
-  <DuModal v-model:open="isOpen" closeButton closeOnEscape>
+  <DuModal v-model:open="isOpen" closeButton>
     <h3 class="font-bold text-lg mb-2">Hello!</h3>
-    <p class="text-base-content/70">This is the modal content.</p>
-    <div class="mt-4 flex justify-end">
-      <DuButton @click="isOpen = false">Close</DuButton>
-    </div>
+    <p>Click the ✕ or backdrop to close.</p>
   </DuModal>
 </template>`,
     },
     {
+      title: 'Basic usage',
+      description: 'Use a unique `id` and `document.getElementById().showModal()` to control the modal.',
+      preview: `<DuButton onclick="document.getElementById('modal-basic').showModal()">Open Modal</DuButton>
+
+<DuModal id="modal-basic" closeButton>
+  <h3 class="font-bold text-lg mb-2">Hello!</h3>
+  <p class="text-base-content/70">This is the modal content.</p>
+</DuModal>`,
+      code: `<DuButton onclick="document.getElementById('my-modal').showModal()">Open Modal</DuButton>
+
+<DuModal id="my-modal" closeButton>
+  <h3 class="font-bold text-lg mb-2">Hello!</h3>
+  <p>This is the modal content.</p>
+</DuModal>`,
+    },
+    {
       title: 'Placements',
       description: 'Control where the modal appears with the `placement` prop.',
-      preview: `<div class="flex flex-wrap gap-2 justify-center">
-  <DuButton size="sm">Top</DuButton>
-  <DuButton size="sm">Bottom</DuButton>
-  <DuButton size="sm">Left</DuButton>
-  <DuButton size="sm">Right</DuButton>
-  <DuButton size="sm">Responsive</DuButton>
-</div>`,
-      code: `<DuModal v-model:open="isOpen" placement="top">Top modal</DuModal>
-<DuModal v-model:open="isOpen" placement="bottom">Bottom modal</DuModal>
-<DuModal v-model:open="isOpen" placement="start">Left modal</DuModal>
-<DuModal v-model:open="isOpen" placement="end">Right modal</DuModal>
-<DuModal v-model:open="isOpen" placement="responsive">Responsive modal</DuModal>`,
+      preview: `<DuButton onclick="document.getElementById('modal-top').showModal()">Top</DuButton>
+<DuButton onclick="document.getElementById('modal-bottom').showModal()">Bottom</DuButton>
+<DuButton onclick="document.getElementById('modal-start').showModal()">Left</DuButton>
+<DuButton onclick="document.getElementById('modal-end').showModal()">Right</DuButton>
+
+<DuModal id="modal-top" placement="top"><h3>Top modal</h3></DuModal>
+<DuModal id="modal-bottom" placement="bottom"><h3>Bottom modal</h3></DuModal>
+<DuModal id="modal-start" placement="start"><h3>Left modal</h3></DuModal>
+<DuModal id="modal-end" placement="end"><h3>Right modal</h3></DuModal>`,
+      code: `<DuModal placement="top">Top modal</DuModal>
+<DuModal placement="bottom">Bottom modal</DuModal>
+<DuModal placement="start">Left modal</DuModal>
+<DuModal placement="end">Right modal</DuModal>`,
     },
     {
       title: 'Close options',
-      description: 'The modal can be closed via a button, clicking the backdrop, or pressing Escape.',
-      preview: `<div class="card bg-base-100 border border-base-300 rounded-xl p-4 w-72 relative">
-  <DuButton size="sm" circle ghost customClass="absolute right-2 top-2">✕</DuButton>
-  <p class="text-sm text-base-content/70">Click ✕, backdrop, or Escape to close.</p>
-</div>`,
+      description: 'Control how the modal can be closed.',
+      preview: `<DuButton onclick="document.getElementById('modal-close').showModal()">Show modal</DuButton>
+
+<DuModal id="modal-close" closeButton :closeBackdrop="false" :closeOnEscape="false">
+  <h3 class="font-bold text-lg mb-2">Custom Close</h3>
+  <p class="text-base-content/70">Backdrop click and Escape are disabled.</p>
+</DuModal>`,
       code: `<!-- Close button in the top right corner -->
-<DuModal v-model:open="isOpen" closeButton>Content</DuModal>
+<DuModal closeButton>Content</DuModal>
 
-<!-- Click backdrop to close (default: true) -->
-<DuModal v-model:open="isOpen" :closeBackdrop="true">Content</DuModal>
+<!-- Disable backdrop click -->
+<DuModal :closeBackdrop="false">Content</DuModal>
 
-<!-- Press Escape to close (default: true) -->
-<DuModal v-model:open="isOpen" :closeOnEscape="true">Content</DuModal>`,
+<!-- Disable Escape key -->
+<DuModal :closeOnEscape="false">Content</DuModal>`,
     },
     {
       title: 'Confirmation dialog',
-      preview: `<div class="card bg-base-100 border border-base-300 rounded-xl p-4 w-72">
-  <div class="flex flex-col gap-3">
-    <h3 class="font-bold text-base">Are you sure?</h3>
-    <p class="text-base-content/60 text-sm">This action cannot be undone.</p>
-    <div class="flex gap-2 justify-end">
-      <DuButton size="sm" ghost>Cancel</DuButton>
-      <DuButton size="sm" variant="error">Delete</DuButton>
-    </div>
-  </div>
-</div>`,
-      code: `<DuModal v-model:open="confirmOpen" closeButton placement="middle">
+      preview: `<DuButton onclick="document.getElementById('modal-confirm').showModal()" variant="error">Delete Item</DuButton>
+
+<DuModal id="modal-confirm" closeButton>
   <div class="flex flex-col gap-4">
     <h3 class="font-bold text-lg">Are you sure?</h3>
     <p class="text-base-content/60 text-sm">This action cannot be undone.</p>
-    <div class="flex gap-2 justify-end">
-      <DuButton variant="neutral" ghost @click="confirmOpen = false">Cancel</DuButton>
-      <DuButton variant="error" @click="confirm">Delete</DuButton>
-    </div>
   </div>
+  <template #actions>
+    <DuButton variant="error">Delete</DuButton>
+  </template>
+</DuModal>`,
+      code: `<DuButton onclick="document.getElementById('confirm-modal').showModal()">Delete</DuButton>
+
+<DuModal id="confirm-modal" closeButton>
+  <div class="flex flex-col gap-4">
+    <h3 class="font-bold text-lg">Are you sure?</h3>
+    <p class="text-sm">This action cannot be undone.</p>
+  </div>
+  <template #actions>
+    <DuButton variant="error">Delete</DuButton>
+  </template>
 </DuModal>`,
     },
     {
       title: 'With actions slot',
       description: 'Use the `#actions` slot to add action buttons at the bottom.',
-      preview: `<div class="card bg-base-100 border border-base-300 rounded-xl p-4 w-72">
-  <h3 class="font-bold text-base mb-2">Form Title</h3>
-  <p class="text-sm text-base-content/60 mb-4">Form description goes here.</p>
-  <div class="flex gap-2 justify-end">
-    <DuButton size="sm" ghost>Cancel</DuButton>
-    <DuButton size="sm" variant="primary">Save</DuButton>
-  </div>
-</div>`,
-      code: `<DuModal v-model:open="isOpen" closeButton>
+      preview: `<DuButton onclick="document.getElementById('modal-form').showModal()">Open Form</DuButton>
+
+<DuModal id="modal-form" closeButton>
+  <h3 class="font-bold text-lg mb-2">Form Title</h3>
+  <p class="text-base-content/70 mb-4">Form description goes here.</p>
+  <template #actions>
+    <DuButton variant="primary">Save</DuButton>
+  </template>
+</DuModal>`,
+      code: `<DuButton onclick="document.getElementById('form-modal').showModal()">Open</DuButton>
+
+<DuModal id="form-modal" closeButton>
   <h3 class="font-bold text-lg mb-2">Form Title</h3>
   <p>Form description goes here.</p>
   <template #actions>
-    <DuButton variant="neutral" ghost @click="isOpen = false">Cancel</DuButton>
-    <DuButton variant="primary" @click="save">Save</DuButton>
+    <DuButton variant="primary">Save</DuButton>
   </template>
 </DuModal>`,
     },
     {
       title: 'Custom box class',
       description: 'Use `classBox` to add custom classes to the modal box.',
-      preview: `<div class="card bg-base-100 border border-base-300 rounded-xl p-4 w-72">
-  <h3 class="font-bold text-base mb-2">Custom Styled</h3>
-  <p class="text-sm text-base-content/60">This modal has a rounded-lg box.</p>
-</div>`,
-      code: `<DuModal v-model:open="isOpen" classBox="rounded-lg">
+      preview: `<DuButton onclick="document.getElementById('modal-custom').showModal()">Open Custom</DuButton>
+
+<DuModal id="modal-custom" closeButton classBox="rounded-2xl shadow-2xl">
+  <h3 class="font-bold text-lg mb-2">Custom Styled</h3>
+  <p class="text-base-content/70">This modal has a rounded-2xl box with shadow.</p>
+</DuModal>`,
+      code: `<DuButton onclick="document.getElementById('my-modal').showModal()">Open</DuButton>
+
+<DuModal id="my-modal" classBox="rounded-lg">
   <h3 class="font-bold text-lg mb-2">Custom Styled</h3>
   <p>This modal has a rounded-lg box.</p>
 </DuModal>`,

@@ -23,7 +23,7 @@ Documenter TOUTES les props de chaque composant avec:
 - `data-display/accordion.ts` - props, slots, dynamic items, modifiers
 - `data-display/collapse.ts` - props, slots, dynamic items, modifiers, open state
 - `actions/dropdown.ts` - props, slots (#trigger, #content), all placements
-- `actions/modal.ts` - props, slot #actions, closeButton, closeOnEscape, closeBackdrop
+- `actions/modal.ts` - props, slot #actions, closeButton, closeOnEscape, closeBackdrop, script support
 - `data-input/select.ts` - props, slots (#selected, #option, #tag, #no-options)
 - `data-input/search.ts` - props, slots (#option, #add-option, #no-results)
 - `data-input/rating.ts` - props, shape, color, halfStar, clearable, disabled, sizes
@@ -76,6 +76,27 @@ Documenter TOUTES les props de chaque composant avec:
 - `layout/join.ts` ✓
 
 ---
+
+## Nouvelles fonctionnalités de documentation
+
+### Support du script dans les sections
+Les sections supportent maintenant un champ `script` pour ajouter du code `<script setup>`:
+
+```typescript
+{
+  title: 'Titre de la section',
+  preview: `<DuButton @click="open = true">Open</DuButton>
+<DuModal v-model:open="open">Content</DuModal>`,
+  code: `<DuButton @click="open = true">Open</DuButton>
+<DuModal v-model:open="open">Content</DuModal>`,
+  script: `const open = ref(false)`,
+}
+```
+
+### Composants de documentation
+- `PropsDocs.vue` - Affiche une table des props
+- `SlotsDocs.vue` - Affiche une table des slots
+- `LivePreview.vue` - Supporte maintenant les props `code` et `script`
 
 ## Conventions de documentation
 

@@ -163,7 +163,7 @@ export default {
   :items="[{ label: 'Tab 1' }, { label: 'Tab 2' }]"
   class="w-full"
 />`,
-      code: `<DuTabs :items="tabs" />`,
+      code: `<DuTabs :items="[{ label: 'Tab 1' }, { label: 'Tab 2' }, { label: 'Tab 3' }]" />`,
     },
     {
       title: 'Lifted style',
@@ -172,7 +172,7 @@ export default {
   type="lift"
   class="w-full"
 />`,
-      code: `<DuTabs :items="tabs" type="lift" />`,
+      code: `<DuTabs :items="[{ label: 'Tab A' }, { label: 'Tab B' }]" type="lift" />`,
     },
     {
       title: 'Border style',
@@ -185,11 +185,19 @@ export default {
   <template #content-1><p class="p-4 text-sm">Settings content</p></template>
   <template #content-2><p class="p-4 text-sm">Analytics content</p></template>
 </DuTabs>`,
-      code: `<DuTabs v-model="activeTab" :items="tabs" type="border" name="main_tabs">
-  <template #content-0>Content for tab 1</template>
-  <template #content-1>Content for tab 2</template>
-  <template #content-2>Content for tab 3</template>
-</DuTabs>`,
+      code: `<script setup lang="ts">
+import { ref } from 'vue'
+const activeTab = ref(0)
+const tabs = [{ label: 'Overview' }, { label: 'Settings' }, { label: 'Analytics' }]
+</script>
+
+<template>
+  <DuTabs v-model="activeTab" :items="tabs" type="border" name="main_tabs">
+    <template #content-0><div class="p-4">Overview content</div></template>
+    <template #content-1><div class="p-4">Settings content</div></template>
+    <template #content-2><div class="p-4">Analytics content</div></template>
+  </DuTabs>
+</template>`,
     },
     {
       title: 'Box (pill) style',
@@ -202,10 +210,18 @@ export default {
   <template #content-1><p class="p-4 text-sm">Content 2</p></template>
   <template #content-2><p class="p-4 text-sm">Content 3</p></template>
 </DuTabs>`,
-      code: `<DuTabs v-model="activeTab" :items="tabs" type="box" name="box_tabs">
-  <template #content-0>Content 1</template>
-  <template #content-1>Content 2</template>
-</DuTabs>`,
+      code: `<script setup lang="ts">
+import { ref } from 'vue'
+const activeTab = ref(0)
+</script>
+
+<template>
+  <DuTabs v-model="activeTab" :items="[{ label: 'Tab 1' }, { label: 'Tab 2' }, { label: 'Tab 3' }]" type="box" name="box_tabs">
+    <template #content-0><div class="p-4">Content 1</div></template>
+    <template #content-1><div class="p-4">Content 2</div></template>
+    <template #content-2><div class="p-4">Content 3</div></template>
+  </DuTabs>
+</template>`,
     },
     {
       title: 'With icons',
@@ -216,7 +232,17 @@ export default {
   ]"
   class="w-full"
 />`,
-      code: `<DuTabs :items="tabs" />`,
+      code: `<!-- Icon as an SVG string in items -->
+<DuTabs
+  :items="[
+    { label: 'Home', icon: '<svg ...>...</svg>' },
+    { label: 'Settings', icon: '<svg ...>...</svg>' },
+  ]"
+>
+  <template #icon="{ item }">
+    <span v-html="item.icon" class="w-5 h-5" />
+  </template>
+</DuTabs>`,
     },
     {
       title: 'With content slots',
@@ -237,7 +263,7 @@ export default {
     </div>
   </template>
 </DuTabs>`,
-      code: `<DuTabs :items="tabs" type="border">
+      code: `<DuTabs :items="[{ label: 'Description' }, { label: 'Reviews' }]" type="border">
   <template #content-0>
     <div class="p-4">
       <h3>Product Description</h3>
@@ -247,7 +273,7 @@ export default {
   <template #content-1>
     <div class="p-4">
       <h3>Reviews</h3>
-      <p>Content here...</p>
+      <p>No reviews yet.</p>
     </div>
   </template>
 </DuTabs>`,
@@ -263,8 +289,9 @@ export default {
   <template #content-0><p class="p-4 text-sm">Content 1</p></template>
   <template #content-1><p class="p-4 text-sm">Content 2</p></template>
 </DuTabs>`,
-      code: `<DuTabs v-model="activeTab" :items="tabs" type="border" :bottom="true" name="bottom_tabs">
-  <template #content-0>Content 1</template>
+      code: `<DuTabs :items="[{ label: 'Tab 1' }, { label: 'Tab 2' }]" type="border" :bottom="true" name="bottom_tabs">
+  <template #content-0><div class="p-4">Content 1</div></template>
+  <template #content-1><div class="p-4">Content 2</div></template>
 </DuTabs>`,
     },
     {

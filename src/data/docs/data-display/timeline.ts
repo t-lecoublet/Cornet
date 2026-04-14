@@ -196,5 +196,38 @@ export default {
   </DuTimelineItem>
 </DuTimeline>`,
     },
+    {
+      title: 'validItems array prop',
+      description: 'Pass `validItems` to DuTimeline to color connector lines from the parent — useful with dynamic items.',
+      preview: `<DuTimeline
+  :items="[
+    { start: 'Step 1', end: 'Account created' },
+    { start: 'Step 2', end: 'Email verified' },
+    { start: 'Step 3', end: 'Profile setup' },
+    { start: 'Step 4', end: 'First purchase' },
+  ]"
+  :validItems="[true, true, undefined, undefined]"
+/>`,
+      code: `<DuTimeline
+  :items="steps"
+  :validItems="steps.map(s => s.completed)"
+/>`,
+    },
+    {
+      title: 'hrClasses array prop',
+      description: 'Pass `hrClasses` to customize connector line classes for each item individually.',
+      preview: `<DuTimeline
+  :items="[
+    { start: '2020', end: 'Founded' },
+    { start: '2022', end: 'Launch' },
+    { start: '2024', end: 'Series A' },
+  ]"
+  :hrClasses="['bg-success', 'bg-warning', '']"
+/>`,
+      code: `<DuTimeline
+  :items="milestones"
+  :hrClasses="milestones.map(m => m.color)"
+/>`,
+    },
   ],
 } satisfies DocPageData

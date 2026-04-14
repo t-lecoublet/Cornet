@@ -38,6 +38,7 @@ export default {
   </label>
 </div>`,
       code: `<script setup lang="ts">
+import { ref } from 'vue'
 const plan = ref('free')
 </script>
 
