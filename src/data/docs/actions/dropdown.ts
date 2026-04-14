@@ -21,96 +21,151 @@ export default {
       title: 'Basic',
       preview: `<DuDropdown>
   <template #trigger>
-    <DuButton>Click me</DuButton>
+    <DuButton soft>Click me</DuButton>
   </template>
-  <ul class="menu menu-sm w-48">
-    <li><a>Item 1</a></li>
-    <li><a>Item 2</a></li>
-    <li><a>Item 3</a></li>
-  </ul>
+  <DuMenu
+    :items="[
+      { label: 'Item 1' },
+      { label: 'Item 2' }
+    ]"
+    class="bg-base-200 w-40"
+  />
 </DuDropdown>`,
       code: `<DuDropdown>
   <template #trigger>
     <DuButton>Click me</DuButton>
   </template>
-  <ul class="menu menu-sm w-48">
-    <li><a>Item 1</a></li>
-    <li><a>Item 2</a></li>
-    <li><a>Item 3</a></li>
-  </ul>
+  <DuMenu
+    :items="[
+      { label: 'Item 1' },
+      { label: 'Item 2' }
+    ]"
+    class="bg-base-200 w-40"
+  />
 </DuDropdown>`,
     },
     {
       title: 'Open on hover',
       preview: `<DuDropdown hover>
   <template #trigger>
-    <DuButton>Hover me</DuButton>
+    <DuButton soft>Hover me</DuButton>
   </template>
-  <ul class="menu menu-sm w-48">
-    <li><a>Item 1</a></li>
-    <li><a>Item 2</a></li>
-  </ul>
+  <DuMenu
+    :items="[
+      { label: 'Item 1' },
+      { label: 'Item 2' }
+    ]"
+    class="bg-base-200 w-40"
+  />
 </DuDropdown>`,
       code: `<DuDropdown hover>
   <template #trigger>
     <DuButton>Hover me</DuButton>
   </template>
-  <ul class="menu menu-sm w-48">
-    <li><a>Item 1</a></li>
-    <li><a>Item 2</a></li>
-  </ul>
+  <DuMenu
+    :items="[
+      { label: 'Item 1' },
+      { label: 'Item 2' }
+    ]"
+    class="bg-base-200 w-40"
+  />
 </DuDropdown>`,
     },
     {
       title: 'Placement',
       preview: `<div class="flex gap-4 flex-wrap justify-center">
-  <DuDropdown placement="top">
-    <template #trigger><DuButton size="sm">Top</DuButton></template>
-    <ul class="menu menu-sm w-36"><li><a>Item 1</a></li></ul>
+  <DuDropdown placement="left">
+    <template #trigger><DuButton>Left</DuButton></template>
+  <DuMenu :items="[{ label: 'Item 1' }]" class="bg-base-200 w-40" />
+  </DuDropdown>
+    <DuDropdown placement="top">
+    <template #trigger><DuButton>Top</DuButton></template>
+  <DuMenu :items="[{ label: 'Item 1' }]" class="bg-base-200 w-40" />
+  </DuDropdown>
+    <DuDropdown placement="bottom">
+    <template #trigger><DuButton>Bottom</DuButton></template>
+  <DuMenu :items="[{ label: 'Item 1' }]" class="bg-base-200 w-40" />
   </DuDropdown>
   <DuDropdown placement="right">
-    <template #trigger><DuButton size="sm">Right</DuButton></template>
-    <ul class="menu menu-sm w-36"><li><a>Item 1</a></li></ul>
+    <template #trigger><DuButton>Right</DuButton></template>
+  <DuMenu :items="[{ label: 'Item 1' }]" class="bg-base-200 w-40" />
   </DuDropdown>
 </div>`,
-      code: `<!-- Opens upward -->
-<DuDropdown placement="top">
-  <template #trigger>
-    <DuButton>Open top</DuButton>
-  </template>
-  <ul class="menu menu-sm w-48">
-    <li><a>Item 1</a></li>
-  </ul>
+      code: `<DuDropdown placement="left">
+  <template #trigger><DuButton>Left</DuButton></template>
+  <DuMenu :items="[{ label: 'Item 1' }]" class="bg-base-200 w-40" />
 </DuDropdown>
 
-<!-- Opens to the right -->
+  <DuDropdown placement="top">
+  <template #trigger><DuButton>Top</DuButton></template>
+  <DuMenu :items="[{ label: 'Item 1' }]" class="bg-base-200 w-40" />
+</DuDropdown>
+
+  <DuDropdown placement="bottom">
+  <template #trigger><DuButton>Bottom</DuButton></template>
+  <DuMenu :items="[{ label: 'Item 1' }]" class="bg-base-200 w-40" />
+</DuDropdown>
+
 <DuDropdown placement="right">
-  <template #trigger>
-    <DuButton>Open right</DuButton>
-  </template>
-  <ul class="menu menu-sm w-48">
-    <li><a>Item 1</a></li>
-  </ul>
+  <template #trigger><DuButton>Right</DuButton></template>
+  <DuMenu :items="[{ label: 'Item 1' }]" class="bg-base-200 w-40" />
 </DuDropdown>`,
     },
     {
       title: 'Forced open',
       preview: `<DuDropdown :open="true">
   <template #trigger>
-    <DuButton>Always open</DuButton>
+    <DuButton soft>Always open</DuButton>
   </template>
-  <ul class="menu menu-sm w-48">
-    <li><a>Item 1</a></li>
-    <li><a>Item 2</a></li>
-  </ul>
+  <DuMenu :items="[{ label: 'Item 1' }]" class="bg-base-200 w-40" />
+
 </DuDropdown>`,
       code: `<DuDropdown :open="true">
   <template #trigger>
     <DuButton>Always open</DuButton>
   </template>
-  <ul class="menu menu-sm w-48">
-    <li><a>Item 1</a></li>
-  </ul>
+  <DuMenu :items="[{ label: 'Item 1' }]" class="bg-base-200 w-40" />
+
+</DuDropdown>`,
+    },
+    {
+      title: 'Combined placement',
+      preview: `<div class="flex gap-4 flex-wrap justify-center">
+  <DuDropdown placement="top,end">
+    <template #trigger><DuButton>top,end</DuButton></template>
+    <DuMenu :items="[{ label: 'Item' }]" class="bg-base-200" />
+  </DuDropdown>
+  <DuDropdown :placement="['bottom', 'start']">
+    <template #trigger><DuButton>Array</DuButton></template>
+    <DuMenu :items="[{ label: 'Item' }]" class="bg-base-200" />
+  </DuDropdown>
+  <DuDropdown :placement="{ right: true }">
+    <template #trigger><DuButton>Object</DuButton></template>
+    <DuMenu :items="[{ label: 'Item' }]" class="bg-base-200" />
+  </DuDropdown>
+</div>`,
+      code: `<!-- String with comma -->
+<DuDropdown placement="top,end">
+  <template #trigger>
+    <DuButton>top,end</DuButton>
+  </template>
+  <DuMenu :items="[{ label: 'Item' }]" class="bg-base-200" />
+</DuDropdown>
+
+<!-- Array -->
+<DuDropdown :placement="['bottom', 'start']">
+  <template #trigger>
+    <DuButton>Array</DuButton>
+  </template>
+  <DuMenu :items="[{ label: 'Item' }]" class="bg-base-200" />
+</DuDropdown>
+
+<!-- Object shorthand -->
+<DuDropdown :placement="{ right: true }">
+  <template #trigger>
+    <DuButton>Object</DuButton>
+  </template>
+  <DuMenu :items="[{ label: 'Item' }]" class="bg-base-200" />
 </DuDropdown>`,
     },
   ],
