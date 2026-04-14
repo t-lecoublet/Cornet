@@ -23,30 +23,32 @@ export default {
       title: 'With avatar and actions',
       preview: `<DuList class="w-72">
   <DuListRow>
-    <span class="font-medium">Alice Martin</span>
-    <span class="text-sm text-base-content/50">alice@example.com</span>
-    <template #end>
-      <DuButton size="xs" ghost>Edit</DuButton>
-    </template>
+    <DuAvatar size="sm" rounded="full"><img src="https://i.pravatar.cc/32?img=1" alt="Alice" /></DuAvatar>
+    <div>
+      <div class="font-medium">Alice Martin</div>
+      <div class="text-sm text-base-content/50">alice@example.com</div>
+    </div>
+    <DuButton size="xs" ghost>Edit</DuButton>
   </DuListRow>
   <DuListRow>
-    <span class="font-medium">Bob Smith</span>
-    <span class="text-sm text-base-content/50">bob@example.com</span>
-    <template #end>
-      <DuButton size="xs" ghost>Edit</DuButton>
-    </template>
+    <DuAvatar size="sm" rounded="full"><img src="https://i.pravatar.cc/32?img=2" alt="Bob" /></DuAvatar>
+    <div>
+      <div class="font-medium">Bob Smith</div>
+      <div class="text-sm text-base-content/50">bob@example.com</div>
+    </div>
+    <DuButton size="xs" ghost>Edit</DuButton>
   </DuListRow>
 </DuList>`,
       code: `<DuList>
   <DuListRow v-for="user in users" :key="user.id">
-    <template #start>
-      <DuAvatar :src="user.avatar" size="sm" />
-    </template>
-    <span class="font-medium">{{ user.name }}</span>
-    <span class="text-sm text-base-content/50">{{ user.email }}</span>
-    <template #end>
-      <DuButton size="xs" ghost>Edit</DuButton>
-    </template>
+    <DuAvatar size="sm" rounded="full">
+      <img :src="user.avatar" :alt="user.name" />
+    </DuAvatar>
+    <div>
+      <div class="font-medium">{{ user.name }}</div>
+      <div class="text-sm text-base-content/50">{{ user.email }}</div>
+    </div>
+    <DuButton size="xs" ghost>Edit</DuButton>
   </DuListRow>
 </DuList>`,
     },

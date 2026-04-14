@@ -24,9 +24,10 @@ export default {
 />`,
     },
     {
-      title: 'Variant',
+      title: 'Reverse theme',
+      description: 'Use `reverseTheme` to apply a dark background to the dock.',
       preview: `<DuDock
-  variant="primary"
+  :reverseTheme="true"
   :items="[
     { label: 'Home', active: true },
     { label: 'Profile' },
@@ -34,7 +35,7 @@ export default {
   ]"
 />`,
       code: `<DuDock
-  variant="primary"
+  :reverseTheme="true"
   :items="[
     { label: 'Home', icon: HomeIcon, active: true },
     { label: 'Profile', icon: UserIcon },

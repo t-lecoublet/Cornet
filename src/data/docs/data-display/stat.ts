@@ -68,7 +68,7 @@ export default {
     <template #value>12</template>
     <template #actions>
       <DuButton size="xs" variant="success">See all</DuButton>
-      <DuButton size="xs" variant="ghost">Ignore</DuButton>
+      <DuButton size="xs" ghost>Ignore</DuButton>
     </template>
   </DuStat>
 </DuStats>`,

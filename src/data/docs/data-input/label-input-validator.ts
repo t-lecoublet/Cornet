@@ -13,7 +13,7 @@ export default {
   placeholder="your@email.com"
   class="w-72"
 >
-  Email
+  <template #before>Email</template>
 </DuLabelInputValidator>`,
       code: `<DuLabelInputValidator
   type="label"
@@ -24,7 +24,7 @@ export default {
   title="Please enter a valid email address"
   v-model="email"
 >
-  Email
+  <template #before>Email</template>
 </DuLabelInputValidator>`,
     },
     {
@@ -35,7 +35,7 @@ export default {
   placeholder="At least 3 characters"
   class="w-72"
 >
-  Username
+  <template #before>Username</template>
 </DuLabelInputValidator>`,
       code: `<DuLabelInputValidator
   type="label"
@@ -46,7 +46,7 @@ export default {
   title="Minimum 3 characters required"
   v-model="username"
 >
-  Username
+  <template #before>Username</template>
 </DuLabelInputValidator>`,
     },
     {
@@ -57,7 +57,7 @@ export default {
   placeholder="Strong password"
   class="w-72"
 >
-  Password
+  <template #before>Password</template>
 </DuLabelInputValidator>`,
       code: `<DuLabelInputValidator
   type="label"
@@ -68,7 +68,7 @@ export default {
   title="Min 8 chars, at least one uppercase and one number"
   v-model="password"
 >
-  Password
+  <template #before>Password</template>
 </DuLabelInputValidator>`,
     },
   ],

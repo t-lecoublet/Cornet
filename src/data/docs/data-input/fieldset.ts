@@ -31,13 +31,13 @@ export default {
     },
     {
       title: 'With helper text',
-      preview: `<DuFieldset legend="Profile" hint="All fields are required." class="w-72">
+      preview: `<DuFieldset legend="Profile" label="All fields are required." class="w-72">
   <DuLabel type="label">
     Name
     <DuInputField placeholder="John Doe" />
   </DuLabel>
 </DuFieldset>`,
-      code: `<DuFieldset legend="Profile" hint="All fields are required.">
+      code: `<DuFieldset legend="Profile" label="All fields are required.">
   <DuLabel type="label">
     Name
     <DuInputField v-model="name" placeholder="John Doe" />

@@ -210,7 +210,7 @@ export default {
     <DuButton variant="ghost" class="text-xl">daisyUI</DuButton>
   </template>
   <template #end>
-    <DuInput placeholder="Search" class="w-24 md:w-auto" />
+    <DuInputField placeholder="Search" class="w-24 md:w-auto" />
   </template>
 </DuNavbar>`,
       code: `<DuNavbar>
@@ -241,7 +241,9 @@ export default {
   <template #end>
     <DuDropdown placement="end">
       <template #trigger>
-        <DuAvatar src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" size="sm" class="cursor-pointer" />
+        <DuAvatar size="sm" rounded="full" class="cursor-pointer">
+          <img src="https://i.pravatar.cc/32?img=5" alt="User" />
+        </DuAvatar>
       </template>
       <ul class="menu menu-sm w-40">
         <li><a>Profile</a></li>
@@ -255,7 +257,9 @@ export default {
   <template #end>
     <DuDropdown placement="end">
       <template #trigger>
-        <DuAvatar src="/user.jpg" size="sm" class="cursor-pointer" />
+        <DuAvatar size="sm" rounded="full" class="cursor-pointer">
+          <img src="/user.jpg" alt="User" />
+        </DuAvatar>
       </template>
       <ul class="menu menu-sm w-40">
         <li><a>Profile</a></li>

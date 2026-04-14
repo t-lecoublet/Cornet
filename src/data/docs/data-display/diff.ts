@@ -10,18 +10,18 @@ export default {
       title: 'Basic (images)',
       preview: `<DuDiff class="rounded-xl w-72 aspect-video">
   <template #item1>
-    <div class="bg-primary/30 w-full h-full flex items-center justify-center text-lg font-bold">Before</div>
+    <img src="https://img.daisyui.com/images/stock/photo-1560717789-0ac7c58ac90a.webp" alt="Before" />
   </template>
   <template #item2>
-    <div class="bg-secondary/30 w-full h-full flex items-center justify-center text-lg font-bold">After</div>
+    <img src="https://img.daisyui.com/images/stock/photo-1560717789-0ac7c58ac90a-blur.webp" alt="After" />
   </template>
 </DuDiff>`,
       code: `<DuDiff>
   <template #item1>
-    <img src="/before.jpg" alt="Before" />
+    <img src="https://placehold.co/600x400?text=Before" alt="Before" />
   </template>
   <template #item2>
-    <img src="/after.jpg" alt="After" />
+    <img src="https://placehold.co/600x400?text=After" alt="After" />
   </template>
 </DuDiff>`,
     },
