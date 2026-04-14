@@ -1,18 +1,12 @@
 <script setup lang="ts">
 import { computed, provide } from 'vue'
+import { type PlacementInput, type PlacementValue } from './du-dropdown.types'
 
 const props = withDefaults(
   defineProps<{
     hover?: boolean
     open?: boolean
-    placement?:
-    | 'start'
-    | 'center'
-    | 'end'
-    | 'top'
-    | 'bottom'
-    | 'left'
-    | 'right'
+    placement?: PlacementInput
   }>(),
   {
     hover: false,
@@ -23,25 +17,40 @@ const props = withDefaults(
 
 provide('isDropdownTrigger', true)
 
-const placementClass = computed(() => {
-  switch (props.placement) {
-    case 'start':
-      return 'dropdown-start'
-    case 'center':
-      return 'dropdown-center'
-    case 'end':
-      return 'dropdown-end'
-    case 'top':
-      return 'dropdown-top'
-    case 'bottom':
-      return 'dropdown-bottom'
-    case 'left':
-      return 'dropdown-left'
-    case 'right':
-      return 'dropdown-right'
-    default:
-      return ''
+const placementToClass = (value: PlacementValue): string => {
+  return `dropdown-${value}`
+}
+
+const getPlacementClasses = (input: PlacementInput): string[] => {
+  if (!input) return []
+
+  if (typeof input === 'string') {
+    if (input.includes(',')) {
+      return input.split(',').map(s => s.trim()).filter(Boolean).map(placementToClass)
+    }
+    return [placementToClass(input as PlacementValue)]
   }
+
+  if (Array.isArray(input)) {
+    return input.map(placementToClass)
+  }
+
+  if (typeof input === 'object') {
+    const keys = Object.keys(input)
+    if (keys.every(key => key in { start: 1, center: 1, end: 1, top: 1, bottom: 1, left: 1, right: 1 })) {
+      return keys.map(key => placementToClass(key as PlacementValue))
+    }
+    return Object.entries(input)
+      .filter(([, enabled]) => enabled)
+      .map(([key]) => placementToClass(key as PlacementValue))
+  }
+
+  return []
+}
+
+const placementClass = computed(() => {
+  const classes = getPlacementClasses(props.placement)
+  return classes.join(' ')
 })
 
 const hoverClass = computed(() => {

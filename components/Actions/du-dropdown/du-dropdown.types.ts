@@ -9,3 +9,7 @@ export const DROPDOWN_PLACEMENTS = [
 ] as const
 
 export type DROPDOWNPlacement = (typeof DROPDOWN_PLACEMENTS)[number] 
+
+
+export type PlacementValue = 'start' | 'center' | 'end' | 'top' | 'bottom' | 'left' | 'right'
+export type PlacementInput = PlacementValue | string | PlacementValue[] | Partial<Record<PlacementValue, boolean>>
