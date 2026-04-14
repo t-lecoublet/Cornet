@@ -64,8 +64,15 @@ export default {
       title: 'Cell slots (#cell-{key})',
       description: 'Customize cells with slot props: row, column, value',
       preview: `<DuTable
-  :columns="columns"
-  :rows="rows"
+  :columns="[
+    { key: 'name', label: 'Name' },
+    { key: 'status', label: 'Status' },
+    { key: 'actions', label: 'Actions' },
+  ]"
+  :rows="[
+    { id: 1, name: 'Alice', status: 'active' },
+    { id: 2, name: 'Bob', status: 'inactive' },
+  ]"
 >
   <template #cell-status="{ value }">
     <DuBadge :variant="value === 'active' ? 'success' : 'error'" size="sm">
@@ -91,8 +98,14 @@ export default {
       title: 'Header slots (#header-{key})',
       description: 'Customize header cells with slot props: column',
       preview: `<DuTable
-  :columns="columns"
-  :rows="rows"
+  :columns="[
+    { key: 'name', label: 'Name' },
+    { key: 'role', label: 'Role' },
+  ]"
+  :rows="[
+    { id: 1, name: 'Alice', role: 'Admin' },
+    { id: 2, name: 'Bob', role: 'User' },
+  ]"
 >
   <template #header-name="{ column }">
     <span class="flex items-center gap-1">
@@ -111,8 +124,14 @@ export default {
       title: 'Footer slots (#footer-{key})',
       description: 'Customize footer cells with slot props: column',
       preview: `<DuTable
-  :columns="columns"
-  :rows="rows"
+  :columns="[
+    { key: 'name', label: 'Name' },
+    { key: 'role', label: 'Role' },
+  ]"
+  :rows="[
+    { id: 1, name: 'Alice', role: 'Admin' },
+    { id: 2, name: 'Bob', role: 'User' },
+  ]"
   :footer="true"
 >
   <template #footer-name>
@@ -133,8 +152,15 @@ export default {
       title: 'Custom header slot (#header)',
       description: 'Replace entire header with custom content',
       preview: `<DuTable
-  :columns="columns"
-  :rows="rows"
+  :columns="[
+    { key: 'name', label: 'Name' },
+    { key: 'job', label: 'Job' },
+    { key: 'status', label: 'Status' },
+  ]"
+  :rows="[
+    { id: 1, name: 'Alice', job: 'Developer', status: 'Active' },
+    { id: 2, name: 'Bob', job: 'Designer', status: 'Away' },
+  ]"
 >
   <template #header>
     <tr>
@@ -157,14 +183,21 @@ export default {
       title: 'Custom footer slot (#footer)',
       description: 'Replace entire footer with custom content',
       preview: `<DuTable
-  :columns="columns"
-  :rows="rows"
+  :columns="[
+    { key: 'name', label: 'Name' },
+    { key: 'job', label: 'Job' },
+    { key: 'status', label: 'Status' },
+  ]"
+  :rows="[
+    { id: 1, name: 'Alice', job: 'Developer', status: 'Active' },
+    { id: 2, name: 'Bob', job: 'Designer', status: 'Away' },
+  ]"
   :footer="true"
 >
   <template #footer>
     <tr>
       <td colspan="3" class="text-right font-bold">
-        Total employees: {{ rows.length }}
+        Total employees: 2
       </td>
     </tr>
   </template>
@@ -334,8 +367,18 @@ export default {
       description: 'Header and footer stay fixed on scroll',
       preview: `<div class="h-48 overflow-auto">
   <DuTable
-    :columns="columns"
-    :rows="rows"
+    :columns="[
+      { key: 'name', label: 'Name' },
+      { key: 'role', label: 'Role' },
+    ]"
+    :rows="[
+      { id: 1, name: 'Alice', role: 'Admin' },
+      { id: 2, name: 'Bob', role: 'User' },
+      { id: 3, name: 'Charlie', role: 'User' },
+      { id: 4, name: 'Diana', role: 'Admin' },
+      { id: 5, name: 'Eve', role: 'User' },
+      { id: 6, name: 'Frank', role: 'User' },
+    ]"
     :pinRows="true"
   />
 </div>`,
@@ -408,8 +451,14 @@ export default {
     {
       title: 'With custom class',
       preview: `<DuTable
-  :columns="columns"
-  :rows="rows"
+  :columns="[
+    { key: 'name', label: 'Name' },
+    { key: 'role', label: 'Role' },
+  ]"
+  :rows="[
+    { id: 1, name: 'Alice', role: 'Admin' },
+    { id: 2, name: 'Bob', role: 'User' },
+  ]"
   class="border border-base-300 rounded-lg"
 />`,
       code: `<DuTable
