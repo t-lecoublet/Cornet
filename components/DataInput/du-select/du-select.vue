@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick, inject } from 'vue'
 import { useSizeMapping } from "../../../composables/useSizeProps"
 import { useVariantMapping } from "../../../composables/useVariantProps"
 import type { SELECTProps } from './du-select.types'
@@ -30,6 +30,8 @@ const { colorClass } = useVariantMapping(props, "select")
 const { sizeClass: inputSizeClass } = useSizeMapping(props, "input")
 const { sizeClass: subMenuSizeClass } = useSizeMapping(props, "menu")
 const ghostClass = computed(() => (props.ghost ? "select-ghost" : ""))
+
+const isInLabel = inject("isInLabel", false);
 
 const root = ref<HTMLElement | null>(null)
 const searchInput = ref<HTMLInputElement | null>(null)
@@ -250,9 +252,9 @@ const selectedOption = computed(() => optionFromValue(selectedSingle.value))
 </script>
 
 <template>
-    <div class="relative" ref="root" @keydown="onKeydown">
+    <div class="relative" :class="[isInLabel && 'w-full']" ref="root" @keydown="onKeydown">
         <div class="input input-bordered flex items-center gap-2 cursor-text w-full overflow-x-clip"
-            :class="[colorClass, inputSizeClass, ghostClass, { 'input-disabled': disabled }]" tabindex="0" role="combobox"
+            :class="[colorClass, inputSizeClass, ghostClass, { 'input-disabled': disabled }, { 'outline-none rounded-l-none border-x-0': isInLabel }]" tabindex="0" role="combobox"
             :aria-expanded="open" :aria-controls="listId" @click="focusToggle" @focus="onFocus">
             <template v-if="multiple">
                 <template v-for="(val, idx) in selectedValues" :key="valKey(val, idx)">
