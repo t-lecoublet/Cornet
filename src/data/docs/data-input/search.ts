@@ -97,9 +97,15 @@ export default {
       title: 'Slot #option',
       description: 'Custom display for dropdown options with slot props: option, index',
       preview: `<DuSearch
-  v-model="selected"
-  :listValues="listValues"
+  name="search"
+  id="search-option"
+  :listValues="[
+    { id: 1, name: 'Alice Martin' },
+    { id: 2, name: 'Bob Smith' },
+    { id: 3, name: 'Charlie Brown' },
+  ]"
   placeholder="Search..."
+  class="w-72"
 >
   <template #option="{ option }">
     <span class="flex items-center gap-2">
@@ -118,10 +124,15 @@ export default {
       title: 'Slot #add-option',
       description: 'Custom display for the "add new option" item with slot props: query',
       preview: `<DuSearch
-  v-model="selected"
-  :listValues="listValues"
+  name="search"
+  id="search-add"
+  :listValues="[
+    { id: 1, name: 'Alice' },
+    { id: 2, name: 'Bob' },
+  ]"
   :addOption="true"
   placeholder="Search or add..."
+  class="w-72"
 >
   <template #add-option="{ query }">
     <span class="flex items-center gap-2 text-success">
@@ -140,9 +151,14 @@ export default {
       title: 'Slot #no-results',
       description: 'Content shown when no results match query',
       preview: `<DuSearch
-  v-model="selected"
-  :listValues="listValues"
-  placeholder="Search..."
+  name="search"
+  id="search-no-results"
+  :listValues="[
+    { id: 1, name: 'Alice' },
+    { id: 2, name: 'Bob' },
+  ]"
+  placeholder="Type something that doesn't match..."
+  class="w-72"
 >
   <template #no-results>
     <span class="text-error">No results found</span>
@@ -158,12 +174,14 @@ export default {
   sections: [
     {
       title: 'Basic',
-      preview: `<DuSearch placeholder="Search..." class="w-72" />`,
+      preview: `<DuSearch name="search" id="search-input" placeholder="Search..." class="w-72" :listValues="[]" />`,
       code: `<DuSearch v-model="query" placeholder="Search..." />`,
     },
     {
       title: 'With autocomplete list',
       preview: `<DuSearch
+  name="author"
+  id="author-search"
   placeholder="Search author..."
   :listValues="[
     { id: 1, name: 'Alice Martin' },
@@ -188,7 +206,7 @@ export default {
     },
     {
       title: 'Variant and size',
-      preview: `<DuSearch variant="primary" size="lg" placeholder="Search..." class="w-72" />`,
+      preview: `<DuSearch name="search" id="search-lg" variant="primary" size="lg" placeholder="Search..." class="w-72" :listValues="[]" />`,
       code: `<DuSearch v-model="query" variant="primary" size="lg" placeholder="Search..." />`,
     },
   ],

@@ -18,6 +18,22 @@ export default {
 </DuLabel>`,
     },
     {
+      title: 'Label with fieldset',
+      description: 'When wrapping a fieldset, the label could be placed inside the fieldset and use `type="label"`.',
+      preview: `<div class="flex flex-col">
+<DuFieldset>
+  <DuLabel type="label">Enter your email</DuLabel>
+  <DuInputField type="email" placeholder="your@email.com" />
+</DuFieldset>
+</div>`,
+      code: `<div class="flex flex-col">
+  <DuFieldset>
+    <DuLabel type="label">Enter your email</DuLabel>
+    <DuInputField type="email" placeholder="your@email.com" />
+  </DuFieldset>
+</div>`,
+    },
+    {
       title: 'Label prefix',
       description: 'Place a `<span class="label">` before the input to show a prefix.',
       preview: `<DuLabel class="w-72">
@@ -43,20 +59,22 @@ export default {
     },
     {
       title: 'Label for select',
-      description: 'Use `type="select"` when wrapping a select element.',
+      description: 'Used when wrapping a select element.',
       preview: `<DuLabel type="select" class="w-72">
   <span class="label">Type</span>
-  <DuSelect>
-    <option>Personal</option>
-    <option>Business</option>
-  </DuSelect>
+  <DuSelect :options="[
+    { id: 1, name: 'Item 1' },
+    { id: 2, name: 'Item 2' }
+  ]" />
 </DuLabel>`,
-      code: `<DuLabel type="select">
+      code: `<DuLabel>
   <span class="label">Type</span>
-  <DuSelect v-model="type">
-    <option value="personal">Personal</option>
-    <option value="business">Business</option>
-  </DuSelect>
+  <DuSelect v-model="type" 
+    :option="[
+      { id: 1, name: 'Item 1' },
+      { id: 2, name: 'Item 2' }
+    ]" 
+  />
 </DuLabel>`,
     },
     {
@@ -69,19 +87,6 @@ export default {
   <span class="label">Your name</span>
   <DuInputField v-model="name" placeholder="Your name" />
 </DuLabel>`,
-    },
-    {
-      title: 'With alt text',
-      preview: `<DuLabel type="label" class="w-72">
-  Username
-  <DuInputField placeholder="john_doe" />
-  <template #alt>Max 20 characters</template>
-</DuLabel>`,
-      code: `<DuLabel type="label">
-  Username
-  <DuInputField v-model="username" placeholder="john_doe" />
-  <template #alt>Max 20 characters</template>
-</DuLabel>`,
-    },
+    }
   ],
 } satisfies DocPageData

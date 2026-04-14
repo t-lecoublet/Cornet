@@ -102,13 +102,20 @@ export default {
       title: 'Slot #selected',
       description: 'Custom display for selected value (single select)',
       preview: `<DuSelect
-  v-model="selected"
-  :options="options"
+  :modelValue="{ id: 1, name: 'Vue' }"
+  :options="[
+    { id: 1, name: 'Vue' },
+    { id: 2, name: 'React' },
+    { id: 3, name: 'Angular' },
+  ]"
+  trackBy="id"
+  labelBy="name"
   placeholder="Choose..."
+  class="w-72"
 >
   <template #selected="{ selected }">
-    <span v-if="selected" class="text-primary">{{ selected.name }}</span>
-    <span v-else class="text-base-content/50">Choose...</span>
+    <span v-if="selected" class="text-primary flex-1">{{ selected.name }}</span>
+    <span v-else class="text-base-content/50 flex-1">Choose...</span>
   </template>
 </DuSelect>`,
       code: `<DuSelect v-model="selected" :options="options">
@@ -122,9 +129,15 @@ export default {
       title: 'Slot #option',
       description: 'Custom display for dropdown options with slot props: option, index',
       preview: `<DuSelect
-  v-model="selected"
-  :options="options"
+  :options="[
+    { id: 1, name: 'Vue', active: true },
+    { id: 2, name: 'React', active: false },
+    { id: 3, name: 'Angular', active: true },
+  ]"
+  trackBy="id"
+  labelBy="name"
   placeholder="Choose..."
+  class="w-72"
 >
   <template #option="{ option }">
     <span class="flex items-center gap-2">
@@ -143,10 +156,17 @@ export default {
       title: 'Slot #tag',
       description: 'Custom display for selected tags (multi-select) with slot props: value, index',
       preview: `<DuSelect
-  v-model="selected"
-  :options="options"
+  :modelValue="[1, 2]"
+  :options="[
+    { id: 1, name: 'Vue' },
+    { id: 2, name: 'React' },
+    { id: 3, name: 'Angular' },
+  ]"
+  trackBy="id"
+  labelBy="name"
   multiple
   placeholder="Select..."
+  class="w-72"
 >
   <template #tag="{ value, index }">
     <span class="badge badge-primary badge-sm">{{ value.name }}</span>
@@ -162,10 +182,15 @@ export default {
       title: 'Slot #no-options',
       description: 'Content shown when no options match search',
       preview: `<DuSelect
-  v-model="selected"
-  :options="options"
+  :options="[
+    { id: 1, name: 'Vue' },
+    { id: 2, name: 'React' },
+  ]"
+  trackBy="id"
+  labelBy="name"
   searchable
-  placeholder="Search..."
+  placeholder="Type something that doesn't match..."
+  class="w-72"
 >
   <template #no-options>
     <span class="text-error">No results found</span>
