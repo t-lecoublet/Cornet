@@ -7,6 +7,14 @@ export default {
   sections: [
     {
       title: 'Basic',
+      preview: `<DuLabelInputValidator
+  type="label"
+  inputType="email"
+  placeholder="your@email.com"
+  class="w-72"
+>
+  Email
+</DuLabelInputValidator>`,
       code: `<DuLabelInputValidator
   type="label"
   inputType="email"
@@ -21,6 +29,14 @@ export default {
     },
     {
       title: 'Text input with min length',
+      preview: `<DuLabelInputValidator
+  type="label"
+  inputType="text"
+  placeholder="At least 3 characters"
+  class="w-72"
+>
+  Username
+</DuLabelInputValidator>`,
       code: `<DuLabelInputValidator
   type="label"
   inputType="text"
@@ -35,6 +51,14 @@ export default {
     },
     {
       title: 'Password with pattern',
+      preview: `<DuLabelInputValidator
+  type="label"
+  inputType="password"
+  placeholder="Strong password"
+  class="w-72"
+>
+  Password
+</DuLabelInputValidator>`,
       code: `<DuLabelInputValidator
   type="label"
   inputType="password"

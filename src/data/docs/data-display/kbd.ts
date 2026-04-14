@@ -16,15 +16,15 @@ export default {
   sections: [
     {
       title: 'Basic',
-      preview: `<kbd class="kbd">K</kbd>`,
+      preview: `<DuKbd>K</DuKbd>`,
       code: `<DuKbd>K</DuKbd>`,
     },
     {
       title: 'Key combination',
       preview: `<div class="flex items-center gap-1">
-  <kbd class="kbd">⌘</kbd>
+  <DuKbd>⌘</DuKbd>
   <span class="text-sm">+</span>
-  <kbd class="kbd">K</kbd>
+  <DuKbd>K</DuKbd>
 </div>`,
       code: `<DuKbd>⌘</DuKbd>
 <span>+</span>
@@ -33,10 +33,10 @@ export default {
     {
       title: 'Sizes',
       preview: `<div class="flex items-center gap-2">
-  <kbd class="kbd kbd-xs">Ctrl</kbd>
-  <kbd class="kbd kbd-sm">Ctrl</kbd>
-  <kbd class="kbd kbd-md">Ctrl</kbd>
-  <kbd class="kbd kbd-lg">Ctrl</kbd>
+  <DuKbd size="xs">Ctrl</DuKbd>
+  <DuKbd size="sm">Ctrl</DuKbd>
+  <DuKbd size="md">Ctrl</DuKbd>
+  <DuKbd size="lg">Ctrl</DuKbd>
 </div>`,
       code: `<DuKbd size="xs">Ctrl</DuKbd>
 <DuKbd size="sm">Ctrl</DuKbd>
@@ -45,7 +45,7 @@ export default {
     },
     {
       title: 'Inline with text',
-      preview: `<p class="text-sm">Press <kbd class="kbd kbd-sm">Ctrl</kbd> + <kbd class="kbd kbd-sm">C</kbd> to copy.</p>`,
+      preview: `<p class="text-sm">Press <DuKbd size="sm">Ctrl</DuKbd> + <DuKbd size="sm">C</DuKbd> to copy.</p>`,
       code: `<p>Press <DuKbd size="sm">Ctrl</DuKbd> + <DuKbd size="sm">C</DuKbd> to copy.</p>`,
     },
   ],

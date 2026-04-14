@@ -9,12 +9,8 @@ export default {
     {
       title: 'Basic',
       preview: `<div class="flex flex-col gap-2 w-72">
-  <div class="chat chat-start">
-    <div class="chat-bubble">Hello there!</div>
-  </div>
-  <div class="chat chat-end">
-    <div class="chat-bubble chat-bubble-primary">Hi! How are you?</div>
-  </div>
+  <DuChatItem placement="start">Hello there!</DuChatItem>
+  <DuChatItem placement="end" variant="primary">Hi! How are you?</DuChatItem>
 </div>`,
       code: `<DuChat>
   <DuChatItem placement="start">Hello there!</DuChatItem>
@@ -24,6 +20,18 @@ export default {
     {
       title: 'With avatar and metadata',
       description: 'Use named slots (`#image`, `#header`, `#footer`) to add avatar, sender name, and delivery status.',
+      preview: `<div class="flex flex-col gap-2 w-80">
+  <DuChatItem placement="start">
+    <template #image><img src="https://i.pravatar.cc/32?img=1" alt="Alice" /></template>
+    <template #header>Alice <time class="text-xs opacity-50">12:45</time></template>
+    <template #message>Can you send me the file?</template>
+  </DuChatItem>
+  <DuChatItem placement="end" variant="primary">
+    <template #header>You <time class="text-xs opacity-50">12:46</time></template>
+    <template #message>Sure, here it is!</template>
+    <template #footer>Delivered</template>
+  </DuChatItem>
+</div>`,
       code: `<DuChat>
   <DuChatItem placement="start">
     <template #image>
@@ -43,10 +51,10 @@ export default {
     {
       title: 'Bubble variants',
       preview: `<div class="flex flex-col gap-2 w-72">
-  <div class="chat chat-start"><div class="chat-bubble chat-bubble-info">Info message</div></div>
-  <div class="chat chat-start"><div class="chat-bubble chat-bubble-success">Success message</div></div>
-  <div class="chat chat-start"><div class="chat-bubble chat-bubble-warning">Warning message</div></div>
-  <div class="chat chat-start"><div class="chat-bubble chat-bubble-error">Error message</div></div>
+  <DuChatItem placement="start" variant="info">Info message</DuChatItem>
+  <DuChatItem placement="start" variant="success">Success message</DuChatItem>
+  <DuChatItem placement="start" variant="warning">Warning message</DuChatItem>
+  <DuChatItem placement="start" variant="error">Error message</DuChatItem>
 </div>`,
       code: `<DuChat>
   <DuChatItem placement="start" variant="info">Info message</DuChatItem>
@@ -58,6 +66,13 @@ export default {
     {
       title: 'Dynamic items',
       description: 'Pass an `items` array to DuChat to render programmatically.',
+      preview: `<DuChat
+  :items="[
+    { message: 'Hello!', placement: 'start' },
+    { message: 'Hey, how are you?', placement: 'end', variant: 'primary' },
+    { message: 'Doing great, thanks!', placement: 'start' },
+  ]"
+/>`,
       code: `<DuChat
   :items="[
     { message: 'Hello!', placement: 'start' },

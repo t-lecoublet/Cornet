@@ -8,17 +8,28 @@ export default {
   sections: [
     {
       title: 'Basic',
-      preview: `<input type="file" class="file-input w-72" />`,
+      preview: `<DuFileInput class="w-72" />`,
       code: `<DuFileInput v-model="file" />`,
     },
     {
       title: 'Variants',
+      preview: `<div class="flex flex-col gap-2 w-72">
+  <DuFileInput variant="primary" />
+  <DuFileInput variant="success" />
+  <DuFileInput variant="error" />
+</div>`,
       code: `<DuFileInput v-model="file" variant="primary" />
 <DuFileInput v-model="file" variant="success" />
 <DuFileInput v-model="file" variant="error" />`,
     },
     {
       title: 'Sizes',
+      preview: `<div class="flex flex-col gap-2 w-72">
+  <DuFileInput size="xs" />
+  <DuFileInput size="sm" />
+  <DuFileInput />
+  <DuFileInput size="lg" />
+</div>`,
       code: `<DuFileInput v-model="file" size="xs" />
 <DuFileInput v-model="file" size="sm" />
 <DuFileInput v-model="file" />

@@ -17,17 +17,14 @@ export default {
     {
       title: 'Dynamic items mode',
       description: 'Pass an `items` array to render collapses automatically. Each item has `title`, `content`, and optional `open` boolean.',
-      preview: `<div class="w-72 flex flex-col gap-1">
-  <div class="collapse collapse-arrow bg-base-100 border border-base-300">
-    <input type="checkbox" />
-    <div class="collapse-title font-semibold">What is Cornet?</div>
-    <div class="collapse-content text-sm">A Vue 3 component library powered by DaisyUI 5.</div>
-  </div>
-  <div class="collapse collapse-arrow bg-base-100 border border-base-300">
-    <input type="checkbox" />
-    <div class="collapse-title font-semibold">Is it free?</div>
-    <div class="collapse-content text-sm">Yes, open source and free.</div>
-  </div>
+      preview: `<div class="w-72">
+  <DuCollapse
+    modifier="collapse-arrow"
+    :items="[
+      { title: 'What is Cornet?', content: 'A Vue 3 component library powered by DaisyUI 5.' },
+      { title: 'Is it free?', content: 'Yes, open source and free.' },
+    ]"
+  />
 </div>`,
       code: `<DuCollapse
   modifier="collapse-arrow"
@@ -41,6 +38,15 @@ export default {
     {
       title: 'Item open by default',
       description: 'Set `open: true` on an item to have it expanded initially.',
+      preview: `<div class="w-72">
+  <DuCollapse
+    modifier="collapse-arrow"
+    :items="[
+      { title: 'Open by default', content: 'This is visible on load.', open: true },
+      { title: 'Closed', content: 'Click to expand.' },
+    ]"
+  />
+</div>`,
       code: `<DuCollapse
   modifier="collapse-arrow"
   :items="[
@@ -51,10 +57,13 @@ export default {
     },
     {
       title: 'Plus indicator',
-      preview: `<div class="collapse collapse-plus bg-base-100 border border-base-300 w-72">
-  <input type="checkbox" />
-  <div class="collapse-title font-semibold">Click to expand</div>
-  <div class="collapse-content text-sm">Revealed content.</div>
+      preview: `<div class="w-72">
+  <DuCollapse
+    modifier="collapse-plus"
+    :items="[
+      { title: 'Click to expand', content: 'Revealed content.' },
+    ]"
+  />
 </div>`,
       code: `<DuCollapse
   modifier="collapse-plus"
@@ -66,6 +75,22 @@ export default {
     {
       title: 'Custom slot per item',
       description: 'Override any item\'s title or content with named slots (`#title-{index}`, `#content-{index}`).',
+      preview: `<div class="w-72">
+  <DuCollapse
+    modifier="collapse-arrow"
+    :items="[
+      { title: 'Custom title', content: 'Default content.' },
+      { title: 'Badge item', content: 'Special content.' },
+    ]"
+  >
+    <template #title-1>
+      <div class="flex items-center gap-2">
+        <DuBadge variant="primary" size="sm">NEW</DuBadge>
+        Badge item
+      </div>
+    </template>
+  </DuCollapse>
+</div>`,
       code: `<DuCollapse
   modifier="collapse-arrow"
   :items="[

@@ -41,20 +41,20 @@ export default {
   sections: [
     {
       title: 'Basic',
-      preview: '<button class="btn">Button</button>',
+      preview: `<DuButton>Button</DuButton>`,
       code: `<DuButton>Button</DuButton>`,
     },
     {
       title: 'Variants',
       preview: `<div class="flex flex-wrap gap-2 justify-center">
-  <button class="btn btn-primary">Primary</button>
-  <button class="btn btn-secondary">Secondary</button>
-  <button class="btn btn-accent">Accent</button>
-  <button class="btn btn-neutral">Neutral</button>
-  <button class="btn btn-info">Info</button>
-  <button class="btn btn-success">Success</button>
-  <button class="btn btn-warning">Warning</button>
-  <button class="btn btn-error">Error</button>
+  <DuButton variant="primary">Primary</DuButton>
+  <DuButton variant="secondary">Secondary</DuButton>
+  <DuButton variant="accent">Accent</DuButton>
+  <DuButton variant="neutral">Neutral</DuButton>
+  <DuButton variant="info">Info</DuButton>
+  <DuButton variant="success">Success</DuButton>
+  <DuButton variant="warning">Warning</DuButton>
+  <DuButton variant="error">Error</DuButton>
 </div>`,
       code: `<DuButton variant="primary">Primary</DuButton>
 <DuButton variant="secondary">Secondary</DuButton>
@@ -68,9 +68,9 @@ export default {
     {
       title: 'Outline style',
       preview: `<div class="flex flex-wrap gap-2 justify-center">
-  <button class="btn btn-outline btn-primary">Primary</button>
-  <button class="btn btn-outline btn-secondary">Secondary</button>
-  <button class="btn btn-outline btn-accent">Accent</button>
+  <DuButton variant="primary" outline>Primary</DuButton>
+  <DuButton variant="secondary" outline>Secondary</DuButton>
+  <DuButton variant="accent" outline>Accent</DuButton>
 </div>`,
       code: `<DuButton variant="primary" outline>Primary</DuButton>
 <DuButton variant="secondary" outline>Secondary</DuButton>
@@ -79,9 +79,9 @@ export default {
     {
       title: 'Soft style',
       preview: `<div class="flex flex-wrap gap-2 justify-center">
-  <button class="btn btn-soft btn-primary">Primary</button>
-  <button class="btn btn-soft btn-secondary">Secondary</button>
-  <button class="btn btn-soft btn-error">Error</button>
+  <DuButton variant="primary" soft>Primary</DuButton>
+  <DuButton variant="secondary" soft>Secondary</DuButton>
+  <DuButton variant="error" soft>Error</DuButton>
 </div>`,
       code: `<DuButton variant="primary" soft>Primary</DuButton>
 <DuButton variant="secondary" soft>Secondary</DuButton>
@@ -90,8 +90,8 @@ export default {
     {
       title: 'Ghost & Link',
       preview: `<div class="flex flex-wrap gap-2 justify-center">
-  <button class="btn btn-ghost">Ghost</button>
-  <button class="btn btn-link">Link</button>
+  <DuButton ghost>Ghost</DuButton>
+  <DuButton link>Link</DuButton>
 </div>`,
       code: `<DuButton ghost>Ghost</DuButton>
 <DuButton link>Link</DuButton>`,
@@ -99,11 +99,11 @@ export default {
     {
       title: 'Sizes',
       preview: `<div class="flex flex-wrap items-center gap-2 justify-center">
-  <button class="btn btn-xs">XSmall</button>
-  <button class="btn btn-sm">Small</button>
-  <button class="btn btn-md">Medium</button>
-  <button class="btn btn-lg">Large</button>
-  <button class="btn btn-xl">XLarge</button>
+  <DuButton size="xs">XSmall</DuButton>
+  <DuButton size="sm">Small</DuButton>
+  <DuButton size="md">Medium</DuButton>
+  <DuButton size="lg">Large</DuButton>
+  <DuButton size="xl">XLarge</DuButton>
 </div>`,
       code: `<DuButton size="xs">XSmall</DuButton>
 <DuButton size="sm">Small</DuButton>
@@ -114,22 +114,24 @@ export default {
     {
       title: 'Circle & Square',
       preview: `<div class="flex flex-wrap items-center gap-2 justify-center">
-  <button class="btn btn-circle btn-primary">✕</button>
-  <button class="btn btn-square btn-neutral">★</button>
+  <DuButton circle variant="primary">✕</DuButton>
+  <DuButton square variant="neutral">★</DuButton>
 </div>`,
       code: `<DuButton circle variant="primary">✕</DuButton>
 <DuButton square variant="neutral">★</DuButton>`,
     },
     {
       title: 'Block (full width)',
-      preview: `<button class="btn btn-primary btn-block">Block button</button>`,
+      preview: `<div class="w-64">
+  <DuButton variant="primary" block>Block button</DuButton>
+</div>`,
       code: `<DuButton variant="primary" block>Block button</DuButton>`,
     },
     {
       title: 'Disabled',
       preview: `<div class="flex flex-wrap gap-2 justify-center">
-  <button class="btn" disabled>Disabled</button>
-  <button class="btn btn-primary" disabled>Disabled</button>
+  <DuButton disabled>Disabled</DuButton>
+  <DuButton variant="primary" disabled>Disabled</DuButton>
 </div>`,
       code: `<DuButton disabled>Disabled</DuButton>
 <DuButton variant="primary" disabled>Disabled</DuButton>`,
@@ -137,6 +139,10 @@ export default {
     {
       title: 'As a link (as prop)',
       description: 'Use the `as` prop to render the button as an anchor or RouterLink element.',
+      preview: `<div class="flex flex-wrap gap-2 justify-center">
+  <DuButton as="a" href="#" variant="primary">Link button</DuButton>
+  <DuButton as="a" href="#" variant="neutral" outline>Outline link</DuButton>
+</div>`,
       code: `<!-- Render as <a> tag -->
 <DuButton as="a" href="/docs" variant="primary">Go to docs</DuButton>
 
@@ -146,7 +152,10 @@ export default {
     {
       title: 'Loading state',
       description: 'Disable the button and add a loading spinner during async operations.',
-      preview: `<button class="btn btn-primary"><span class="loading loading-spinner loading-sm"></span> Loading...</button>`,
+      preview: `<DuButton variant="primary" disabled>
+  <span class="loading loading-spinner loading-sm"></span>
+  Loading...
+</DuButton>`,
       code: `<DuButton variant="primary" :disabled="loading">
   <span v-if="loading" class="loading loading-spinner loading-sm" />
   {{ loading ? 'Loading...' : 'Submit' }}

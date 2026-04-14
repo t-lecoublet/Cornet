@@ -8,13 +8,13 @@ export default {
   sections: [
     {
       title: 'Basic',
-      preview: `<div class="stats shadow border border-base-300">
-  <div class="stat">
-    <div class="stat-title">Total Users</div>
-    <div class="stat-value text-primary">31K</div>
-    <div class="stat-desc">21% more than last month</div>
-  </div>
-</div>`,
+      preview: `<DuStats>
+  <DuStat valueClass="text-primary">
+    <template #title>Total Users</template>
+    <template #value>31K</template>
+    <template #desc>21% more than last month</template>
+  </DuStat>
+</DuStats>`,
       code: `<DuStats>
   <DuStat valueClass="text-primary">
     <template #title>Total Users</template>
@@ -26,6 +26,16 @@ export default {
     {
       title: 'With figure icon',
       description: 'Place an icon or image in the `#figure` slot — it renders to the right of the stat.',
+      preview: `<DuStats>
+  <DuStat valueClass="text-success">
+    <template #figure>
+      <span class="text-4xl text-success">💰</span>
+    </template>
+    <template #title>Revenue</template>
+    <template #value>$4,200</template>
+    <template #desc>+12% this week</template>
+  </DuStat>
+</DuStats>`,
       code: `<DuStats>
   <DuStat valueClass="text-success">
     <template #figure>
@@ -42,6 +52,16 @@ export default {
     {
       title: 'With actions',
       description: 'Place buttons or links in the `#actions` slot.',
+      preview: `<DuStats>
+  <DuStat>
+    <template #title>New Messages</template>
+    <template #value>12</template>
+    <template #actions>
+      <DuButton size="xs" variant="success">See all</DuButton>
+      <DuButton size="xs" ghost>Ignore</DuButton>
+    </template>
+  </DuStat>
+</DuStats>`,
       code: `<DuStats>
   <DuStat>
     <template #title>New Messages</template>

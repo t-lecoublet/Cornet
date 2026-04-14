@@ -8,15 +8,20 @@ export default {
   sections: [
     {
       title: 'Basic',
-      preview: `<div class="navbar bg-base-100 border border-base-300 rounded-xl">
-  <div class="navbar-start"><a class="btn btn-ghost text-xl">Logo</a></div>
-  <div class="navbar-center hidden lg:flex">
-    <ul class="menu menu-horizontal px-1">
-      <li><a>Home</a></li><li><a>About</a></li>
-    </ul>
-  </div>
-  <div class="navbar-end"><a class="btn btn-primary">Get Started</a></div>
-</div>`,
+      preview: `<DuNavbar class="border border-base-300 rounded-xl w-full">
+  <template #start>
+    <DuButton ghost class="text-xl">Logo</DuButton>
+  </template>
+  <template #center>
+    <nav class="hidden lg:flex gap-4 text-sm">
+      <a>Home</a>
+      <a>About</a>
+    </nav>
+  </template>
+  <template #end>
+    <DuButton variant="primary" size="sm">Get Started</DuButton>
+  </template>
+</DuNavbar>`,
       code: `<DuNavbar>
   <template #start>
     <RouterLink to="/" class="btn btn-ghost text-xl">Logo</RouterLink>

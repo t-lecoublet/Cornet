@@ -24,21 +24,25 @@ export default {
   sections: [
     {
       title: 'Basic',
-      preview: `<input type="range" min="0" max="100" value="40" class="range range-primary w-72" />`,
+      preview: `<div class="w-64">
+  <DuRange :modelValue="40" :min="0" :max="100" variant="primary" />
+</div>`,
       code: `<DuRange v-model="value" :min="0" :max="100" variant="primary" />`,
     },
     {
       title: 'With steps',
-      preview: `<input type="range" min="0" max="100" step="25" value="50" class="range range-secondary w-72" />`,
+      preview: `<div class="w-64">
+  <DuRange :modelValue="50" :min="0" :max="100" :step="25" variant="secondary" />
+</div>`,
       code: `<DuRange v-model="value" :min="0" :max="100" :step="25" variant="secondary" />`,
     },
     {
       title: 'Sizes',
-      preview: `<div class="flex flex-col gap-3 w-72">
-  <input type="range" class="range range-xs range-primary" value="50" />
-  <input type="range" class="range range-sm range-primary" value="50" />
-  <input type="range" class="range range-primary" value="50" />
-  <input type="range" class="range range-lg range-primary" value="50" />
+      preview: `<div class="flex flex-col gap-3 w-64">
+  <DuRange :modelValue="50" variant="primary" size="xs" />
+  <DuRange :modelValue="50" variant="primary" size="sm" />
+  <DuRange :modelValue="50" variant="primary" />
+  <DuRange :modelValue="50" variant="primary" size="lg" />
 </div>`,
       code: `<DuRange v-model="val" variant="primary" size="xs" />
 <DuRange v-model="val" variant="primary" size="sm" />

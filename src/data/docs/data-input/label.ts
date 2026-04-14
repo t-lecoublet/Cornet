@@ -8,10 +8,10 @@ export default {
   sections: [
     {
       title: 'Basic',
-      preview: `<label class="label">
-  <span class="label-text">Email</span>
-  <input type="email" class="input" placeholder="your@email.com" />
-</label>`,
+      preview: `<DuLabel type="label" class="w-72">
+  Email
+  <DuInputField type="email" placeholder="your@email.com" />
+</DuLabel>`,
       code: `<DuLabel type="label">
   Email
   <DuInputField v-model="email" type="email" placeholder="your@email.com" />
@@ -19,6 +19,10 @@ export default {
     },
     {
       title: 'Floating label',
+      preview: `<DuLabel type="floating-label" class="w-72">
+  Name
+  <DuInputField placeholder=" " />
+</DuLabel>`,
       code: `<DuLabel type="floating-label">
   Name
   <DuInputField v-model="name" placeholder=" " />
@@ -26,6 +30,11 @@ export default {
     },
     {
       title: 'With alt text',
+      preview: `<DuLabel type="label" class="w-72">
+  Username
+  <DuInputField placeholder="john_doe" />
+  <template #alt>Max 20 characters</template>
+</DuLabel>`,
       code: `<DuLabel type="label">
   Username
   <DuInputField v-model="username" placeholder="john_doe" />

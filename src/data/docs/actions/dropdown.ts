@@ -19,14 +19,16 @@ export default {
   sections: [
     {
       title: 'Basic',
-      preview: `<div class="dropdown">
-  <div tabindex="0" role="button" class="btn m-1">Click me</div>
-  <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm border border-base-300">
+      preview: `<DuDropdown>
+  <template #trigger>
+    <DuButton>Click me</DuButton>
+  </template>
+  <ul class="menu menu-sm w-48">
     <li><a>Item 1</a></li>
     <li><a>Item 2</a></li>
     <li><a>Item 3</a></li>
   </ul>
-</div>`,
+</DuDropdown>`,
       code: `<DuDropdown>
   <template #trigger>
     <DuButton>Click me</DuButton>
@@ -40,6 +42,15 @@ export default {
     },
     {
       title: 'Open on hover',
+      preview: `<DuDropdown hover>
+  <template #trigger>
+    <DuButton>Hover me</DuButton>
+  </template>
+  <ul class="menu menu-sm w-48">
+    <li><a>Item 1</a></li>
+    <li><a>Item 2</a></li>
+  </ul>
+</DuDropdown>`,
       code: `<DuDropdown hover>
   <template #trigger>
     <DuButton>Hover me</DuButton>
@@ -52,6 +63,16 @@ export default {
     },
     {
       title: 'Placement',
+      preview: `<div class="flex gap-4 flex-wrap justify-center">
+  <DuDropdown placement="top">
+    <template #trigger><DuButton size="sm">Top</DuButton></template>
+    <ul class="menu menu-sm w-36"><li><a>Item 1</a></li></ul>
+  </DuDropdown>
+  <DuDropdown placement="right">
+    <template #trigger><DuButton size="sm">Right</DuButton></template>
+    <ul class="menu menu-sm w-36"><li><a>Item 1</a></li></ul>
+  </DuDropdown>
+</div>`,
       code: `<!-- Opens upward -->
 <DuDropdown placement="top">
   <template #trigger>
@@ -74,6 +95,15 @@ export default {
     },
     {
       title: 'Forced open',
+      preview: `<DuDropdown :open="true">
+  <template #trigger>
+    <DuButton>Always open</DuButton>
+  </template>
+  <ul class="menu menu-sm w-48">
+    <li><a>Item 1</a></li>
+    <li><a>Item 2</a></li>
+  </ul>
+</DuDropdown>`,
       code: `<DuDropdown :open="true">
   <template #trigger>
     <DuButton>Always open</DuButton>

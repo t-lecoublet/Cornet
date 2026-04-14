@@ -8,17 +8,11 @@ export default {
   sections: [
     {
       title: 'Basic',
-      preview: `<ul class="list bg-base-100 border border-base-300 rounded-xl w-72">
-  <li class="list-row">
-    <div class="list-col-grow">Item 1</div>
-  </li>
-  <li class="list-row">
-    <div class="list-col-grow">Item 2</div>
-  </li>
-  <li class="list-row">
-    <div class="list-col-grow">Item 3</div>
-  </li>
-</ul>`,
+      preview: `<DuList class="w-72">
+  <DuListRow>Item 1</DuListRow>
+  <DuListRow>Item 2</DuListRow>
+  <DuListRow>Item 3</DuListRow>
+</DuList>`,
       code: `<DuList>
   <DuListRow>Item 1</DuListRow>
   <DuListRow>Item 2</DuListRow>
@@ -27,6 +21,22 @@ export default {
     },
     {
       title: 'With avatar and actions',
+      preview: `<DuList class="w-72">
+  <DuListRow>
+    <span class="font-medium">Alice Martin</span>
+    <span class="text-sm text-base-content/50">alice@example.com</span>
+    <template #end>
+      <DuButton size="xs" ghost>Edit</DuButton>
+    </template>
+  </DuListRow>
+  <DuListRow>
+    <span class="font-medium">Bob Smith</span>
+    <span class="text-sm text-base-content/50">bob@example.com</span>
+    <template #end>
+      <DuButton size="xs" ghost>Edit</DuButton>
+    </template>
+  </DuListRow>
+</DuList>`,
       code: `<DuList>
   <DuListRow v-for="user in users" :key="user.id">
     <template #start>

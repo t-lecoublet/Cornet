@@ -8,16 +8,21 @@ export default {
   sections: [
     {
       title: 'Basic',
-      preview: `<label class="input w-72">
-  <svg class="h-4 w-4 opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
-  </svg>
-  <input type="search" placeholder="Search..." />
-</label>`,
+      preview: `<DuSearch placeholder="Search..." class="w-72" />`,
       code: `<DuSearch v-model="query" placeholder="Search..." />`,
     },
     {
       title: 'With autocomplete list',
+      preview: `<DuSearch
+  placeholder="Search author..."
+  :listValues="[
+    { id: 1, name: 'Alice Martin' },
+    { id: 2, name: 'Bob Smith' },
+    { id: 3, name: 'Charlie Brown' },
+  ]"
+  :limit="5"
+  class="w-72"
+/>`,
       code: `<DuSearch
   v-model="author"
   name="author"
@@ -33,6 +38,7 @@ export default {
     },
     {
       title: 'Variant and size',
+      preview: `<DuSearch variant="primary" size="lg" placeholder="Search..." class="w-72" />`,
       code: `<DuSearch v-model="query" variant="primary" size="lg" placeholder="Search..." />`,
     },
   ],

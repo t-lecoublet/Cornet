@@ -14,23 +14,23 @@ export default {
   sections: [
     {
       title: 'Horizontal stats (slot mode)',
-      preview: `<div class="stats shadow border border-base-300">
-  <div class="stat">
-    <div class="stat-title">Downloads</div>
-    <div class="stat-value">31K</div>
-    <div class="stat-desc">Jan 1st - Feb 1st</div>
-  </div>
-  <div class="stat">
-    <div class="stat-title">Users</div>
-    <div class="stat-value text-primary">4.2K</div>
-    <div class="stat-desc text-primary">↗ 40 (2%)</div>
-  </div>
-  <div class="stat">
-    <div class="stat-title">New Registers</div>
-    <div class="stat-value text-secondary">1,200</div>
-    <div class="stat-desc text-secondary">↘ 90 (14%)</div>
-  </div>
-</div>`,
+      preview: `<DuStats>
+  <DuStat>
+    <template #title>Downloads</template>
+    <template #value>31K</template>
+    <template #desc>Jan 1st - Feb 1st</template>
+  </DuStat>
+  <DuStat valueClass="text-primary" descClass="text-primary">
+    <template #title>Users</template>
+    <template #value>4.2K</template>
+    <template #desc>↗ 40 (2%)</template>
+  </DuStat>
+  <DuStat valueClass="text-secondary" descClass="text-secondary">
+    <template #title>New Registers</template>
+    <template #value>1,200</template>
+    <template #desc>↘ 90 (14%)</template>
+  </DuStat>
+</DuStats>`,
       code: `<DuStats>
   <DuStat>
     <template #title>Downloads</template>
@@ -51,6 +51,16 @@ export default {
     },
     {
       title: 'Vertical stats',
+      preview: `<DuStats :vertical="true">
+  <DuStat>
+    <template #title>Downloads</template>
+    <template #value>31K</template>
+  </DuStat>
+  <DuStat valueClass="text-primary">
+    <template #title>Users</template>
+    <template #value>4.2K</template>
+  </DuStat>
+</DuStats>`,
       code: `<DuStats :vertical="true">
   <DuStat>
     <template #title>Downloads</template>
@@ -65,6 +75,12 @@ export default {
     {
       title: 'Dynamic items mode',
       description: 'Pass an `items` array to DuStats. Each item supports `title`, `value`, `description`, `figure`, `figureClass`, `valueClass`, `descClass`, `titleClass`.',
+      preview: `<DuStats
+  :items="[
+    { title: 'Downloads', value: '31K', description: 'Jan 1st - Feb 1st' },
+    { title: 'Users', value: '4.2K', description: '↗ 40 (2%)', valueClass: 'text-primary' },
+  ]"
+/>`,
       code: `<DuStats
   :items="[
     { title: 'Downloads', value: '31K', description: 'Jan 1st - Feb 1st' },
@@ -75,6 +91,12 @@ export default {
     },
     {
       title: 'With shadow',
+      preview: `<DuStats shadow>
+  <DuStat>
+    <template #title>Total Revenue</template>
+    <template #value>$89,400</template>
+  </DuStat>
+</DuStats>`,
       code: `<DuStats shadow>
   <DuStat>
     <template #title>Total Revenue</template>

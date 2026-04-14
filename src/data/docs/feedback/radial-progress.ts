@@ -8,11 +8,14 @@ export default {
   sections: [
     {
       title: 'Basic',
-      preview: `<div class="radial-progress text-primary" style="--value:70; --size:5rem; --thickness:0.4rem;" role="progressbar">70%</div>`,
+      preview: `<DuRadialProgress :value="70" variant="primary" />`,
       code: `<DuRadialProgress :value="70" variant="primary" />`,
     },
     {
       title: 'Custom size and thickness',
+      preview: `<DuRadialProgress :value="60" variant="secondary" size="8rem" thickness="0.6rem">
+  60%
+</DuRadialProgress>`,
       code: `<DuRadialProgress :value="60" variant="secondary" size="8rem" thickness="0.6rem">
   60%
 </DuRadialProgress>`,
@@ -20,9 +23,9 @@ export default {
     {
       title: 'Multiple variants',
       preview: `<div class="flex gap-4 flex-wrap justify-center">
-  <div class="radial-progress text-primary" style="--value:70;" role="progressbar">70%</div>
-  <div class="radial-progress text-success" style="--value:40;" role="progressbar">40%</div>
-  <div class="radial-progress text-error" style="--value:15;" role="progressbar">15%</div>
+  <DuRadialProgress :value="70" variant="primary" />
+  <DuRadialProgress :value="40" variant="success" />
+  <DuRadialProgress :value="15" variant="error" />
 </div>`,
       code: `<DuRadialProgress :value="70" variant="primary" />
 <DuRadialProgress :value="40" variant="success" />

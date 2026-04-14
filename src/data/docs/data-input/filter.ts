@@ -8,12 +8,13 @@ export default {
   sections: [
     {
       title: 'Basic',
-      preview: `<div class="filter">
-  <button class="btn filter-reset">×</button>
-  <button class="btn">All</button>
-  <button class="btn">Active</button>
-  <button class="btn">Archived</button>
-</div>`,
+      preview: `<DuFilter
+  :items="[
+    { title: 'All', checked: true },
+    { title: 'Active' },
+    { title: 'Archived' },
+  ]"
+/>`,
       code: `<DuFilter
   :items="[
     { title: 'All', checked: true },
@@ -25,6 +26,15 @@ export default {
     {
       title: 'With button style',
       description: 'Use `buttonsArgs` on DuFilter to style all buttons, or per-item `buttonsArgs` for individual overrides.',
+      preview: `<DuFilter
+  :buttonsArgs="{ variant: 'primary', outline: true }"
+  :items="[
+    { title: 'All', checked: true },
+    { title: 'Active' },
+    { title: 'Pending' },
+    { title: 'Closed' },
+  ]"
+/>`,
       code: `<DuFilter
   :buttonsArgs="{ variant: 'primary', outline: true }"
   :items="[
@@ -37,6 +47,14 @@ export default {
     },
     {
       title: 'Per-item style override',
+      preview: `<DuFilter
+  :items="[
+    { title: 'All', checked: true },
+    { title: 'In Progress', buttonsArgs: { variant: 'warning', soft: true } },
+    { title: 'Done', buttonsArgs: { variant: 'success', soft: true } },
+    { title: 'Blocked', buttonsArgs: { variant: 'error', soft: true } },
+  ]"
+/>`,
       code: `<DuFilter
   :items="[
     { title: 'All', checked: true },
@@ -49,6 +67,14 @@ export default {
     {
       title: 'Named group',
       description: 'Use `name` to group filters. Defaults to a random ID.',
+      preview: `<DuFilter
+  name="status-filter"
+  :items="[
+    { title: 'All', checked: true },
+    { title: 'Active' },
+    { title: 'Inactive' },
+  ]"
+/>`,
       code: `<DuFilter
   name="status-filter"
   :items="[

@@ -30,10 +30,10 @@ export default {
     {
       title: 'Basic',
       preview: `<div class="flex items-center gap-3">
-  <span class="status status-success"></span>
-  <span class="status status-warning"></span>
-  <span class="status status-error"></span>
-  <span class="status status-info"></span>
+  <DuStatus variant="success" />
+  <DuStatus variant="warning" />
+  <DuStatus variant="error" />
+  <DuStatus variant="info" />
 </div>`,
       code: `<DuStatus variant="success" />
 <DuStatus variant="warning" />
@@ -43,8 +43,8 @@ export default {
     {
       title: 'Ping animation',
       preview: `<div class="flex items-center gap-3">
-  <span class="status status-success status-ping"></span>
-  <span class="status status-error status-ping"></span>
+  <DuStatus variant="success" ping />
+  <DuStatus variant="error" ping />
 </div>`,
       code: `<DuStatus variant="success" ping />
 <DuStatus variant="error" ping />`,
@@ -52,11 +52,11 @@ export default {
     {
       title: 'Sizes',
       preview: `<div class="flex items-center gap-3">
-  <span class="status status-success status-xs"></span>
-  <span class="status status-success status-sm"></span>
-  <span class="status status-success"></span>
-  <span class="status status-success status-lg"></span>
-  <span class="status status-success status-xl"></span>
+  <DuStatus variant="success" size="xs" />
+  <DuStatus variant="success" size="sm" />
+  <DuStatus variant="success" />
+  <DuStatus variant="success" size="lg" />
+  <DuStatus variant="success" size="xl" />
 </div>`,
       code: `<DuStatus variant="success" size="xs" />
 <DuStatus variant="success" size="sm" />
@@ -67,7 +67,7 @@ export default {
     {
       title: 'Inline with text',
       preview: `<div class="flex items-center gap-2">
-  <span class="status status-success"></span>
+  <DuStatus variant="success" />
   <span class="text-sm">Server online</span>
 </div>`,
       code: `<div class="flex items-center gap-2">

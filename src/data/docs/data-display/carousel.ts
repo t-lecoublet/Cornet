@@ -16,17 +16,17 @@ export default {
   sections: [
     {
       title: 'Basic',
-      preview: `<div class="carousel carousel-start rounded-xl w-72">
-  <div class="carousel-item w-full">
+      preview: `<DuCarousel class="rounded-xl w-72">
+  <DuCarouselItem>
     <div class="bg-primary/20 w-full h-32 flex items-center justify-center rounded-xl font-bold">Slide 1</div>
-  </div>
-  <div class="carousel-item w-full">
+  </DuCarouselItem>
+  <DuCarouselItem>
     <div class="bg-secondary/20 w-full h-32 flex items-center justify-center rounded-xl font-bold">Slide 2</div>
-  </div>
-  <div class="carousel-item w-full">
+  </DuCarouselItem>
+  <DuCarouselItem>
     <div class="bg-accent/20 w-full h-32 flex items-center justify-center rounded-xl font-bold">Slide 3</div>
-  </div>
-</div>`,
+  </DuCarouselItem>
+</DuCarousel>`,
       code: `<DuCarousel>
   <DuCarouselItem>
     <div class="bg-primary/20 w-full h-32 flex items-center justify-center">Slide 1</div>
@@ -41,6 +41,13 @@ export default {
     },
     {
       title: 'Center snap',
+      preview: `<DuCarousel :center="true" class="w-72 rounded-xl">
+  <DuCarouselItem v-for="n in 5" :key="n">
+    <div class="w-48 h-32 bg-base-200 flex items-center justify-center rounded-xl font-medium">
+      Slide {{ n }}
+    </div>
+  </DuCarouselItem>
+</DuCarousel>`,
       code: `<!-- Each item snaps to the center of the viewport -->
 <DuCarousel :center="true">
   <DuCarouselItem v-for="n in 5" :key="n">
@@ -52,6 +59,13 @@ export default {
     },
     {
       title: 'Vertical',
+      preview: `<DuCarousel :vertical="true" class="h-48 w-72 rounded-xl">
+  <DuCarouselItem v-for="n in 4" :key="n">
+    <div class="h-24 w-full bg-base-200 flex items-center justify-center font-medium">
+      Slide {{ n }}
+    </div>
+  </DuCarouselItem>
+</DuCarousel>`,
       code: `<DuCarousel :vertical="true" class="h-48">
   <DuCarouselItem v-for="n in 4" :key="n">
     <div class="h-24 w-full bg-base-200 flex items-center justify-center">

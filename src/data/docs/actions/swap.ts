@@ -14,11 +14,10 @@ export default {
   sections: [
     {
       title: 'Basic (text)',
-      preview: `<label class="swap">
-  <input type="checkbox" />
-  <div class="swap-on font-bold text-success">ON</div>
-  <div class="swap-off font-bold text-error">OFF</div>
-</label>`,
+      preview: `<DuSwap>
+  <template #on><span class="font-bold text-success">ON</span></template>
+  <template #off><span class="font-bold text-error">OFF</span></template>
+</DuSwap>`,
       code: `<DuSwap>
   <template #on>ON</template>
   <template #off>OFF</template>
@@ -40,11 +39,10 @@ const active = ref(false)
     },
     {
       title: 'Rotate animation',
-      preview: `<label class="swap swap-rotate text-2xl">
-  <input type="checkbox" />
-  <div class="swap-on">☀️</div>
-  <div class="swap-off">🌙</div>
-</label>`,
+      preview: `<DuSwap rotate class="text-2xl">
+  <template #on>☀️</template>
+  <template #off>🌙</template>
+</DuSwap>`,
       code: `<!-- rotate prop adds rotation animation -->
 <DuSwap v-model="isDark" rotate>
   <template #on>☀️</template>
@@ -53,11 +51,10 @@ const active = ref(false)
     },
     {
       title: 'Flip animation',
-      preview: `<label class="swap swap-flip text-2xl">
-  <input type="checkbox" />
-  <div class="swap-on">😊</div>
-  <div class="swap-off">😴</div>
-</label>`,
+      preview: `<DuSwap flip class="text-2xl">
+  <template #on>😊</template>
+  <template #off>😴</template>
+</DuSwap>`,
       code: `<!-- flip prop adds flip animation -->
 <DuSwap v-model="isHappy" flip>
   <template #on>😊</template>
@@ -66,6 +63,11 @@ const active = ref(false)
     },
     {
       title: 'With indeterminate state',
+      preview: `<DuSwap class="text-2xl">
+  <template #on>✅</template>
+  <template #off>❌</template>
+  <template #indeterminate>⏳</template>
+</DuSwap>`,
       code: `<DuSwap v-model="active">
   <template #on>✅</template>
   <template #off>❌</template>

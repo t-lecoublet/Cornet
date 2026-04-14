@@ -13,6 +13,16 @@ export default {
   sections: [
     {
       title: 'Basic',
+      preview: `<div class="relative h-32 w-64 border border-base-300 rounded-xl">
+  <DuFab
+    :mainAction="{ label: '+', variant: 'primary' }"
+    :items="[
+      { label: 'Edit' },
+      { label: 'Share' },
+      { label: 'Delete' },
+    ]"
+  />
+</div>`,
       code: `<DuFab
   :mainAction="{ label: '+', variant: 'primary' }"
   :items="[
@@ -24,6 +34,15 @@ export default {
     },
     {
       title: 'With icons',
+      preview: `<div class="relative h-32 w-64 border border-base-300 rounded-xl">
+  <DuFab
+    :mainAction="{ label: '+', variant: 'primary' }"
+    :items="[
+      { label: '✏️', tooltip: 'Edit', tooltipPosition: 'left' },
+      { label: '🗑️', tooltip: 'Delete', tooltipPosition: 'left', customClass: 'btn-error' },
+    ]"
+  />
+</div>`,
       code: `<DuFab
   :mainAction="{ icon: PlusIcon, variant: 'primary' }"
   :items="[
@@ -34,20 +53,16 @@ export default {
 />`,
     },
     {
-      title: 'Flower layout',
-      code: `<DuFab
-  modifier="fab-flower"
-  :mainAction="{ icon: PlusIcon, variant: 'primary' }"
-  :items="[
-    { icon: PencilIcon, tooltip: 'Edit' },
-    { icon: ShareIcon, tooltip: 'Share' },
-    { icon: TrashIcon, tooltip: 'Delete' },
-    { icon: StarIcon, tooltip: 'Favorite' },
-  ]"
-/>`,
-    },
-    {
       title: 'With click handlers',
+      preview: `<div class="relative h-32 w-64 border border-base-300 rounded-xl">
+  <DuFab
+    :mainAction="{ label: '+', variant: 'primary' }"
+    :items="[
+      { label: 'Edit' },
+      { label: 'Delete', customClass: 'btn-error' },
+    ]"
+  />
+</div>`,
       code: `<DuFab
   :mainAction="{ label: '+', variant: 'primary', onClick: () => console.log('main') }"
   :items="[

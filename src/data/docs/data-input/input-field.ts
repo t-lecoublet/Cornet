@@ -28,17 +28,17 @@ export default {
   sections: [
     {
       title: 'Basic',
-      preview: `<input type="text" placeholder="Type here..." class="input w-72" />`,
+      preview: `<DuInputField placeholder="Type here..." class="w-72" />`,
       code: `<DuInputField v-model="value" placeholder="Type here..." />`,
     },
     {
       title: 'Variants',
       preview: `<div class="flex flex-col gap-2 w-72">
-  <input class="input input-primary" placeholder="Primary" />
-  <input class="input input-secondary" placeholder="Secondary" />
-  <input class="input input-accent" placeholder="Accent" />
-  <input class="input input-error" placeholder="Error" />
-  <input class="input input-success" placeholder="Success" />
+  <DuInputField variant="primary" placeholder="Primary" />
+  <DuInputField variant="secondary" placeholder="Secondary" />
+  <DuInputField variant="accent" placeholder="Accent" />
+  <DuInputField variant="error" placeholder="Error" />
+  <DuInputField variant="success" placeholder="Success" />
 </div>`,
       code: `<DuInputField v-model="val" variant="primary" placeholder="Primary" />
 <DuInputField v-model="val" variant="secondary" placeholder="Secondary" />
@@ -49,11 +49,11 @@ export default {
     {
       title: 'Sizes',
       preview: `<div class="flex flex-col gap-2 w-72">
-  <input class="input input-xs" placeholder="XSmall" />
-  <input class="input input-sm" placeholder="Small" />
-  <input class="input" placeholder="Medium" />
-  <input class="input input-lg" placeholder="Large" />
-  <input class="input input-xl" placeholder="XLarge" />
+  <DuInputField size="xs" placeholder="XSmall" />
+  <DuInputField size="sm" placeholder="Small" />
+  <DuInputField placeholder="Medium" />
+  <DuInputField size="lg" placeholder="Large" />
+  <DuInputField size="xl" placeholder="XLarge" />
 </div>`,
       code: `<DuInputField v-model="val" size="xs" placeholder="XSmall" />
 <DuInputField v-model="val" size="sm" placeholder="Small" />
@@ -63,16 +63,22 @@ export default {
     },
     {
       title: 'Ghost style',
-      preview: `<input class="input input-ghost w-72" placeholder="Ghost input" />`,
+      preview: `<DuInputField ghost placeholder="Ghost input" class="w-72" />`,
       code: `<DuInputField v-model="val" ghost placeholder="Ghost input" />`,
     },
     {
       title: 'Disabled',
-      preview: `<input class="input w-72" disabled placeholder="Disabled" />`,
+      preview: `<DuInputField disabled placeholder="Disabled" class="w-72" />`,
       code: `<DuInputField v-model="val" disabled placeholder="Disabled" />`,
     },
     {
       title: 'Input types',
+      preview: `<div class="flex flex-col gap-2 w-72">
+  <DuInputField type="email" placeholder="your@email.com" />
+  <DuInputField type="password" placeholder="Password" />
+  <DuInputField type="number" placeholder="0" />
+  <DuInputField type="date" />
+</div>`,
       code: `<DuInputField v-model="email" type="email" placeholder="your@email.com" />
 <DuInputField v-model="password" type="password" placeholder="Password" />
 <DuInputField v-model="number" type="number" placeholder="0" />

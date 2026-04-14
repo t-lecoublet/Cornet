@@ -8,11 +8,14 @@ export default {
   sections: [
     {
       title: 'Basic vertical',
-      preview: `<ul class="menu bg-base-100 rounded-xl border border-base-300 w-48 p-2">
-  <li><a>Dashboard</a></li>
-  <li><a>Products</a></li>
-  <li><a>Settings</a></li>
-</ul>`,
+      preview: `<DuMenu
+  :items="[
+    { label: 'Dashboard', href: '/' },
+    { label: 'Products', href: '/products' },
+    { label: 'Settings', href: '/settings' },
+  ]"
+  direction="vertical"
+/>`,
       code: `<DuMenu
   :items="[
     { label: 'Dashboard', href: '/' },
@@ -24,6 +27,14 @@ export default {
     },
     {
       title: 'Horizontal',
+      preview: `<DuMenu
+  :items="[
+    { label: 'Home', href: '/' },
+    { label: 'About', href: '/about' },
+    { label: 'Contact', href: '/contact' },
+  ]"
+  direction="horizontal"
+/>`,
       code: `<DuMenu
   :items="[
     { label: 'Home', href: '/' },
@@ -35,6 +46,20 @@ export default {
     },
     {
       title: 'With sub-menus',
+      preview: `<DuMenu
+  :items="[
+    { label: 'Dashboard', href: '/' },
+    {
+      label: 'Products',
+      subItems: [
+        { label: 'List', href: '/products' },
+        { label: 'Add new', href: '/products/new' },
+      ],
+    },
+    { label: 'Settings', href: '/settings', disabled: true },
+  ]"
+  direction="vertical"
+/>`,
       code: `<DuMenu
   :items="[
     { label: 'Dashboard', href: '/' },
@@ -54,6 +79,15 @@ export default {
     },
     {
       title: 'Active item',
+      preview: `<DuMenu
+  :items="[
+    { label: 'Dashboard', value: '/dashboard', href: '#' },
+    { label: 'Settings', value: '/settings', href: '#' },
+    { label: 'Profile', value: '/profile', href: '#' },
+  ]"
+  activeItem="/dashboard"
+  direction="vertical"
+/>`,
       code: `<DuMenu
   :items="navItems"
   :activeItem="$route.path"

@@ -25,18 +25,18 @@ export default {
   sections: [
     {
       title: 'Spinner',
-      preview: `<span class="loading loading-spinner loading-lg text-primary"></span>`,
+      preview: `<DuLoading animation="spinner" size="lg" variant="primary" />`,
       code: `<DuLoading animation="spinner" size="lg" variant="primary" />`,
     },
     {
       title: 'All animations',
       preview: `<div class="flex flex-wrap gap-4 items-center justify-center">
-  <span class="loading loading-spinner text-primary"></span>
-  <span class="loading loading-dots text-secondary"></span>
-  <span class="loading loading-ring text-accent"></span>
-  <span class="loading loading-ball text-info"></span>
-  <span class="loading loading-bars text-success"></span>
-  <span class="loading loading-infinity text-warning"></span>
+  <DuLoading animation="spinner" variant="primary" />
+  <DuLoading animation="dots" variant="secondary" />
+  <DuLoading animation="ring" variant="accent" />
+  <DuLoading animation="ball" variant="info" />
+  <DuLoading animation="bars" variant="success" />
+  <DuLoading animation="infinity" variant="warning" />
 </div>`,
       code: `<DuLoading animation="spinner" variant="primary" />
 <DuLoading animation="dots" variant="secondary" />
@@ -48,11 +48,11 @@ export default {
     {
       title: 'Sizes',
       preview: `<div class="flex items-center gap-4">
-  <span class="loading loading-spinner loading-xs text-primary"></span>
-  <span class="loading loading-spinner loading-sm text-primary"></span>
-  <span class="loading loading-spinner text-primary"></span>
-  <span class="loading loading-spinner loading-lg text-primary"></span>
-  <span class="loading loading-spinner loading-xl text-primary"></span>
+  <DuLoading animation="spinner" size="xs" variant="primary" />
+  <DuLoading animation="spinner" size="sm" variant="primary" />
+  <DuLoading animation="spinner" variant="primary" />
+  <DuLoading animation="spinner" size="lg" variant="primary" />
+  <DuLoading animation="spinner" size="xl" variant="primary" />
 </div>`,
       code: `<DuLoading animation="spinner" size="xs" variant="primary" />
 <DuLoading animation="spinner" size="sm" variant="primary" />

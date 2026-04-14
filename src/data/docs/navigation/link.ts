@@ -21,33 +21,34 @@ export default {
   sections: [
     {
       title: 'Basic',
-      preview: `<a class="link link-primary" href="#">Click here</a>`,
+      preview: `<DuLink href="#" variant="primary">Click here</DuLink>`,
       code: `<DuLink href="/docs" variant="primary">Click here</DuLink>`,
     },
     {
       title: 'Hover only underline',
       description: 'The underline only appears on hover with `onlyUnderlineOnHover`.',
-      preview: `<a class="link link-hover link-secondary" href="#">Hover me</a>`,
+      preview: `<DuLink href="#" variant="secondary" :onlyUnderlineOnHover="true">Hover me</DuLink>`,
       code: `<DuLink href="/" variant="secondary" :onlyUnderlineOnHover="true">Hover me</DuLink>`,
     },
     {
       title: 'Ghost (no color)',
+      preview: `<DuLink href="#">Ghost link</DuLink>`,
       code: `<DuLink href="/" ghost>Ghost link</DuLink>`,
     },
     {
       title: 'Inline in text',
-      preview: `<p class="text-sm">Read our <a class="link link-primary" href="#">documentation</a> to get started.</p>`,
+      preview: `<p class="text-sm">Read our <DuLink href="#" variant="primary">documentation</DuLink> to get started.</p>`,
       code: `<p>Read our <DuLink href="/docs" variant="primary">documentation</DuLink> to get started.</p>`,
     },
     {
       title: 'All variants',
       preview: `<div class="flex flex-wrap gap-3">
-  <a class="link link-primary" href="#">Primary</a>
-  <a class="link link-secondary" href="#">Secondary</a>
-  <a class="link link-accent" href="#">Accent</a>
-  <a class="link link-neutral" href="#">Neutral</a>
-  <a class="link link-success" href="#">Success</a>
-  <a class="link link-error" href="#">Error</a>
+  <DuLink href="#" variant="primary">Primary</DuLink>
+  <DuLink href="#" variant="secondary">Secondary</DuLink>
+  <DuLink href="#" variant="accent">Accent</DuLink>
+  <DuLink href="#" variant="neutral">Neutral</DuLink>
+  <DuLink href="#" variant="success">Success</DuLink>
+  <DuLink href="#" variant="error">Error</DuLink>
 </div>`,
       code: `<DuLink href="/" variant="primary">Primary</DuLink>
 <DuLink href="/" variant="secondary">Secondary</DuLink>

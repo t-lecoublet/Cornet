@@ -8,13 +8,13 @@ export default {
   sections: [
     {
       title: 'Basic',
-      preview: `<div class="breadcrumbs text-sm">
-  <ul>
-    <li><a>Home</a></li>
-    <li><a>Components</a></li>
-    <li>Breadcrumbs</li>
-  </ul>
-</div>`,
+      preview: `<DuBreadcrumbs
+  :items="[
+    { label: 'Home', href: '/' },
+    { label: 'Components', href: '/docs' },
+    { label: 'Breadcrumbs' },
+  ]"
+/>`,
       code: `<DuBreadcrumbs
   :items="[
     { label: 'Home', href: '/' },
@@ -25,6 +25,13 @@ export default {
     },
     {
       title: 'With icons',
+      preview: `<DuBreadcrumbs
+  :items="[
+    { label: 'Home', href: '/' },
+    { label: 'Docs', href: '/docs' },
+    { label: 'Breadcrumbs' },
+  ]"
+/>`,
       code: `<DuBreadcrumbs
   :items="[
     { label: 'Home', href: '/', icon: HomeIcon },

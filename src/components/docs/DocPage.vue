@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import type { DocPageData } from '@/types/docs'
 import PropsTable from './PropsTable.vue'
 import CodeBlock from '@/components/CodeBlock.vue'
+import LivePreview from './LivePreview.vue'
 
 defineProps<{ data: DocPageData }>()
 
@@ -66,12 +67,13 @@ async function copyCode(code: string, idx: number) {
           {{ section.description }}
         </p>
 
-        <!-- Preview box (raw DaisyUI HTML) -->
+        <!-- Live Vue preview -->
         <div
           v-if="section.preview"
-          class="border border-base-300 rounded-t-xl bg-base-100 px-6 py-8 flex items-center justify-center flex-wrap gap-3 min-h-20"
-          v-html="section.preview"
-        />
+          class="border border-base-300 rounded-t-xl bg-base-100 px-6 py-8"
+        >
+          <LivePreview :code="section.preview" />
+        </div>
 
         <!-- Code block -->
         <div :class="section.preview ? 'rounded-b-xl overflow-hidden border border-t-0 border-base-300' : 'rounded-xl overflow-hidden border border-base-300'">

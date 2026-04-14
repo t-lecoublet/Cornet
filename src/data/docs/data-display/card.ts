@@ -22,18 +22,22 @@ export default {
   sections: [
     {
       title: 'Basic',
-      preview: `<div class="card bg-base-100 border border-base-300 w-72">
-  <div class="card-body">
-    <h2 class="card-title">Card title</h2>
-    <p>Card content goes here.</p>
-  </div>
-</div>`,
+      preview: `<DuCard bordered title="Card title" class="w-72">
+  Card content goes here.
+</DuCard>`,
       code: `<DuCard bordered title="Card title">
   Card content goes here.
 </DuCard>`,
     },
     {
       title: 'With actions slot',
+      preview: `<DuCard bordered title="My Product" class="w-72">
+  <p>A great product description.</p>
+  <template #actions>
+    <DuButton variant="primary" size="sm">Buy now</DuButton>
+    <DuButton ghost size="sm">Details</DuButton>
+  </template>
+</DuCard>`,
       code: `<DuCard bordered title="My Product">
   <p>A great product description.</p>
   <template #actions>
@@ -44,13 +48,12 @@ export default {
     },
     {
       title: 'With image',
-      preview: `<div class="card bg-base-100 border border-base-300 w-72">
-  <figure><img src="https://picsum.photos/seed/cornet/400/200" alt="placeholder" class="w-full h-36 object-cover" /></figure>
-  <div class="card-body">
-    <h2 class="card-title">Card with image</h2>
-    <p>A beautiful card.</p>
-  </div>
-</div>`,
+      preview: `<DuCard bordered title="Card with image" class="w-72">
+  <template #image>
+    <img src="https://picsum.photos/seed/cornet/400/200" alt="placeholder" class="w-full h-36 object-cover" />
+  </template>
+  A beautiful card.
+</DuCard>`,
       code: `<DuCard bordered title="Card with image">
   <template #image>
     <img src="/image.jpg" alt="..." />
@@ -60,6 +63,9 @@ export default {
     },
     {
       title: 'Side image',
+      preview: `<DuCard bordered side title="Side card" class="w-72">
+  Content next to the image.
+</DuCard>`,
       code: `<DuCard bordered side title="Side card">
   <template #image>
     <img src="/image.jpg" alt="..." class="w-32 object-cover" />
@@ -69,18 +75,18 @@ export default {
     },
     {
       title: 'Dashed border',
-      preview: `<div class="card card-border w-72 border-2 border-dashed border-base-300">
-  <div class="card-body">
-    <h2 class="card-title">Dashed card</h2>
-    <p>Drop zone or placeholder.</p>
-  </div>
-</div>`,
+      preview: `<DuCard dash title="Dashed card" class="w-72">
+  Drop zone or placeholder.
+</DuCard>`,
       code: `<DuCard dash title="Dashed card">
   Drop zone or placeholder.
 </DuCard>`,
     },
     {
       title: 'Custom class',
+      preview: `<DuCard bordered customClass="bg-primary/10 border-primary/30" title="Styled card" class="w-72">
+  Custom styled card content.
+</DuCard>`,
       code: `<DuCard bordered customClass="bg-primary/10 border-primary/30" title="Styled card">
   Custom styled card content.
 </DuCard>`,

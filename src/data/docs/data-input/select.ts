@@ -27,6 +27,11 @@ export default {
   sections: [
     {
       title: 'Basic (string options)',
+      preview: `<DuSelect
+  :options="['Apple', 'Banana', 'Cherry']"
+  placeholder="Choose a fruit"
+  class="w-72"
+/>`,
       code: `<DuSelect
   v-model="selected"
   :options="['Apple', 'Banana', 'Cherry']"
@@ -35,6 +40,17 @@ export default {
     },
     {
       title: 'Object options',
+      preview: `<DuSelect
+  :options="[
+    { id: 1, name: 'Vue' },
+    { id: 2, name: 'React' },
+    { id: 3, name: 'Angular' },
+  ]"
+  trackBy="id"
+  labelBy="name"
+  placeholder="Choose a framework"
+  class="w-72"
+/>`,
       code: `<DuSelect
   v-model="selected"
   :options="[
@@ -60,6 +76,12 @@ export default {
     },
     {
       title: 'Multi-select',
+      preview: `<DuSelect
+  :options="['Vue', 'React', 'Angular', 'Svelte']"
+  multiple
+  placeholder="Select frameworks..."
+  class="w-72"
+/>`,
       code: `<DuSelect
   v-model="selectedTags"
   :options="tags"
@@ -71,6 +93,13 @@ export default {
     },
     {
       title: 'Multi-select with checkboxes',
+      preview: `<DuSelect
+  :options="['Vue', 'React', 'Angular', 'Svelte']"
+  multiple
+  checkboxes
+  placeholder="Select frameworks..."
+  class="w-72"
+/>`,
       code: `<DuSelect
   v-model="selectedTags"
   :options="tags"
@@ -83,6 +112,12 @@ export default {
     },
     {
       title: 'Searchable',
+      preview: `<DuSelect
+  :options="['Apple', 'Banana', 'Cherry', 'Grape', 'Mango', 'Orange']"
+  searchable
+  placeholder="Choose a fruit"
+  class="w-72"
+/>`,
       code: `<!-- Search field above the dropdown -->
 <DuSelect
   v-model="selected"
@@ -105,6 +140,12 @@ export default {
     },
     {
       title: 'Sizes',
+      preview: `<div class="flex flex-col gap-2 w-72">
+  <DuSelect :options="['Apple', 'Banana']" size="xs" placeholder="XSmall" />
+  <DuSelect :options="['Apple', 'Banana']" size="sm" placeholder="Small" />
+  <DuSelect :options="['Apple', 'Banana']" placeholder="Medium" />
+  <DuSelect :options="['Apple', 'Banana']" size="lg" placeholder="Large" />
+</div>`,
       code: `<DuSelect v-model="val" :options="opts" size="xs" />
 <DuSelect v-model="val" :options="opts" size="sm" />
 <DuSelect v-model="val" :options="opts" />
@@ -112,6 +153,11 @@ export default {
     },
     {
       title: 'Variants',
+      preview: `<div class="flex flex-col gap-2 w-72">
+  <DuSelect :options="['Apple', 'Banana']" variant="primary" placeholder="Primary" />
+  <DuSelect :options="['Apple', 'Banana']" variant="success" placeholder="Success" />
+  <DuSelect :options="['Apple', 'Banana']" variant="error" placeholder="Error" />
+</div>`,
       code: `<DuSelect v-model="val" :options="opts" variant="primary" />
 <DuSelect v-model="val" :options="opts" variant="success" />
 <DuSelect v-model="val" :options="opts" variant="error" />`,

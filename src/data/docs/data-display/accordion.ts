@@ -18,16 +18,14 @@ export default {
       title: 'Basic — slot mode',
       description: 'Wrap DuAccordionItem elements inside DuAccordion. Share the same `name` to link items in a radio group.',
       preview: `<div class="w-72">
-  <div class="collapse collapse-arrow bg-base-100 border border-base-300">
-    <input type="radio" name="demo-acc" checked />
-    <div class="collapse-title font-semibold">What is Cornet?</div>
-    <div class="collapse-content text-sm">A Vue 3 component library powered by DaisyUI 5.</div>
-  </div>
-  <div class="collapse collapse-arrow bg-base-100 border border-base-300">
-    <input type="radio" name="demo-acc" />
-    <div class="collapse-title font-semibold">Is it free?</div>
-    <div class="collapse-content text-sm">Yes, open source and free.</div>
-  </div>
+  <DuAccordion name="demo-acc" modifier="collapse-arrow">
+    <DuAccordionItem title="What is Cornet?" :checked="true">
+      A Vue 3 component library powered by DaisyUI 5.
+    </DuAccordionItem>
+    <DuAccordionItem title="Is it free?">
+      Yes, open source and free.
+    </DuAccordionItem>
+  </DuAccordion>
 </div>`,
       code: `<DuAccordion name="faq" modifier="collapse-arrow">
   <DuAccordionItem title="What is Cornet?" :checked="true">
@@ -44,6 +42,16 @@ export default {
     {
       title: 'Dynamic items mode',
       description: 'Pass an `items` array directly to DuAccordion to render programmatically.',
+      preview: `<div class="w-72">
+  <DuAccordion
+    name="faq-dyn"
+    modifier="collapse-arrow"
+    :items="[
+      { title: 'What is Cornet?', content: 'A Vue 3 component library.' },
+      { title: 'Is it free?', content: 'Yes, open source.' },
+    ]"
+  />
+</div>`,
       code: `<DuAccordion
   name="faq"
   modifier="collapse-arrow"
@@ -55,6 +63,12 @@ export default {
     },
     {
       title: 'Plus/minus indicator',
+      preview: `<div class="w-72">
+  <DuAccordion name="plus-faq" modifier="collapse-plus">
+    <DuAccordionItem title="Section 1">Content 1</DuAccordionItem>
+    <DuAccordionItem title="Section 2">Content 2</DuAccordionItem>
+  </DuAccordion>
+</div>`,
       code: `<DuAccordion name="plus-faq" modifier="collapse-plus">
   <DuAccordionItem title="Section 1">Content 1</DuAccordionItem>
   <DuAccordionItem title="Section 2">Content 2</DuAccordionItem>
@@ -62,6 +76,20 @@ export default {
     },
     {
       title: 'Custom title slot',
+      preview: `<div class="w-72">
+  <DuAccordion name="custom-acc-prev" modifier="collapse-arrow">
+    <DuAccordionItem>
+      <template #title>
+        <div class="flex items-center gap-2">
+          <DuBadge variant="primary" size="sm">NEW</DuBadge>
+          Custom title
+        </div>
+      </template>
+      Content here.
+    </DuAccordionItem>
+    <DuAccordionItem title="Normal title">Normal content.</DuAccordionItem>
+  </DuAccordion>
+</div>`,
       code: `<DuAccordion name="custom-acc" modifier="collapse-arrow">
   <DuAccordionItem>
     <template #title>

@@ -25,10 +25,10 @@ export default {
   sections: [
     {
       title: 'Basic',
-      preview: `<div class="flex items-center gap-2">
-  <input type="checkbox" class="checkbox" />
+      preview: `<label class="flex items-center gap-2 cursor-pointer">
+  <DuCheckbox :checked="true" />
   <span class="text-sm">Accept terms</span>
-</div>`,
+</label>`,
       code: `<label class="flex items-center gap-2">
   <DuCheckbox v-model="accepted" />
   Accept terms
@@ -37,11 +37,11 @@ export default {
     {
       title: 'Variants',
       preview: `<div class="flex flex-wrap gap-3">
-  <input type="checkbox" class="checkbox checkbox-primary" checked />
-  <input type="checkbox" class="checkbox checkbox-secondary" checked />
-  <input type="checkbox" class="checkbox checkbox-accent" checked />
-  <input type="checkbox" class="checkbox checkbox-success" checked />
-  <input type="checkbox" class="checkbox checkbox-error" checked />
+  <DuCheckbox variant="primary" :checked="true" />
+  <DuCheckbox variant="secondary" :checked="true" />
+  <DuCheckbox variant="accent" :checked="true" />
+  <DuCheckbox variant="success" :checked="true" />
+  <DuCheckbox variant="error" :checked="true" />
 </div>`,
       code: `<DuCheckbox v-model="val" variant="primary" />
 <DuCheckbox v-model="val" variant="secondary" />
@@ -52,11 +52,11 @@ export default {
     {
       title: 'Sizes',
       preview: `<div class="flex items-center gap-3">
-  <input type="checkbox" class="checkbox checkbox-xs" checked />
-  <input type="checkbox" class="checkbox checkbox-sm" checked />
-  <input type="checkbox" class="checkbox" checked />
-  <input type="checkbox" class="checkbox checkbox-lg" checked />
-  <input type="checkbox" class="checkbox checkbox-xl" checked />
+  <DuCheckbox size="xs" :checked="true" />
+  <DuCheckbox size="sm" :checked="true" />
+  <DuCheckbox :checked="true" />
+  <DuCheckbox size="lg" :checked="true" />
+  <DuCheckbox size="xl" :checked="true" />
 </div>`,
       code: `<DuCheckbox v-model="val" size="xs" />
 <DuCheckbox v-model="val" size="sm" />
@@ -66,7 +66,7 @@ export default {
     },
     {
       title: 'Disabled',
-      preview: `<input type="checkbox" class="checkbox" disabled />`,
+      preview: `<DuCheckbox disabled :checked="true" />`,
       code: `<DuCheckbox v-model="val" disabled />`,
     },
   ],

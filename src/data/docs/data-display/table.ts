@@ -21,15 +21,17 @@ export default {
   sections: [
     {
       title: 'Basic',
-      preview: `<div class="overflow-x-auto rounded-xl border border-base-300 w-full">
-  <table class="table">
-    <thead><tr><th>Name</th><th>Email</th><th>Role</th></tr></thead>
-    <tbody>
-      <tr><td>Alice</td><td>alice@example.com</td><td>Admin</td></tr>
-      <tr><td>Bob</td><td>bob@example.com</td><td>User</td></tr>
-    </tbody>
-  </table>
-</div>`,
+      preview: `<DuTable
+  :columns="[
+    { key: 'name', label: 'Name' },
+    { key: 'email', label: 'Email' },
+    { key: 'role', label: 'Role' },
+  ]"
+  :rows="[
+    { name: 'Alice', email: 'alice@example.com', role: 'Admin' },
+    { name: 'Bob', email: 'bob@example.com', role: 'User' },
+  ]"
+/>`,
       code: `<DuTable
   :columns="[
     { key: 'name', label: 'Name' },
@@ -44,6 +46,18 @@ export default {
     },
     {
       title: 'Zebra stripes',
+      preview: `<DuTable
+  zebra
+  :columns="[
+    { key: 'name', label: 'Name' },
+    { key: 'role', label: 'Role' },
+  ]"
+  :rows="[
+    { name: 'Alice', role: 'Admin' },
+    { name: 'Bob', role: 'User' },
+    { name: 'Charlie', role: 'User' },
+  ]"
+/>`,
       code: `<DuTable zebra :columns="columns" :rows="rows" />`,
     },
     {
@@ -61,6 +75,16 @@ export default {
     },
     {
       title: 'Sizes',
+      preview: `<div class="flex flex-col gap-4">
+  <DuTable size="xs"
+    :columns="[{ key: 'name', label: 'Name' }, { key: 'role', label: 'Role' }]"
+    :rows="[{ name: 'Alice', role: 'Admin' }, { name: 'Bob', role: 'User' }]"
+  />
+  <DuTable size="lg"
+    :columns="[{ key: 'name', label: 'Name' }, { key: 'role', label: 'Role' }]"
+    :rows="[{ name: 'Alice', role: 'Admin' }, { name: 'Bob', role: 'User' }]"
+  />
+</div>`,
       code: `<DuTable size="xs" :columns="columns" :rows="rows" />
 <DuTable size="sm" :columns="columns" :rows="rows" />
 <DuTable size="md" :columns="columns" :rows="rows" />

@@ -8,11 +8,16 @@ export default {
   sections: [
     {
       title: 'Basic',
-      preview: `<fieldset class="fieldset border border-base-300 rounded-xl p-4 w-72">
-  <legend class="fieldset-legend px-2">Account</legend>
-  <label class="label">Email<input type="email" class="input" placeholder="your@email.com" /></label>
-  <label class="label">Password<input type="password" class="input" /></label>
-</fieldset>`,
+      preview: `<DuFieldset legend="Account" class="w-72">
+  <DuLabel type="label">
+    Email
+    <DuInputField type="email" placeholder="your@email.com" />
+  </DuLabel>
+  <DuLabel type="label">
+    Password
+    <DuInputField type="password" placeholder="••••••••" />
+  </DuLabel>
+</DuFieldset>`,
       code: `<DuFieldset legend="Account">
   <DuLabel type="label">
     Email
@@ -26,6 +31,12 @@ export default {
     },
     {
       title: 'With helper text',
+      preview: `<DuFieldset legend="Profile" hint="All fields are required." class="w-72">
+  <DuLabel type="label">
+    Name
+    <DuInputField placeholder="John Doe" />
+  </DuLabel>
+</DuFieldset>`,
       code: `<DuFieldset legend="Profile" hint="All fields are required.">
   <DuLabel type="label">
     Name

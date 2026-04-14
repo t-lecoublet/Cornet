@@ -9,9 +9,7 @@ export default {
     {
       title: 'Single value',
       description: 'DuCountdown with a static `:value` prop.',
-      preview: `<span class="countdown font-mono text-4xl">
-  <span style="--value:47;"></span>
-</span>`,
+      preview: `<DuCountdown :value="47" />`,
       code: `<DuCountdown :value="47" />`,
     },
     {
@@ -42,13 +40,25 @@ const deadline = new Date(Date.now() + 1000 * 60 * 60 * 3) // 3 hours from now
       title: 'Full countdown group',
       description: 'DuCountdownGroup renders days / hours / minutes / seconds all at once from a single `targetDate`.',
       preview: `<div class="flex items-center gap-2 font-mono text-4xl">
-  <div class="flex flex-col items-center"><span class="countdown"><span style="--value:2;"></span></span><span class="text-xs mt-1">days</span></div>
+  <div class="flex flex-col items-center">
+    <DuCountdown :value="2" />
+    <span class="text-xs mt-1">days</span>
+  </div>
   <span class="text-xl">:</span>
-  <div class="flex flex-col items-center"><span class="countdown"><span style="--value:10;"></span></span><span class="text-xs mt-1">hours</span></div>
+  <div class="flex flex-col items-center">
+    <DuCountdown :value="10" />
+    <span class="text-xs mt-1">hours</span>
+  </div>
   <span class="text-xl">:</span>
-  <div class="flex flex-col items-center"><span class="countdown"><span style="--value:24;"></span></span><span class="text-xs mt-1">min</span></div>
+  <div class="flex flex-col items-center">
+    <DuCountdown :value="24" />
+    <span class="text-xs mt-1">min</span>
+  </div>
   <span class="text-xl">:</span>
-  <div class="flex flex-col items-center"><span class="countdown"><span style="--value:50;"></span></span><span class="text-xs mt-1">sec</span></div>
+  <div class="flex flex-col items-center">
+    <DuCountdown :value="50" />
+    <span class="text-xs mt-1">sec</span>
+  </div>
 </div>`,
       code: `<script setup lang="ts">
 const deadline = new Date('2025-12-31T23:59:59')

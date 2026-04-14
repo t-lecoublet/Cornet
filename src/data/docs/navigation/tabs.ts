@@ -22,6 +22,15 @@ export default {
   sections: [
     {
       title: 'Border style',
+      preview: `<DuTabs
+  :items="[{ label: 'Overview' }, { label: 'Settings' }, { label: 'Analytics' }]"
+  type="border"
+  name="preview_border"
+>
+  <template #content-0><p class="p-4 text-sm">Overview content</p></template>
+  <template #content-1><p class="p-4 text-sm">Settings content</p></template>
+  <template #content-2><p class="p-4 text-sm">Analytics content</p></template>
+</DuTabs>`,
       code: `<DuTabs v-model="activeTab" :items="tabs" type="border" name="main_tabs">
   <template #content-0>Content for tab 1</template>
   <template #content-1>Content for tab 2</template>
@@ -30,6 +39,15 @@ export default {
     },
     {
       title: 'Box (pill) style',
+      preview: `<DuTabs
+  :items="[{ label: 'Tab 1' }, { label: 'Tab 2' }, { label: 'Tab 3' }]"
+  type="box"
+  name="preview_box"
+>
+  <template #content-0><p class="p-4 text-sm">Content 1</p></template>
+  <template #content-1><p class="p-4 text-sm">Content 2</p></template>
+  <template #content-2><p class="p-4 text-sm">Content 3</p></template>
+</DuTabs>`,
       code: `<DuTabs v-model="activeTab" :items="tabs" type="box" name="box_tabs">
   <template #content-0>Content 1</template>
   <template #content-1>Content 2</template>
@@ -37,6 +55,14 @@ export default {
     },
     {
       title: 'Lifted style',
+      preview: `<DuTabs
+  :items="[{ label: 'Tab A' }, { label: 'Tab B' }]"
+  type="lift"
+  name="preview_lift"
+>
+  <template #content-0><p class="p-4 text-sm">Content A</p></template>
+  <template #content-1><p class="p-4 text-sm">Content B</p></template>
+</DuTabs>`,
       code: `<DuTabs v-model="activeTab" :items="tabs" type="lift" name="lift_tabs">
   <template #content-0>Content 1</template>
   <template #content-1>Content 2</template>
@@ -44,6 +70,15 @@ export default {
     },
     {
       title: 'Tabs at bottom',
+      preview: `<DuTabs
+  :items="[{ label: 'Tab 1' }, { label: 'Tab 2' }]"
+  type="border"
+  :bottom="true"
+  name="preview_bottom"
+>
+  <template #content-0><p class="p-4 text-sm">Content 1</p></template>
+  <template #content-1><p class="p-4 text-sm">Content 2</p></template>
+</DuTabs>`,
       code: `<DuTabs v-model="activeTab" :items="tabs" type="border" :bottom="true" name="bottom_tabs">
   <template #content-0>Content 1</template>
 </DuTabs>`,

@@ -26,17 +26,28 @@ export default {
   sections: [
     {
       title: 'Basic',
-      preview: `<textarea class="textarea w-72" placeholder="Write something..."></textarea>`,
+      preview: `<DuTextArea placeholder="Write something..." class="w-72" />`,
       code: `<DuTextArea v-model="message" placeholder="Write something..." />`,
     },
     {
       title: 'Variants',
+      preview: `<div class="flex flex-col gap-2 w-72">
+  <DuTextArea variant="primary" placeholder="Primary" />
+  <DuTextArea variant="success" placeholder="Success" />
+  <DuTextArea variant="error" placeholder="Error" />
+</div>`,
       code: `<DuTextArea v-model="msg" variant="primary" placeholder="Primary" />
 <DuTextArea v-model="msg" variant="success" placeholder="Success" />
 <DuTextArea v-model="msg" variant="error" placeholder="Error" />`,
     },
     {
       title: 'Sizes',
+      preview: `<div class="flex flex-col gap-2 w-72">
+  <DuTextArea size="xs" placeholder="XSmall" />
+  <DuTextArea size="sm" placeholder="Small" />
+  <DuTextArea placeholder="Medium" />
+  <DuTextArea size="lg" placeholder="Large" />
+</div>`,
       code: `<DuTextArea v-model="msg" size="xs" placeholder="XSmall" />
 <DuTextArea v-model="msg" size="sm" placeholder="Small" />
 <DuTextArea v-model="msg" placeholder="Medium" />
@@ -44,10 +55,12 @@ export default {
     },
     {
       title: 'Disabled',
+      preview: `<DuTextArea disabled placeholder="Disabled" class="w-72" />`,
       code: `<DuTextArea v-model="msg" disabled placeholder="Disabled" />`,
     },
     {
       title: 'With rows',
+      preview: `<DuTextArea :rows="6" placeholder="Custom row height..." class="w-72" />`,
       code: `<DuTextArea v-model="msg" :rows="6" placeholder="Custom row height..." />`,
     },
   ],

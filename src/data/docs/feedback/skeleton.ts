@@ -8,15 +8,15 @@ export default {
   sections: [
     {
       title: 'Basic',
-      preview: `<div class="skeleton h-24 w-72 rounded-xl"></div>`,
+      preview: `<DuSkeleton class="h-24 w-72 rounded-xl" />`,
       code: `<DuSkeleton class="h-24 w-full" />`,
     },
     {
       title: 'Card skeleton',
       preview: `<div class="flex flex-col gap-3 w-64">
-  <div class="skeleton h-36 w-full rounded-xl"></div>
-  <div class="skeleton h-4 w-3/4"></div>
-  <div class="skeleton h-4 w-1/2"></div>
+  <DuSkeleton class="h-36 w-full rounded-xl" />
+  <DuSkeleton class="h-4 w-3/4" />
+  <DuSkeleton class="h-4 w-1/2" />
 </div>`,
       code: `<div class="flex flex-col gap-3 w-64">
   <DuSkeleton class="h-36 w-full rounded-xl" />
@@ -26,19 +26,19 @@ export default {
     },
     {
       title: 'List skeleton',
-      preview: `<div class="flex flex-col gap-2 w-72">
+      preview: `<div class="flex flex-col gap-3 w-72">
   <div class="flex items-center gap-3">
-    <div class="skeleton w-10 h-10 rounded-full shrink-0"></div>
+    <DuSkeleton class="w-10 h-10 rounded-full shrink-0" />
     <div class="flex flex-col gap-2 flex-1">
-      <div class="skeleton h-3 w-32"></div>
-      <div class="skeleton h-3 w-24"></div>
+      <DuSkeleton class="h-3 w-32" />
+      <DuSkeleton class="h-3 w-24" />
     </div>
   </div>
   <div class="flex items-center gap-3">
-    <div class="skeleton w-10 h-10 rounded-full shrink-0"></div>
+    <DuSkeleton class="w-10 h-10 rounded-full shrink-0" />
     <div class="flex flex-col gap-2 flex-1">
-      <div class="skeleton h-3 w-28"></div>
-      <div class="skeleton h-3 w-20"></div>
+      <DuSkeleton class="h-3 w-28" />
+      <DuSkeleton class="h-3 w-20" />
     </div>
   </div>
 </div>`,

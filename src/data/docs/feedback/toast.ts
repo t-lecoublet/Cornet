@@ -18,6 +18,9 @@ export default {
   sections: [
     {
       title: 'Basic',
+      preview: `<DuToast horizontalPosition="end" verticalPosition="top">
+  <DuAlert variant="success" icon>Saved successfully!</DuAlert>
+</DuToast>`,
       code: `<DuToast horizontalPosition="end" verticalPosition="top">
   <DuAlert variant="success" icon>Saved successfully!</DuAlert>
 </DuToast>`,

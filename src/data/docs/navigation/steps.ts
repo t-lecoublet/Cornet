@@ -14,12 +14,17 @@ export default {
   sections: [
     {
       title: 'Basic',
-      preview: `<ul class="steps w-full">
-  <li class="step step-primary">Register</li>
-  <li class="step step-primary">Verify</li>
-  <li class="step">Profile</li>
-  <li class="step">Finish</li>
-</ul>`,
+      preview: `<DuSteps
+  :items="[
+    { label: 'Register', dataContent: '1' },
+    { label: 'Verify', dataContent: '2' },
+    { label: 'Profile', dataContent: '3' },
+    { label: 'Finish', dataContent: '4' },
+  ]"
+  :activeSteps="[0, 1]"
+  variant="primary"
+  direction="steps-horizontal"
+/>`,
       code: `<DuSteps
   :items="[
     { label: 'Register', dataContent: '1' },
@@ -34,6 +39,17 @@ export default {
     },
     {
       title: 'Vertical steps',
+      preview: `<DuSteps
+  :items="[
+    { label: 'Order placed' },
+    { label: 'Processing' },
+    { label: 'Shipped' },
+    { label: 'Delivered' },
+  ]"
+  :activeSteps="[0, 1, 2]"
+  variant="success"
+  direction="steps-vertical"
+/>`,
       code: `<DuSteps
   :items="[
     { label: 'Order placed' },
@@ -48,6 +64,15 @@ export default {
     },
     {
       title: 'Custom icons',
+      preview: `<DuSteps
+  :items="[
+    { label: 'Cart', dataContent: '🛒' },
+    { label: 'Payment', dataContent: '💳' },
+    { label: 'Done', dataContent: '✓' },
+  ]"
+  :activeSteps="[0]"
+  variant="primary"
+/>`,
       code: `<DuSteps
   :items="[
     { label: 'Cart', dataContent: '🛒' },
