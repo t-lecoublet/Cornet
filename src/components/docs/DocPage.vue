@@ -2,7 +2,6 @@
 import { ref } from 'vue'
 import type { DocPageData } from '@/types/docs'
 import PropsTable from './PropsTable.vue'
-import CodeBlock from '@/components/CodeBlock.vue'
 import LivePreview from './LivePreview.vue'
 
 defineProps<{ data: DocPageData }>()
@@ -53,7 +52,7 @@ async function copyCode(code: string, idx: number) {
     <section v-if="data.sections.length" class="space-y-10">
       <div
         v-for="(section, idx) in data.sections"
-        :key="idx"
+        :key="`${data.title}-${idx}`"
         class="group"
       >
         <!-- Section title -->
