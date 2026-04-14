@@ -5,6 +5,179 @@ export default {
   description: 'Select is a custom dropdown for picking a single or multiple values from a list of options.',
   category: 'Data Input',
   source: 'https://daisyui.com/components/select/',
+  props: [
+    {
+      title: 'options',
+      description: 'Array of options (strings or objects)',
+      type: '(string | object)[]',
+      required: true,
+    },
+    {
+      title: 'modelValue',
+      description: 'Selected value(s)',
+      type: 'any',
+    },
+    {
+      title: 'multiple',
+      description: 'Allow selecting multiple values',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'placeholder',
+      description: 'Placeholder text when nothing is selected',
+      type: 'string',
+      default: '"Choisissez..."',
+    },
+    {
+      title: 'searchable',
+      description: 'Enable search input above dropdown',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'searchableInside',
+      description: 'Enable search input inside dropdown',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'checkboxes',
+      description: 'Show checkboxes for multi-select options',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'closeOnSelect',
+      description: 'Close dropdown after selecting (single select only)',
+      type: 'boolean',
+      default: 'true',
+    },
+    {
+      title: 'trackBy',
+      description: 'Property name to use as value for object options',
+      type: 'string',
+      default: '"id"',
+    },
+    {
+      title: 'labelBy',
+      description: 'Property name to use as label for object options',
+      type: 'string',
+      default: '"name"',
+    },
+    {
+      title: 'returnObject',
+      description: 'Return full object instead of just the trackBy value',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'ghost',
+      description: 'Use ghost/transparent style',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'variant',
+      description: 'Color variant',
+      type: 'string',
+      options: ['default', 'primary', 'secondary', 'accent', 'info', 'success', 'warning', 'error'],
+    },
+    {
+      title: 'size',
+      description: 'Size of the select',
+      type: 'string',
+      default: '"default"',
+      options: ['xs', 'sm', 'md', 'lg', 'xl'],
+    },
+    {
+      title: 'disabled',
+      description: 'Disable the select',
+      type: 'boolean',
+      default: 'false',
+    },
+  ],
+  slots: [
+    {
+      title: 'Slot #selected',
+      description: 'Custom display for selected value (single select)',
+      preview: `<DuSelect
+  v-model="selected"
+  :options="options"
+  placeholder="Choose..."
+>
+  <template #selected="{ selected }">
+    <span v-if="selected" class="text-primary">{{ selected.name }}</span>
+    <span v-else class="text-base-content/50">Choose...</span>
+  </template>
+</DuSelect>`,
+      code: `<DuSelect v-model="selected" :options="options">
+  <template #selected="{ selected }">
+    <span v-if="selected" class="text-primary">{{ selected.name }}</span>
+    <span v-else>Choose...</span>
+  </template>
+</DuSelect>`,
+    },
+    {
+      title: 'Slot #option',
+      description: 'Custom display for dropdown options with slot props: option, index',
+      preview: `<DuSelect
+  v-model="selected"
+  :options="options"
+  placeholder="Choose..."
+>
+  <template #option="{ option }">
+    <span class="flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full" :class="option.active ? 'bg-success' : 'bg-base-300'"></span>
+      {{ option.name }}
+    </span>
+  </template>
+</DuSelect>`,
+      code: `<DuSelect v-model="selected" :options="options">
+  <template #option="{ option, index }">
+    <span class="text-primary">{{ option.name }}</span>
+  </template>
+</DuSelect>`,
+    },
+    {
+      title: 'Slot #tag',
+      description: 'Custom display for selected tags (multi-select) with slot props: value, index',
+      preview: `<DuSelect
+  v-model="selected"
+  :options="options"
+  multiple
+  placeholder="Select..."
+>
+  <template #tag="{ value, index }">
+    <span class="badge badge-primary badge-sm">{{ value.name }}</span>
+  </template>
+</DuSelect>`,
+      code: `<DuSelect v-model="selected" :options="options" multiple>
+  <template #tag="{ value, index }">
+    <span class="badge badge-primary badge-sm">{{ value.name }}</span>
+  </template>
+</DuSelect>`,
+    },
+    {
+      title: 'Slot #no-options',
+      description: 'Content shown when no options match search',
+      preview: `<DuSelect
+  v-model="selected"
+  :options="options"
+  searchable
+  placeholder="Search..."
+>
+  <template #no-options>
+    <span class="text-error">No results found</span>
+  </template>
+</DuSelect>`,
+      code: `<DuSelect v-model="selected" :options="options" searchable>
+  <template #no-options>
+    <span class="text-error">No results found</span>
+  </template>
+</DuSelect>`,
+    },
+  ],
   classnames: {
     style: [
       { class: 'select-ghost', desc: 'Transparent ghost style' },

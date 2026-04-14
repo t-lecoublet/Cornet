@@ -5,6 +5,55 @@ export default {
   description: 'Chat bubbles are used to show messages in a conversation. DuChat wraps DuChatItem elements and sets a default placement. Each DuChatItem supports named slots for image, header, message, and footer.',
   category: 'Data Display',
   source: 'https://daisyui.com/components/chat/',
+  props: [
+    {
+      title: 'items',
+      description: 'Array of chat message objects with message, placement, variant, image, header, footer, and customClass',
+      type: 'ChatItem[]',
+    },
+    {
+      title: 'placement',
+      description: 'Default message placement when not specified on items',
+      type: 'string',
+      default: '"start"',
+      options: ['start', 'end'],
+    },
+    {
+      title: 'customClass',
+      description: 'Additional CSS classes for all chat items',
+      type: 'string',
+    },
+  ],
+  slots: [
+    {
+      title: 'Item slots (#image-{n}, #header-{n}, #message-{n}, #footer-{n})',
+      description: 'Customize chat message elements with slot props: item, index',
+      preview: `<DuChat
+  :items="[
+    { message: 'Hello!', placement: 'start' },
+    { message: 'Hey!', placement: 'end', variant: 'primary' },
+  ]"
+>
+  <template #image-0>
+    <img src="https://i.pravatar.cc/32?img=1" alt="Avatar" />
+  </template>
+  <template #header-0>
+    <span class="text-sm">Alice</span>
+  </template>
+  <template #message-0>
+    <span class="text-blue-600">Hello!</span>
+  </template>
+</DuChat>`,
+      code: `<DuChat :items="items">
+  <template #image-0>
+    <img :src="item.image" />
+  </template>
+  <template #header-0>
+    <span>{{ item.header }}</span>
+  </template>
+</DuChat>`,
+    },
+  ],
   sections: [
     {
       title: 'Basic',

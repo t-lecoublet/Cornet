@@ -86,5 +86,55 @@ export default {
   <DuBadge size="sm">5</DuBadge>
 </DuButton>`,
     },
+    {
+      title: 'Dash style',
+      preview: `<div class="flex flex-wrap gap-2 justify-center">
+  <DuBadge variant="primary" dash>Primary</DuBadge>
+  <DuBadge variant="success" dash>Success</DuBadge>
+</div>`,
+      code: `<DuBadge variant="primary" dash>Primary</DuBadge>
+<DuBadge variant="success" dash>Success</DuBadge>`,
+    },
+    {
+      title: 'With icon',
+      description: 'The `icon` prop adds an icon based on the variant.',
+      preview: `<div class="flex flex-wrap gap-2 justify-center">
+  <DuBadge variant="info" icon>Info</DuBadge>
+  <DuBadge variant="success" icon>Success</DuBadge>
+  <DuBadge variant="warning" icon>Warning</DuBadge>
+  <DuBadge variant="error" icon>Error</DuBadge>
+</div>`,
+      code: `<DuBadge variant="info" icon>Info</DuBadge>
+<DuBadge variant="success" icon>Success</DuBadge>
+<DuBadge variant="warning" icon>Warning</DuBadge>
+<DuBadge variant="error" icon>Error</DuBadge>`,
+    },
+    {
+      title: 'Empty badge',
+      description: 'Badge without content, useful for indicators.',
+      preview: `<div class="flex items-center gap-4">
+  <DuBadge size="lg" variant="primary"></DuBadge>
+  <DuBadge size="md" variant="success"></DuBadge>
+  <DuBadge size="sm" variant="warning"></DuBadge>
+  <DuBadge size="xs" variant="error"></DuBadge>
+</div>`,
+      code: `<DuBadge size="lg" variant="primary"></DuBadge>
+<DuBadge size="md" variant="success"></DuBadge>
+<DuBadge size="sm" variant="warning"></DuBadge>
+<DuBadge size="xs" variant="error"></DuBadge>`,
+    },
+    {
+      title: 'In headings',
+      preview: `<div class="flex flex-col gap-2">
+  <h1 class="text-xl font-semibold">Heading <DuBadge size="lg">New</DuBadge></h1>
+  <h2 class="text-lg font-semibold">Section <DuBadge variant="secondary">Beta</DuBadge></h2>
+</div>`,
+      code: `<h1 class="text-xl font-semibold">
+  Heading <DuBadge size="lg">New</DuBadge>
+</h1>
+<h2 class="text-lg font-semibold">
+  Section <DuBadge variant="secondary">Beta</DuBadge>
+</h2>`,
+    },
   ],
 } satisfies DocPageData

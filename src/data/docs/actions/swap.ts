@@ -74,5 +74,34 @@ const active = ref(false)
   <template #indeterminate>⏳</template>
 </DuSwap>`,
     },
+    {
+      title: 'Without checkbox (useCheckbox)',
+      description: 'Use `useCheckbox={false}` to render as a div instead of a label with checkbox.',
+      preview: `<DuSwap :useCheckbox="false" class="text-2xl">
+  <template #on>☀️</template>
+  <template #off>🌙</template>
+</DuSwap>`,
+      code: `<DuSwap v-model="isDark" :useCheckbox="false">
+  <template #on>☀️</template>
+  <template #off>🌙</template>
+</DuSwap>`,
+    },
+    {
+      title: 'With images or icons',
+      preview: `<div class="flex flex-wrap gap-4 justify-center">
+  <DuSwap rotate class="text-4xl">
+    <template #on>🌙</template>
+    <template #off>☀️</template>
+  </DuSwap>
+  <DuSwap flip class="text-4xl">
+    <template #on>📖</template>
+    <template #off>🎮</template>
+  </DuSwap>
+</div>`,
+      code: `<DuSwap v-model="state" rotate>
+  <template #on>🌙</template>
+  <template #off>☀️</template>
+</DuSwap>`,
+    },
   ],
 } satisfies DocPageData

@@ -69,5 +69,11 @@ export default {
       preview: `<DuCheckbox disabled :checked="true" />`,
       code: `<DuCheckbox v-model="val" disabled />`,
     },
+    {
+      title: 'Indeterminate',
+      description: 'Use `indeterminate` prop to set the checkbox to an indeterminate state.',
+      preview: `<DuCheckbox indeterminate />`,
+      code: `<DuCheckbox v-model="val" indeterminate />`,
+    },
   ],
 } satisfies DocPageData

@@ -97,6 +97,24 @@ export default {
 <DuButton link>Link</DuButton>`,
     },
     {
+      title: 'Dash style',
+      preview: `<div class="flex flex-wrap gap-2 justify-center">
+  <DuButton variant="primary" dash>Dash Primary</DuButton>
+  <DuButton variant="secondary" dash>Dash Secondary</DuButton>
+</div>`,
+      code: `<DuButton variant="primary" dash>Dash Primary</DuButton>
+<DuButton variant="secondary" dash>Dash Secondary</DuButton>`,
+    },
+    {
+      title: 'Active',
+      preview: `<div class="flex flex-wrap gap-2 justify-center">
+  <DuButton variant="primary" active>Active</DuButton>
+  <DuButton variant="secondary" active>Active</DuButton>
+</div>`,
+      code: `<DuButton variant="primary" active>Active</DuButton>
+<DuButton variant="secondary" active>Active</DuButton>`,
+    },
+    {
       title: 'Sizes',
       preview: `<div class="flex flex-wrap items-center gap-2 justify-center">
   <DuButton size="xs">XSmall</DuButton>

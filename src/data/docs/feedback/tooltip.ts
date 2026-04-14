@@ -5,6 +5,63 @@ export default {
   description: 'Tooltip displays a small label when hovering over an element. The tooltip text is set via the `dataTip` prop. Use `position` to control placement and `open` to force it always visible.',
   category: 'Feedback',
   source: 'https://daisyui.com/components/tooltip/',
+  props: [
+    {
+      title: 'dataTip',
+      description: 'Text content of the tooltip',
+      type: 'string',
+    },
+    {
+      title: 'position',
+      description: 'Position of the tooltip relative to trigger',
+      type: 'string',
+      default: '"top"',
+      options: ['top', 'bottom', 'left', 'right'],
+    },
+    {
+      title: 'variant',
+      description: 'Color variant for the tooltip',
+      type: 'string',
+      default: '"default"',
+      options: ['default', 'primary', 'secondary', 'accent', 'info', 'success', 'warning', 'error'],
+    },
+    {
+      title: 'open',
+      description: 'Force tooltip to always be visible',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'responsive',
+      description: 'Enable responsive behavior (tooltip only on large screens)',
+      type: 'boolean',
+      default: 'false',
+    },
+  ],
+  slots: [
+    {
+      title: 'Slot #content',
+      description: 'Custom rich content for the tooltip instead of plain text',
+      preview: `<DuTooltip :open="true">
+  <template #content>
+    <div class="p-2">
+      <p class="font-bold">Rich tooltip</p>
+      <p class="text-xs">With multiple lines</p>
+    </div>
+  </template>
+  <DuButton>Hover me</DuButton>
+</DuTooltip>`,
+      code: `<DuTooltip>
+  <template #content>
+    <div class="p-2">
+      <p class="font-bold">Rich tooltip</p>
+      <p class="text-xs">With multiple lines</p>
+    </div>
+  </template>
+  <DuButton>Hover me</DuButton>
+</DuTooltip>`,
+    },
+  ],
   classnames: {
     placement: [
       { class: 'tooltip-top', desc: 'Shows above (default)', default: true },

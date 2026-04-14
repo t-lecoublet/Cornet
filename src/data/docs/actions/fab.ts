@@ -71,5 +71,103 @@ export default {
   ]"
 />`,
     },
+    {
+      title: 'Flower modifier',
+      description: 'Use `modifier="fab-flower"` for flower-style layout.',
+      preview: `<div class="relative h-40 w-64 border border-base-300 rounded-xl">
+  <DuFab
+    modifier="fab-flower"
+    :mainAction="{ label: '✕', variant: 'primary' }"
+    :items="[
+      { label: '📷', tooltip: 'Camera' },
+      { label: '📁', tooltip: 'Folder' },
+      { label: '⭐', tooltip: 'Star' },
+    ]"
+  />
+</div>`,
+      code: `<DuFab
+  modifier="fab-flower"
+  :mainAction="{ label: '✕', variant: 'primary' }"
+  :items="[
+    { label: '📷', tooltip: 'Camera' },
+    { label: '📁', tooltip: 'Folder' },
+    { label: '⭐', tooltip: 'Star' },
+  ]"
+/>`,
+    },
+    {
+      title: 'Positions',
+      description: 'Control where the FAB appears with `position` prop.',
+      preview: `<div class="relative h-40 w-64 border border-base-300 rounded-xl">
+  <DuFab
+    :mainAction="{ label: '↗', variant: 'primary' }"
+    :items="[{ label: 'Test' }]"
+    position="top-right"
+  />
+</div>`,
+      code: `<!-- Positions: top-right, top-left, bottom-right, bottom-left -->
+<DuFab
+  :mainAction="{ label: '↗', variant: 'primary' }"
+  :items="[{ label: 'Test' }]"
+  position="top-right"
+/>`,
+    },
+    {
+      title: 'With close button',
+      description: 'Show a close button when the FAB is expanded.',
+      preview: `<div class="relative h-32 w-64 border border-base-300 rounded-xl">
+  <DuFab
+    :mainAction="{ label: '+', variant: 'primary' }"
+    :items="[{ label: 'Item 1' }]"
+    :closeButton="{ label: 'Close' }"
+  />
+</div>`,
+      code: `<DuFab
+  :mainAction="{ label: '+', variant: 'primary' }"
+  :items="[{ label: 'Item 1' }]"
+  :closeButton="{ label: 'Close', variant: 'error' }"
+/>`,
+    },
+    {
+      title: 'Sizes & variants',
+      preview: `<div class="flex flex-col gap-4 items-center">
+  <div class="relative w-48 h-24 border border-base-300 rounded-xl">
+    <DuFab
+      :mainAction="{ label: 'S', variant: 'primary' }"
+      size="sm"
+      :items="[{ label: '1' }]"
+    />
+  </div>
+  <div class="relative w-48 h-24 border border-base-300 rounded-xl">
+    <DuFab
+      :mainAction="{ label: 'M', variant: 'secondary' }"
+      size="md"
+      :items="[{ label: '1' }]"
+    />
+  </div>
+  <div class="relative w-48 h-24 border border-base-300 rounded-xl">
+    <DuFab
+      :mainAction="{ label: 'L', variant: 'accent' }"
+      size="lg"
+      :items="[{ label: '1' }]"
+    />
+  </div>
+</div>`,
+      code: `<DuFab
+  :mainAction="{ label: 'S', variant: 'primary' }"
+  size="sm"
+  :items="[{ label: '1' }]"
+/>
+<DuFab
+  :mainAction="{ label: 'M', variant: 'secondary' }"
+  size="md"
+  :items="[{ label: '1' }]"
+/>
+<DuFab
+  :mainAction="{ label: 'L', variant: 'accent' }"
+  size="lg"
+  :items="[{ label: '1' }]"
+/>`,
+    },
   ],
 } satisfies DocPageData

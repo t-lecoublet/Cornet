@@ -2,9 +2,67 @@ import type { DocPageData } from '@/types/docs'
 
 export default {
   title: 'Dropdown',
-  description: 'Dropdown can open a menu or any other element when the button is clicked.',
+  description: 'Dropdown can open a menu or any other element when the button is clicked. Supports multiple placement formats: string, comma-separated, array, and object.',
   category: 'Actions',
   source: 'https://daisyui.com/components/dropdown/',
+  props: [
+    {
+      title: 'hover',
+      description: 'Open dropdown on hover instead of click',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'open',
+      description: 'Force dropdown to be open',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'placement',
+      description: 'Dropdown position (supports string, comma-separated, array, and object formats)',
+      type: 'string | string[] | object',
+      default: '"bottom"',
+    },
+  ],
+  slots: [
+    {
+      title: 'Slot #trigger',
+      description: 'Element that triggers the dropdown',
+      preview: `<DuDropdown>
+  <template #trigger>
+    <DuButton soft>Click me</DuButton>
+  </template>
+  <DuMenu :items="[{ label: 'Item 1' }]" class="bg-base-200 w-40" />
+</DuDropdown>`,
+      code: `<DuDropdown>
+  <template #trigger>
+    <DuButton>Click me</DuButton>
+  </template>
+  <DuMenu :items="[{ label: 'Item 1' }]" class="bg-base-200 w-40" />
+</DuDropdown>`,
+    },
+    {
+      title: 'Slot #content',
+      description: 'Content displayed in the dropdown panel',
+      preview: `<DuDropdown>
+  <template #trigger>
+    <DuButton soft>Menu</DuButton>
+  </template>
+  <template #content>
+    <DuMenu :items="items" class="bg-base-200 w-40" />
+  </template>
+</DuDropdown>`,
+      code: `<DuDropdown>
+  <template #trigger>
+    <DuButton>Menu</DuButton>
+  </template>
+  <template #content>
+    <div class="p-4">Custom content here</div>
+  </template>
+</DuDropdown>`,
+    },
+  ],
   classnames: {
     placement: [
       { class: 'bottom', desc: 'Opens downward', default: true },

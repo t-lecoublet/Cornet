@@ -2,9 +2,159 @@ import type { DocPageData } from '@/types/docs'
 
 export default {
   title: 'Search',
-  description: 'Search input with optional autocomplete suggestions via a datalist.',
+  description: 'Search input with optional autocomplete suggestions. Supports single/multiple selection and adding new options.',
   category: 'Data Input',
   source: 'https://daisyui.com/components/input/',
+  props: [
+    {
+      title: 'modelValue',
+      description: 'Selected value(s)',
+      type: 'SearchOption | SearchOption[]',
+    },
+    {
+      title: 'listValues',
+      description: 'Array of options for autocomplete',
+      type: 'SearchOption[]',
+      required: true,
+    },
+    {
+      title: 'placeholder',
+      description: 'Placeholder text',
+      type: 'string',
+    },
+    {
+      title: 'limit',
+      description: 'Maximum number of suggestions to show',
+      type: 'number',
+    },
+    {
+      title: 'addOption',
+      description: 'Allow adding new options not in listValues',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'multiple',
+      description: 'Allow selecting multiple values',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'size',
+      description: 'Size of the search input',
+      type: 'string',
+      default: '"default"',
+      options: ['xs', 'sm', 'md', 'lg', 'xl'],
+    },
+    {
+      title: 'variant',
+      description: 'Color variant',
+      type: 'string',
+      options: ['default', 'primary', 'secondary', 'accent', 'info', 'success', 'warning', 'error'],
+    },
+    {
+      title: 'ghost',
+      description: 'Use ghost/transparent style',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'disabled',
+      description: 'Disable the search input',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'id',
+      description: 'ID for the input element',
+      type: 'string',
+    },
+    {
+      title: 'name',
+      description: 'Name attribute for the input',
+      type: 'string',
+    },
+    {
+      title: 'type',
+      description: 'Input type',
+      type: 'string',
+      default: '"text"',
+    },
+    {
+      title: 'required',
+      description: 'Mark as required field',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'pattern',
+      description: 'Validation pattern',
+      type: 'string',
+    },
+  ],
+  slots: [
+    {
+      title: 'Slot #option',
+      description: 'Custom display for dropdown options with slot props: option, index',
+      preview: `<DuSearch
+  v-model="selected"
+  :listValues="listValues"
+  placeholder="Search..."
+>
+  <template #option="{ option }">
+    <span class="flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-base-300"></span>
+      {{ option.name }}
+    </span>
+  </template>
+</DuSearch>`,
+      code: `<DuSearch v-model="selected" :listValues="listValues">
+  <template #option="{ option, index }">
+    <span class="text-primary">{{ option.name }}</span>
+  </template>
+</DuSearch>`,
+    },
+    {
+      title: 'Slot #add-option',
+      description: 'Custom display for the "add new option" item with slot props: query',
+      preview: `<DuSearch
+  v-model="selected"
+  :listValues="listValues"
+  :addOption="true"
+  placeholder="Search or add..."
+>
+  <template #add-option="{ query }">
+    <span class="flex items-center gap-2 text-success">
+      <span>+</span>
+      Add "{{ query }}"
+    </span>
+  </template>
+</DuSearch>`,
+      code: `<DuSearch v-model="selected" :listValues="listValues" :addOption="true">
+  <template #add-option="{ query }">
+    <span class="text-success">Add "{{ query }}"</span>
+  </template>
+</DuSearch>`,
+    },
+    {
+      title: 'Slot #no-results',
+      description: 'Content shown when no results match query',
+      preview: `<DuSearch
+  v-model="selected"
+  :listValues="listValues"
+  placeholder="Search..."
+>
+  <template #no-results>
+    <span class="text-error">No results found</span>
+  </template>
+</DuSearch>`,
+      code: `<DuSearch v-model="selected" :listValues="listValues">
+  <template #no-results>
+    <span class="text-error">No results found</span>
+  </template>
+</DuSearch>`,
+    },
+  ],
   sections: [
     {
       title: 'Basic',

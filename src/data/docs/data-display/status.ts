@@ -42,12 +42,23 @@ export default {
     },
     {
       title: 'Ping animation',
+      description: 'The `ping` prop adds a pulsing ring animation.',
       preview: `<div class="flex items-center gap-3">
   <DuStatus variant="success" ping />
   <DuStatus variant="error" ping />
 </div>`,
       code: `<DuStatus variant="success" ping />
 <DuStatus variant="error" ping />`,
+    },
+    {
+      title: 'Bounce animation',
+      description: 'The `bounce` prop adds a bouncing animation.',
+      preview: `<div class="flex items-center gap-3">
+  <DuStatus variant="info" bounce />
+  <span class="text-sm">Unread messages</span>
+</div>`,
+      code: `<DuStatus variant="info" bounce />
+<span>Unread messages</span>`,
     },
     {
       title: 'Sizes',

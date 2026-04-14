@@ -5,6 +5,71 @@ export default {
   description: 'Modal is used to show a dialog or a box when you click a button.',
   category: 'Actions',
   source: 'https://daisyui.com/components/modal/',
+  props: [
+    {
+      title: 'open',
+      description: 'Whether the modal is open (use with v-model:open)',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'closeButton',
+      description: 'Show close button in top right corner',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'closeOnEscape',
+      description: 'Close modal when Escape is pressed',
+      type: 'boolean',
+      default: 'true',
+    },
+    {
+      title: 'closeBackdrop',
+      description: 'Close modal when clicking the backdrop',
+      type: 'boolean',
+      default: 'true',
+    },
+    {
+      title: 'placement',
+      description: 'Position of the modal on screen',
+      type: 'string',
+      default: '"middle"',
+      options: ['top', 'middle', 'bottom', 'start', 'end', 'responsive'],
+    },
+    {
+      title: 'classBox',
+      description: 'Additional CSS classes for the modal box',
+      type: 'string',
+    },
+    {
+      title: 'id',
+      description: 'Unique identifier for the modal',
+      type: 'string',
+    },
+  ],
+  slots: [
+    {
+      title: 'Slot #actions',
+      description: 'Action buttons displayed at the bottom of the modal',
+      preview: `<DuModal v-model:open="isOpen" closeButton class="w-72">
+  <h3 class="font-bold text-lg mb-2">Confirm Action</h3>
+  <p class="text-base-content/70 mb-4">Are you sure you want to continue?</p>
+  <template #actions>
+    <DuButton variant="neutral" ghost @click="isOpen = false">Cancel</DuButton>
+    <DuButton variant="primary">Confirm</DuButton>
+  </template>
+</DuModal>`,
+      code: `<DuModal v-model:open="isOpen" closeButton>
+  <h3 class="font-bold text-lg mb-2">Confirm Action</h3>
+  <p>Are you sure you want to continue?</p>
+  <template #actions>
+    <DuButton variant="neutral" ghost @click="isOpen = false">Cancel</DuButton>
+    <DuButton variant="primary">Confirm</DuButton>
+  </template>
+</DuModal>`,
+    },
+  ],
   classnames: {
     placement: [
       { class: 'top', desc: 'Align to the top' },
@@ -96,6 +161,38 @@ const isOpen = ref(false)
       <DuButton variant="error" @click="confirm">Delete</DuButton>
     </div>
   </div>
+</DuModal>`,
+    },
+    {
+      title: 'With actions slot',
+      description: 'Use the `#actions` slot to add action buttons at the bottom.',
+      preview: `<div class="card bg-base-100 border border-base-300 rounded-xl p-4 w-72">
+  <h3 class="font-bold text-base mb-2">Form Title</h3>
+  <p class="text-sm text-base-content/60 mb-4">Form description goes here.</p>
+  <div class="flex gap-2 justify-end">
+    <DuButton size="sm" ghost>Cancel</DuButton>
+    <DuButton size="sm" variant="primary">Save</DuButton>
+  </div>
+</div>`,
+      code: `<DuModal v-model:open="isOpen" closeButton>
+  <h3 class="font-bold text-lg mb-2">Form Title</h3>
+  <p>Form description goes here.</p>
+  <template #actions>
+    <DuButton variant="neutral" ghost @click="isOpen = false">Cancel</DuButton>
+    <DuButton variant="primary" @click="save">Save</DuButton>
+  </template>
+</DuModal>`,
+    },
+    {
+      title: 'Custom box class',
+      description: 'Use `classBox` to add custom classes to the modal box.',
+      preview: `<div class="card bg-base-100 border border-base-300 rounded-xl p-4 w-72">
+  <h3 class="font-bold text-base mb-2">Custom Styled</h3>
+  <p class="text-sm text-base-content/60">This modal has a rounded-lg box.</p>
+</div>`,
+      code: `<DuModal v-model:open="isOpen" classBox="rounded-lg">
+  <h3 class="font-bold text-lg mb-2">Custom Styled</h3>
+  <p>This modal has a rounded-lg box.</p>
 </DuModal>`,
     },
   ],
