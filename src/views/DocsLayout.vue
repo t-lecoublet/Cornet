@@ -40,8 +40,9 @@ function isActive(path: string) {
               <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
             </svg>
           </button>
-          <RouterLink to="/" class="flex items-center">
+          <RouterLink to="/" class="relative flex items-center pr-2">
             <img src="/logo.svg" alt="Cornet" class="h-9 w-auto" />
+            <span class="beta-badge">Beta</span>
           </RouterLink>
           <span class="hidden sm:inline text-xs font-mono text-base-content/30 border border-base-300 rounded-md px-2 py-0.5">docs</span>
         </div>
@@ -133,3 +134,25 @@ function isActive(path: string) {
     </div>
   </div>
 </template>
+
+<style scoped>
+.beta-badge {
+  position: absolute;
+  top: -6px;
+  right: -4px;
+  font-size: 10px;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  color: var(--color-primary);
+  text-shadow:
+    -1px -1px 0 color-mix(in srgb, var(--color-primary), black 60%),
+     1px -1px 0 color-mix(in srgb, var(--color-primary), black 60%),
+    -1px  1px 0 color-mix(in srgb, var(--color-primary), black 60%),
+     1px  1px 0 color-mix(in srgb, var(--color-primary), black 60%),
+     1px  2px 0 color-mix(in srgb, var(--color-primary), black 75%);
+  user-select: none;
+  pointer-events: none;
+}
+</style>

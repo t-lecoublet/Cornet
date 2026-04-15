@@ -48,7 +48,7 @@ const flavors = [
   {
     name: 'Feedback',
     count: 7,
-    cardClass: 'bg-warning/10 border-warning/20 hover:border-warning/40',
+    cardClass: 'bg-error/10 border-error/20 hover:border-error/40',
     tagClass: 'text-base-content/70',
     components: ['DuAlert', 'DuToast', 'DuLoading', 'DuProgress', 'DuTooltip'],
     iconPath: 'M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0',
@@ -167,8 +167,9 @@ export default defineConfig({
     <!-- ─── Navbar ──────────────────────────────────────── -->
     <DuNavbar class="sticky top-0 z-50 shadow-none! bg-base-100/80 backdrop-blur border-b-2 border-base-300">
       <template #start>
-        <a href="/" class="flex items-center px-2">
+        <a href="/" class="relative flex items-center px-2">
           <img src="/logo.svg" alt="Cornet" class="h-9 w-auto" />
+          <span class="beta-badge">Beta</span>
         </a>
       </template>
       <template #center>
@@ -198,7 +199,10 @@ export default defineConfig({
       <div class="absolute -bottom-24 -right-24 w-100 h-100 rounded-full bg-secondary/10 blur-3xl pointer-events-none" />
 
       <div class="container mx-auto px-6 flex flex-col items-center text-center gap-10 relative">
-        <img src="/logoLong.svg" alt="Cornet – daisyUI + Vue" class="w-full max-w-xl" />
+        <div class="relative inline-block">
+          <img src="/logoLong.svg" alt="Cornet – daisyUI + Vue" class="w-full max-w-xl" />
+          <span class="beta-badge beta-badge--hero">Beta</span>
+        </div>
 
         <div class="max-w-2xl space-y-4">
           <h1 class="text-4xl md:text-5xl font-black leading-tight">
@@ -444,3 +448,50 @@ export default defineConfig({
 
   </div>
 </template>
+
+<style scoped>
+@keyframes beta-float {
+  0%, 100% { transform: rotate(12deg) translateY(0px); }
+  50%       { transform: rotate(12deg) translateY(-3px); }
+}
+
+.beta-badge {
+  position: absolute;
+  top: -6px;
+  right: -4px;
+  font-size: 10px;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  color: var(--color-primary);
+  text-shadow:
+    -1px -1px 0 color-mix(in srgb, var(--color-primary), black 60%),
+     1px -1px 0 color-mix(in srgb, var(--color-primary), black 60%),
+    -1px  1px 0 color-mix(in srgb, var(--color-primary), black 60%),
+     1px  1px 0 color-mix(in srgb, var(--color-primary), black 60%),
+     1px  2px 0 color-mix(in srgb, var(--color-primary), black 75%);
+  user-select: none;
+  pointer-events: none;
+}
+
+.beta-badge--hero {
+  top: 4px;
+  right: -10px;
+  font-size: 30px;
+  transform: rotate(12deg);
+  transform-origin: bottom left;
+  animation: beta-float 2s ease-in-out infinite;
+  color: var(--color-primary);
+  text-shadow:
+    -2px -2px 0 color-mix(in srgb, var(--color-primary), black 60%),
+     2px -2px 0 color-mix(in srgb, var(--color-primary), black 60%),
+    -2px  2px 0 color-mix(in srgb, var(--color-primary), black 60%),
+     2px  2px 0 color-mix(in srgb, var(--color-primary), black 60%),
+    -2px  0   0 color-mix(in srgb, var(--color-primary), black 60%),
+     2px  0   0 color-mix(in srgb, var(--color-primary), black 60%),
+     0   -2px 0 color-mix(in srgb, var(--color-primary), black 60%),
+     0    2px 0 color-mix(in srgb, var(--color-primary), black 60%),
+     2px  3px 0 color-mix(in srgb, var(--color-primary), black 80%);
+}
+</style>
