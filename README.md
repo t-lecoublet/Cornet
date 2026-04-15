@@ -6,6 +6,8 @@
 
 Cornet is a Vue 3 component library for daisyUI without node_modules limitations.
 
+> Docs: https://cornet-ui.com/
+
 ## Why
 
 DaisyUI is a Tailwind CSS component library that provides a set of pre-designed UI components. However, it is not designed to be used as a Vue component library. This project aims to provide a set of Vue components that are based on daisyUI's design principles and can be easily integrated into Vue applications.
