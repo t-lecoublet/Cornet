@@ -96,7 +96,7 @@ function sectionKey(data: DocPageData, idx: number): string {
           v-if="section.preview"
           class="border border-base-300 rounded-t-xl bg-base-100 px-6 py-8"
         >
-          <LivePreview :code="section.preview" />
+          <LivePreview :code="section.preview" :script="section.script" />
         </div>
 
         <!-- Code block -->

@@ -72,19 +72,19 @@ export default {
     {
       title: 'Slot #sidebar',
       description: 'Sidebar content when not using items prop',
-      preview: `<DuDrawer v-model="open">
-  <template #sidebar>
-    <nav class="p-4">
-      <ul class="menu">
-        <li><a>Dashboard</a></li>
-        <li><a>Settings</a></li>
-      </ul>
-    </nav>
-  </template>
-  <div class="p-4">
-    <h1>Page Content</h1>
-  </div>
-</DuDrawer>`,
+      preview: `<div class="h-44 overflow-hidden rounded-lg border border-base-300" style="transform: translate(0, 0)">
+  <DuDrawer :modelValue="true" overlayClass="hidden">
+    <template #sidebar>
+      <nav class="p-4 bg-base-200 h-full w-44">
+        <ul class="menu text-sm">
+          <li><a>Dashboard</a></li>
+          <li><a>Settings</a></li>
+        </ul>
+      </nav>
+    </template>
+    <div class="p-4 text-sm text-base-content/60">Page Content</div>
+  </DuDrawer>
+</div>`,
       code: `<DuDrawer v-model="open">
   <template #sidebar>
     <nav class="p-4">
@@ -100,16 +100,16 @@ export default {
     {
       title: 'Slot #content',
       description: 'Main content area (default slot content)',
-      preview: `<DuDrawer v-model="open">
-  <template #sidebar>
-    <nav class="p-4"><ul class="menu"><li><a>Link</a></li></ul></nav>
-  </template>
-  <template #content>
-    <div class="p-4">
-      <h1>Main Content</h1>
-    </div>
-  </template>
-</DuDrawer>`,
+      preview: `<div class="h-44 overflow-hidden rounded-lg border border-base-300" style="transform: translate(0, 0)">
+  <DuDrawer :modelValue="true" overlayClass="hidden">
+    <template #sidebar>
+      <nav class="p-4 bg-base-200 h-full w-44"><ul class="menu text-sm"><li><a>Link</a></li></ul></nav>
+    </template>
+    <template #content>
+      <div class="p-4 text-sm text-base-content/60">Main Content</div>
+    </template>
+  </DuDrawer>
+</div>`,
       code: `<DuDrawer v-model="open">
   <template #sidebar>...</template>
   <template #content>
@@ -130,6 +130,78 @@ export default {
   sections: [
     {
       title: 'Basic',
+      script: `
+        const drawerOpen = ref(false)
+        return { drawerOpen }
+      `,
+      preview: `<div class="h-64 w-full overflow-hidden rounded-lg border border-base-300" style="transform: translate(0, 0)">
+<DuDrawer v-model="drawerOpen">
+    <div class="flex flex-col items-center justify-center h-64">
+      <DuButton as="label" @click="drawerOpen = true">
+        Open drawer
+      </DuButton>
+      <p class="mt-4">Page content here</p>
+    </div>
+  
+  <template #sidebar>
+    <ul class="w-full h-full bg-base-100 p-2">
+      <li><a>This is the sidebar</a></li>
+    </ul>
+  </template>
+</DuDrawer>
+</div>`,
+      code: `<script setup lang="ts">
+const drawerOpen = ref(false)
+</script>
+
+<template>
+<DuDrawer v-model="drawerOpen">
+    <div class="flex flex-col items-center justify-center h-64">
+      <DuButton as="label" @click="drawerOpen = true">
+        Open drawer
+      </DuButton>
+      <p class="mt-4">Page content here</p>
+    </div>
+  
+  <template #sidebar>
+    <ul class="w-full h-full bg-base-100 p-2">
+      <li><a>This is the sidebar</a></li>
+    </ul>
+  </template>
+</DuDrawer>
+</template>`,
+    },
+    {
+      title: 'With navbar and menu',
+      script: `
+        const drawerOpen = ref(false)
+        return { drawerOpen }
+      `,
+      preview: `<div class="h-64 w-full overflow-hidden rounded-lg border border-base-300" style="transform: translate(0, 0)">
+  <DuDrawer v-model="drawerOpen">
+    <template #sidebar>
+      <div class="bg-base-200 h-full">
+        <DuMenu>
+          <li><a>Sidebar Item 1</a></li>
+          <li><a>Sidebar Item 2</a></li>
+        </DuMenu>
+      </div>
+    </template>
+      <DuNavbar>
+        <template #start>
+          <DuButton ghost square size="sm" @click="drawerOpen = !drawerOpen">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+            </svg>
+          </DuButton>
+          <span class="ml-1 font-medium">My App</span>
+        </template>
+      </DuNavbar>
+      <div class="p-4">
+        <p class="text-base-content/60 text-xs">Page content</p>
+      </div>
+  </DuDrawer>
+</div>`,
       code: `<script setup lang="ts">
 const drawerOpen = ref(false)
 </script>
@@ -138,31 +210,57 @@ const drawerOpen = ref(false)
   <DuDrawer v-model="drawerOpen">
     <!-- Sidebar content -->
     <template #sidebar>
-      <nav class="p-4">
-        <ul class="menu">
-          <li><a>Dashboard</a></li>
-          <li><a>Settings</a></li>
-        </ul>
-      </nav>
+      <div class="bg-base-200 h-full">
+        <DuMenu>
+          <li><a>Sidebar Item 1</a></li>
+          <li><a>Sidebar Item 2</a></li>
+        </DuMenu>
+      </div>
     </template>
 
     <!-- Page content -->
     <DuNavbar>
       <template #start>
-        <DuButton @click="drawerOpen = true" ghost square>
-          <MenuIcon />
+        <DuButton ghost square size="sm" @click="drawerOpen = !drawerOpen">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+          </svg>
         </DuButton>
+        <span class="ml-1 font-medium">My App</span>
       </template>
     </DuNavbar>
+
     <main class="p-4">
-      <RouterView />
+      <p class="text-base-content/60 text-xs">Page content</p>
     </main>
+
   </DuDrawer>
 </template>`,
     },
     {
       title: 'Responsive sidebar',
       description: 'The drawer becomes a persistent sidebar on large screens.',
+      script: `
+        const drawerOpen = ref(true)
+        return { drawerOpen }
+      `,
+      preview: `<div class="h-64 w-full overflow-hidden rounded-lg border border-base-300" style="transform: translate(0, 0)">
+  <DuDrawer v-model="drawerOpen" overlayClass="hidden" responsive>
+    <template #sidebar>
+      <nav class="p-4 bg-base-200 h-full w-48">
+        <ul class="menu text-sm">
+          <li><a>Dashboard</a></li>
+          <li><a>Projects</a></li>
+          <li><a>Settings</a></li>
+        </ul>
+      </nav>
+    </template>
+    <div class="p-4 text-sm">
+      <div class="font-medium mb-1">Main content</div>
+      <p class="text-base-content/60 text-xs">Sidebar always visible on large screens</p>
+    </div>
+  </DuDrawer>
+</div>`,
       code: `<DuDrawer v-model="drawerOpen" responsive position="start">
   <template #sidebar>
     <!-- Sidebar nav -->
@@ -172,10 +270,30 @@ const drawerOpen = ref(false)
     },
     {
       title: 'With DuMenu items',
+      description: 'Pass an `items` array to automatically render a DuMenu inside the sidebar.',
+      script: `
+        const drawerOpen = ref(true)
+        return { drawerOpen }
+      `,
+      preview: `<div class="h-56 overflow-hidden rounded-lg border border-base-300" style="transform: translate(0, 0)">
+  <DuDrawer
+    v-model="drawerOpen"
+    overlayClass="hidden"
+    sidebarWrapperClass="bg-base-200 w-48"
+    :items="[
+      { label: 'Dashboard', href: '/' },
+      { label: 'Projects', href: '/projects' },
+      { label: 'Settings', href: '/settings' },
+    ]"
+  >
+    <div class="p-4 text-sm">
+      <div class="font-medium mb-1">Main content</div>
+      <p class="text-base-content/60 text-xs">Sidebar powered by DuMenu</p>
+    </div>
+  </DuDrawer>
+</div>`,
       code: `<DuDrawer v-model="open" :items="menuItems">
-  <template #default>
-    <!-- page content -->
-  </template>
+  <!-- page content -->
 </DuDrawer>`,
     },
   ],
