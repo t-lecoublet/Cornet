@@ -183,7 +183,7 @@ export default defineConfig({
           <DuButton variant="neutral" size="sm" outline as="a" href="https://gitlab.limos.fr/hub-isima/daisyui-vue-kit" target="_blank">
             GitLab
           </DuButton>
-          <DuButton variant="primary" size="sm" as="a" href="#quickstart">
+          <DuButton class="hidden md:flex" variant="primary" size="sm" as="a" href="#quickstart">
             Get started
             <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" :d="icons.arrowRight" />
@@ -231,7 +231,7 @@ export default defineConfig({
           </DuButton>
         </div>
 
-        <div class="flex items-center gap-3 bg-base-200 border border-base-300 rounded-2xl px-6 py-3 font-mono text-sm shadow-inner">
+        <div class="flex flex-wrap w-full sm:w-auto items-center gap-3 bg-base-200 border border-base-300 rounded-2xl px-6 py-3 font-mono text-sm shadow-inner">
           <svg class="w-4 h-4 text-base-content/40 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" :d="icons.git" />
           </svg>
@@ -347,11 +347,11 @@ export default defineConfig({
       <div class="max-w-2xl mx-auto space-y-8">
 
         <!-- Step 01: install method tabs -->
-        <div class="flex gap-5 items-start">
+        <div class="flex flex-col sm:flex-row gap-5 items-start overflow-clip max-w-screen">
           <div class="shrink-0 w-10 h-10 rounded-xl bg-primary text-primary-content flex items-center justify-center font-mono font-bold text-sm">01</div>
           <div class="flex-1">
             <p class="font-semibold mb-3">Add the library — choose your setup</p>
-            <DuTabs v-model="selectedTab" :items="installTabs" type="box" name="install_tabs">
+            <DuTabs class="max-w-[85dvw]" v-model="selectedTab" :items="installTabs" type="box" name="install_tabs">
               <template #content-0>
                 <div class="pt-3">
                   <p class="text-sm text-base-content/55 mb-2">{{ installMethods[0].description }}</p>
@@ -367,7 +367,7 @@ export default defineConfig({
               <template #content-2>
                 <div class="pt-3">
                   <p class="text-sm text-base-content/55 mb-2">{{ installMethods[2].description }}</p>
-                  <CodeBlock :code="installMethods[2].code" />
+                  <CodeBlock class="max-w-[85dvw]" :code="installMethods[2].code" />
                 </div>
               </template>
             </DuTabs>
@@ -379,19 +379,19 @@ export default defineConfig({
           v-if="selectedTab === 1"
           v-for="step in postSteps"
           :key="step.n"
-          class="flex gap-5 items-start"
+          class="flex flex-col sm:flex-row gap-5 items-start max-w-screen overflow-clip"
         >
           <div class="shrink-0 w-10 h-10 rounded-xl bg-primary text-primary-content flex items-center justify-center font-mono font-bold text-sm">
             {{ step.n }}
           </div>
-          <div class="flex-1">
+          <div class="flex-1 w-full">
             <p class="font-semibold mb-2">{{ step.label }}</p>
             <CodeBlock :code="step.code" />
           </div>
         </div>
 
         <!-- Storybook callout -->
-        <div class="flex gap-5 items-start">
+        <div class="flex flex-col sm:flex-row gap-5 items-start max-w-screen overflow-clip">
           <div class="shrink-0 w-10 h-10 rounded-xl bg-secondary/15 border border-secondary/25 flex items-center justify-center">
             <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" :d="icons.book" />
@@ -416,7 +416,7 @@ export default defineConfig({
           <h2 class="text-2xl font-black mb-1">Ready for your first scoop?</h2>
           <p class="text-primary-content/70 text-sm">Cornet is open source and free to use.</p>
         </div>
-        <div class="flex gap-3">
+        <div class="flex flex-wrap gap-3">
           <DuButton variant="neutral" size="lg" customClass="bg-primary-content text-primary border-0 hover:bg-primary-content/90" as="a" href="https://gitlab.limos.fr/hub-isima/daisyui-vue-kit" target="_blank">
             <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" :d="icons.git" />
