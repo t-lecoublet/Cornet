@@ -132,23 +132,31 @@ export default {
       title: 'Basic',
       script: `
         const drawerOpen = ref(false)
-        return { drawerOpen }
+        const { width, onResizeStart } = useResize(700)
+        return { drawerOpen, width, onResizeStart }
       `,
-      preview: `<div class="h-64 w-full overflow-hidden rounded-lg border border-base-300" style="transform: translate(0, 0)">
-<DuDrawer v-model="drawerOpen">
+      preview: `<div
+  class="relative h-64 overflow-hidden rounded-lg border border-base-300"
+  :style="{ width: width + 'px' }"
+  style="transform: translate(0, 0)"
+>
+  <DuDrawer v-model="drawerOpen">
     <div class="flex flex-col items-center justify-center h-64">
-      <DuButton as="label" @click="drawerOpen = true">
-        Open drawer
-      </DuButton>
-      <p class="mt-4">Page content here</p>
+      <DuButton @click="drawerOpen = true">Open drawer</DuButton>
+      <p class="mt-4 text-sm text-base-content/60">Page content here</p>
     </div>
-  
-  <template #sidebar>
-    <ul class="w-full h-full bg-base-100 p-2">
-      <li><a>This is the sidebar</a></li>
-    </ul>
-  </template>
-</DuDrawer>
+    <template #sidebar>
+      <ul class="w-full h-full bg-base-100 p-2">
+        <li><a>This is the sidebar</a></li>
+      </ul>
+    </template>
+  </DuDrawer>
+  <div
+    class="absolute right-0 top-0 h-full w-2 cursor-ew-resize z-20 grid place-items-center group/itemdrag"
+    @pointerdown.prevent="onResizeStart"
+  >
+    <div class="w-1 h-1/2 bg-base-300 group-hover/itemdrag:bg-neutral rounded-full"></div>
+  </div>
 </div>`,
       code: `<script setup lang="ts">
 const drawerOpen = ref(false)
@@ -175,9 +183,14 @@ const drawerOpen = ref(false)
       title: 'With navbar and menu',
       script: `
         const drawerOpen = ref(false)
-        return { drawerOpen }
+        const { width, onResizeStart } = useResize(700)
+        return { drawerOpen, width, onResizeStart }
       `,
-      preview: `<div class="h-64 w-full overflow-hidden rounded-lg border border-base-300" style="transform: translate(0, 0)">
+      preview: `<div
+  class="relative h-64 overflow-hidden rounded-lg border border-base-300"
+  :style="{ width: width + 'px' }"
+  style="transform: translate(0, 0)"
+>
   <DuDrawer v-model="drawerOpen">
     <template #sidebar>
       <div class="bg-base-200 h-full">
@@ -187,20 +200,26 @@ const drawerOpen = ref(false)
         </DuMenu>
       </div>
     </template>
-      <DuNavbar>
-        <template #start>
-          <DuButton ghost square size="sm" @click="drawerOpen = !drawerOpen">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-            </svg>
-          </DuButton>
-          <span class="ml-1 font-medium">My App</span>
-        </template>
-      </DuNavbar>
-      <div class="p-4">
-        <p class="text-base-content/60 text-xs">Page content</p>
-      </div>
+    <DuNavbar>
+      <template #start>
+        <DuButton ghost square size="sm" @click="drawerOpen = !drawerOpen">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+          </svg>
+        </DuButton>
+        <span class="ml-1 font-medium">My App</span>
+      </template>
+    </DuNavbar>
+    <div class="p-4">
+      <p class="text-base-content/60 text-xs">Page content</p>
+    </div>
   </DuDrawer>
+  <div
+    class="absolute right-0 top-0 h-full w-2 cursor-ew-resize z-30 grid place-items-center group/itemdrag"
+    @pointerdown.prevent="onResizeStart"
+  >
+    <div class="w-1 h-1/2 bg-base-300 group-hover/itemdrag:bg-neutral rounded-full"></div>
+  </div>
 </div>`,
       code: `<script setup lang="ts">
 const drawerOpen = ref(false)
@@ -242,9 +261,14 @@ const drawerOpen = ref(false)
       description: 'The drawer becomes a persistent sidebar on large screens.',
       script: `
         const drawerOpen = ref(true)
-        return { drawerOpen }
+        const { width, onResizeStart } = useResize(700)
+        return { drawerOpen, width, onResizeStart }
       `,
-      preview: `<div class="h-64 w-full overflow-hidden rounded-lg border border-base-300" style="transform: translate(0, 0)">
+      preview: `<div
+  class="relative h-64 overflow-hidden rounded-lg border border-base-300"
+  :style="{ width: width + 'px' }"
+  style="transform: translate(0, 0)"
+>
   <DuDrawer v-model="drawerOpen" overlayClass="hidden" responsive>
     <template #sidebar>
       <nav class="p-4 bg-base-200 h-full w-48">
@@ -260,6 +284,12 @@ const drawerOpen = ref(false)
       <p class="text-base-content/60 text-xs">Sidebar always visible on large screens</p>
     </div>
   </DuDrawer>
+  <div
+    class="absolute right-0 top-0 h-full w-2 cursor-ew-resize z-20 grid place-items-center group/itemdrag"
+    @pointerdown.prevent="onResizeStart"
+  >
+    <div class="w-1 h-1/2 bg-base-300 group-hover/itemdrag:bg-neutral rounded-full"></div>
+  </div>
 </div>`,
       code: `<DuDrawer v-model="drawerOpen" responsive position="start">
   <template #sidebar>

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, compile, h, ref, reactive, computed, watch, type Component } from 'vue'
+import { defineComponent, compile, h, ref, reactive, computed, watch, type Component, type Ref } from 'vue'
 import * as CornetComponents from 'daisyui-vue-kit'
 
 const duComponents = Object.fromEntries(
@@ -11,6 +11,32 @@ const duComponents = Object.fromEntries(
 
 const WRAPPER = `<div class="flex items-center justify-center flex-wrap gap-3 min-h-20 w-full">`
 
+function useResize(initialWidth = 500, min = 240, max = 900): {
+  width: Ref<number>
+  onResizeStart: (e: PointerEvent) => void
+} {
+  const width = ref(initialWidth)
+
+  function onResizeStart(e: PointerEvent) {
+    const startX = e.clientX
+    const startWidth = width.value
+
+    function onMove(ev: PointerEvent) {
+      width.value = Math.max(min, Math.min(max, startWidth + ev.clientX - startX))
+    }
+    function onEnd() {
+      document.removeEventListener('pointermove', onMove)
+      document.removeEventListener('pointerup', onEnd)
+    }
+
+    document.addEventListener('pointermove', onMove)
+    document.addEventListener('pointerup', onEnd)
+    e.preventDefault()
+  }
+
+  return { width, onResizeStart }
+}
+
 export default defineComponent({
   props: {
     code: { type: String, required: true },
@@ -20,12 +46,12 @@ export default defineComponent({
   setup(props) {
     if (props.script) {
       // eslint-disable-next-line no-new-func
-      const setupFn = new Function('ref', 'reactive', 'computed', 'watch', props.script)
+      const setupFn = new Function('ref', 'reactive', 'computed', 'watch', 'useResize', props.script)
 
       const DynamicComp = defineComponent({
         components: duComponents,
         setup() {
-          return setupFn(ref, reactive, computed, watch)
+          return setupFn(ref, reactive, computed, watch, useResize)
         },
         template: `${WRAPPER}${props.code}</div>`,
       })
