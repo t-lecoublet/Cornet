@@ -260,7 +260,7 @@ const drawerOpen = ref(false)
       title: 'Responsive sidebar',
       description: 'The drawer becomes a persistent sidebar on large screens.',
       script: `
-        const drawerOpen = ref(true)
+        const drawerOpen = ref(false)
         const { width, onResizeStart } = useResize(700)
         return { drawerOpen, width, onResizeStart }
       `,
@@ -269,7 +269,7 @@ const drawerOpen = ref(false)
   :style="{ width: width + 'px' }"
   style="transform: translate(0, 0)"
 >
-  <DuDrawer v-model="drawerOpen" overlayClass="hidden" responsive>
+  <DuDrawer v-model="drawerOpen" :class="{'drawer-open': (width >= 500)}">
     <template #sidebar>
       <nav class="p-4 bg-base-200 h-full w-48">
         <ul class="menu text-sm">
@@ -282,6 +282,7 @@ const drawerOpen = ref(false)
     <div class="p-4 text-sm">
       <div class="font-medium mb-1">Main content</div>
       <p class="text-base-content/60 text-xs">Sidebar always visible on large screens</p>
+      <DuButton class="mt-4" :class="{'hidden':!(width < 500)}" @click="drawerOpen = !drawerOpen">Open</DuButton>
     </div>
   </DuDrawer>
   <div
@@ -291,7 +292,7 @@ const drawerOpen = ref(false)
     <div class="w-1 h-1/2 bg-base-300 group-hover/itemdrag:bg-neutral rounded-full"></div>
   </div>
 </div>`,
-      code: `<DuDrawer v-model="drawerOpen" responsive position="start">
+      code: `<DuDrawer responsive>
   <template #sidebar>
     <!-- Sidebar nav -->
   </template>
