@@ -10,7 +10,8 @@ const props = withDefaults(
         id?: string
         position?: 'start' | 'end'
         open?: boolean
-        responsive?: boolean
+        responsive?: boolean | 'xl' | 'lg' | 'md' | 'sm'
+        // keep alwaysOpenOnLarge due to breaking changes
         alwaysOpenOnLarge?: boolean
         modelValue?: boolean
         sidebarClass?: string
@@ -53,8 +54,24 @@ const drawerClasses = computed(() => {
         classes.push('drawer-end')
     }
 
-    if (props.alwaysOpenOnLarge) {
+    if (props.alwaysOpenOnLarge && !props.responsive) {
         classes.push('lg:drawer-open')
+    }
+
+    switch (props.responsive) {
+        case 'xl':
+            classes.push('xl:drawer-open')
+            break
+        case 'lg':
+        case true:
+            classes.push('lg:drawer-open')
+            break
+        case 'md':
+            classes.push('md:drawer-open')
+            break
+        case 'sm':
+            classes.push('sm:drawer-open')
+            break
     }
 
     return classes
@@ -63,8 +80,24 @@ const drawerClasses = computed(() => {
 const drawerSideClasses = computed(() => {
     const classes = ['drawer-side']
 
-    if (props.alwaysOpenOnLarge) {
+    if (props.alwaysOpenOnLarge && !props.responsive) {
         classes.push('max-lg:z-[1002]')
+    }
+
+    switch (props.responsive) {
+        case 'xl':
+            classes.push('xl:max-lg:z-[1002]')
+            break
+        case 'lg':
+        case true:
+            classes.push('lg:max-md:z-[1002]')
+            break
+        case 'md':
+            classes.push('md:max-sm:z-[1002]')
+            break
+        case 'sm':
+            classes.push('sm:max-xs:z-[1002]')
+            break
     }
 
     if (props.iconOnly) {
