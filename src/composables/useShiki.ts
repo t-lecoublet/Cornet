@@ -1,12 +1,23 @@
-import { createHighlighter, type Highlighter } from 'shiki'
+import { createHighlighterCore } from 'shiki/core'
+import { createJavaScriptRegexEngine } from 'shiki/engine/javascript'
 
-let highlighterPromise: Promise<Highlighter> | null = null
+import themeSolarizedLight from 'shiki/themes/solarized-light.mjs'
+import langVue from 'shiki/langs/vue.mjs'
+import langTs from 'shiki/langs/typescript.mjs'
+import langJs from 'shiki/langs/javascript.mjs'
+import langHtml from 'shiki/langs/html.mjs'
+import langCss from 'shiki/langs/css.mjs'
+import langBash from 'shiki/langs/bash.mjs'
+import langJson from 'shiki/langs/json.mjs'
 
-export function getHighlighter(): Promise<Highlighter> {
+let highlighterPromise: ReturnType<typeof createHighlighterCore> | null = null
+
+export function getHighlighter() {
   if (!highlighterPromise) {
-    highlighterPromise = createHighlighter({
-      themes: ['solarized-light'],
-      langs: ['vue', 'typescript', 'javascript', 'html', 'css', 'bash', 'sh', 'json', 'shell'],
+    highlighterPromise = createHighlighterCore({
+      themes: [themeSolarizedLight],
+      langs: [langVue, langTs, langJs, langHtml, langCss, langBash, langJson],
+      engine: createJavaScriptRegexEngine(),
     })
   }
   return highlighterPromise
