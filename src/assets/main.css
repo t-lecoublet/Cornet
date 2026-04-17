@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @import "daisyui-vue-kit/css";
 @plugin "daisyui" {
-  themes: cornet;
+  themes: cornet --default, light, dark, cupcake;
 }
 @plugin "daisyui/theme" {
   name: "cornet";

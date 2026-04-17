@@ -36,6 +36,7 @@ export interface DocSection {
   preview?: string
   code: string
   script?: string
+  lang?: string
 }
 
 export interface DocPageData {

@@ -21,7 +21,7 @@ const router = createRouter({
       children: [
         {
           path: '',
-          redirect: '/docs/actions/button',
+          redirect: '/docs/guides/installation',
         },
         {
           path: ':category/:component',

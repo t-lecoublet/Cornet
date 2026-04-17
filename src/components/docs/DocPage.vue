@@ -5,6 +5,7 @@ import PropsTable from './PropsTable.vue'
 import PropsDocs from './PropsDocs.vue'
 import SlotsDocs from './SlotsDocs.vue'
 import LivePreview from './LivePreview.vue'
+import CodeBlock from './CodeBlock.vue'
 
 defineProps<{ data: DocPageData }>()
 
@@ -102,7 +103,7 @@ function sectionKey(data: DocPageData, idx: number): string {
         <!-- Code block -->
         <div :class="section.preview ? 'rounded-b-xl overflow-hidden border border-t-0 border-base-300' : 'rounded-xl overflow-hidden border border-base-300'">
           <div class="flex items-center justify-between bg-base-200/80 px-4 py-2 border-b border-base-300/60">
-            <span class="text-xs font-mono text-base-content/40">vue</span>
+            <span class="text-xs font-mono text-base-content/40">{{ section.lang || 'vue' }}</span>
             <button
               class="flex items-center gap-1.5 text-xs px-2 py-1 rounded-lg transition-all cursor-pointer"
               :class="copiedIdx === idx
@@ -119,7 +120,9 @@ function sectionKey(data: DocPageData, idx: number): string {
               {{ copiedIdx === idx ? 'Copied!' : 'Copy' }}
             </button>
           </div>
-          <pre class="bg-base-200/40 px-5 py-4 text-sm font-mono text-base-content overflow-x-auto leading-relaxed">{{ getFullCode(section) }}</pre>
+          <div class="bg-base-200/40 font-semibold">
+            <CodeBlock :code="getFullCode(section)" :lang="section.lang" />
+          </div>
         </div>
       </div>
     </section>

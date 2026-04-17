@@ -1,5 +1,10 @@
 import type { DocPageData } from '@/types/docs'
 
+// ─── Guides ─────────────────────────────────────────────────
+import installation from './guides/installation'
+import quickStart from './guides/quick-start'
+import theming from './guides/theming'
+
 // ─── Actions ────────────────────────────────────────────────
 import button from './actions/button'
 import modal from './actions/modal'
@@ -66,6 +71,11 @@ import tabs from './navigation/tabs'
 
 // ─── Registry ────────────────────────────────────────────────
 export const docsRegistry: Record<string, DocPageData> = {
+  // Guides
+  '/docs/guides/installation': installation,
+  '/docs/guides/quick-start': quickStart,
+  '/docs/guides/theming': theming,
+
   // Actions
   '/docs/actions/button': button,
   '/docs/actions/modal': modal,
@@ -143,6 +153,14 @@ export interface NavCategory {
 }
 
 export const docsNav: NavCategory[] = [
+  {
+    category: 'Guides',
+    items: [
+      { label: 'Installation', path: '/docs/guides/installation' },
+      { label: 'Quick Start', path: '/docs/guides/quick-start' },
+      { label: 'Theming', path: '/docs/guides/theming' },
+    ],
+  },
   {
     category: 'Actions',
     items: [

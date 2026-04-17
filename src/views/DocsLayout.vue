@@ -120,7 +120,7 @@ function isActive(path: string) {
 
         <!-- Footer -->
         <div class="px-4 py-3 border-t border-base-300 text-xs text-base-content/30">
-          55 components · 6 categories
+          55 components · 3 guides
         </div>
       </aside>
 

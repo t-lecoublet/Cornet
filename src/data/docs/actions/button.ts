@@ -171,7 +171,7 @@ export default {
       title: 'Loading state',
       description: 'Disable the button and add a loading spinner during async operations.',
       preview: `<DuButton variant="primary" disabled>
-  <span class="loading loading-spinner loading-sm"></span>
+  <DuLoading animation="spinner" />
   Loading...
 </DuButton>`,
       code: `<script setup lang="ts">
@@ -187,7 +187,7 @@ async function handleSubmit() {
 
 <template>
   <DuButton variant="primary" :disabled="loading" @click="handleSubmit">
-    <span v-if="loading" class="loading loading-spinner loading-sm" />
+    <DuLoading v-if="loading" animation="spinner" />
     {{ loading ? 'Loading...' : 'Submit' }}
   </DuButton>
 </template>`,
