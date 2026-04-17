@@ -33,7 +33,7 @@ function sectionKey(data: DocPageData, idx: number): string {
 
     <!-- ─── Page header ─────────────────────────────────── -->
     <div class="border-b border-base-300 pb-6 mb-8">
-      <div class="flex items-start justify-between gap-4 flex-wrap">
+      <div class="flex items-start justify-between gap-4 flex-wrap relative">
         <div>
           <div class="flex items-center gap-2 mb-2">
             <span class="text-xs font-mono text-base-content/40 uppercase tracking-widest">{{ data.category }}</span>
@@ -46,7 +46,7 @@ function sectionKey(data: DocPageData, idx: number): string {
           :href="data.source"
           target="_blank"
           rel="noopener"
-          class="flex items-center gap-1.5 text-xs text-base-content/40 hover:text-primary transition-colors mt-1 shrink-0"
+          class="flex items-center gap-1.5 text-xs text-base-content/40 hover:text-primary transition-colors mt-1 shrink-0 absolute top-0 right-0"
         >
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />

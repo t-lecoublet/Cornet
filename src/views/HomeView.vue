@@ -174,7 +174,7 @@ export default defineConfig({
       </template>
       <template #center>
         <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-base-content/70">
-          <a href="#flavors" class="hover:text-primary transition-colors">Components</a>
+          <a class="text-primary">Home</a>
           <RouterLink to="/docs" class="hover:text-primary transition-colors">Docs</RouterLink>
         </nav>
       </template>
@@ -183,12 +183,12 @@ export default defineConfig({
           <DuButton variant="neutral" size="sm" outline as="a" href="https://gitlab.limos.fr/hub-isima/daisyui-vue-kit" target="_blank">
             GitLab
           </DuButton>
-          <DuButton class="hidden md:flex" variant="primary" size="sm" as="a" href="#quickstart">
+          <!-- <DuButton class="hidden md:flex" variant="primary" size="sm" as="a" href="#quickstart">
             Get started
             <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" :d="icons.arrowRight" />
             </svg>
-          </DuButton>
+          </DuButton> -->
         </div>
       </template>
     </DuNavbar>
@@ -235,8 +235,10 @@ export default defineConfig({
           <svg class="w-4 h-4 text-base-content/40 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" :d="icons.git" />
           </svg>
-          <span class="text-primary font-semibold">git submodule add</span>
-          <span class="text-base-content truncate">git@gitlab.limos.fr:hub-isima/daisyui-vue-kit.git lib</span>
+          <span class="text-primary font-semibold">git submodule</span><br>
+          <span class="text-base-content truncate">
+            The recommended way to install Cornet
+          </span>
         </div>
       </div>
     </section>

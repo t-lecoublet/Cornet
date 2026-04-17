@@ -4,6 +4,7 @@ import type { DocPageData } from '@/types/docs'
 import installation from './guides/installation'
 import quickStart from './guides/quick-start'
 import theming from './guides/theming'
+import copyComponents from './guides/copy-components'
 
 // ─── Actions ────────────────────────────────────────────────
 import button from './actions/button'
@@ -75,6 +76,7 @@ export const docsRegistry: Record<string, DocPageData> = {
   '/docs/guides/installation': installation,
   '/docs/guides/quick-start': quickStart,
   '/docs/guides/theming': theming,
+  '/docs/guides/copy-components': copyComponents,
 
   // Actions
   '/docs/actions/button': button,
@@ -159,6 +161,7 @@ export const docsNav: NavCategory[] = [
       { label: 'Installation', path: '/docs/guides/installation' },
       { label: 'Quick Start', path: '/docs/guides/quick-start' },
       { label: 'Theming', path: '/docs/guides/theming' },
+      { label: 'Copy Components', path: '/docs/guides/copy-components' },
     ],
   },
   {
