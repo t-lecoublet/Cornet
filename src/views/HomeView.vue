@@ -370,6 +370,10 @@ export default defineConfig({
               Every component ships with Storybook stories. Run them locally to browse all variants, sizes and props interactively.
             </p>
             <CodeBlock code="npx storybook dev" />
+            <DuLink class="absolute top-3 right-3 flex items-center gap-1" variant="secondary" size="sm" href="https://storybook.js.org/docs/get-started/frameworks/vue3-vite" target="_blank">
+              Storybook docs
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"></path></svg>
+            </DuLink>
           </DuCard>
         </div>
 
