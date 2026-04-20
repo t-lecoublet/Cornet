@@ -318,6 +318,9 @@ export default {
     },
     {
       title: 'Active item',
+      links: [
+        { label: 'Vue Router docs', href: 'https://router.vuejs.org/guide/' },
+      ],
       preview: `<DuMenu
   :items="[
     { label: 'Dashboard', value: '/dashboard', href: '#' },
@@ -384,6 +387,9 @@ export default {
     {
       title: 'With icons',
       description: 'Icons can be added via the icon property (SVG string or component)',
+      links: [
+        { label: 'Heroicons', href: 'https://heroicons.com/' },
+      ],
       preview: `<DuMenu
   :items="[
     { label: 'Dashboard', href: '/', icon: '<svg class=\"w-5 h-5\"><path d=\"..."/></svg>' },

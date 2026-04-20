@@ -72,6 +72,9 @@ export default {
     {
       title: 'Group (array binding)',
       description: 'Bind multiple checkboxes to the same array ref using the `value` prop.',
+      links: [
+        { label: 'Vue checkbox v-model docs', href: 'https://vuejs.org/guide/essentials/forms.html#checkbox' },
+      ],
       preview: `<div class="flex flex-col gap-2">
   <label class="flex items-center gap-2 cursor-pointer text-sm">
     <DuCheckbox variant="primary" :checked="true" value="vue" /> Vue

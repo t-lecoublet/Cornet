@@ -37,6 +37,9 @@ export default {
     },
     {
       title: 'Accept specific types',
+      links: [
+        { label: 'MDN input accept attribute', href: 'https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept' },
+      ],
       code: `<DuFileInput v-model="image" accept="image/*" />
 <DuFileInput v-model="pdf" accept=".pdf" />
 <DuFileInput v-model="files" accept="image/*,.pdf" multiple />`,

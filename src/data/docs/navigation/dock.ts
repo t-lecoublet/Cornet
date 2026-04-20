@@ -8,6 +8,9 @@ export default {
   sections: [
     {
       title: 'Basic',
+      links: [
+        { label: 'Heroicons', href: 'https://heroicons.com/' },
+      ],
       preview: `<DuDock
   :items="[
     { label: 'Home', active: true },

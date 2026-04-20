@@ -21,6 +21,10 @@ export default {
     },
     {
       title: 'With avatar and actions',
+      links: [
+        { label: 'DuAvatar docs', href: '/docs/data-display/avatar' },
+        { label: 'DuButton docs', href: '/docs/actions/button' },
+      ],
       preview: `<DuList class="w-72">
   <DuListRow>
     <DuAvatar size="sm" rounded="full"><img src="https://i.pravatar.cc/32?img=1" alt="Alice" /></DuAvatar>

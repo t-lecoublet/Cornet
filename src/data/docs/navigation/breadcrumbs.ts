@@ -25,6 +25,9 @@ export default {
     },
     {
       title: 'With icons',
+      links: [
+        { label: 'Heroicons', href: 'https://heroicons.com/' },
+      ],
       preview: `<DuBreadcrumbs
   :items="[
     { label: 'Home', href: '/' },

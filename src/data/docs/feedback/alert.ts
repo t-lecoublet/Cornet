@@ -134,6 +134,9 @@ export default {
     },
     {
       title: 'With actions',
+      links: [
+        { label: 'DuButton docs', href: '/docs/actions/button' },
+      ],
       preview: `<DuAlert variant="warning" icon>
   Your session will expire soon.
   <template #actions>

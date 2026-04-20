@@ -243,6 +243,9 @@ export default {
     {
       title: 'With custom slots on DuChat (#header-{n})',
       description: 'Override specific message parts when using the `items` prop.',
+      links: [
+        { label: 'DuBadge docs', href: '/docs/data-display/badge' },
+      ],
       preview: `<div class="flex flex-col gap-2">
   <DuChat
     :items="[

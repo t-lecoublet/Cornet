@@ -20,6 +20,9 @@ export default {
     {
       title: 'Label with fieldset',
       description: 'When wrapping a fieldset, the label could be placed inside the fieldset and use `type="label"`.',
+      links: [
+        { label: 'DuFieldset docs', href: '/docs/data-input/fieldset' },
+      ],
       preview: `<div class="flex flex-col">
 <DuFieldset>
   <DuLabel type="label">Enter your email</DuLabel>
@@ -60,6 +63,9 @@ export default {
     {
       title: 'Label for select',
       description: 'Used when wrapping a select element.',
+      links: [
+        { label: 'DuSelect docs', href: '/docs/data-input/select' },
+      ],
       preview: `<DuLabel type="select" class="w-72">
   <span class="label">Type</span>
   <DuSelect :options="[

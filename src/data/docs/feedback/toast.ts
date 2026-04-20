@@ -18,6 +18,9 @@ export default {
   sections: [
     {
       title: 'Basic',
+      links: [
+        { label: 'DuAlert docs', href: '/docs/feedback/alert' },
+      ],
       preview: `<DuToast horizontalPosition="end" verticalPosition="top">
   <DuAlert variant="success" icon>Saved successfully!</DuAlert>
 </DuToast>`,
@@ -42,6 +45,9 @@ export default {
     {
       title: 'With composable (recommended)',
       description: 'Create a global toast manager using Vue\'s provide/inject.',
+      links: [
+        { label: 'Vue provide/inject docs', href: 'https://vuejs.org/guide/components/provide-inject.html' },
+      ],
       code: `<!-- In your app root or layout -->
 <DuToast horizontalPosition="end" verticalPosition="top">
   <DuAlert

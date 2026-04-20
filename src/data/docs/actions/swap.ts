@@ -25,6 +25,9 @@ export default {
     },
     {
       title: 'With v-model',
+      links: [
+        { label: 'Vue v-model docs', href: 'https://vuejs.org/guide/components/v-model.html' },
+      ],
       code: `<script setup lang="ts">
 const active = ref(false)
 </script>

@@ -23,6 +23,9 @@ export default {
     {
       title: 'Slot #center',
       description: 'Content centered in the navbar (navbar-center)',
+      links: [
+        { label: 'Vue Router RouterLink docs', href: 'https://router.vuejs.org/guide/essentials/navigation.html' },
+      ],
       preview: `<DuNavbar class="border border-base-300 rounded-lg w-full">
   <template #center>
     <nav class="flex gap-4 text-sm">
@@ -237,6 +240,10 @@ export default {
     },
     {
       title: 'With dropdown menu',
+      links: [
+        { label: 'DuDropdown docs', href: '/docs/actions/dropdown' },
+        { label: 'DuAvatar docs', href: '/docs/data-display/avatar' },
+      ],
       preview: `<DuNavbar class="border border-base-300 rounded-lg w-full">
   <template #end>
     <DuDropdown placement="end">

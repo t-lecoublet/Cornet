@@ -157,6 +157,9 @@ export default {
     {
       title: 'As a link (as prop)',
       description: 'Use the `as` prop to render the button as an anchor or RouterLink element.',
+      links: [
+        { label: 'Vue Router RouterLink docs', href: 'https://router.vuejs.org/guide/essentials/navigation.html' },
+      ],
       preview: `<div class="flex flex-wrap gap-2 justify-center">
   <DuButton as="a" href="#" variant="primary">Link button</DuButton>
   <DuButton as="a" href="#" variant="neutral" outline>Outline link</DuButton>
@@ -170,6 +173,9 @@ export default {
     {
       title: 'Loading state',
       description: 'Disable the button and add a loading spinner during async operations.',
+      links: [
+        { label: 'DuLoading docs', href: '/docs/feedback/loading' },
+      ],
       preview: `<DuButton variant="primary" disabled>
   <DuLoading animation="spinner" />
   Loading...

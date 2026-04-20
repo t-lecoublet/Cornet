@@ -15,6 +15,9 @@ export default {
     {
       title: 'Countdown from target date',
       description: 'Pass a `targetDate` and a `format` to show the remaining days, hours, minutes, or seconds.',
+      links: [
+        { label: 'JavaScript Date docs', href: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date' },
+      ],
       code: `<script setup lang="ts">
 const deadline = new Date(Date.now() + 1000 * 60 * 60 * 3) // 3 hours from now
 </script>

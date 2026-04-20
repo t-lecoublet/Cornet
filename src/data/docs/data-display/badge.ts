@@ -78,6 +78,9 @@ export default {
     },
     {
       title: 'Inside a button',
+      links: [
+        { label: 'DuButton docs', href: '/docs/actions/button' },
+      ],
       preview: `<DuButton variant="primary">
   Inbox <DuBadge size="sm">5</DuBadge>
 </DuButton>`,

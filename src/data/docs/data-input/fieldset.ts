@@ -8,6 +8,10 @@ export default {
   sections: [
     {
       title: 'Basic',
+      links: [
+        { label: 'DuLabel docs', href: '/docs/data-input/label' },
+        { label: 'DuInputField docs', href: '/docs/data-input/input-field' },
+      ],
       preview: `<DuFieldset legend="Account" class="w-72">
   <DuLabel type="fieldset-label">Email</DuLabel>
   <DuInputField type="email" placeholder="your@email.com" />
@@ -56,6 +60,9 @@ export default {
     },
     {
       title: 'Login form',
+      links: [
+        { label: 'DuButton docs', href: '/docs/actions/button' },
+      ],
       preview: `<DuFieldset
   legend="Login"
   class="w-72 bg-base-200 border border-base-300 p-4 rounded-box"

@@ -34,6 +34,9 @@ export default {
     },
     {
       title: 'With icons',
+      links: [
+        { label: 'Heroicons', href: 'https://heroicons.com/' },
+      ],
       preview: `<div class="relative h-32 w-64 border border-base-300 rounded-xl">
   <DuFab
     :mainAction="{ label: '+', variant: 'primary' }"

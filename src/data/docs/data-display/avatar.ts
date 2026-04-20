@@ -78,6 +78,9 @@ export default {
     },
     {
       title: 'Avatar group',
+      links: [
+        { label: 'DaisyUI avatar group docs', href: 'https://daisyui.com/components/avatar/#avatar-group' },
+      ],
       preview: `<div class="avatar-group -space-x-4 rtl:space-x-reverse">
   <DuAvatar size="sm" rounded="full"><img src="https://i.pravatar.cc/40?img=1" /></DuAvatar>
   <DuAvatar size="sm" rounded="full"><img src="https://i.pravatar.cc/40?img=2" /></DuAvatar>

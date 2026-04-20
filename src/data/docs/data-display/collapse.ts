@@ -75,6 +75,10 @@ export default {
     {
       title: 'Custom slot per item',
       description: 'Override any item\'s title or content with named slots (`#title-{index}`, `#content-{index}`).',
+      links: [
+        { label: 'DuBadge docs', href: '/docs/data-display/badge' },
+        { label: 'DuButton docs', href: '/docs/actions/button' },
+      ],
       preview: `<div class="w-72">
   <DuCollapse
     modifier="collapse-arrow"

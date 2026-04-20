@@ -312,6 +312,10 @@ export default {
     {
       title: 'With custom cell slots',
       description: 'Use #cell-{key} slots to customize cell content',
+      links: [
+        { label: 'DuBadge docs', href: '/docs/data-display/badge' },
+        { label: 'DuButton docs', href: '/docs/actions/button' },
+      ],
       preview: `<DuTable
   :columns="[
     { key: 'name', label: 'Name' },

@@ -105,6 +105,10 @@ export default {
     {
       title: 'Custom title slot',
       description: 'Use the `#title` slot to replace the default title with any custom content.',
+      links: [
+        { label: 'DuBadge docs', href: '/docs/data-display/badge' },
+        { label: 'Vue named slots docs', href: 'https://vuejs.org/guide/components/slots.html#named-slots' },
+      ],
       preview: `<DuCard bordered class="w-72">
   <template #title>
     <div class="flex items-center gap-2">

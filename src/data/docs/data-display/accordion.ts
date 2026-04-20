@@ -76,6 +76,10 @@ export default {
     },
     {
       title: 'Custom title slot',
+      links: [
+        { label: 'DuBadge docs', href: '/docs/data-display/badge' },
+        { label: 'Vue named slots docs', href: 'https://vuejs.org/guide/components/slots.html#named-slots' },
+      ],
       preview: `<div class="w-72">
   <DuAccordion name="custom-acc-prev" modifier="collapse-arrow">
     <DuAccordionItem>
@@ -105,6 +109,9 @@ export default {
     {
       title: 'Per-item slots (#title-0, #content-0)',
       description: 'Override the title or content for a specific item by index when using the `items` prop.',
+      links: [
+        { label: 'Vue scoped slots docs', href: 'https://vuejs.org/guide/components/slots.html#scoped-slots' },
+      ],
       preview: `<div class="w-72">
   <DuAccordion
     name="per-item-prev"
@@ -146,6 +153,9 @@ export default {
     {
       title: 'Global slots (#title, #content)',
       description: 'Apply the same custom template to all items using the global `#title` and `#content` slots.',
+      links: [
+        { label: 'Vue scoped slots docs', href: 'https://vuejs.org/guide/components/slots.html#scoped-slots' },
+      ],
       preview: `<div class="w-72">
   <DuAccordion
     name="global-slots-prev"

@@ -7,6 +7,9 @@ export default {
   sections: [
     {
       title: 'Basic',
+      links: [
+        { label: 'HTML constraint validation docs', href: 'https://developer.mozilla.org/en-US/docs/Web/HTML/Constraint_validation' },
+      ],
       preview: `<DuLabelInputValidator
   type="label"
   inputType="email"

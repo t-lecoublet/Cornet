@@ -181,6 +181,10 @@ const drawerOpen = ref(false)
     },
     {
       title: 'With navbar and menu',
+      links: [
+        { label: 'DuNavbar docs', href: '/docs/navigation/navbar' },
+        { label: 'DuMenu docs', href: '/docs/navigation/menu' },
+      ],
       script: `
         const drawerOpen = ref(false)
         const { width, onResizeStart } = useResize(700)
@@ -302,6 +306,9 @@ const drawerOpen = ref(false)
     {
       title: 'With DuMenu items',
       description: 'Pass an `items` array to automatically render a DuMenu inside the sidebar.',
+      links: [
+        { label: 'DuMenu docs', href: '/docs/navigation/menu' },
+      ],
       script: `
         const drawerOpen = ref(true)
         return { drawerOpen }

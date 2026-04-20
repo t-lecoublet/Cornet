@@ -86,6 +86,9 @@ export default {
     },
     {
       title: 'With HTML validation',
+      links: [
+        { label: 'HTML constraint validation docs', href: 'https://developer.mozilla.org/en-US/docs/Web/HTML/Constraint_validation' },
+      ],
       code: `<DuInputField
   v-model="email"
   type="email"

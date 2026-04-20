@@ -176,6 +176,9 @@ export default {
     },
     {
       title: 'Border style',
+      links: [
+        { label: 'Vue v-model docs', href: 'https://vuejs.org/guide/components/v-model.html' },
+      ],
       preview: `<DuTabs
   :items="[{ label: 'Overview' }, { label: 'Settings' }, { label: 'Analytics' }]"
   type="border"

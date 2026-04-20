@@ -84,6 +84,9 @@ export default {
     {
       title: 'With v-model',
       description: 'Use `v-model:open` to control modal state reactively — the Vue way.',
+      links: [
+        { label: 'Vue v-model docs', href: 'https://vuejs.org/guide/components/v-model.html' },
+      ],
       preview: `<DuButton onclick="document.getElementById('modal-vmodel').showModal()" variant="primary">Open</DuButton>
 <DuModal id="modal-vmodel" closeButton>
   <h3 class="font-bold text-lg mb-2">Hello!</h3>
@@ -105,6 +108,9 @@ const isOpen = ref(false)
     {
       title: 'Basic usage',
       description: 'Use a unique `id` and `document.getElementById().showModal()` to control the modal.',
+      links: [
+        { label: 'HTMLDialogElement.showModal() docs', href: 'https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement/showModal' },
+      ],
       preview: `<DuButton onclick="document.getElementById('modal-basic').showModal()">Open Modal</DuButton>
 
 <DuModal id="modal-basic" closeButton>

@@ -87,6 +87,9 @@ export default {
     {
       title: 'With navigation buttons',
       description: 'Add prev/next anchors inside each DuCarouselItem using `id` attributes for scroll targeting.',
+      links: [
+        { label: 'CSS scroll snap docs', href: 'https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_scroll_snap' },
+      ],
       preview: `<DuCarousel class="w-72 rounded-xl">
   <DuCarouselItem id="nav-slide1" class="relative w-full">
     <div class="bg-primary/20 h-32 w-72 flex items-center justify-center rounded-xl font-bold text-lg">Slide 1</div>
