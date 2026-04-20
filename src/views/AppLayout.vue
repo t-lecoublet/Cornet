@@ -60,7 +60,7 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKeydown))
 </script>
 
 <template>
-  <div class="h-screen flex flex-col bg-base-100 text-base-content">
+  <div class="h-dvh flex flex-col bg-base-100 text-base-content">
 
     <!-- ─── Navbar ──────────────────────────────────────── -->
     <DuNavbar class="sticky top-0 z-50 shadow-none! bg-base-100/80 backdrop-blur border-b-2 border-base-300 shrink-0">

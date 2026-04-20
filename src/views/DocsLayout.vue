@@ -23,7 +23,7 @@ function isActive(path: string) {
 
     <!-- ─── Sidebar ────────────────────────────────────── -->
     <aside
-      class="fixed lg:sticky top-16 lg:top-0 h-[calc(100vh-4rem)] lg:h-full z-40 w-64 shrink-0 border-r border-base-300 bg-base-100 flex flex-col transition-transform duration-200"
+      class="fixed lg:sticky top-16 lg:top-0 h-[calc(100dvh-4rem)] lg:h-full z-40 w-64 shrink-0 border-r border-base-300 bg-base-100 flex flex-col transition-transform duration-200"
       :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
     >
       <!-- Nav -->
