@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { DuButton, DuBadge, DuCard, DuTabs } from 'daisyui-vue-kit'
+import { DuButton, DuBadge, DuCard, DuTabs, DuLink } from 'daisyui-vue-kit'
 import CodeBlock from '@/components/CodeBlock.vue'
 
 // ─── SVG icon paths (Heroicons 24 outline) ───────────────
@@ -182,9 +182,9 @@ export default defineConfig({
           </h1>
           <p class="text-lg text-base-content/60">
             55 beautifully crafted components, powered by
-            <span class="text-primary font-semibold">daisyUI 5</span>
+            <DuLink target="_blank" href="https://daisyui.com" class="font-semibold" variant="primary">daisyUI 5</DuLink>
             &amp;
-            <span class="text-primary font-semibold">Tailwind CSS 4</span>.
+            <DuLink target="_blank" href="https://tailwindcss.com/" class="font-semibold" variant="primary">Tailwind CSS 4</DuLink>
             Pick your flavors. Stack your scoops. Ship faster.
           </p>
         </div>
