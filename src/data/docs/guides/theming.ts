@@ -9,6 +9,10 @@ export default {
       title: 'Built-in themes',
       description: 'DaisyUI ships 35+ themes out of the box. Set a theme on the `<html>` element with the `data-theme` attribute.',
       lang: 'html',
+      links: [
+        { href: 'https://daisyui.com/docs/themes/#list-of-themes', label: 'See all themes' },
+        { href: 'https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/dataset', label: 'Learn about data attributes' },
+      ],
       code: `<!-- index.html -->
 <html data-theme="light">
   ...
@@ -24,6 +28,9 @@ export default {
       title: 'Enable themes in CSS',
       description: 'By default DaisyUI loads light and dark themes. To ship only specific themes, list them explicitly in your CSS.',
       lang: 'css',
+      links: [
+        { href: 'https://daisyui.com/docs/themes/#enable-a-built-in-theme', label: 'DaisyUI themes configuration' },
+      ],
       code: `/* src/style.css */
 @import "tailwindcss";
 @plugin "daisyui" {
@@ -33,6 +40,9 @@ export default {
     {
       title: 'Switching themes at runtime',
       description: 'Toggle the `data-theme` attribute on `<html>` to switch themes dynamically.',
+      links: [
+        { href: 'https://vuejs.org/guide/components/events.html', label: 'Vue event handling docs' },
+      ],
       script: `
         const currentTheme = ref('cornet');
         function setTheme(theme) {
@@ -66,10 +76,14 @@ if (saved) document.documentElement.setAttribute('data-theme', saved)
       title: 'Custom theme',
       description: 'Define your own theme by overriding DaisyUI CSS variables.',
       lang: 'css',
-      preview:`
-      <!-- check directly the theme genertor on daisyui.com #href https://daisyui.com/theme-generator -->
-      <DuButton as="a" target="_blank" size="sm" href="https://daisyui.com/theme-generator" link>Click here to see theme generator</DuButton>
-      `,
+      links: [
+        { href: 'https://daisyui.com/docs/themes/#how-to-add-a-new-custom-theme', label: 'DaisyUI custom themes docs' },
+        { href: 'https://daisyui.com/theme-generator', label: 'DaisyUI theme generator' },
+      ],
+      // preview:`
+      // <!-- check directly the theme genertor on daisyui.com #href https://daisyui.com/theme-generator -->
+      // <DuButton as="a" target="_blank" size="sm" href="https://daisyui.com/theme-generator" link>Click here to see theme generator</DuButton>
+      // `,
       code: `/* src/style.css */
 @import "tailwindcss";
 @plugin "daisyui" {
@@ -95,6 +109,11 @@ if (saved) document.documentElement.setAttribute('data-theme', saved)
       title: 'Using theme variables in your CSS',
       description: 'All DaisyUI theme colors are available as CSS variables and Tailwind utilities.',
       lang: 'html',
+      links: [
+        { href: 'https://daisyui.com/docs/colors/#how-to-use', label: 'DaisyUI colors docs' },
+        { href: 'https://daisyui.com/docs/utilities/#component-specific-css-variables', label: 'DaisyUI component CSS variables' },
+        { href: 'https://tailwindcss.com/docs/theme', label: 'Tailwind theme docs' },
+      ],
       code: `<!-- Tailwind utility classes -->
 <div class="bg-primary text-primary-content p-4">
   Primary background

@@ -7,7 +7,11 @@ export default {
   sections: [
     {
       title: 'Your first component',
-      description: 'Import a component directly or rely on auto-imports if you have the Vite plugin configured.',
+      description: 'Import a component directly.',
+      links: [
+        { label: 'Cornet button', href: '/docs/actions/button' },
+        { label: 'Vue basic usage docs', href: 'https://vuejs.org/api/composition-api-setup.html#basic-usage' },
+      ],
       preview: `<div class="flex flex-wrap gap-3 items-center">
   <DuButton>Default</DuButton>
   <DuButton variant="primary">Primary</DuButton>
@@ -24,6 +28,10 @@ import { DuButton } from 'daisyui-vue-kit'
     {
       title: 'Variants',
       description: 'Most components accept a `variant` prop to change their color.',
+      links: [
+        { label: 'DaisyUI variants docs', href: 'https://daisyui.com/docs/colors' },
+        { label: 'Vue props docs', href: 'https://vuejs.org/guide/components/props.html#props' },
+      ],
       preview: `<div class="flex flex-wrap gap-2 items-center">
   <DuButton variant="neutral">Neutral</DuButton>
   <DuButton variant="primary">Primary</DuButton>
@@ -55,6 +63,11 @@ import { DuButton } from 'daisyui-vue-kit'
     {
       title: 'Reactive state with v-model',
       description: 'Components that hold state (inputs, selects, modals) support `v-model`.',
+      links: [
+        { label: 'Vue reactivity docs', href: 'https://vuejs.org/guide/essentials/reactivity-fundamentals' },
+        { label: 'Vue v-model docs', href: 'https://vuejs.org/guide/components/v-model.html' },
+        { label: 'Vue form input bindings docs', href: 'https://vuejs.org/guide/essentials/forms' },
+      ],
       code: `<script setup lang="ts">
 import { ref } from 'vue'
 
@@ -70,7 +83,12 @@ const agreed = ref(false)
     },
     {
       title: 'Composing a form',
-      description: 'Combine DuLabel, DuInputField, and DuButton to build a simple form.',
+      description: 'Combine DuButton, DuInputField, and DuLabel to build a simple form.',
+      links: [
+        { label: 'DuInputField docs', href: 'http://localhost:5173/docs/form/input-field' },
+        { label: 'DuLabel docs', href: 'http://localhost:5173/docs/form/label' },
+        { label: 'DuCheckbox docs', href: 'http://localhost:5173/docs/form/checkbox' },
+      ],
       code: `<script setup lang="ts">
 import { ref } from 'vue'
 

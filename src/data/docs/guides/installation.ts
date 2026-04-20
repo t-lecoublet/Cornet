@@ -63,7 +63,7 @@ export default defineConfig({
       title: 'Use a component',
       lang: 'vue',
       links: [
-        { label: 'Cornet button', href: 'http://localhost:5173/docs/actions/button' },
+        { label: 'Cornet button', href: '/docs/actions/button' },
         { label: 'Vue components docs', href: 'https://vuejs.org/guide/essentials/component-basics' },
       ],
       code: `import { DuButton } from 'daisyui-vue-kit'
