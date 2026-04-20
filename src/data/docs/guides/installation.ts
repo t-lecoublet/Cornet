@@ -9,6 +9,9 @@ export default {
       title: '1. Add to Your project',
       description: 'Add only the lib as a Git submodule — no npm publish needed.',
       lang: 'bash',
+      links: [
+        { label: 'Git submodules docs', href: 'https://git-scm.com/docs/gitsubmodules' },
+      ],
       code: `git submodule add -b lib \\
   git@gitlab.limos.fr:hub-isima/daisyui-vue-kit.git lib
 git submodule update --init --recursive
@@ -23,12 +26,19 @@ npm install ./lib`,
     },
     {
       title: 'Or with Nuxt',
+      links: [
+        { label: 'Nuxt starter repo', href: 'https://gitlab.limos.fr/hub-isima/daisyui-vue-kit-nuxt-starter' },
+        { label: 'Nuxt docs', href: 'https://nuxt.com/docs/getting-started/installation' },
+      ],
       description: 'Grab our ready-made Nuxt starter instead.',
       lang: 'bash',
       code: `git clone git@gitlab.limos.fr:hub-isima/daisyui-vue-kit-nuxt-starter.git`,
     },
     {
       title: '2. Add the Vite plugin',
+      links: [
+        { label: 'Vite plugin docs', href: 'https://vite.dev/guide/using-plugins#adding-a-plugin' },
+      ],
       lang: 'ts',
       code: `// vite.config.ts
 import vueDaisyUI from 'daisyui-vue-kit/plugin-vite'
@@ -40,6 +50,10 @@ export default defineConfig({
     {
       title: '3. Import the CSS',
       lang: 'css',
+      links: [
+        { label: 'Tailwind directives docs', href: 'https://tailwindcss.com/docs/functions-and-directives#import-directive' },
+        { label: 'DaisyUI installation docs', href: 'https://daisyui.com/docs/install/vue' },
+      ],
       code: `/* your main CSS file */
 @import "tailwindcss";
 @import "daisyui-vue-kit/css";
@@ -48,6 +62,10 @@ export default defineConfig({
     {
       title: 'Use a component',
       lang: 'vue',
+      links: [
+        { label: 'Cornet button', href: 'http://localhost:5173/docs/actions/button' },
+        { label: 'Vue components docs', href: 'https://vuejs.org/guide/essentials/component-basics' },
+      ],
       code: `import { DuButton } from 'daisyui-vue-kit'
 
 <DuButton variant="primary">Hello World!</DuButton>`,

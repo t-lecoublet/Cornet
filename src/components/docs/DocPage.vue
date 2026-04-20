@@ -92,6 +92,23 @@ function sectionKey(data: DocPageData, idx: number): string {
           {{ section.description }}
         </p>
 
+        <!-- Optional external links -->
+        <div v-if="section.links?.length" class="flex flex-wrap gap-2 mb-3">
+          <a
+            v-for="link in section.links"
+            :key="link.href"
+            :href="link.href"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-lg border border-base-300 text-base-content/55 hover:text-primary hover:border-primary/40 transition-colors"
+          >
+            {{ link.label }}
+            <svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+            </svg>
+          </a>
+        </div>
+
         <!-- Live Vue preview -->
         <div
           v-if="section.preview"

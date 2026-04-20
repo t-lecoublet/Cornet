@@ -30,9 +30,15 @@ export interface DocSlot {
   code?: string
 }
 
+export interface DocLink {
+  label: string
+  href: string
+}
+
 export interface DocSection {
   title: string
   description?: string
+  links?: DocLink[]
   preview?: string
   code: string
   script?: string
