@@ -56,6 +56,10 @@ const closeModal = () => {
   }
 }
 
+const emit = defineEmits<{
+  'update:open': [value: boolean]
+}>()
+
 defineExpose({
   showModal,
   closeModal,
@@ -91,6 +95,7 @@ function handleEscapeKey(event: KeyboardEvent) {
     :id="id"
     :class="['modal', placementClass]"
     @keydown.esc.prevent="handleEscapeKey"
+    @close="emit('update:open', false)"
   >
     <div :class="['modal-box', classBox]">
       <form v-if="closeButton" method="dialog">
