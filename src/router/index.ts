@@ -5,7 +5,7 @@ import DocView from '@/views/docs/DocView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  scrollBehavior(to, from, savedPosition) {
+  scrollBehavior(_to, _from, savedPosition) {
     if (savedPosition) return savedPosition
     return { top: 0 }
   },

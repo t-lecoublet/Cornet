@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { RouterLink } from 'vue-router'
-import { DuButton, DuBadge, DuCard, DuNavbar, DuTabs } from 'daisyui-vue-kit'
+import { DuButton, DuBadge, DuCard, DuTabs } from 'daisyui-vue-kit'
 import CodeBlock from '@/components/CodeBlock.vue'
 
 // ─── SVG icon paths (Heroicons 24 outline) ───────────────
@@ -162,36 +161,7 @@ export default defineConfig({
 </script>
 
 <template>
-  <div class="min-h-screen bg-base-100 text-base-content">
-
-    <!-- ─── Navbar ──────────────────────────────────────── -->
-    <DuNavbar class="sticky top-0 z-50 shadow-none! bg-base-100/80 backdrop-blur border-b-2 border-base-300">
-      <template #start>
-        <a href="/" class="relative flex items-center px-2">
-          <img src="/logo.svg" alt="Cornet" class="h-9 w-auto" />
-          <span class="beta-badge">Beta</span>
-        </a>
-      </template>
-      <template #center>
-        <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-base-content/70">
-          <a class="text-primary">Home</a>
-          <RouterLink to="/docs" class="hover:text-primary transition-colors">Docs</RouterLink>
-        </nav>
-      </template>
-      <template #end>
-        <div class="flex items-center gap-2 px-2">
-          <DuButton variant="neutral" size="sm" outline as="a" href="https://gitlab.limos.fr/hub-isima/daisyui-vue-kit" target="_blank">
-            GitLab
-          </DuButton>
-          <!-- <DuButton class="hidden md:flex" variant="primary" size="sm" as="a" href="#quickstart">
-            Get started
-            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" :d="icons.arrowRight" />
-            </svg>
-          </DuButton> -->
-        </div>
-      </template>
-    </DuNavbar>
+  <div>
 
     <!-- ─── Hero ────────────────────────────────────────── -->
     <section class="relative overflow-hidden pt-16 pb-24">
@@ -231,15 +201,12 @@ export default defineConfig({
           </DuButton>
         </div>
 
-        <div class="flex flex-wrap w-full sm:w-auto items-center gap-3 bg-base-200 border border-base-300 rounded-2xl px-6 py-3 font-mono text-sm shadow-inner">
-          <svg class="w-4 h-4 text-base-content/40 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <p class="flex items-center gap-2 text-sm text-base-content/75 bg-base-200/60 rounded-xl px-4 py-2.5">
+          <svg class="w-3.5 h-3.5 shrink-0 text-primary" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" :d="icons.git" />
           </svg>
-          <span class="text-primary font-semibold">git submodule</span><br>
-          <span class="text-base-content truncate">
-            The recommended way to install Cornet
-          </span>
-        </div>
+          <span><code class="text-primary font-semibold text-xs">git submodule</code> — the recommended way to install Cornet</span>
+        </p>
       </div>
     </section>
 
@@ -268,7 +235,6 @@ export default defineConfig({
     <!-- ─── Flavors / Categories ──────────────────────────── -->
     <section id="flavors" class="container mx-auto px-6 py-24">
       <div class="text-center mb-14">
-        <DuBadge variant="primary" customClass="mb-4">55 components · 6 categories</DuBadge>
         <h2 class="text-4xl font-black mb-3">Pick your flavors</h2>
         <p class="text-base-content/55 max-w-md mx-auto">
           Every category is a scoop. Mix and match to build the UI you need.
@@ -329,7 +295,6 @@ export default defineConfig({
                 <path stroke-linecap="round" stroke-linejoin="round" :d="why.iconPath" />
               </svg>
             </div>
-            <div class="text-xs font-mono text-primary/60 mb-1">0{{ i + 1 }}</div>
             <h3 class="font-bold text-base mb-2">{{ why.headline }}</h3>
             <p class="text-sm text-base-content/55">{{ why.body }}</p>
           </DuCard>
