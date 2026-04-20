@@ -3,6 +3,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, watch } f
 import { useRoute, useRouter, RouterLink, RouterView } from 'vue-router'
 import { DuButton, DuModal, DuNavbar, DuSearch } from 'daisyui-vue-kit'
 import { docsNav, docsRegistry } from '@/data/docs/registry'
+import Logo from '@/components/logos/logo.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -76,7 +77,7 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKeydown))
             </svg>
           </button>
           <RouterLink to="/" class="relative flex items-center pr-2">
-            <img src="/logo.svg" alt="Cornet" class="h-9 w-auto" />
+            <Logo class="h-9 w-auto" />
             <span class="beta-badge">Beta</span>
           </RouterLink>
           <span v-if="isDocsRoute" class="hidden sm:inline text-xs font-mono text-base-content/30 border border-base-300 rounded-md px-2 py-0.5">docs</span>

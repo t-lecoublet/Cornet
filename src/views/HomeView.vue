@@ -2,6 +2,8 @@
 import { computed, ref } from 'vue'
 import { DuButton, DuBadge, DuCard, DuTabs, DuLink } from 'daisyui-vue-kit'
 import CodeBlock from '@/components/CodeBlock.vue'
+import Logo from '@/components/logos/logo.vue'
+import LogoLong from '@/components/logos/logoLong.vue'
 
 // ─── SVG icon paths (Heroicons 24 outline) ───────────────
 const icons = {
@@ -170,7 +172,7 @@ export default defineConfig({
 
       <div class="container mx-auto px-6 flex flex-col items-center text-center gap-10 relative">
         <div class="relative inline-block">
-          <img src="/logoLong.svg" alt="Cornet – daisyUI + Vue" class="w-full max-w-xl" />
+          <LogoLong alt="Cornet – daisyUI + Vue" class="w-full h-min max-w-xl" />
           <span class="beta-badge beta-badge--hero">Beta</span>
         </div>
 
@@ -408,7 +410,7 @@ export default defineConfig({
     <footer class="bg-base-200 border-t border-base-300 py-8">
       <div class="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
         <div class="flex items-center gap-3">
-          <img src="/logo.svg" alt="Cornet" class="h-7" />
+          <Logo class="h-7 w-min" />
           <span class="text-sm text-base-content/50">Vue 3 component library for DaisyUI</span>
         </div>
         <div class="text-xs text-base-content/35">
