@@ -11,10 +11,25 @@ const highlighted = ref('')
 
 async function highlight() {
   const hl = await getHighlighter()
-  highlighted.value = hl.codeToHtml(props.code.trim(), {
-    lang: props.lang ?? 'vue',
-    theme: 'solarized-light',
-  })
+  const lang = props.lang ?? 'vue'
+  let code = props.code.trim()
+  let wrapFragment = false
+
+  if (lang === 'vue' && !code.startsWith('<template') && !code.includes('<script') && !code.includes('<style')) {
+    wrapFragment = true
+    code = `<template>\n${code}\n</template>`
+  }
+
+  let html = hl.codeToHtml(code, { lang, theme: 'solarized-light' })
+
+  if (wrapFragment) {
+    html = html.replace(/(<code>)([\s\S]*?)(<\/code>)/, (_, open, content, close) => {
+      const lines = content.split('\n').filter((l: string) => l !== '')
+      return open + '\n' + lines.slice(1, -1).join('\n') + '\n' + close
+    })
+  }
+
+  highlighted.value = html
 }
 
 onMounted(highlight)

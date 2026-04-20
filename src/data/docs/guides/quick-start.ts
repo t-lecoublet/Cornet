@@ -48,7 +48,7 @@ import { DuButton } from 'daisyui-vue-kit'
     },
     {
       title: 'Sizes',
-      description: 'Use the `size` prop to scale components: `xs`, `sm`, `md`, `lg`, `xl`.',
+      description: `Use the 'size' prop to scale components: 'xs', 'sm', 'md', 'lg', 'xl'.`,
       preview: `<div class="flex flex-wrap gap-3 items-center">
   <DuButton size="xs">XS</DuButton>
   <DuButton size="sm">SM</DuButton>
