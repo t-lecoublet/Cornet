@@ -124,7 +124,7 @@ export default {
       code: `<DuCard bordered>
   <template #title>
     <div class="flex items-center gap-2">
-      <span class="badge badge-primary badge-sm">NEW</span>
+      <DuBadge variant="primary" size="sm">NEW</DuBadge>
       Custom title
     </div>
   </template>
