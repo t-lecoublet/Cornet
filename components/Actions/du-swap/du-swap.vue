@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { type SWAPProperty } from './du-swap.types'
 
 const props = withDefaults(
@@ -19,9 +19,18 @@ const props = withDefaults(
 
 const emit = defineEmits(['update:modelValue'])
 
+const internalActive = ref(props.modelValue)
+
+watch(() => props.modelValue, (val) => {
+  internalActive.value = val
+})
+
 const isActive = computed({
-  get: () => props.modelValue,
-  set: (value) => emit('update:modelValue', value),
+  get: () => internalActive.value,
+  set: (value) => {
+    internalActive.value = value
+    emit('update:modelValue', value)
+  },
 })
 
 const classes = computed(() => ({
@@ -47,7 +56,7 @@ const classes = computed(() => ({
       <slot name="indeterminate" />
     </div>
   </label>
-  <div v-else class="swap" :class="[classes, { 'swap-active': isActive }]">
+  <div v-else class="swap" :class="[classes, { 'swap-active': isActive }]" @click="isActive = !isActive">
     <div class="swap-on">
       <slot name="on" />
     </div>

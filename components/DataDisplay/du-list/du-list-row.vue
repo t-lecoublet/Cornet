@@ -1,11 +1,12 @@
 <script setup lang="ts">
 const props = defineProps<{
   class?: string
+  as?: string
 }>()
 </script>
 
 <template>
-  <li :class="['list-row', props.class]">
-    <slot></slot>
-  </li>
+  <component :class="['list-row', props.class, (props.as == 'label') && 'cursor-pointer']" :is="props.as || 'li'">
+      <slot></slot>
+  </component>
 </template> 
