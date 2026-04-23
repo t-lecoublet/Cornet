@@ -28,6 +28,19 @@ export default {
       links: [
         { label: 'Vue v-model docs', href: 'https://vuejs.org/guide/components/v-model.html' },
       ],
+      script: `
+      const active = ref(false)
+      return { active }
+      `,
+      preview: `<div class="flex items-center gap-4">
+  <DuSwap v-model="active">
+    <template #on><span class="font-bold text-success">ON</span></template>
+    <template #off><span class="font-bold text-error">OFF</span></template>
+  </DuSwap>
+  <span class="text-sm text-base-content/50">← toggle to see v-model update</span>
+  <p>State: {{ active ? 'true' : 'false' }}</p>
+
+</div>`,
       code: `<script setup lang="ts">
 const active = ref(false)
 </script>
@@ -37,7 +50,7 @@ const active = ref(false)
     <template #on>ON</template>
     <template #off>OFF</template>
   </DuSwap>
-  <p>State: {{ active ? 'ON' : 'OFF' }}</p>
+  <p>State: {{ active ? 'true' : 'false' }}</p>
 </template>`,
     },
     {
@@ -84,7 +97,7 @@ const active = ref(false)
   <template #on>☀️</template>
   <template #off>🌙</template>
 </DuSwap>`,
-      code: `<DuSwap v-model="isDark" :useCheckbox="false">
+      code: `<DuSwap :useCheckbox="false">
   <template #on>☀️</template>
   <template #off>🌙</template>
 </DuSwap>`,

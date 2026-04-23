@@ -94,5 +94,87 @@ export default {
   <DuAvatar size="sm" rounded="full" placeholder variant="neutral">+5</DuAvatar>
 </div>`,
     },
+    {
+      title: 'Ring border',
+      description: 'Set `ring` to add a colored ring. Use `ringColor` (Tailwind color token) and `ringOffset` (offset in px) to customize it.',
+      links: [
+        { label: 'Tailwind ring utilities', href: 'https://tailwindcss.com/docs/ring-color' },
+      ],
+      preview: `<div class="flex items-center gap-4">
+  <DuAvatar size="md" rounded="full" ring ringColor="primary">
+    <img src="https://i.pravatar.cc/64?img=5" alt="user" />
+  </DuAvatar>
+  <DuAvatar size="md" rounded="full" ring ringColor="success">
+    <img src="https://i.pravatar.cc/64?img=6" alt="user" />
+  </DuAvatar>
+  <DuAvatar size="md" rounded="full" ring ringColor="error">
+    <img src="https://i.pravatar.cc/64?img=7" alt="user" />
+  </DuAvatar>
+  <DuAvatar size="md" rounded="full" ring ringColor="warning" :ringOffset="4">
+    <img src="https://i.pravatar.cc/64?img=8" alt="user" />
+  </DuAvatar>
+</div>`,
+      code: `<!-- ring applies a colored border around the avatar -->
+<DuAvatar size="md" rounded="full" ring ringColor="primary">
+  <img src="/user.jpg" alt="User" />
+</DuAvatar>
+
+<!-- custom offset -->
+<DuAvatar size="md" rounded="full" ring ringColor="success" :ringOffset="4">
+  <img src="/user.jpg" alt="User" />
+</DuAvatar>`,
+    },
+    {
+      title: 'Mask shapes',
+      description: 'Use the `mask` prop to clip the avatar into different shapes. Works best without `rounded`.',
+      links: [
+        { label: 'DaisyUI mask docs', href: 'https://daisyui.com/components/mask/' },
+      ],
+      preview: `<div class="flex flex-wrap items-center gap-4">
+  <DuAvatar size="md" mask="heart">
+    <img src="https://i.pravatar.cc/64?img=9" alt="heart" />
+  </DuAvatar>
+  <DuAvatar size="md" mask="squircle">
+    <img src="https://i.pravatar.cc/64?img=10" alt="squircle" />
+  </DuAvatar>
+  <DuAvatar size="md" mask="hexagon">
+    <img src="https://i.pravatar.cc/64?img=11" alt="hexagon" />
+  </DuAvatar>
+  <DuAvatar size="md" mask="star">
+    <img src="https://i.pravatar.cc/64?img=12" alt="star" />
+  </DuAvatar>
+  <DuAvatar size="md" mask="diamond">
+    <img src="https://i.pravatar.cc/64?img=13" alt="diamond" />
+  </DuAvatar>
+</div>`,
+      code: `<!-- Available masks: heart, squircle, hexagon, hexagon-2, decagon, pentagon, diamond, square, circle, parallelogram, star, star-2 -->
+<DuAvatar size="md" mask="heart">
+  <img src="/user.jpg" alt="User" />
+</DuAvatar>
+
+<DuAvatar size="md" mask="squircle">
+  <img src="/user.jpg" alt="User" />
+</DuAvatar>
+
+<DuAvatar size="md" mask="hexagon">
+  <img src="/user.jpg" alt="User" />
+</DuAvatar>`,
+    },
+    {
+      title: 'Rounded variants',
+      description: 'Control the border radius with the `rounded` prop.',
+      preview: `<div class="flex flex-wrap items-center gap-3">
+  <DuAvatar size="md" rounded="sm"><img src="https://i.pravatar.cc/64?img=14" alt="sm" /></DuAvatar>
+  <DuAvatar size="md" rounded="md"><img src="https://i.pravatar.cc/64?img=15" alt="md" /></DuAvatar>
+  <DuAvatar size="md" rounded="lg"><img src="https://i.pravatar.cc/64?img=16" alt="lg" /></DuAvatar>
+  <DuAvatar size="md" rounded="xl"><img src="https://i.pravatar.cc/64?img=17" alt="xl" /></DuAvatar>
+  <DuAvatar size="md" rounded="full"><img src="https://i.pravatar.cc/64?img=18" alt="full" /></DuAvatar>
+</div>`,
+      code: `<!-- rounded values: sm | md | lg | xl | full -->
+<DuAvatar size="md" rounded="sm"><img src="/user.jpg" /></DuAvatar>
+<DuAvatar size="md" rounded="md"><img src="/user.jpg" /></DuAvatar>
+<DuAvatar size="md" rounded="xl"><img src="/user.jpg" /></DuAvatar>
+<DuAvatar size="md" rounded="full"><img src="/user.jpg" /></DuAvatar>`,
+    },
   ],
 } satisfies DocPageData

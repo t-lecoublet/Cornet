@@ -80,6 +80,9 @@ export default {
   sections: [
     {
       title: 'Basic',
+      links: [
+        { label: 'Vue v-model docs', href: 'https://vuejs.org/guide/components/v-model.html' },
+      ],
       preview: `<DuRating :modelValue="3" :count="5" />`,
       code: `<script setup lang="ts">
 import { ref } from 'vue'
@@ -88,6 +91,7 @@ const rating = ref(3)
 
 <template>
   <DuRating v-model="rating" :count="5" />
+  <p>Selected: {{ rating }}/5</p>
 </template>`,
     },
     {

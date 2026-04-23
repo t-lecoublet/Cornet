@@ -141,7 +141,10 @@ export default {
     },
     {
       title: 'Custom content slot',
-      description: 'Use the `#content` slot for rich tooltip content instead of a plain string.',
+      description: 'Use the `#content` slot for rich tooltip content instead of a plain string. The default slot wraps the trigger element.',
+      links: [
+        { label: 'Vue named slots docs', href: 'https://vuejs.org/guide/components/slots.html#named-slots' },
+      ],
       preview: `<DuTooltip :open="true">
   <template #content>
     <div class="p-2">
@@ -159,6 +162,28 @@ export default {
     </div>
   </template>
   <DuButton>Hover me</DuButton>
+</DuTooltip>`,
+    },
+    {
+      title: 'On any element',
+      description: 'Wrap any element inside DuTooltip — it works on icons, badges, or text.',
+      preview: `<div class="flex items-center gap-4">
+  <DuTooltip dataTip="User profile">
+    <DuAvatar size="sm" rounded="full" placeholder variant="primary">JD</DuAvatar>
+  </DuTooltip>
+  <DuTooltip dataTip="3 unread" variant="info">
+    <DuBadge variant="info">3</DuBadge>
+  </DuTooltip>
+  <DuTooltip dataTip="Keyboard shortcut: ⌘K" position="right">
+    <DuKbd>⌘K</DuKbd>
+  </DuTooltip>
+</div>`,
+      code: `<DuTooltip dataTip="User profile">
+  <DuAvatar size="sm" rounded="full" placeholder variant="primary">JD</DuAvatar>
+</DuTooltip>
+
+<DuTooltip dataTip="Keyboard shortcut: ⌘K" position="right">
+  <DuKbd>⌘K</DuKbd>
 </DuTooltip>`,
     },
   ],

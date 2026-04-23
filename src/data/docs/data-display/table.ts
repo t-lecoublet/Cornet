@@ -311,8 +311,9 @@ export default {
     },
     {
       title: 'With custom cell slots',
-      description: 'Use #cell-{key} slots to customize cell content',
+      description: 'Use `#cell-{key}` to customize a cell by column key. Slot props: `{ value, row, column }`. Use `value` for the cell content, `row` for the full row object.',
       links: [
+        { label: 'Vue scoped slots docs', href: 'https://vuejs.org/guide/components/slots.html#scoped-slots' },
         { label: 'DuBadge docs', href: '/docs/data-display/badge' },
         { label: 'DuButton docs', href: '/docs/actions/button' },
       ],

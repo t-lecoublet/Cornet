@@ -199,7 +199,7 @@ export default defineConfig({
             </svg>
           </DuButton>
           <DuButton variant="neutral" size="lg" outline as="RouterLink" to="/docs">
-            Browse components
+            Documentation
           </DuButton>
         </div>
 

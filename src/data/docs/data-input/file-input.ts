@@ -40,9 +40,54 @@ export default {
       links: [
         { label: 'MDN input accept attribute', href: 'https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept' },
       ],
-      code: `<DuFileInput v-model="image" accept="image/*" />
+      preview: `<div class="flex flex-col gap-2 w-72">
+  <DuFileInput accept="image/*" />
+  <DuFileInput accept=".pdf" />
+  <DuFileInput accept="image/*,.pdf" multiple />
+</div>`,
+      code: `<!-- images only -->
+<DuFileInput v-model="image" accept="image/*" />
+
+<!-- PDF only -->
 <DuFileInput v-model="pdf" accept=".pdf" />
+
+<!-- multiple files, mixed types -->
 <DuFileInput v-model="files" accept="image/*,.pdf" multiple />`,
+    },
+    {
+      title: 'Ghost style',
+      description: 'Use `ghost` for a transparent background with no border — blends into any surface.',
+      preview: `<DuFileInput ghost class="w-72" />`,
+      code: `<DuFileInput v-model="file" ghost />`,
+    },
+    {
+      title: 'Disabled',
+      preview: `<DuFileInput disabled class="w-72" />`,
+      code: `<DuFileInput v-model="file" disabled />`,
+    },
+    {
+      title: 'With label and fieldset',
+      description: 'Wrap inside DuFieldset + DuLabel for accessible file upload forms.',
+      links: [
+        { label: 'DuFieldset docs', href: '/docs/data-input/fieldset' },
+        { label: 'DuLabel docs', href: '/docs/data-input/label' },
+      ],
+      preview: `<DuFieldset legend="Attachments">
+  <DuLabel label="Profile picture">
+    <DuFileInput accept="image/*" variant="primary" />
+  </DuLabel>
+  <DuLabel label="CV (PDF only)">
+    <DuFileInput accept=".pdf" />
+  </DuLabel>
+</DuFieldset>`,
+      code: `<DuFieldset legend="Attachments">
+  <DuLabel label="Profile picture">
+    <DuFileInput v-model="avatar" accept="image/*" variant="primary" />
+  </DuLabel>
+  <DuLabel label="CV (PDF only)">
+    <DuFileInput v-model="cv" accept=".pdf" />
+  </DuLabel>
+</DuFieldset>`,
     },
   ],
 } satisfies DocPageData

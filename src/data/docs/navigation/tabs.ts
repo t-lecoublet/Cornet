@@ -228,6 +228,11 @@ const activeTab = ref(0)
     },
     {
       title: 'With icons',
+      description: 'Pass an icon via the `icon` property on each item (SVG string or component). Use the `#icon` scoped slot to render it — receives `{ item }` as slot props.',
+      links: [
+        { label: 'Heroicons', href: 'https://heroicons.com/' },
+        { label: 'Vue scoped slots docs', href: 'https://vuejs.org/guide/components/slots.html#scoped-slots' },
+      ],
       preview: `<DuTabs
   :items="[
     { label: 'Home', icon: '<svg class=\\"w-5 h-5\\"><path d=\\"M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6\\"/></svg>' },
@@ -249,6 +254,10 @@ const activeTab = ref(0)
     },
     {
       title: 'With content slots',
+      description: 'Use `#content-{n}` (numbered) slots to render custom content for each tab panel. The index matches the tab position in the `items` array.',
+      links: [
+        { label: 'Vue named slots docs', href: 'https://vuejs.org/guide/components/slots.html#named-slots' },
+      ],
       preview: `<DuTabs
   :items="[{ label: 'Description' }, { label: 'Reviews' }]"
   type="border"

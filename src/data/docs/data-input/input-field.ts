@@ -86,18 +86,97 @@ export default {
     },
     {
       title: 'With HTML validation',
+      description: 'Use `pattern`, `minlength`, `maxlength`, `required` and `title` for native browser validation. Add `invalid` to apply the error style regardless of browser state.',
       links: [
         { label: 'HTML constraint validation docs', href: 'https://developer.mozilla.org/en-US/docs/Web/HTML/Constraint_validation' },
+        { label: 'MDN pattern attribute', href: 'https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/pattern' },
       ],
-      code: `<DuInputField
+      preview: `<div class="flex flex-col gap-2 w-72">
+  <DuInputField
+    type="email"
+    placeholder="your@email.com"
+    required
+    :invalid="true"
+    variant="error"
+  />
+  <DuInputField
+    type="text"
+    placeholder="Min 3 chars"
+    :minlength="3"
+    :maxlength="20"
+  />
+</div>`,
+      code: `<!-- invalid applies error styling without waiting for native validation -->
+<DuInputField
   v-model="email"
   type="email"
   placeholder="your@email.com"
   required
   :pattern="'[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$'"
   title="Please enter a valid email"
-  :invalid="true"
+  :invalid="hasError"
+/>
+
+<!-- character limits -->
+<DuInputField
+  v-model="username"
+  type="text"
+  placeholder="Username"
+  :minlength="3"
+  :maxlength="20"
 />`,
+    },
+    {
+      title: 'Suggestion list (autocomplete)',
+      description: 'Pass `suggestionList` (values array) and `suggestionName` (HTML datalist id) to enable native browser autocomplete suggestions.',
+      links: [
+        { label: 'MDN datalist element', href: 'https://developer.mozilla.org/en-US/docs/Web/HTML/Element/datalist' },
+      ],
+      preview: `<DuInputField
+  placeholder="Search a country..."
+  suggestionName="countries-list"
+  :suggestionList="['France', 'Germany', 'Italy', 'Spain', 'Portugal']"
+  class="w-72"
+/>`,
+      code: `<script setup lang="ts">
+const country = ref('')
+const countries = [
+  'France', 'Germany', 'Italy', 'Spain', 'Portugal', 'Netherlands', 'Belgium',
+]
+</script>
+
+<template>
+  <DuInputField
+    v-model="country"
+    placeholder="Search a country..."
+    suggestionName="countries-list"
+    :suggestionList="countries"
+  />
+</template>`,
+    },
+    {
+      title: 'Inside a fieldset with label',
+      description: 'Combine with DuFieldset and DuLabel for accessible form groups with error messages.',
+      links: [
+        { label: 'DuFieldset docs', href: '/docs/data-input/fieldset' },
+        { label: 'DuLabel docs', href: '/docs/data-input/label' },
+      ],
+      preview: `<DuFieldset legend="Account">
+  <DuLabel label="Email">
+    <DuInputField type="email" placeholder="you@example.com" />
+  </DuLabel>
+  <DuLabel label="Password">
+    <DuInputField type="password" placeholder="••••••••" />
+  </DuLabel>
+</DuFieldset>`,
+      code: `<DuFieldset legend="Account">
+  <DuLabel label="Email">
+    <DuInputField v-model="email" type="email" placeholder="you@example.com" />
+  </DuLabel>
+  <DuLabel label="Password">
+    <DuInputField v-model="password" type="password" placeholder="••••••••" />
+  </DuLabel>
+</DuFieldset>`,
     },
   ],
 } satisfies DocPageData

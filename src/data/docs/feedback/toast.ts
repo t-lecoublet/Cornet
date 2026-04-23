@@ -30,6 +30,13 @@ export default {
     },
     {
       title: 'Multiple toasts',
+      preview: `<div class="relative h-36 w-full rounded-xl border border-base-300 overflow-hidden">
+  <DuToast horizontalPosition="end" verticalPosition="top" class="absolute">
+    <DuAlert variant="success" icon size="sm">Saved successfully!</DuAlert>
+    <DuAlert variant="info" icon size="sm">2 files uploaded</DuAlert>
+    <DuAlert variant="warning" icon size="sm">Session expiring soon</DuAlert>
+  </DuToast>
+</div>`,
       code: `<DuToast horizontalPosition="end" verticalPosition="top">
   <DuAlert
     v-for="toast in toasts"
@@ -48,6 +55,11 @@ export default {
       links: [
         { label: 'Vue provide/inject docs', href: 'https://vuejs.org/guide/components/provide-inject.html' },
       ],
+      preview: `<div class="relative h-24 w-full rounded-xl border border-base-300 overflow-hidden">
+  <DuToast horizontalPosition="end" verticalPosition="bottom" class="absolute">
+    <DuAlert variant="primary" icon size="sm" dismissible>Operation completed</DuAlert>
+  </DuToast>
+</div>`,
       code: `<!-- In your app root or layout -->
 <DuToast horizontalPosition="end" verticalPosition="top">
   <DuAlert

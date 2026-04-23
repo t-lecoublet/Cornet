@@ -16,38 +16,68 @@ export default {
   sections: [
     {
       title: 'Basic',
-      preview: `<DuCarousel class="rounded-xl w-72">
+      script: `
+        const { width, onResizeStart } = useResize(700)
+        return { width, onResizeStart }
+      `,
+      preview: `<div
+  class="relative h-96 overflow-hidden rounded-lg border border-base-300"
+  :style="{ width: width + 'px' }"
+>
+<DuCarousel>
   <DuCarouselItem>
-    <div class="bg-primary/20 w-full h-32 flex items-center justify-center rounded-xl font-bold">Slide 1</div>
+    <img src="https://img.daisyui.com/images/stock/photo-1559703248-dcaaec9fab78.webp" />
   </DuCarouselItem>
   <DuCarouselItem>
-    <div class="bg-secondary/20 w-full h-32 flex items-center justify-center rounded-xl font-bold">Slide 2</div>
+    <img src="https://img.daisyui.com/images/stock/photo-1565098772267-60af42b81ef2.webp" />
   </DuCarouselItem>
   <DuCarouselItem>
-    <div class="bg-accent/20 w-full h-32 flex items-center justify-center rounded-xl font-bold">Slide 3</div>
+    <img src="https://img.daisyui.com/images/stock/photo-1494253109108-2e30c049369b.webp" />
   </DuCarouselItem>
-</DuCarousel>`,
+</DuCarousel>
+  <div
+    class="absolute right-0 top-0 h-full w-2 cursor-ew-resize z-20 grid place-items-center group/itemdrag"
+    @pointerdown.prevent="onResizeStart"
+  >
+    <div class="w-1 h-1/2 bg-base-300 group-hover/itemdrag:bg-neutral rounded-full"></div>
+  </div>
+</div>`,
       code: `<DuCarousel>
   <DuCarouselItem>
-    <div class="bg-primary/20 w-full h-32 flex items-center justify-center">Slide 1</div>
+    <img src="https://img.daisyui.com/images/stock/photo-1559703248-dcaaec9fab78.webp" />
   </DuCarouselItem>
   <DuCarouselItem>
-    <div class="bg-secondary/20 w-full h-32 flex items-center justify-center">Slide 2</div>
+    <img src="https://img.daisyui.com/images/stock/photo-1565098772267-60af42b81ef2.webp" />
   </DuCarouselItem>
   <DuCarouselItem>
-    <div class="bg-accent/20 w-full h-32 flex items-center justify-center">Slide 3</div>
+    <img src="https://img.daisyui.com/images/stock/photo-1572635148818-ef6fd45eb394.webp" />
   </DuCarouselItem>
 </DuCarousel>`,
     },
     {
       title: 'Center snap',
-      preview: `<DuCarousel :center="true" class="w-72 rounded-xl">
+      script: `
+        const { width, onResizeStart } = useResize(300)
+        return { width, onResizeStart }
+      `,
+      preview: `<div
+  class="relative h-32 overflow-hidden rounded-lg border border-base-300"
+  :style="{ width: width + 'px' }"
+>
+  <DuCarousel :center="true" class="w-full">
   <DuCarouselItem v-for="n in 5" :key="n">
-    <div class="w-48 h-32 bg-base-200 flex items-center justify-center rounded-xl font-medium">
+    <div class="w-48 h-32 bg-base-200 flex items-center justify-center font-medium">
       Slide {{ n }}
     </div>
   </DuCarouselItem>
-</DuCarousel>`,
+</DuCarousel>
+  <div
+    class="absolute right-0 top-0 h-full w-2 cursor-ew-resize z-20 grid place-items-center group/itemdrag"
+    @pointerdown.prevent="onResizeStart"
+  >
+    <div class="w-1 h-1/2 bg-base-300 group-hover/itemdrag:bg-neutral rounded-full"></div>
+  </div>
+</div>`,
       code: `<!-- Each item snaps to the center of the viewport -->
 <DuCarousel :center="true">
   <DuCarouselItem v-for="n in 5" :key="n">
@@ -76,6 +106,15 @@ export default {
     },
     {
       title: 'Dynamic items prop',
+      description: 'Pass an `items` array where each item has `src` and `alt`. The component renders each as a DuCarouselItem automatically.',
+      preview: `<DuCarousel
+  class="w-72 rounded-xl"
+  :items="[
+    { src: 'https://img.daisyui.com/images/stock/photo-1559703248-dcaaec9fab78.webp', alt: 'Slide 1' },
+    { src: 'https://img.daisyui.com/images/stock/photo-1565098772267-60af42b81ef2.webp', alt: 'Slide 2' },
+    { src: 'https://img.daisyui.com/images/stock/photo-1572635148818-ef6fd45eb394.webp', alt: 'Slide 3' },
+  ]"
+/>`,
       code: `<DuCarousel
   :items="[
     { src: '/img1.jpg', alt: 'Image 1' },

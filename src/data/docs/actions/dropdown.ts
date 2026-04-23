@@ -77,6 +77,11 @@ export default {
   sections: [
     {
       title: 'Basic',
+      description: 'Use `#trigger` for the element that opens the dropdown, and the default slot (or `#content`) for the panel. Any component can go in the content slot — not just DuMenu.',
+      links: [
+        { label: 'Vue named slots docs', href: 'https://vuejs.org/guide/components/slots.html#named-slots' },
+        { label: 'DuMenu docs', href: '/docs/navigation/menu' },
+      ],
       preview: `<DuDropdown>
   <template #trigger>
     <DuButton soft>Click me</DuButton>
@@ -184,6 +189,45 @@ export default {
   </template>
   <DuMenu :items="[{ label: 'Item 1' }]" class="bg-base-200 w-40" />
 
+</DuDropdown>`,
+    },
+    {
+      title: 'Custom content (not DuMenu)',
+      description: "The content slot accepts any element — use a card, form, or any custom UI inside the dropdown. You just need to add 'tabindex=0' to the trigger element to make it focusable if it's needed.",
+      preview: `<DuDropdown placement="bottom,end">
+  <template #trigger>
+    <DuAvatar size="sm" rounded="full" ring ringColor="primary" placeholder variant="primary" tabindex="0" class="cursor-pointer">JD</DuAvatar>
+  </template>
+  <div class="bg-base-100 border border-base-300 rounded-xl shadow-lg p-4 w-56 flex flex-col gap-3 mt-2">
+    <div class="flex items-center gap-3">
+      <DuAvatar size="sm" rounded="full" placeholder variant="primary">JD</DuAvatar>
+      <div>
+        <div class="font-semibold text-sm">John Doe</div>
+        <div class="text-xs text-base-content/50">john@example.com</div>
+      </div>
+    </div>
+    <div class="divider my-0"></div>
+    <DuButton ghost size="sm" class="justify-start">Profile</DuButton>
+    <DuButton ghost size="sm" class="justify-start">Settings</DuButton>
+    <DuButton variant="error" soft size="sm" class="justify-start">Sign out</DuButton>
+  </div>
+</DuDropdown>`,
+      code: `<DuDropdown placement="bottom,end">
+  <template #trigger>
+    <DuAvatar size="sm" rounded="full" placeholder variant="primary" tabindex="0" class="cursor-pointer">JD</DuAvatar>
+  </template>
+  <div class="bg-base-100 border border-base-300 rounded-xl shadow-lg p-4 w-56">
+    <div class="flex items-center gap-3 mb-3">
+      <DuAvatar size="sm" rounded="full" placeholder variant="primary">JD</DuAvatar>
+      <div>
+        <div class="font-semibold text-sm">{{ user.name }}</div>
+        <div class="text-xs text-base-content/50">{{ user.email }}</div>
+      </div>
+    </div>
+    <div class="divider my-0"></div>
+    <DuButton ghost size="sm" class="w-full justify-start" @click="goToProfile">Profile</DuButton>
+    <DuButton variant="error" soft size="sm" class="w-full justify-start" @click="signOut">Sign out</DuButton>
+  </div>
 </DuDropdown>`,
     },
     {

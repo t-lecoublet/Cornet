@@ -225,19 +225,30 @@ export default {
   sections: [
     {
       title: 'Basic (string options)',
+      links: [
+        { label: 'Vue v-model docs', href: 'https://vuejs.org/guide/components/v-model.html' },
+      ],
       preview: `<DuSelect
   :options="['Apple', 'Banana', 'Cherry']"
   placeholder="Choose a fruit"
   class="w-72"
 />`,
-      code: `<DuSelect
-  v-model="selected"
-  :options="['Apple', 'Banana', 'Cherry']"
-  placeholder="Choose a fruit"
-/>`,
+      code: `<script setup lang="ts">
+import { ref } from 'vue'
+const selected = ref(null)
+</script>
+
+<template>
+  <DuSelect
+    v-model="selected"
+    :options="['Apple', 'Banana', 'Cherry']"
+    placeholder="Choose a fruit"
+  />
+</template>`,
     },
     {
       title: 'Object options',
+      description: 'Use `trackBy` to specify which property is used as value, and `labelBy` for the display text.',
       preview: `<DuSelect
   :options="[
     { id: 1, name: 'Vue' },
@@ -249,20 +260,42 @@ export default {
   placeholder="Choose a framework"
   class="w-72"
 />`,
-      code: `<DuSelect
-  v-model="selected"
-  :options="[
-    { id: 1, name: 'Vue' },
-    { id: 2, name: 'React' },
-    { id: 3, name: 'Angular' },
-  ]"
-  trackBy="id"
-  labelBy="name"
-  placeholder="Choose a framework"
-/>`,
+      code: `<script setup lang="ts">
+import { ref } from 'vue'
+
+const frameworks = [
+  { id: 1, name: 'Vue' },
+  { id: 2, name: 'React' },
+  { id: 3, name: 'Angular' },
+]
+const selected = ref(null) // will hold the id (trackBy value)
+</script>
+
+<template>
+  <DuSelect
+    v-model="selected"
+    :options="frameworks"
+    trackBy="id"
+    labelBy="name"
+    placeholder="Choose a framework"
+  />
+</template>`,
     },
     {
       title: 'Return full object',
+      description: 'By default, `v-model` receives only the `trackBy` value (e.g. the id). Set `returnObject` to get the full option object instead.',
+      preview: `<DuSelect
+  :options="[
+    { id: 1, name: 'Vue', color: 'green' },
+    { id: 2, name: 'React', color: 'blue' },
+    { id: 3, name: 'Angular', color: 'red' },
+  ]"
+  trackBy="id"
+  labelBy="name"
+  returnObject
+  placeholder="Choose a framework"
+  class="w-72"
+/>`,
       code: `<DuSelect
   v-model="selectedItem"
   :options="items"

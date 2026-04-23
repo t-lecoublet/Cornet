@@ -54,6 +54,12 @@ export default {
 <DuTextArea v-model="msg" size="lg" placeholder="Large" />`,
     },
     {
+      title: 'Ghost style',
+      description: 'Use `ghost` for a transparent textarea that blends into its container.',
+      preview: `<DuTextArea ghost placeholder="Ghost textarea..." class="w-72" />`,
+      code: `<DuTextArea v-model="msg" ghost placeholder="Ghost textarea..." />`,
+    },
+    {
       title: 'Disabled',
       preview: `<DuTextArea disabled placeholder="Disabled" class="w-72" />`,
       code: `<DuTextArea v-model="msg" disabled placeholder="Disabled" />`,
@@ -62,6 +68,54 @@ export default {
       title: 'With rows',
       preview: `<DuTextArea :rows="6" placeholder="Custom row height..." class="w-72" />`,
       code: `<DuTextArea v-model="msg" :rows="6" placeholder="Custom row height..." />`,
+    },
+    {
+      title: 'v-model binding',
+      description: 'DuTextArea uses `modelValue` + `update:modelValue` under the hood, compatible with `v-model`.',
+      links: [
+        { label: 'Vue v-model docs', href: 'https://vuejs.org/guide/components/v-model.html' },
+      ],
+      preview: `<div class="flex flex-col gap-2 w-72">
+  <DuTextArea placeholder="Write a comment..." :rows="4" variant="primary" />
+  <p class="text-xs text-base-content/50">0 characters</p>
+</div>`,
+      code: `<script setup lang="ts">
+import { ref } from 'vue'
+const message = ref('')
+</script>
+
+<template>
+  <DuTextArea
+    v-model="message"
+    placeholder="Write a comment..."
+    :rows="4"
+    variant="primary"
+  />
+  <p class="text-sm text-base-content/50 mt-1">{{ message.length }} characters</p>
+</template>`,
+    },
+    {
+      title: 'Inside a fieldset',
+      description: 'Combine with DuFieldset + DuLabel for accessible form groups.',
+      links: [
+        { label: 'DuFieldset docs', href: '/docs/data-input/fieldset' },
+        { label: 'DuLabel docs', href: '/docs/data-input/label' },
+      ],
+      preview: `<DuFieldset legend="Contact">
+  <DuLabel label="Message">
+    <DuTextArea placeholder="Your message..." :rows="4" variant="primary" />
+  </DuLabel>
+</DuFieldset>`,
+      code: `<DuFieldset legend="Contact">
+  <DuLabel label="Message">
+    <DuTextArea
+      v-model="msg"
+      placeholder="Your message..."
+      :rows="5"
+      variant="primary"
+    />
+  </DuLabel>
+</DuFieldset>`,
     },
   ],
 } satisfies DocPageData

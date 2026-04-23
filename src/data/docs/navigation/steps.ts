@@ -45,7 +45,7 @@ export default {
   slots: [
     {
       title: 'Step slots (#step, #step-{index})',
-      description: 'Customize individual steps with slot props: item, index',
+      description: 'Customize individual steps with slot props: item, index. Use `#step-{n}` for a specific step or `#step` for all.',
       preview: `<DuSteps
   :items="[
     { label: 'Step 1' },
@@ -266,6 +266,82 @@ export default {
   ]"
 />`,
       code: `<DuSteps :items="items" />`,
+    },
+    {
+      title: 'Custom step content with scoped slots',
+      description: 'Numbered template slots like `#step-0`, `#step-1` expose `{ item, index }` as slot props. Use `#step` (without index) to apply the same template to all steps.',
+      links: [
+        { label: 'Vue scoped slots docs', href: 'https://vuejs.org/guide/components/slots.html#scoped-slots' },
+      ],
+      preview: `<DuSteps
+  :items="[
+    { label: 'Register' },
+    { label: 'Verify' },
+    { label: 'Profile' },
+  ]"
+  :activeSteps="[0, 1]"
+>
+  <template #step-0="{ item, index }">
+    <DuBadge variant="primary" size="sm">{{ index + 1 }}</DuBadge>
+    {{ item.label }}
+  </template>
+  <template #step-1="{ item }">
+    <DuBadge variant="secondary" size="sm">✓</DuBadge>
+    {{ item.label }}
+  </template>
+</DuSteps>`,
+      code: `<!-- Per-step override -->
+<DuSteps :items="steps" :activeSteps="[0, 1]">
+  <template #step-0="{ item, index }">
+    <span class="badge badge-primary">{{ index + 1 }}</span>
+    {{ item.label }}
+  </template>
+  <template #step-1="{ item }">
+    <span class="badge badge-secondary">✓</span>
+    {{ item.label }}
+  </template>
+</DuSteps>
+
+<!-- Same template for all steps -->
+<DuSteps :items="steps" :activeSteps="activeSteps">
+  <template #step="{ item, index }">
+    <span class="font-bold text-primary">{{ index + 1 }}.</span>
+    {{ item.label }}
+  </template>
+</DuSteps>`,
+    },
+    {
+      title: 'Icon slots per step (#step-icon-{n})',
+      description: 'Use `#step-icon-{n}` to set a custom icon inside the step circle for a specific step.',
+      preview: `<DuSteps
+  :items="[
+    { label: 'Cart' },
+    { label: 'Payment' },
+    { label: 'Confirm' },
+  ]"
+  :activeSteps="[0, 1]"
+>
+  <template #step-icon-0>🛒</template>
+  <template #step-icon-1>💳</template>
+  <template #step-icon-2>✅</template>
+</DuSteps>`,
+      code: `<DuSteps :items="checkoutSteps" :activeSteps="[0, 1]">
+  <template #step-icon-0>
+    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4" />
+    </svg>
+  </template>
+  <template #step-icon-1>
+    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+    </svg>
+  </template>
+  <template #step-icon-2>
+    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+    </svg>
+  </template>
+</DuSteps>`,
     },
   ],
 } satisfies DocPageData

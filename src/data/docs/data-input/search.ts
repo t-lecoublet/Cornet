@@ -174,8 +174,18 @@ export default {
   sections: [
     {
       title: 'Basic',
+      links: [
+        { label: 'Vue v-model docs', href: 'https://vuejs.org/guide/components/v-model.html' },
+      ],
       preview: `<DuSearch name="search" id="search-input" placeholder="Search..." class="w-72" :listValues="[]" />`,
-      code: `<DuSearch v-model="query" placeholder="Search..." />`,
+      code: `<script setup lang="ts">
+import { ref } from 'vue'
+const query = ref(null)
+</script>
+
+<template>
+  <DuSearch v-model="query" placeholder="Search..." :listValues="[]" />
+</template>`,
     },
     {
       title: 'With autocomplete list',
@@ -208,6 +218,79 @@ export default {
       title: 'Variant and size',
       preview: `<DuSearch name="search" id="search-lg" variant="primary" size="lg" placeholder="Search..." class="w-72" :listValues="[]" />`,
       code: `<DuSearch v-model="query" variant="primary" size="lg" placeholder="Search..." />`,
+    },
+    {
+      title: 'Multiple selection',
+      description: 'Set `multiple` to allow selecting more than one value. Selected values appear as tags.',
+      preview: `<DuSearch
+  name="tags"
+  id="tags-search"
+  multiple
+  placeholder="Select tags..."
+  :listValues="[
+    { id: 1, name: 'Vue' },
+    { id: 2, name: 'React' },
+    { id: 3, name: 'TypeScript' },
+    { id: 4, name: 'Tailwind' },
+  ]"
+  class="w-72"
+/>`,
+      code: `<script setup lang="ts">
+import { ref } from 'vue'
+const selectedTags = ref([])
+</script>
+
+<template>
+  <DuSearch
+    v-model="selectedTags"
+    name="tags"
+    id="tags-search"
+    multiple
+    placeholder="Select tags..."
+    :listValues="[
+      { id: 1, name: 'Vue' },
+      { id: 2, name: 'React' },
+      { id: 3, name: 'TypeScript' },
+    ]"
+  />
+</template>`,
+    },
+    {
+      title: 'Add new option',
+      description: 'Set `addOption` to allow creating new values not present in `listValues`. The `#add-option` slot customizes how the "add" row appears.',
+      links: [
+        { label: 'Vue named slots docs', href: 'https://vuejs.org/guide/components/slots.html#named-slots' },
+      ],
+      preview: `<DuSearch
+  name="tech"
+  id="tech-add"
+  :addOption="true"
+  placeholder="Search or add a technology..."
+  :listValues="[
+    { id: 1, name: 'Vue' },
+    { id: 2, name: 'React' },
+  ]"
+  class="w-72"
+>
+  <template #add-option="{ query }">
+    <span class="flex items-center gap-2 text-success">
+      <span>+</span>
+      Add "{{ query }}"
+    </span>
+  </template>
+</DuSearch>`,
+      code: `<DuSearch
+  v-model="selected"
+  :addOption="true"
+  :listValues="listValues"
+  @add="(newOption) => listValues.push(newOption)"
+>
+  <template #add-option="{ query }">
+    <span class="flex items-center gap-2 text-success">
+      <span>+</span> Add "{{ query }}"
+    </span>
+  </template>
+</DuSearch>`,
     },
   ],
 } satisfies DocPageData
