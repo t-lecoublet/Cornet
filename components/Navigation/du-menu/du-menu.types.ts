@@ -4,6 +4,9 @@ import { type Size } from "../../../composables/useSizeProps";
 export const DU_MENU_DIRECTIONS = ["default", "vertical", "horizontal", "responsive"] as const;
 export type MenuDirection = (typeof DU_MENU_DIRECTIONS)[number];
 
+export const MENU_SIZES = ['menu-xs', 'menu-sm', 'menu-md', 'menu-lg', 'menu-xl'] as const
+export type MENUSize = (typeof MENU_SIZES)[number]
+
 export interface MenuItem {
   label: string;
   href?: string;
