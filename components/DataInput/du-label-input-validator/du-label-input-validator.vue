@@ -3,11 +3,12 @@ import DuInputField from "../du-input-field/du-input-field.vue";
 import DuLabel from "../du-label/du-label.vue";
 import { type LabelInputValidatorProps } from "./du-label-input-validator.types";
 
-const model = defineModel();
+defineOptions({ inheritAttrs: false })
+
+const model = defineModel<string>()
 
 const props = withDefaults(defineProps<LabelInputValidatorProps>(), {
   type: "floating-label",
-  pattern: "[A-Za-z][A-Za-z0-9\\-]*",
   required: false,
   placeholder: "",
   inputType: "text",
@@ -16,9 +17,13 @@ const props = withDefaults(defineProps<LabelInputValidatorProps>(), {
 </script>
 
 <template>
-  <DuLabel :class="[type, 'validator']">
-    <slot name="before"></slot>
+  <DuLabel :type="type" class="validator">
+    <slot name="before" />
+    <template v-if="type !== 'floating-label'">
+      <slot />
+    </template>
     <DuInputField
+      v-bind="$attrs"
       v-model="model"
       :required="required"
       :pattern="pattern"
@@ -28,12 +33,19 @@ const props = withDefaults(defineProps<LabelInputValidatorProps>(), {
       :type="inputType"
       :placeholder="placeholder"
       :disabled="disabled"
+      :invalid="invalid"
+      :size="size"
+      :variant="variant"
+      :ghost="ghost"
       :suggestionName="suggestionName"
       :suggestionList="suggestionList"
     />
-    <slot name="after"></slot>
+    <span v-if="type === 'floating-label'">
+      <slot />
+    </span>
+    <slot name="after" />
   </DuLabel>
   <p class="validator-hint" v-if="$slots.hint">
-    <slot name="hint"></slot>
+    <slot name="hint" />
   </p>
-</template> 
+</template>

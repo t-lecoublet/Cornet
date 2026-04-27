@@ -43,7 +43,7 @@ const computedInputClass = computed(() => {
     return classes.join(' ')
 })
 
-const emit = defineEmits(["update:modelValue", "select", "remove"])
+const emit = defineEmits(["update:modelValue", "select", "remove", "add"])
 
 const selectedValues = ref<any[]>([])
 watch(
@@ -118,20 +118,23 @@ function updateModel() {
 }
 
 function selectValue(val: any) {
+    const isNew = props.addOption && val.id === null
     if (props.multiple) {
         if (!selectedValues.value.find((v) => v.id === val.id && v.name === val.name)) {
             selectedValues.value.push(val)
-            emit("select", val)
+            if (isNew) emit("add", val)
+            else emit("select", val)
             updateModel()
         }
         query.value = ""
     } else {
         selectedValues.value = [val]
-        emit("select", val)
+        if (isNew) emit("add", val)
+        else emit("select", val)
         updateModel()
         open.value = false
         query.value = ""
-        isEditing.value = false // Arrêter l'édition après sélection
+        isEditing.value = false
     }
 }
 

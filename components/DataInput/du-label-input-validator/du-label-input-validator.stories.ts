@@ -2,25 +2,14 @@ import type { Meta, StoryObj } from "@storybook/vue3";
 import DuLabelInputValidator from "./du-label-input-validator.vue";
 import { h } from 'vue';
 
-const UserIconSvg = `
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-    <g
-      stroke-linejoin="round"
-      stroke-linecap="round"
-      stroke-width="2.5"
-      fill="none"
-      stroke="currentColor"
-    >
-      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-      <circle cx="12" cy="7" r="4"></circle>
-    </g>
-  </svg>
-`
+const UserIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g stroke-linejoin="round" stroke-linecap="round" stroke-width="2.5" fill="none" stroke="currentColor"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></g></svg>`
+
 const UserIcon = {
   render() {
     return h('div', { innerHTML: UserIconSvg });
   }
 };
+
 const meta: Meta<typeof DuLabelInputValidator> = {
   title: "Components/DataInput/LabelInputValidator",
   component: DuLabelInputValidator,
@@ -30,11 +19,14 @@ const meta: Meta<typeof DuLabelInputValidator> = {
 
 export default meta;
 
-// Username text input with icon and validator
-const UserNameTextInputWithIconAndValidatorTplStr = `
-<DuLabelInputValidator 
-  v-bind="args" 
-  type="input" 
+export const UsernameWithIcon: StoryObj = {
+  render: (args) => ({
+    components: { DuLabelInputValidator, UserIcon },
+    setup() { return { args }; },
+    template: `
+<DuLabelInputValidator
+  v-bind="args"
+  type="input"
   pattern="[A-Za-z][A-Za-z0-9\\-]*"
   minlength="3"
   maxlength="30"
@@ -45,25 +37,47 @@ const UserNameTextInputWithIconAndValidatorTplStr = `
   <template #before>
     <UserIcon class="h-[1em] opacity-50" />
   </template>
-  <template #hint>
-// USERNAME TEXT INPUT WITH ICON AND VALIDATOR
-const UserNameTextInputWithIconAndValidatorTemplate: StoryObj = {
-  render: (args: any) => ({
-</DuLabelInputValidator>
-`;
-
-// USERNAME TEXT INPUT WITH ICON AND VALIDATOR
-const UserNameTextInputWithIconAndValidatorTemplate: StoryObj = {
-  render: (args) => ({
-    components: { DuLabelInputValidator, UserIcon },
-    setup() {
-      return { args };
-    },
-    template: UserNameTextInputWithIconAndValidatorTplStr,
+  <template #hint>Must be 3–30 characters. Letters, numbers, or dash only.</template>
+</DuLabelInputValidator>`,
   }),
-  // on indique ici les valeurs
   args: {},
 };
-export const UserNameTextInputWithIconAndValidator = {
-  ...UserNameTextInputWithIconAndValidatorTemplate,
-}; 
+
+export const FloatingLabel: StoryObj = {
+  render: (args) => ({
+    components: { DuLabelInputValidator },
+    setup() { return { args }; },
+    template: `
+<DuLabelInputValidator
+  v-bind="args"
+  inputType="email"
+  placeholder="your@email.com"
+  required
+  title="Please enter a valid email"
+  pattern="[a-z0-9._%+\\-]+@[a-z0-9.\\-]+\\.[a-z]{2,}$"
+>
+  Email
+  <template #hint>Enter a valid email address.</template>
+</DuLabelInputValidator>`,
+  }),
+  args: {},
+};
+
+export const LabelType: StoryObj = {
+  render: (args) => ({
+    components: { DuLabelInputValidator },
+    setup() { return { args }; },
+    template: `
+<DuLabelInputValidator
+  v-bind="args"
+  type="label"
+  inputType="text"
+  placeholder="John Doe"
+  required
+>
+  Full name
+  <template #hint>Required field.</template>
+</DuLabelInputValidator>`,
+  }),
+  args: {},
+};
