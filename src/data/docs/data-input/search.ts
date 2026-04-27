@@ -257,33 +257,28 @@ const selectedTags = ref([])
     },
     {
       title: 'Add new option',
-      description: 'Set `addOption` to allow creating new values not present in `listValues`. The `#add-option` slot customizes how the "add" row appears.',
+      description: 'Set `addOption` to allow creating values not present in `listValues`. The `#add-option` slot customizes how the "add" row appears. The `@add` event fires with `{ id: null, name: query }` — assign a real id in the handler before pushing to the list.',
       links: [
         { label: 'Vue named slots docs', href: 'https://vuejs.org/guide/components/slots.html#named-slots' },
       ],
+      script: `
+      const listValues = ref([
+        { id: 1, name: 'Vue' },
+        { id: 2, name: 'React' },
+      ])
+      const selected = ref(null)
+      function onAdd(newOption) {
+        listValues.value.push({ id: listValues.value.length + 1, name: newOption.name })
+      }
+      return { listValues, selected, onAdd }`,
       preview: `<DuSearch
-  name="tech"
-  id="tech-add"
-  :addOption="true"
-  placeholder="Search or add a technology..."
-  :listValues="[
-    { id: 1, name: 'Vue' },
-    { id: 2, name: 'React' },
-  ]"
-  class="w-72"
->
-  <template #add-option="{ query }">
-    <span class="flex items-center gap-2 text-success">
-      <span>+</span>
-      Add "{{ query }}"
-    </span>
-  </template>
-</DuSearch>`,
-      code: `<DuSearch
+  id="search-add"
+  name="framework"
   v-model="selected"
   :addOption="true"
   :listValues="listValues"
-  @add="(newOption) => listValues.push(newOption)"
+  placeholder="Select Tech..."
+  @add="onAdd"
 >
   <template #add-option="{ query }">
     <span class="flex items-center gap-2 text-success">
@@ -291,6 +286,35 @@ const selectedTags = ref([])
     </span>
   </template>
 </DuSearch>`,
+      code: `<script setup lang="ts">
+const listValues = ref([
+  { id: 1, name: 'Vue' },
+  { id: 2, name: 'React' },
+])
+const selected = ref(null)
+
+function onAdd(newOption: { id: null; name: string }) {
+  listValues.value.push({ id: listValues.value.length + 1, name: newOption.name })
+}
+</script>
+
+<template>
+  <DuSearch
+    id="search-fw"
+    name="framework"
+    v-model="selected"
+    :addOption="true"
+    placeholder="Select Tech..."
+    :listValues="listValues"
+    @add="onAdd"
+  >
+    <template #add-option="{ query }">
+      <span class="flex items-center gap-2 text-success">
+        <span>+</span> Add "{{ query }}"
+      </span>
+    </template>
+  </DuSearch>
+</template>`,
     },
   ],
 } satisfies DocPageData
