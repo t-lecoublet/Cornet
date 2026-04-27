@@ -7,3 +7,23 @@ export interface FILEINPUTProps {
   size?: Size
   ghost?: boolean
 } 
+
+export const FILEINPUT_SIZES = [
+  'file-input-xs',
+  'file-input-sm',
+  'file-input-md',
+  'file-input-lg',
+  'file-input-xl',
+] as const
+
+export const FILEINPUT_VARIANTS = [
+  'file-input-primary',
+  'file-input-secondary',
+  'file-input-accent',
+  'file-input-neutral',
+  'file-input-info',
+  'file-input-success',
+  'file-input-warning',
+  'file-input-error',
+] as const
+
