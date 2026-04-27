@@ -73,7 +73,7 @@ export default {
     { id: 2, name: 'Item 2' }
   ]" />
 </DuLabel>`,
-      code: `<DuLabel>
+      code: `<DuLabel type="select">
   <span class="label">Type</span>
   <DuSelect v-model="type" 
     :option="[

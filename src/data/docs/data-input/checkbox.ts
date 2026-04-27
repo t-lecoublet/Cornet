@@ -75,20 +75,22 @@ export default {
       links: [
         { label: 'Vue checkbox v-model docs', href: 'https://vuejs.org/guide/essentials/forms.html#checkbox' },
       ],
-      preview: `<div class="flex flex-col gap-2">
-  <label class="flex items-center gap-2 cursor-pointer text-sm">
-    <DuCheckbox variant="primary" :checked="true" value="vue" /> Vue
-  </label>
-  <label class="flex items-center gap-2 cursor-pointer text-sm">
-    <DuCheckbox variant="primary" value="react" /> React
-  </label>
-  <label class="flex items-center gap-2 cursor-pointer text-sm">
-    <DuCheckbox variant="primary" value="angular" /> Angular
-  </label>
-</div>`,
+      script: `
+        const selected = ref(['Vue'])
+        const options = ['Vue', 'React', 'Angular', 'Svelte']
+        return { selected, options }
+      `,
+      preview: `  <div class="flex flex-col justify-center items-center  gap-2">
+    <label v-for="opt in options" :key="opt" class="flex items-center gap-2 cursor-pointer w-28">
+      <DuCheckbox :value="opt" v-model="selected" variant="primary" />
+      {{ opt }}
+    </label>
+    <p class="text-sm mt-2 text-base-content/60">Selected: {{ selected.join(', ') }}</p>
+  </div>
+  `,
       code: `<script setup lang="ts">
 import { ref } from 'vue'
-const selected = ref(['vue'])
+const selected = ref(['Vue'])
 const options = ['Vue', 'React', 'Angular', 'Svelte']
 </script>
 

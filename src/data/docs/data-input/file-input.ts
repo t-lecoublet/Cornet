@@ -73,20 +73,16 @@ export default {
         { label: 'DuLabel docs', href: '/docs/data-input/label' },
       ],
       preview: `<DuFieldset legend="Attachments">
-  <DuLabel label="Profile picture">
+  <DuLabel type="label">Profile picture</DuLabel>
     <DuFileInput accept="image/*" variant="primary" />
-  </DuLabel>
-  <DuLabel label="CV (PDF only)">
+  <DuLabel type="label">CV (PDF only)</DuLabel>
     <DuFileInput accept=".pdf" />
-  </DuLabel>
 </DuFieldset>`,
       code: `<DuFieldset legend="Attachments">
-  <DuLabel label="Profile picture">
-    <DuFileInput v-model="avatar" accept="image/*" variant="primary" />
-  </DuLabel>
-  <DuLabel label="CV (PDF only)">
-    <DuFileInput v-model="cv" accept=".pdf" />
-  </DuLabel>
+  <DuLabel type="label">Profile picture</DuLabel>
+  <DuFileInput accept="image/*" variant="primary" />
+  <DuLabel type="label">CV (PDF only)</DuLabel>
+  <DuFileInput accept=".pdf" />
 </DuFieldset>`,
     },
   ],
