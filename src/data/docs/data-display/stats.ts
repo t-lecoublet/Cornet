@@ -79,6 +79,7 @@ export default {
   :items="[
     { title: 'Downloads', value: '31K', description: 'Jan 1st - Feb 1st' },
     { title: 'Users', value: '4.2K', description: '↗ 40 (2%)', valueClass: 'text-primary' },
+    { title: 'New Registers', value: '1,200', description: '↘ 90 (14%)', valueClass: 'text-secondary' },
   ]"
 />`,
       code: `<DuStats
