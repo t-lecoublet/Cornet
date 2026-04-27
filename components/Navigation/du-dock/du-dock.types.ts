@@ -1,5 +1,8 @@
 import { type Size } from "../../../composables/useSizeProps";
 
+export const DOCK_SIZES = ['dock-xs', 'dock-sm', 'dock-md', 'dock-lg', 'dock-xl'] as const
+
+export type DOCKSize = (typeof DOCK_SIZES)[number]
 export interface DockItem {
   label?: string;
   icon?: any;

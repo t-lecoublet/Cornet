@@ -2,9 +2,7 @@
 import { computed, provide } from "vue"
 import { type LABELProps } from "./du-label.types"
 
-const props = withDefaults(defineProps<LABELProps>(), {
-  type: "input",
-})
+const props = defineProps<LABELProps>()
 
 if (props.type == "input") {
   provide("isInInput", true)
