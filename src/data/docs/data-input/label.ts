@@ -39,11 +39,11 @@ export default {
     {
       title: 'Label prefix',
       description: 'Place a `<span class="label">` before the input to show a prefix.',
-      preview: `<DuLabel class="w-72">
+      preview: `<DuLabel type="input" class="w-72">
   <span class="label">https://</span>
   <DuInputField placeholder="mysite.com" />
 </DuLabel>`,
-      code: `<DuLabel>
+      code: `<DuLabel type="input">
   <span class="label">https://</span>
   <DuInputField v-model="url" placeholder="mysite.com" />
 </DuLabel>`,
@@ -51,11 +51,11 @@ export default {
     {
       title: 'Label suffix',
       description: 'Place a `<span class="label">` after the input to show a suffix.',
-      preview: `<DuLabel class="w-72">
+      preview: `<DuLabel type="input" class="w-72">
   <DuInputField placeholder="domain name" />
   <span class="label">.com</span>
 </DuLabel>`,
-      code: `<DuLabel>
+      code: `<DuLabel type="input">
   <DuInputField v-model="domain" placeholder="domain name" />
   <span class="label">.com</span>
 </DuLabel>`,

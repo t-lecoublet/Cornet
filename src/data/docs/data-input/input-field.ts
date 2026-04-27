@@ -161,21 +161,23 @@ const countries = [
         { label: 'DuFieldset docs', href: '/docs/data-input/fieldset' },
         { label: 'DuLabel docs', href: '/docs/data-input/label' },
       ],
-      preview: `<DuFieldset legend="Account">
-  <DuLabel label="Email">
+      preview: `<DuFieldset legend="Account" class="bg-base-200 border border-base-300 rounded-box p-4">
+  <DuLabel> Email </DuLabel>
     <DuInputField type="email" placeholder="you@example.com" />
-  </DuLabel>
-  <DuLabel label="Password">
+  <DuLabel type="label"> Option </DuLabel>
+
+  <DuLabel>Password</DuLabel>
     <DuInputField type="password" placeholder="••••••••" />
-  </DuLabel>
+  <DuLabel type="label"> Min 12 caract</DuLabel>
 </DuFieldset>`,
-      code: `<DuFieldset legend="Account">
-  <DuLabel label="Email">
-    <DuInputField v-model="email" type="email" placeholder="you@example.com" />
-  </DuLabel>
-  <DuLabel label="Password">
-    <DuInputField v-model="password" type="password" placeholder="••••••••" />
-  </DuLabel>
+      code: `<DuFieldset legend="Account" class="bg-base-200 border border-base-300 rounded-box p-4">
+  <DuLabel> Email </DuLabel>
+    <DuInputField type="email" placeholder="you@example.com" />
+  <DuLabel type="label"> Option </DuLabel>
+
+  <DuLabel>Password</DuLabel>
+    <DuInputField type="password" placeholder="••••••••" />
+  <DuLabel type="label"> Min 12 caract</DuLabel>
 </DuFieldset>`,
     },
   ],

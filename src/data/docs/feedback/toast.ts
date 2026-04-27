@@ -21,9 +21,11 @@ export default {
       links: [
         { label: 'DuAlert docs', href: '/docs/feedback/alert' },
       ],
-      preview: `<DuToast horizontalPosition="end" verticalPosition="top">
-  <DuAlert variant="success" icon>Saved successfully!</DuAlert>
-</DuToast>`,
+      preview: `<div class="relative h-36 w-full rounded-xl border border-base-300 overflow-hidden">
+  <DuToast class="absolute" horizontalPosition="end" verticalPosition="top">
+    <DuAlert variant="success" icon>Saved successfully!</DuAlert>
+  </DuToast>
+</div>`,
       code: `<DuToast horizontalPosition="end" verticalPosition="top">
   <DuAlert variant="success" icon>Saved successfully!</DuAlert>
 </DuToast>`,

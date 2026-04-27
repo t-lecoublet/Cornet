@@ -89,6 +89,25 @@ const agreed = ref(false)
         { label: 'DuLabel docs', href: 'http://localhost:5173/docs/form/label' },
         { label: 'DuCheckbox docs', href: 'http://localhost:5173/docs/form/checkbox' },
       ],
+      script: `
+      const email = ref('')
+      const password = ref('')
+      function submit() {
+        alert('forme submitted with email: ' + email.value + ' and password: ' + password.value)
+      }
+      return { email, password, submit }
+      `,
+      preview: `<form class="flex flex-col gap-4 w-80" @submit.prevent="submit">
+<DuFieldset legend="Email">
+      <DuInputField v-model="email" type="email" required />
+    </DuFieldset>
+
+<DuFieldset legend="Password">
+      <DuInputField v-model="password" type="password" required />
+    </DuFieldset>
+
+    <DuButton type="submit" variant="primary">Log in</DuButton>
+  </form>`,
       code: `<script setup lang="ts">
 import { ref } from 'vue'
 
@@ -102,15 +121,13 @@ async function submit() {
 
 <template>
   <form class="flex flex-col gap-4 w-80" @submit.prevent="submit">
-    <DuLabel type="label">
-      Email
+    <DuFieldset legend="Email">
       <DuInputField v-model="email" type="email" required />
-    </DuLabel>
+    </DuFieldset>
 
-    <DuLabel type="label">
-      Password
+    <DuFieldset legend="Password">
       <DuInputField v-model="password" type="password" required />
-    </DuLabel>
+    </DuFieldset>
 
     <DuButton type="submit" variant="primary">Log in</DuButton>
   </form>
