@@ -1,91 +1,99 @@
-<div align="center">
-  <img src="./public/logoLong.svg" alt="Vue + daisyUI Logo" width="300">
-</div>
+# Cornet MCP
 
-# Cornet
+MCP server exposing the [Cornet](https://gitlab.limos.fr/hub-isima/daisyui-vue-kit) Vue component library documentation and source code to any LLM.
 
-Cornet is a Vue 3 component library for daisyUI without node_modules limitations.
+## Tools
 
-## Why
+| Tool | Description |
+| --- | --- |
+| `list_components` | List all components by category |
+| `get_component_docs` | Full docs for a component (props, slots, classnames, code examples) |
+| `get_component_source` | Raw `.vue` source from the lib |
 
-DaisyUI is a Tailwind CSS component library that provides a set of pre-designed UI components. However, it is not designed to be used as a Vue component library. This project aims to provide a set of Vue components that are based on daisyUI's design principles and can be easily integrated into Vue applications.
-This library is designed to be used as components next to your own components, as a library without being in node_modules. That allows to use and modify the library without having to fork, publish it etc.
-
-## Requirements
-
-- [Tailwind CSS](https://tailwindcss.com/docs/installation)
-- [DaisyUI](https://daisyui.com/docs/install/)
-- [Vue 3](https://vuejs.org/guide/introduction.html)
-
-## Installation
-
-### Method 1: (New Vue project) Clone this vue repository
+## Setup
 
 ```bash
-git clone --recurse-submodules git@gitlab.limos.fr:hub-isima/daisyui-vue-kit.git
+git clone --recurse-submodules git@gitlab.limos.fr:hub-isima/daisyui-vue-kit.git -b mcp cornet-mcp
+cd cornet-mcp
+docker compose up -d
 ```
 
-### Method 2: (Vue existing projects) Download only lib directory from branch lib
+The server listens on `http://localhost:3000/mcp`.
 
-If you want to use the library in an existing project, you can download only the `lib` directory from the [lib](https://gitlab.limos.fr/hub-isima/daisyui-vue-kit/-/tree/lib?ref_type=heads) branch of the repository. This will allow you to use the library without having to clone the entire repository.
+---
 
-At the source of your project, run the following command to add the `lib` as a submodule:
+## Usage
+
+### Claude Code
 
 ```bash
-git submodule add -b lib git@gitlab.limos.fr:hub-isima/daisyui-vue-kit.git lib
-git submodule update --init --recursive
+claude mcp add --transport http cornet http://localhost:3000/mcp
 ```
 
-More information about submodules can be found in the [Git documentation](https://git-scm.com/docs/git-submodule).
-
-Install the local directory as a dependency with :
-
-```bash
-npm install ./lib
-```
-
-OR
-Add this line to your dependency file (package.json):
+Or in `.claude/mcp.json`:
 
 ```json
-"dependencies": {
-  "daisyui-vue-kit": "file:lib"
+{
+  "mcpServers": {
+    "cornet": {
+      "type": "http",
+      "url": "http://localhost:3000/mcp"
+    }
+  }
 }
 ```
 
-Then, run your installation command with your package manager like `npm install` to install the dependencies.
+---
 
-Finally add the vite plugin and import the lib in your css file:
+### OpenCode
 
-```javascript
-// vite.config.js
-import vueDaisyUI from 'daisyui-vue-kit/plugin-vite'
+In `~/.config/opencode/config.json`:
 
-// ... Existing code
-export default defineConfig({
-  plugins: [
-    vueDaisyUI({
-      showOutput: true
-    }),
-  ]
-})
+```json
+{
+  "mcp": {
+    "cornet": {
+      "type": "remote",
+      "url": "http://localhost:3000/mcp"
+    }
+  }
+}
 ```
 
-```css
-/* your.css */
-@import "tailwindcss";
-@import "daisyui-vue-kit/css";
-@plugin "daisyui";
+---
+
+### Cursor / Windsurf
+
+In `.cursor/mcp.json` or `.windsurf/mcp.json` at the project root:
+
+```json
+{
+  "mcpServers": {
+    "cornet": {
+      "url": "http://localhost:3000/mcp"
+    }
+  }
+}
 ```
 
-### Method 3: Nuxt project
+---
 
-You can refer to this [Nuxt project with kit](https://gitlab.limos.fr/hub-isima/daisyui-vue-kit-nuxt-starter/-/tree/master?ref_type=heads) for installation needs.
+### OpenAI-compatible clients (via mcp-to-openai proxy)
 
-## Storybook
+If your client doesn't natively support MCP, use a proxy like [`mcp-proxy`](https://github.com/sparfenyuk/mcp-proxy) to expose the server as OpenAI tool-calling:
 
-Library also provide storybook stories to test components. So you can install it and run daisyui-vue-kit stories.
+```bash
+uvx mcp-proxy --sse-port 8080 -- docker compose exec -T web npx tsx /app/server.ts
+```
 
-See [storybook](https://storybook.js.org/docs/vue/get-started/install) documentation for more information.
+Then point your client at `http://localhost:8080`.
 
-WARNING: Storybook v9 is not compatible with Nuxt for now, so use vite storybook instead or use Storybook v8 inside Nuxt project. (Actually, Nuxt project linked above use Storybook v9 with vite)
+---
+
+## Updating
+
+When the Cornet library or docs are updated:
+
+```bash
+git submodule update --remote --recursive
+```

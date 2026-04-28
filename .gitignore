@@ -20,7 +20,7 @@ coverage
 
 # Editor directories and files
 .vscode/*
-.claude/*
+.claude/
 !.vscode/extensions.json
 .idea
 *.suo
@@ -30,3 +30,5 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+.claude/settings.json
+.vscode/extensions.json
