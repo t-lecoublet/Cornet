@@ -14,10 +14,10 @@ function choose(pref: RepoPref) {
       <div class="bg-base-100 rounded-2xl shadow-2xl w-full max-w-lg border border-base-300">
 
         <div class="p-6 pb-4">
-          <h2 class="text-lg font-bold mb-1">Choisissez votre source</h2>
+          <h2 class="text-lg font-bold mb-1">Choose your source</h2>
           <p class="text-sm text-base-content/60">
-            Cornet est hébergé sur deux plateformes. Choisissez celle que vous préférez
-            pour les liens et exemples de code — vous pourrez changer d'avis plus tard.
+            Cornet is hosted on two platforms. Pick the one you prefer for
+            links and code examples — you can switch anytime from the navbar.
           </p>
         </div>
 
@@ -34,7 +34,7 @@ function choose(pref: RepoPref) {
             <div>
               <div class="font-semibold text-sm">GitLab</div>
               <div class="text-xs text-base-content/50 mt-0.5 leading-relaxed">
-                Labo CNRS indépendant — hébergement souverain, pas de dépendance à une grande plateforme.
+                Independent CNRS lab — sovereign hosting, no dependency on a big platform.
               </div>
             </div>
           </button>
@@ -50,7 +50,7 @@ function choose(pref: RepoPref) {
             <div>
               <div class="font-semibold text-sm">GitHub</div>
               <div class="text-xs text-base-content/50 mt-0.5 leading-relaxed">
-                Microsoft — plus grande visibilité, le code a plus de chances de rester accessible longtemps.
+                Microsoft — wider reach, the code is more likely to stay accessible long-term.
               </div>
             </div>
           </button>

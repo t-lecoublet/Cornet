@@ -117,7 +117,7 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKeydown))
             :href="repoUrl"
             target="_blank"
             rel="noopener"
-            :title="`Ouvrir sur ${preference === 'gitlab' ? 'GitLab' : 'GitHub'}`"
+            :title="`Open on ${preference === 'gitlab' ? 'GitLab' : 'GitHub'}`"
             class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-medium transition-colors"
             :class="preference === 'gitlab'
               ? 'border-warning/50 text-warning hover:bg-warning/5'
@@ -132,8 +132,8 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKeydown))
 
           <!-- Switch source button -->
           <div
-            class="tooltip tooltip-bottom"
-            :data-tip="`Passer à ${preference === 'gitlab' ? 'GitHub' : 'GitLab'}`"
+            class="tooltip tooltip-left"
+            :data-tip="`Switch to ${preference === 'gitlab' ? 'GitHub' : 'GitLab'}`"
           >
             <button
               class="p-1.5 rounded-lg border border-base-300 text-base-content/50 hover:text-base-content/80 hover:border-base-content/20 hover:bg-base-200 transition-colors cursor-pointer"
