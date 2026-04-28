@@ -451,22 +451,30 @@ export default defineConfig({
 }
 
 .beta-badge--hero {
+  --outline-size: 2px;
   top: 4px;
   right: -10px;
-  font-size: 30px;
+  font-size: 1.88rem;
   transform: rotate(12deg);
   transform-origin: bottom left;
   animation: beta-float 2s ease-in-out infinite;
   color: var(--color-primary);
   text-shadow:
-    -2px -2px 0 color-mix(in srgb, var(--color-primary), black 60%),
-     2px -2px 0 color-mix(in srgb, var(--color-primary), black 60%),
-    -2px  2px 0 color-mix(in srgb, var(--color-primary), black 60%),
-     2px  2px 0 color-mix(in srgb, var(--color-primary), black 60%),
-    -2px  0   0 color-mix(in srgb, var(--color-primary), black 60%),
-     2px  0   0 color-mix(in srgb, var(--color-primary), black 60%),
-     0   -2px 0 color-mix(in srgb, var(--color-primary), black 60%),
-     0    2px 0 color-mix(in srgb, var(--color-primary), black 60%),
-     2px  3px 0 color-mix(in srgb, var(--color-primary), black 80%);
+    calc(var(--outline-size) * -1) calc(var(--outline-size) * -1) 0 color-mix(in srgb, var(--color-primary), black 60%),
+     var(--outline-size) calc(var(--outline-size) * -1) 0 color-mix(in srgb, var(--color-primary), black 60%),
+    calc(var(--outline-size) * -1)  var(--outline-size) 0 color-mix(in srgb, var(--color-primary), black 60%),
+     var(--outline-size)  var(--outline-size) 0 color-mix(in srgb, var(--color-primary), black 60%),
+    calc(var(--outline-size) * -1)  0   0 color-mix(in srgb, var(--color-primary), black 60%),
+     var(--outline-size)  0   0 color-mix(in srgb, var(--color-primary), black 60%),
+     0   calc(var(--outline-size) * -1) 0 color-mix(in srgb, var(--color-primary), black 60%),
+     0    var(--outline-size) 0 color-mix(in srgb, var(--color-primary), black 60%),
+     var(--outline-size)  3px 0 color-mix(in srgb, var(--color-primary), black 80%);
+}
+
+@media (max-width: 500px) {
+  .beta-badge--hero {
+    font-size: 5vw;
+    --outline-size: 1px;
+  }
 }
 </style>
