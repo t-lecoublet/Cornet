@@ -5,6 +5,7 @@ import installation from './guides/installation'
 import quickStart from './guides/quick-start'
 import theming from './guides/theming'
 import copyComponents from './guides/copy-components'
+import mcp from './guides/mcp'
 
 // ─── Actions ────────────────────────────────────────────────
 import button from './actions/button'
@@ -77,6 +78,7 @@ export const docsRegistry: Record<string, DocPageData> = {
   '/docs/guides/quick-start': quickStart,
   '/docs/guides/theming': theming,
   '/docs/guides/copy-components': copyComponents,
+  '/docs/guides/mcp': mcp,
 
   // Actions
   '/docs/actions/button': button,
@@ -162,6 +164,7 @@ export const docsNav: NavCategory[] = [
       { label: 'Quick Start', path: '/docs/guides/quick-start' },
       { label: 'Theming', path: '/docs/guides/theming' },
       { label: 'Copy Components', path: '/docs/guides/copy-components' },
+      { label: 'MCP Server', path: '/docs/guides/mcp' },
     ],
   },
   {
