@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useRepoPreference } from '@/composables/useRepoPreference'
+
+const { transformUrl } = useRepoPreference()
 import { DuButton, DuBadge, DuCard, DuTabs, DuLink } from 'daisyui-vue-kit'
 import CodeBlock from '@/components/CodeBlock.vue'
 import Logo from '@/components/logos/logo.vue'
@@ -97,21 +100,21 @@ const whys = [
 ]
 
 // ─── Install methods → DuTabs ────────────────────────────
-const installMethods = [
+const installMethods = computed(() => [
   {
     label: 'New project',
     iconPath: icons.sparkles,
     description: 'Clone the full repo — Vite + Vue already wired up.',
-    code: 'git clone --recurse-submodules \\\n  git@gitlab.limos.fr:hub-isima/daisyui-vue-kit.git',
+    code: transformUrl('git clone --recurse-submodules \\\n  git@gitlab.limos.fr:hub-isima/daisyui-vue-kit.git'),
   },
   {
     label: 'Existing project',
     iconPath: icons.folder,
     description: 'Add only the lib as a Git submodule — no npm publish needed.',
-    code: `git submodule add -b lib \\
+    code: transformUrl(`git submodule add -b lib \\
   git@gitlab.limos.fr:hub-isima/daisyui-vue-kit.git lib
 git submodule update --init --recursive
-npm install ./lib`,
+npm install ./lib`),
   },
   {
     label: 'Nuxt',
@@ -119,12 +122,12 @@ npm install ./lib`,
     description: 'Grab our ready-made Nuxt starter instead.',
     code: 'git clone git@gitlab.limos.fr:hub-isima/daisyui-vue-kit-nuxt-starter.git',
   },
-]
+])
 
 const selectedTab = ref(1)
 
 const installTabs = computed(() =>
-  installMethods.map((m, i) => ({
+  installMethods.value.map((m, i) => ({
     label: m.label,
     icon: svgIcon(m.iconPath),
     class: 'gap-2',

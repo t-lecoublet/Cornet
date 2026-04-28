@@ -6,8 +6,11 @@ import PropsDocs from './PropsDocs.vue'
 import SlotsDocs from './SlotsDocs.vue'
 import LivePreview from './LivePreview.vue'
 import CodeBlock from './CodeBlock.vue'
+import { useRepoPreference } from '@/composables/useRepoPreference'
 
 defineProps<{ data: DocPageData }>()
+
+const { transformUrl } = useRepoPreference()
 
 const copiedIdx = ref<number | null>(null)
 const copiedAnchorIdx = ref<number | null>(null)
@@ -30,7 +33,7 @@ function copyAnchor(id: string, idx: number) {
 }
 
 function getFullCode(section: { code: string }): string {
-  return section.code
+  return transformUrl(section.code)
 }
 
 function sectionKey(data: DocPageData, idx: number): string {
@@ -137,7 +140,7 @@ onMounted(async () => {
           <a
             v-for="link in section.links"
             :key="link.href"
-            :href="link.href"
+            :href="transformUrl(link.href)"
             target="_blank"
             rel="noopener noreferrer"
             class="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-lg border border-base-300 text-base-content/55 hover:text-primary hover:border-primary/40 transition-colors"
