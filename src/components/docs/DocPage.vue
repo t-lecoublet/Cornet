@@ -10,13 +10,23 @@ import CodeBlock from './CodeBlock.vue'
 defineProps<{ data: DocPageData }>()
 
 const copiedIdx = ref<number | null>(null)
+const copiedAnchorIdx = ref<number | null>(null)
+
 function copyCode(code: string, idx: number) {
   navigator.clipboard.writeText(code).then(() => {
     copiedIdx.value = idx
     setTimeout(() => { copiedIdx.value = null }, 2000)
-  }).catch(() => {
-    // Clipboard API not available
-  })
+  }).catch(() => {})
+}
+
+function copyAnchor(id: string, idx: number) {
+  history.pushState(null, '', `#${id}`)
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+  const url = window.location.href
+  navigator.clipboard.writeText(url).then(() => {
+    copiedAnchorIdx.value = idx
+    setTimeout(() => { copiedAnchorIdx.value = null }, 2000)
+  }).catch(() => {})
 }
 
 function getFullCode(section: { code: string }): string {
@@ -25,6 +35,10 @@ function getFullCode(section: { code: string }): string {
 
 function sectionKey(data: DocPageData, idx: number): string {
   return data.title + '-' + idx
+}
+
+function sectionId(title: string): string {
+  return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
 }
 </script>
 
@@ -79,11 +93,28 @@ function sectionKey(data: DocPageData, idx: number): string {
       <div
         v-for="(section, idx) in data.sections"
         :key="sectionKey(data, idx)"
-        class="group"
+        :id="sectionId(section.title)"
+        class="group pt-5"
       >
         <!-- Section title -->
-        <h3 class="text-sm font-bold text-base-content/80 mb-3 flex items-center gap-2">
-          <span class="w-1 h-4 rounded-full bg-primary/50 inline-block"></span>
+        <h3
+          class="text-sm font-bold text-base-content/80 mb-3 flex items-center gap-2 group/heading cursor-pointer relative"
+          :title="copiedAnchorIdx === idx ? 'Copied!' : 'Copy link'"
+          @click="copyAnchor(sectionId(section.title), idx)"
+        >
+          <a
+            :href="`#${sectionId(section.title)}`"
+            class="w-5.5 h-5.5 bg-base-200/50  text-info/25 group-hover/heading:bg-base-200 group-hover/heading:text-primary transition-opacity absolute top-0 -left-10 shrink-0 grid place-items-center rounded-md"
+            :class="copiedAnchorIdx === idx ? 'text-success' : 'text-base-content/30 hover:text-primary'"
+          >
+            <svg v-if="copiedAnchorIdx !== idx" class="w-full h-full" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M10.416 6.507a.5.5 0 0 1 .41.575L10.506 9h3.987l.347-2.082a.5.5 0 0 1 .986.164L15.506 9H17a.5.5 0 0 1 0 1h-1.66l-.666 4h1.493a.5.5 0 0 1 0 1h-1.66l-.347 2.082a.5.5 0 1 1-.986-.164l.32-1.918H9.506l-.347 2.082a.5.5 0 1 1-.987-.164L8.493 15H7a.5.5 0 0 1 0-1h1.66l.666-4H7.833a.5.5 0 1 1 0-1h1.66l.347-2.082a.5.5 0 0 1 .575-.411M10.34 10l-.666 4h3.986l.666-4z"/>
+            </svg>
+            <svg v-else class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+            </svg>
+          </a>
+          <span class="w-1 h-4 rounded-full bg-primary/50 inline-block shrink-0"></span>
           {{ section.title }}
         </h3>
 
