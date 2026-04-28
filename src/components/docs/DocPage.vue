@@ -42,9 +42,12 @@ function sectionId(title: string): string {
 }
 
 onMounted(async () => {
-  await nextTick()
   const hash = window.location.hash.slice(1)
-  if (hash) document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth' })
+  if (!hash) return
+  await nextTick()
+  setTimeout(() => {
+    document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth' })
+  }, 400)
 })
 </script>
 
