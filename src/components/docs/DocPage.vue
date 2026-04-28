@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import type { DocPageData } from '@/types/docs'
 import PropsTable from './PropsTable.vue'
 import PropsDocs from './PropsDocs.vue'
@@ -40,6 +40,12 @@ function sectionKey(data: DocPageData, idx: number): string {
 function sectionId(title: string): string {
   return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
 }
+
+onMounted(async () => {
+  await nextTick()
+  const hash = window.location.hash.slice(1)
+  if (hash) document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth' })
+})
 </script>
 
 <template>
