@@ -1,4 +1,4 @@
-[submodule "lib"]
-	path = lib
+[submodule "website"]
+	path = website
 	url = git@gitlab.limos.fr:hub-isima/daisyui-vue-kit.git
-	branch = lib
+	branch = website

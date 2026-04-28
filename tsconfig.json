@@ -1,11 +1,16 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
-    },
-    {
-      "path": "./tsconfig.app.json"
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "types": ["node"],
+    "paths": {
+      "@/*": ["./website/src/*"]
     }
-  ]
+  },
+  "include": ["server.ts", "website/src/data/docs/**/*.ts"],
+  "exclude": ["node_modules"]
 }

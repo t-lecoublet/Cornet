@@ -5,7 +5,13 @@
       "Bash(node -e \"import\\('vue'\\).then\\(v => console.log\\(typeof v.compile, Object.keys\\(v\\).filter\\(k => k.toLowerCase\\(\\).includes\\('compile'\\)\\)\\)\\)\")",
       "Bash(node -e \"console.log\\(require\\('./node_modules/vue/package.json'\\).version\\)\")",
       "Bash(node -e ':*)",
-      "Bash(read comp:*)"
+      "Bash(read comp:*)",
+      "mcp__cornet__list_components",
+      "mcp__cornet__get_component_docs",
+      "mcp__cornet__get_component_source",
+      "Bash(git submodule *)",
+      "Bash(git rm *)",
+      "Bash(rm -rf .git/modules/lib)"
     ]
   }
 }
