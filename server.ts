@@ -10,19 +10,46 @@ import { docsRegistry } from './website/src/data/docs/registry.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
+const GITLAB_BASE = 'https://gitlab.limos.fr/hub-isima/daisyui-vue-kit'
+const GITHUB_BASE = 'https://github.com/t-lecoublet/Cornet'
+const GITHUB_SSH  = 'git@github.com:t-lecoublet/Cornet.git'
+
+function transformToGithub(text: string): string {
+  return text
+    .replace(/https:\/\/gitlab\.limos\.fr\/hub-isima\/daisyui-vue-kit\/-\/tree\//g, `${GITHUB_BASE}/tree/`)
+    .replace(/https:\/\/gitlab\.limos\.fr\/hub-isima\/daisyui-vue-kit/g, GITHUB_BASE)
+    .replace(/git@gitlab\.limos\.fr:hub-isima\/daisyui-vue-kit\.git/g, GITHUB_SSH)
+}
+
+function applyRepo(text: string, repo: 'gitlab' | 'github'): string {
+  return repo === 'github' ? transformToGithub(text) : text
+}
+
+const repoSchema = z.enum(['gitlab', 'github']).optional().describe(
+  'Which repo to use for URLs in code examples. ' +
+  'IMPORTANT: Before calling any tool, check if the user\'s project has a .gitmodules file. ' +
+  'If it exists, read it to detect which Cornet remote is configured (gitlab.limos.fr → "gitlab", github.com → "github") and use that. ' +
+  'If there is no .gitmodules or Cornet is not yet installed, ask the user which platform they prefer: ' +
+  `GitLab (${GITLAB_BASE}) or GitHub (${GITHUB_BASE}).`
+)
+
 function createServer() {
   const server = new McpServer({ name: 'cornet', version: '1.0.0' })
 
   server.registerTool(
     'list_components',
-    { description: 'List all Cornet Vue components organized by category' },
-    async () => {
+    {
+      description: 'List all Cornet Vue components organized by category',
+      inputSchema: { repo: repoSchema },
+    },
+    async ({ repo = 'gitlab' }) => {
       const categories: Record<string, string[]> = {}
       for (const [path, doc] of Object.entries(docsRegistry)) {
         if (!categories[doc.category]) categories[doc.category] = []
         categories[doc.category].push(path.split('/').pop()!)
       }
-      return { content: [{ type: 'text', text: JSON.stringify(categories, null, 2) }] }
+      const text = applyRepo(JSON.stringify(categories, null, 2), repo)
+      return { content: [{ type: 'text', text }] }
     },
   )
 
@@ -30,9 +57,12 @@ function createServer() {
     'get_component_docs',
     {
       description: 'Get full documentation for a Cornet component including props, slots, classnames and code examples',
-      inputSchema: { component: z.string().describe('Component name like "button", "modal", "select"') },
+      inputSchema: {
+        component: z.string().describe('Component name like "button", "modal", "select"'),
+        repo: repoSchema,
+      },
     },
-    async ({ component }) => {
+    async ({ component, repo = 'gitlab' }) => {
       const key = Object.keys(docsRegistry).find((k) =>
         k.toLowerCase().endsWith('/' + component.toLowerCase()),
       )
@@ -44,7 +74,8 @@ function createServer() {
           ],
         }
       }
-      return { content: [{ type: 'text', text: JSON.stringify(docsRegistry[key], null, 2) }] }
+      const text = applyRepo(JSON.stringify(docsRegistry[key], null, 2), repo)
+      return { content: [{ type: 'text', text }] }
     },
   )
 
