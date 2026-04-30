@@ -2,7 +2,7 @@ import express, { type Request, type Response } from 'express'
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js'
 import { z } from 'zod'
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { execSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
@@ -23,6 +23,21 @@ function transformToGithub(text: string): string {
 
 function applyRepo(text: string, repo: 'gitlab' | 'github'): string {
   return repo === 'github' ? transformToGithub(text) : text
+}
+
+function injectTailwindVitePlugin(content: string): string | null {
+  if (content.includes('@tailwindcss/vite')) return null
+  const importLine = `import tailwindcss from '@tailwindcss/vite';`
+  const lines = content.split('\n')
+  let lastImportIdx = -1
+  for (let i = 0; i < lines.length; i++) {
+    if (/^\s*import\s/.test(lines[i])) lastImportIdx = i
+  }
+  if (lastImportIdx < 0) return null
+  lines.splice(lastImportIdx + 1, 0, importLine)
+  const withImport = lines.join('\n')
+  if (!/plugins\s*:\s*\[/.test(withImport)) return null
+  return withImport.replace(/plugins\s*:\s*\[/, 'plugins: [\n    tailwindcss(),')
 }
 
 const repoSchema = z.enum(['gitlab', 'github']).optional().describe(
@@ -95,6 +110,122 @@ function createServer() {
       } catch (e) {
         return { content: [{ type: 'text', text: `Error reading source for "${component}": ${e}` }] }
       }
+    },
+  )
+
+  server.registerTool(
+    'setup_tailwind',
+    {
+      description:
+        'Check if Tailwind CSS, @tailwindcss/vite and DaisyUI are installed and configured in the user\'s project. ' +
+        'Always call first WITHOUT confirm to show what will be done, then ask the user if they want to proceed. ' +
+        'If they agree, call again with confirm: true to execute.',
+      inputSchema: {
+        projectPath: z.string().describe('Absolute path to the project root directory'),
+        confirm: z.boolean().optional().describe('Set to true to confirm and execute the setup actions'),
+      },
+    },
+    async ({ projectPath, confirm = false }) => {
+      const pkgPath = join(projectPath, 'package.json')
+      if (!existsSync(pkgPath)) {
+        return { content: [{ type: 'text', text: `No package.json found at "${projectPath}". Make sure the path is correct.` }] }
+      }
+
+      let pkg: Record<string, unknown>
+      try {
+        pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'))
+      } catch {
+        return { content: [{ type: 'text', text: `Could not parse package.json at "${projectPath}".` }] }
+      }
+
+      const allDeps = { ...(pkg.dependencies as object), ...(pkg.devDependencies as object) }
+      const missing = ['tailwindcss', '@tailwindcss/vite', 'daisyui'].filter(p => !(p in allDeps))
+
+      const viteConfigFile = ['vite.config.ts', 'vite.config.js', 'vite.config.mjs'].find(
+        f => existsSync(join(projectPath, f)),
+      )
+      const viteConfigPath = viteConfigFile ? join(projectPath, viteConfigFile) : null
+      const viteContent = viteConfigPath ? readFileSync(viteConfigPath, 'utf-8') : null
+      const viteNeedsTailwind = !viteContent?.includes('@tailwindcss/vite')
+
+      const stylePath = join(projectPath, 'src', 'style.css')
+      const styleExists = existsSync(stylePath)
+      const styleContent = styleExists ? readFileSync(stylePath, 'utf-8') : ''
+      const styleNeedsTailwind =
+        !styleContent.includes('@import "tailwindcss"') || !styleContent.includes('@plugin "daisyui"')
+
+      const actions: string[] = []
+      if (missing.length > 0) {
+        actions.push(`npm install ${missing.map(p => `${p}@latest`).join(' ')}`)
+      }
+      if (viteNeedsTailwind) {
+        actions.push(
+          viteConfigPath
+            ? `Update ${viteConfigFile} to register @tailwindcss/vite plugin`
+            : 'Create vite.config.js with @tailwindcss/vite plugin',
+        )
+      }
+      if (styleNeedsTailwind) {
+        actions.push(`${styleExists ? 'Update' : 'Create'} src/style.css with @import "tailwindcss" and @plugin "daisyui"`)
+      }
+
+      if (actions.length === 0) {
+        return { content: [{ type: 'text', text: 'Tailwind CSS, @tailwindcss/vite and DaisyUI are already installed and configured.' }] }
+      }
+
+      if (!confirm) {
+        return {
+          content: [{
+            type: 'text',
+            text: [
+              'The following actions are needed to set up Tailwind CSS + DaisyUI:',
+              ...actions.map(a => `  • ${a}`),
+              '',
+              'Ask the user if they want to proceed, then call this tool again with confirm: true.',
+            ].join('\n'),
+          }],
+        }
+      }
+
+      const results: string[] = []
+
+      if (missing.length > 0) {
+        try {
+          execSync(`npm install ${missing.map(p => `${p}@latest`).join(' ')}`, { cwd: projectPath, stdio: 'pipe' })
+          results.push(`Installed: ${missing.join(', ')}`)
+        } catch (e: unknown) {
+          results.push(`npm install failed: ${e instanceof Error ? e.message : String(e)}`)
+        }
+      }
+
+      if (viteNeedsTailwind) {
+        const minimalConfig =
+          `import { defineConfig } from 'vite';\nimport tailwindcss from '@tailwindcss/vite';\n\nexport default defineConfig({\n  plugins: [\n    tailwindcss()\n  ],\n});\n`
+        if (viteConfigPath && viteContent) {
+          const injected = injectTailwindVitePlugin(viteContent)
+          if (injected) {
+            writeFileSync(viteConfigPath, injected, 'utf-8')
+            results.push(`Updated ${viteConfigFile}`)
+          } else {
+            results.push(
+              `Could not auto-patch ${viteConfigFile}. Add manually:\n` +
+              `  import tailwindcss from '@tailwindcss/vite';\n` +
+              `  // then add tailwindcss() to the plugins array`,
+            )
+          }
+        } else {
+          writeFileSync(join(projectPath, 'vite.config.js'), minimalConfig, 'utf-8')
+          results.push('Created vite.config.js')
+        }
+      }
+
+      if (styleNeedsTailwind) {
+        const prefix = `@import "tailwindcss";\n@plugin "daisyui";\n`
+        writeFileSync(stylePath, styleExists ? prefix + '\n' + styleContent : prefix, 'utf-8')
+        results.push(`${styleExists ? 'Updated' : 'Created'} src/style.css`)
+      }
+
+      return { content: [{ type: 'text', text: results.join('\n') }] }
     },
   )
 
