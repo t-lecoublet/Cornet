@@ -39,10 +39,6 @@ function injectVitePlugin(content: string, importLine: string, pluginCall: strin
   return withImport.replace(/plugins\s*:\s*\[/, `plugins: [\n    ${pluginCall},`)
 }
 
-function injectTailwindVitePlugin(content: string): string | null {
-  if (content.includes('@tailwindcss/vite')) return null
-  return injectVitePlugin(content, `import tailwindcss from '@tailwindcss/vite';`, 'tailwindcss()')
-}
 
 const repoSchema = z.enum(['gitlab', 'github']).optional().describe(
   'Which repo to use for URLs in code examples. ' +
@@ -58,7 +54,7 @@ function createServer() {
   server.registerTool(
     'list_components',
     {
-      description: 'List all Cornet Vue components organized by category',
+      description: 'List all Cornet Vue components and guides organized by category (includes a "Guides" category with installation, quick-start, theming, etc.)',
       inputSchema: { repo: repoSchema },
     },
     async ({ repo = 'gitlab' }) => {
@@ -75,9 +71,12 @@ function createServer() {
   server.registerTool(
     'get_component_docs',
     {
-      description: 'Get full documentation for a Cornet component including props, slots, classnames and code examples',
+      description:
+        'Get full documentation for a Cornet component or guide. ' +
+        'Works for both components (e.g. "button", "modal") and guides (e.g. "installation", "quick-start", "theming", "copy-components", "mcp"). ' +
+        'Always call this to read a guide before asking the user to do manual steps.',
       inputSchema: {
-        component: z.string().describe('Component name like "button", "modal", "select"'),
+        component: z.string().describe('Component name like "button", "modal" or guide name like "installation", "quick-start"'),
         repo: repoSchema,
       },
     },
@@ -121,11 +120,13 @@ function createServer() {
     'install_cornet',
     {
       description:
-        'Install Cornet as a git submodule in lib/ and fully configure it. ' +
-        'Handles ALL steps: git submodule add (on the lib branch), git submodule update, npm install ./lib, ' +
-        'adding the vueDaisyUI Vite plugin, and adding @import "daisyui-vue-kit/css" to the CSS. ' +
+        'Install Cornet as a git submodule in lib/ and fully configure the project (Tailwind CSS included). ' +
+        'Handles ALL steps: npm install tailwindcss + daisyui, git submodule add (on the lib branch), ' +
+        'git submodule update, npm install ./lib, adding vueDaisyUI + tailwindcss Vite plugins, ' +
+        'and writing the complete CSS imports. ' +
         'IMPORTANT: Never clone or copy files manually — always use this tool. ' +
-        'Call first WITHOUT confirm to preview actions, ask the user, then call again with confirm: true.',
+        'Call first WITHOUT confirm to preview actions, ask the user, then call again with confirm: true. ' +
+        'If anything is unclear, call get_component_docs with "installation" or "quick-start" to read the official guide.',
       inputSchema: {
         projectPath: z.string().describe('Absolute path to the project root directory'),
         repo: repoSchema,
@@ -150,32 +151,48 @@ function createServer() {
       const sshUrl = repo === 'github' ? GITHUB_SSH : GITLAB_SSH
       const httpsUrl = repo === 'github' ? GITHUB_BASE : GITLAB_BASE
 
+      // npm packages
+      const pkgPath = join(projectPath, 'package.json')
+      const pkg = existsSync(pkgPath) ? JSON.parse(readFileSync(pkgPath, 'utf-8')) : {}
+      const allDeps = { ...(pkg.dependencies ?? {}), ...(pkg.devDependencies ?? {}) }
+      const missingNpm = ['tailwindcss', '@tailwindcss/vite', 'daisyui'].filter(p => !(p in allDeps))
+
+      // vite config
       const viteConfigFile = ['vite.config.ts', 'vite.config.js', 'vite.config.mjs'].find(
         f => existsSync(join(projectPath, f)),
       )
       const viteConfigPath = viteConfigFile ? join(projectPath, viteConfigFile) : null
       const viteContent = viteConfigPath ? readFileSync(viteConfigPath, 'utf-8') : null
-      const viteNeedsPlugin = !viteContent?.includes('daisyui-vue-kit/plugin-vite')
+      const viteNeedsTailwind = !viteContent?.includes('@tailwindcss/vite')
+      const viteNeedsCornet = !viteContent?.includes('daisyui-vue-kit/plugin-vite')
 
+      // CSS
       const stylePath = join(projectPath, 'src', 'style.css')
       const styleExists = existsSync(stylePath)
       const styleContent = styleExists ? readFileSync(stylePath, 'utf-8') : ''
-      const styleNeedsImport = !styleContent.includes('daisyui-vue-kit/css')
+      const styleNeedsTailwindImport = !styleContent.includes('@import "tailwindcss"')
+      const styleNeedsCornetImport = !styleContent.includes('daisyui-vue-kit/css')
+      const styleNeedsDaisyuiPlugin = !styleContent.includes('@plugin "daisyui"')
 
-      const actions = [
+      const actions: string[] = []
+      if (missingNpm.length > 0) {
+        actions.push(`npm install ${missingNpm.map(p => `${p}@latest`).join(' ')}`)
+      }
+      actions.push(
         `git submodule add -b lib ${sshUrl} lib`,
         'git submodule update --init --recursive',
         'npm install ./lib',
-      ]
-      if (viteNeedsPlugin) {
+      )
+      if (viteNeedsTailwind || viteNeedsCornet) {
+        const pluginNames = [...(viteNeedsCornet ? ['vueDaisyUI()'] : []), ...(viteNeedsTailwind ? ['tailwindcss()'] : [])]
         actions.push(
           viteConfigPath
-            ? `Update ${viteConfigFile}: add vueDaisyUI from 'daisyui-vue-kit/plugin-vite' to plugins`
-            : "No vite.config found — add vueDaisyUI from 'daisyui-vue-kit/plugin-vite' to plugins manually",
+            ? `Update ${viteConfigFile}: add ${pluginNames.join(', ')} to plugins`
+            : `Create vite.config.js with ${pluginNames.join(', ')}`,
         )
       }
-      if (styleNeedsImport) {
-        actions.push(`${styleExists ? 'Update' : 'Create'} src/style.css: add @import "daisyui-vue-kit/css"`)
+      if (styleNeedsTailwindImport || styleNeedsCornetImport || styleNeedsDaisyuiPlugin) {
+        actions.push(`${styleExists ? 'Update' : 'Create'} src/style.css with all required imports`)
       }
 
       if (!confirm) {
@@ -183,7 +200,7 @@ function createServer() {
           content: [{
             type: 'text',
             text: [
-              'The following actions will install Cornet:',
+              'The following actions will install Cornet and set up Tailwind CSS + DaisyUI:',
               ...actions.map(a => `  • ${a}`),
               '',
               `Uses SSH (${sshUrl}). If SSH is unavailable, HTTPS fallback: ${httpsUrl}`,
@@ -196,6 +213,17 @@ function createServer() {
 
       const results: string[] = []
 
+      // 1. npm install tailwind packages
+      if (missingNpm.length > 0) {
+        try {
+          execSync(`npm install ${missingNpm.map(p => `${p}@latest`).join(' ')}`, { cwd: projectPath, stdio: 'pipe' })
+          results.push(`Installed: ${missingNpm.join(', ')}`)
+        } catch (e: unknown) {
+          results.push(`npm install failed: ${e instanceof Error ? e.message : String(e)}`)
+        }
+      }
+
+      // 2. git submodule
       try {
         execSync(`git submodule add -b lib ${sshUrl} lib`, { cwd: projectPath })
         results.push('Cornet added as git submodule at lib/')
@@ -212,6 +240,7 @@ function createServer() {
         results.push(`git submodule update failed: ${e instanceof Error ? e.message : String(e)}`)
       }
 
+      // 3. npm install ./lib
       try {
         execSync('npm install ./lib', { cwd: projectPath, stdio: 'pipe' })
         results.push('npm install ./lib done')
@@ -219,151 +248,58 @@ function createServer() {
         results.push(`npm install ./lib failed: ${e instanceof Error ? e.message : String(e)}`)
       }
 
-      if (viteNeedsPlugin && viteConfigPath && viteContent) {
-        const injected = injectVitePlugin(
-          viteContent,
-          `import vueDaisyUI from 'daisyui-vue-kit/plugin-vite';`,
-          'vueDaisyUI()',
-        )
-        if (injected) {
-          writeFileSync(viteConfigPath, injected, 'utf-8')
-          results.push(`Updated ${viteConfigFile}`)
-        } else {
-          results.push(
-            `Could not auto-patch ${viteConfigFile}. Add manually:\n` +
-            `  import vueDaisyUI from 'daisyui-vue-kit/plugin-vite'\n` +
-            `  // add vueDaisyUI() as first item in the plugins array`,
-          )
-        }
-      }
-
-      if (styleNeedsImport) {
-        const cornetLine = '@import "daisyui-vue-kit/css";'
-        let newStyle: string
-        if (styleExists && styleContent.includes('@import "tailwindcss"')) {
-          newStyle = styleContent.replace('@import "tailwindcss";', `@import "tailwindcss";\n${cornetLine}`)
-        } else if (styleExists) {
-          newStyle = cornetLine + '\n' + styleContent
-        } else {
-          newStyle = `@import "tailwindcss";\n${cornetLine}\n@plugin "daisyui";\n`
-        }
-        writeFileSync(stylePath, newStyle, 'utf-8')
-        results.push(`${styleExists ? 'Updated' : 'Created'} src/style.css`)
-      }
-
-      return { content: [{ type: 'text', text: results.join('\n') }] }
-    },
-  )
-
-  server.registerTool(
-    'setup_tailwind',
-    {
-      description:
-        'Check if Tailwind CSS, @tailwindcss/vite and DaisyUI are installed and configured in the user\'s project. ' +
-        'Always call first WITHOUT confirm to show what will be done, then ask the user if they want to proceed. ' +
-        'If they agree, call again with confirm: true to execute.',
-      inputSchema: {
-        projectPath: z.string().describe('Absolute path to the project root directory'),
-        confirm: z.boolean().optional().describe('Set to true to confirm and execute the setup actions'),
-      },
-    },
-    async ({ projectPath, confirm = false }) => {
-      const pkgPath = join(projectPath, 'package.json')
-      if (!existsSync(pkgPath)) {
-        return { content: [{ type: 'text', text: `No package.json found at "${projectPath}". Make sure the path is correct.` }] }
-      }
-
-      let pkg: Record<string, unknown>
-      try {
-        pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'))
-      } catch {
-        return { content: [{ type: 'text', text: `Could not parse package.json at "${projectPath}".` }] }
-      }
-
-      const allDeps = { ...(pkg.dependencies as object), ...(pkg.devDependencies as object) }
-      const missing = ['tailwindcss', '@tailwindcss/vite', 'daisyui'].filter(p => !(p in allDeps))
-
-      const viteConfigFile = ['vite.config.ts', 'vite.config.js', 'vite.config.mjs'].find(
-        f => existsSync(join(projectPath, f)),
-      )
-      const viteConfigPath = viteConfigFile ? join(projectPath, viteConfigFile) : null
-      const viteContent = viteConfigPath ? readFileSync(viteConfigPath, 'utf-8') : null
-      const viteNeedsTailwind = !viteContent?.includes('@tailwindcss/vite')
-
-      const stylePath = join(projectPath, 'src', 'style.css')
-      const styleExists = existsSync(stylePath)
-      const styleContent = styleExists ? readFileSync(stylePath, 'utf-8') : ''
-      const styleNeedsTailwind =
-        !styleContent.includes('@import "tailwindcss"') || !styleContent.includes('@plugin "daisyui"')
-
-      const actions: string[] = []
-      if (missing.length > 0) {
-        actions.push(`npm install ${missing.map(p => `${p}@latest`).join(' ')}`)
-      }
-      if (viteNeedsTailwind) {
-        actions.push(
-          viteConfigPath
-            ? `Update ${viteConfigFile} to register @tailwindcss/vite plugin`
-            : 'Create vite.config.js with @tailwindcss/vite plugin',
-        )
-      }
-      if (styleNeedsTailwind) {
-        actions.push(`${styleExists ? 'Update' : 'Create'} src/style.css with @import "tailwindcss" and @plugin "daisyui"`)
-      }
-
-      if (actions.length === 0) {
-        return { content: [{ type: 'text', text: 'Tailwind CSS, @tailwindcss/vite and DaisyUI are already installed and configured.' }] }
-      }
-
-      if (!confirm) {
-        return {
-          content: [{
-            type: 'text',
-            text: [
-              'The following actions are needed to set up Tailwind CSS + DaisyUI:',
-              ...actions.map(a => `  • ${a}`),
-              '',
-              'Ask the user if they want to proceed, then call this tool again with confirm: true.',
-            ].join('\n'),
-          }],
-        }
-      }
-
-      const results: string[] = []
-
-      if (missing.length > 0) {
-        try {
-          execSync(`npm install ${missing.map(p => `${p}@latest`).join(' ')}`, { cwd: projectPath, stdio: 'pipe' })
-          results.push(`Installed: ${missing.join(', ')}`)
-        } catch (e: unknown) {
-          results.push(`npm install failed: ${e instanceof Error ? e.message : String(e)}`)
-        }
-      }
-
-      if (viteNeedsTailwind) {
-        const minimalConfig =
-          `import { defineConfig } from 'vite';\nimport tailwindcss from '@tailwindcss/vite';\n\nexport default defineConfig({\n  plugins: [\n    tailwindcss()\n  ],\n});\n`
+      // 4. vite config — inject tailwindcss first, then vueDaisyUI so it ends up first in the array
+      if (viteNeedsTailwind || viteNeedsCornet) {
         if (viteConfigPath && viteContent) {
-          const injected = injectTailwindVitePlugin(viteContent)
-          if (injected) {
-            writeFileSync(viteConfigPath, injected, 'utf-8')
+          let updated = viteContent
+          if (viteNeedsTailwind) {
+            updated = injectVitePlugin(updated, `import tailwindcss from '@tailwindcss/vite';`, 'tailwindcss()') ?? updated
+          }
+          if (viteNeedsCornet) {
+            updated = injectVitePlugin(updated, `import vueDaisyUI from 'daisyui-vue-kit/plugin-vite';`, 'vueDaisyUI()') ?? updated
+          }
+          if (updated !== viteContent) {
+            writeFileSync(viteConfigPath, updated, 'utf-8')
             results.push(`Updated ${viteConfigFile}`)
           } else {
             results.push(
               `Could not auto-patch ${viteConfigFile}. Add manually:\n` +
-              `  import tailwindcss from '@tailwindcss/vite';\n` +
-              `  // then add tailwindcss() to the plugins array`,
+              `  import vueDaisyUI from 'daisyui-vue-kit/plugin-vite'\n` +
+              `  import tailwindcss from '@tailwindcss/vite'\n` +
+              `  // add vueDaisyUI() and tailwindcss() to the plugins array`,
             )
           }
         } else {
+          const minimalConfig =
+            `import { defineConfig } from 'vite';\nimport vueDaisyUI from 'daisyui-vue-kit/plugin-vite';\nimport tailwindcss from '@tailwindcss/vite';\n\nexport default defineConfig({\n  plugins: [\n    vueDaisyUI(),\n    tailwindcss()\n  ],\n});\n`
           writeFileSync(join(projectPath, 'vite.config.js'), minimalConfig, 'utf-8')
           results.push('Created vite.config.js')
         }
       }
 
-      if (styleNeedsTailwind) {
-        const prefix = `@import "tailwindcss";\n@plugin "daisyui";\n`
-        writeFileSync(stylePath, styleExists ? prefix + '\n' + styleContent : prefix, 'utf-8')
+      // 5. CSS — ensure correct order: @import "tailwindcss" → @import "daisyui-vue-kit/css" → @plugin "daisyui"
+      if (styleNeedsTailwindImport || styleNeedsCornetImport || styleNeedsDaisyuiPlugin) {
+        let css = styleContent
+        if (styleNeedsTailwindImport) {
+          css = `@import "tailwindcss";\n` + css
+        }
+        if (styleNeedsCornetImport) {
+          css = css.replace('@import "tailwindcss";', `@import "tailwindcss";\n@import "daisyui-vue-kit/css";`)
+        }
+        if (styleNeedsDaisyuiPlugin) {
+          const lines = css.split('\n')
+          let lastImportLine = -1
+          for (let i = 0; i < lines.length; i++) {
+            if (lines[i].startsWith('@import ')) lastImportLine = i
+          }
+          if (lastImportLine >= 0) {
+            lines.splice(lastImportLine + 1, 0, '@plugin "daisyui";')
+            css = lines.join('\n')
+          } else {
+            css += '\n@plugin "daisyui";'
+          }
+        }
+        writeFileSync(stylePath, css, 'utf-8')
         results.push(`${styleExists ? 'Updated' : 'Created'} src/style.css`)
       }
 
