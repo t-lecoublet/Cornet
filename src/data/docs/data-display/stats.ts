@@ -5,10 +5,40 @@ export default {
   description: 'Stats groups multiple DuStat components in a horizontal or vertical layout. Use the `vertical` boolean prop to switch direction. Pass an `items` array for dynamic rendering, or nest DuStat elements in the default slot.',
   category: 'Data Display',
   source: 'https://daisyui.com/components/stat/',
+  props: [
+    {
+      title: 'items',
+      description: 'Array of stat items with title, value, description, figure and actions',
+      type: 'DuStatsItem[]',
+    },
+    {
+      title: 'vertical',
+      description: 'Stack the stats vertically instead of in a row',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'shadow',
+      description: 'Add a drop shadow to the container',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'dash',
+      description: 'Dashed border style',
+      type: 'boolean',
+      default: 'false',
+    },
+  ],
   classnames: {
+    component: [
+      { class: 'stats', desc: 'Base class on the wrapper, always applied.' },
+      { class: 'stat', desc: 'Each item, from DuStat or the items array.' },
+    ],
     modifier: [
-      { class: 'stats-horizontal', desc: 'Horizontal layout (default, vertical: false)', default: true },
-      { class: 'stats-vertical', desc: 'Vertical layout (prop: vertical)' },
+      { class: 'stats-horizontal', desc: 'Row layout — the default' },
+      { class: 'stats-vertical', desc: 'Column layout — vertical' },
+      { class: 'stats-dash', desc: 'Dashed separators — dash' },
     ],
   },
   sections: [

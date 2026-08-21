@@ -5,6 +5,23 @@ export default {
   description: 'Filter provides a radio-button-style toggle group for category filtering. Pass an `items` array where each item has a `title` (display label), optional `checked` boolean, and optional style overrides via `buttonsArgs`. A reset button is always rendered automatically.',
   category: 'Data Input',
   source: 'https://daisyui.com/components/filter/',
+  props: [
+    {
+      title: 'items',
+      description: 'Array of filter items with title, checked, customClass and buttonsArgs',
+      type: 'DuFilterItem[]',
+    },
+    {
+      title: 'name',
+      description: 'Radio group name. Generated per instance when omitted.',
+      type: 'string',
+    },
+    {
+      title: 'buttonsArgs',
+      description: 'DuButton props applied to every filter button. A per-item `buttonsArgs` takes priority.',
+      type: 'DuFilterButtonArgs',
+    },
+  ],
   sections: [
     {
       title: 'Basic',
@@ -22,6 +39,47 @@ export default {
     { title: 'Archived' },
   ]"
 />`,
+    },
+    {
+      title: 'change event',
+      description: 'The `change` event fires with the clicked item — or `undefined` when the reset (×) button is used.',
+      script: `
+        const active = ref('All')
+        return { active }
+      `,
+      preview: `<div class="flex flex-col items-center gap-3">
+  <DuFilter
+    :items="[
+      { title: 'All', checked: true },
+      { title: 'Active' },
+      { title: 'Archived' },
+    ]"
+    @change="(item) => active = item ? item.title : 'All'"
+  />
+  <p class="text-sm text-base-content/60">Active: <strong class="text-base-content">{{ active }}</strong></p>
+</div>`,
+      code: `<script setup lang="ts">
+import { ref } from 'vue'
+import type { DuFilterItem } from 'cornet-ui/types'
+
+const active = ref<string | undefined>('All')
+
+function onChange(item: DuFilterItem | undefined) {
+  // undefined = the reset (×) button was clicked
+  active.value = item?.title
+}
+</script>
+
+<template>
+  <DuFilter
+    :items="[
+      { title: 'All', checked: true },
+      { title: 'Active' },
+      { title: 'Archived' },
+    ]"
+    @change="onChange"
+  />
+</template>`,
     },
     {
       title: 'With button style',

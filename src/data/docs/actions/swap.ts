@@ -5,10 +5,43 @@ export default {
   description: 'Swap allows you to toggle the visibility of two elements by clicking.',
   category: 'Actions',
   source: 'https://daisyui.com/components/swap/',
+  props: [
+    {
+      title: 'modelValue',
+      description: 'Swap state (use with `v-model`)',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'rotate',
+      description: 'Rotate animation between the two faces',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'flip',
+      description: 'Flip animation between the two faces',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'useCheckbox',
+      description: 'Drive the swap with a hidden checkbox. Set to `false` to toggle on click instead.',
+      type: 'boolean',
+      default: 'true',
+    },
+  ],
   classnames: {
+    component: [
+      { class: 'swap', desc: 'Base class on the wrapper, always applied.' },
+      { class: 'swap-on', desc: 'Wrapper for the on slot.' },
+      { class: 'swap-off', desc: 'Wrapper for the off slot.' },
+      { class: 'swap-indeterminate', desc: 'Wrapper for the indeterminate slot, when provided.' },
+    ],
     modifier: [
-      { class: 'rotate', desc: 'Rotate animation when toggling (prop: rotate)' },
-      { class: 'flip', desc: 'Flip animation when toggling (prop: flip)' },
+      { class: 'swap-rotate', desc: 'Rotate animation — rotate' },
+      { class: 'swap-flip', desc: 'Flip animation — flip' },
+      { class: 'swap-active', desc: 'Toggled state in click mode (useCheckbox=false)' },
     ],
   },
   sections: [

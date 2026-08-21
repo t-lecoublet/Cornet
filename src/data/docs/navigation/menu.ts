@@ -29,7 +29,7 @@ export default {
     {
       title: 'items',
       description: 'Array of menu items with label, href, disabled, isTitle, and subItems properties',
-      type: 'MenuItem[]',
+      type: 'DuMenuItemData[]',
     },
     {
       title: 'activeItem',
@@ -39,12 +39,12 @@ export default {
     {
       title: 'onItemClick',
       description: 'Callback when a top-level item is clicked',
-      type: '(item: MenuItem) => void',
+      type: '(item: DuMenuItemData) => void',
     },
     {
       title: 'onSubItemClick',
       description: 'Callback when a sub-item is clicked',
-      type: '(item: MenuItem) => void',
+      type: '(item: DuMenuItemData) => void',
     },
   ],
   slots: [
@@ -417,6 +417,33 @@ import Cog6ToothIcon from '@heroicons/vue/24/outline/Cog6ToothIcon'
 </template>`,
     },
     {
+      title: 'Keyboard navigation',
+      description: 'Arrow keys move focus between sibling items, and <kbd>Home</kbd> / <kbd>End</kbd> jump to the first and last. The axis is scoped per nesting level, so a horizontal root menu uses ←/→ while its vertical submenus use ↑/↓. Items driven purely by `onClick` (no `href`) are focusable too.',
+      preview: `<div class="flex flex-col gap-3 items-center">
+  <p class="text-xs text-base-content/60">Click an item, then use the arrow keys.</p>
+  <DuMenu
+    :items="[
+      { label: 'Dashboard' },
+      { label: 'Projects' },
+      { label: 'Team' },
+      { label: 'Settings' },
+    ]"
+    direction="vertical"
+    class="w-48 bg-base-200"
+  />
+</div>`,
+      code: `<!-- ↑/↓ in a vertical menu, ←/→ in a horizontal one -->
+<DuMenu
+  :items="[
+    { label: 'Dashboard' },
+    { label: 'Projects' },
+    { label: 'Team' },
+    { label: 'Settings' },
+  ]"
+  direction="vertical"
+/>`,
+    },
+    {
       title: 'With onClick per item',
       description: 'Attach an `onClick` callback on each item. Can be combined with `href` or used standalone.',
       script: `
@@ -445,7 +472,7 @@ import Cog6ToothIcon from '@heroicons/vue/24/outline/Cog6ToothIcon'
     },
     {
       title: '@item-click event',
-      description: 'The `@item-click` event fires on any top-level item click with the `MenuItem` as payload.',
+      description: 'The `@item-click` event fires on any top-level item click with the `DuMenuItemData` as payload.',
       links: [
         { label: 'Vue events docs', href: 'https://vuejs.org/guide/components/events.html' },
       ],
@@ -466,9 +493,9 @@ import Cog6ToothIcon from '@heroicons/vue/24/outline/Cog6ToothIcon'
   <p class="text-sm text-center text-base-content/60">Active: <strong class="text-base-content">{{ selected }}</strong></p>
 </div>`,
       code: `<script setup lang="ts">
-import type { MenuItem } from 'cornet/types'
+import type { DuMenuItemData } from 'cornet-ui/types'
 
-function handleItemClick(item: MenuItem) {
+function handleItemClick(item: DuMenuItemData) {
   // item.label, item.value, item.href…
   router.push(item.href)
 }

@@ -5,6 +5,15 @@ export default {
   description: 'Label wraps an input with an accessible label. Use it to associate text with form fields.',
   category: 'Data Input',
   source: 'https://daisyui.com/components/label/',
+  props: [
+    {
+      title: 'type',
+      description: 'Which DaisyUI label style to render',
+      type: "'label' | 'input' | 'select' | 'floating-label' | 'fieldset-label'",
+      default: '"label"',
+      options: ['label', 'input', 'select', 'floating-label', 'fieldset-label'],
+    },
+  ],
   sections: [
     {
       title: 'Basic',

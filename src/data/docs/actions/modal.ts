@@ -71,13 +71,22 @@ export default {
     },
   ],
   classnames: {
+    component: [
+      { class: 'modal', desc: 'Base class on the <dialog>, always applied.' },
+      { class: 'modal-box', desc: 'The panel. Extra classes go through classBox.' },
+      { class: 'modal-action', desc: 'Footer wrapper, rendered when the actions slot is used.' },
+      { class: 'modal-backdrop', desc: 'Click-outside backdrop form — closeBackdrop' },
+    ],
+    style: [
+      { class: 'btn btn-sm btn-circle btn-ghost', desc: 'The built-in close button, when closeButton is set.' },
+    ],
     placement: [
-      { class: 'top', desc: 'Align to the top' },
-      { class: 'middle', desc: 'Center of screen', default: true },
-      { class: 'bottom', desc: 'Align to the bottom' },
-      { class: 'start', desc: 'Align to the left' },
-      { class: 'end', desc: 'Align to the right' },
-      { class: 'responsive', desc: 'Bottom on mobile, middle on desktop' },
+      { class: 'modal-top', desc: 'placement="top"' },
+      { class: 'modal-middle', desc: 'placement="middle"' },
+      { class: 'modal-bottom', desc: 'placement="bottom"' },
+      { class: 'modal-start', desc: 'placement="start"' },
+      { class: 'modal-end', desc: 'placement="end"' },
+      { class: 'modal-bottom sm:modal-middle', desc: 'placement="responsive" — a combo, there is no modal-responsive class' },
     ],
   },
   sections: [

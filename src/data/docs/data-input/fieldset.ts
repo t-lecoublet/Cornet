@@ -5,6 +5,18 @@ export default {
   description: 'Fieldset groups related form fields with a legend and optional hint text.',
   category: 'Data Input',
   source: 'https://daisyui.com/components/fieldset/',
+  props: [
+    {
+      title: 'legend',
+      description: 'Legend text. When omitted no `<legend>` element is rendered at all.',
+      type: 'string',
+    },
+    {
+      title: 'label',
+      description: 'Hint text rendered below the fieldset content',
+      type: 'string',
+    },
+  ],
   sections: [
     {
       title: 'Basic',

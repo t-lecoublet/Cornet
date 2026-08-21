@@ -5,9 +5,71 @@ export default {
   description: 'Floating Action Button — a speed-dial button that reveals multiple actions on click.',
   category: 'Actions',
   source: 'https://daisyui.com/components/fab/',
+  props: [
+    {
+      title: 'items',
+      description: 'Action items revealed when the FAB is opened',
+      type: 'DuFabItem[]',
+    },
+    {
+      title: 'mainAction',
+      description: 'The always-visible main button (label / icon / variant / onClick)',
+      type: 'DuFabMainAction',
+    },
+    {
+      title: 'closeButton',
+      description: 'Extra close button shown while the FAB is expanded',
+      type: 'DuFabCloseButton',
+    },
+    {
+      title: 'modifier',
+      description: 'Layout modifier for the action items',
+      type: 'DuFabModifier',
+      options: ['fab-flower'],
+    },
+    {
+      title: 'absolute',
+      description: 'Pin the FAB to the bottom-right of the nearest positioned ancestor. Set to `false` to place it inline.',
+      type: 'boolean',
+      default: 'true',
+    },
+    {
+      title: 'circle',
+      description: 'Render the buttons as circles',
+      type: 'boolean',
+      default: 'true',
+    },
+    {
+      title: 'size',
+      description: 'Size of the FAB buttons',
+      type: 'Size',
+      default: '"lg"',
+      options: ['default', 'xs', 'sm', 'md', 'lg', 'xl'],
+    },
+    {
+      title: 'variant',
+      description: 'Color variant of the FAB buttons',
+      type: 'Variant',
+      default: '"primary"',
+      options: ['default', 'neutral', 'primary', 'secondary', 'accent', 'info', 'success', 'warning', 'error'],
+    },
+    {
+      title: 'customClass',
+      description: 'Additional CSS classes for the root element',
+      type: 'string',
+    },
+  ],
   classnames: {
+    component: [
+      { class: 'fab', desc: 'Base class on the wrapper, always applied.' },
+      { class: 'fab-main-action', desc: 'The always-visible main button.' },
+      { class: 'fab-close', desc: 'The close button, when closeButton is set.' },
+    ],
+    style: [
+      { class: 'btn btn-circle', desc: 'Every FAB button is a DuButton — see the Button page for its btn-* classes.' },
+    ],
     modifier: [
-      { class: 'fab-flower', desc: 'Flower layout for action items' },
+      { class: 'fab-flower', desc: 'Flower layout for the action items — modifier="fab-flower"' },
     ],
   },
   sections: [
@@ -99,20 +161,36 @@ export default {
 />`,
     },
     {
-      title: 'Positions',
-      description: 'Control where the FAB appears with `position` prop.',
-      preview: `<div class="relative h-40 w-64 border border-base-300 rounded-xl">
+      title: 'Positioning',
+      description: 'By default `absolute` is `true`, pinning the FAB to the bottom-right corner of the nearest positioned ancestor (give it `relative`). Set `:absolute="false"` to let the FAB sit inline in the normal document flow.',
+      preview: `<div class="flex flex-col gap-4">
+  <div class="relative h-40 w-64 border border-base-300 rounded-xl">
+    <DuFab
+      :mainAction="{ label: '↗', variant: 'primary' }"
+      :items="[{ label: 'Test' }]"
+    />
+  </div>
+  <div class="flex justify-start w-64 border border-base-300 rounded-xl p-4">
+    <DuFab
+      :absolute="false"
+      :mainAction="{ label: '↗', variant: 'secondary' }"
+      :items="[{ label: 'Test' }]"
+    />
+  </div>
+</div>`,
+      code: `<!-- Default: pinned bottom-right of the nearest positioned ancestor -->
+<div class="relative h-40 w-64">
   <DuFab
     :mainAction="{ label: '↗', variant: 'primary' }"
     :items="[{ label: 'Test' }]"
-    position="top-right"
   />
-</div>`,
-      code: `<!-- Positions: top-right, top-left, bottom-right, bottom-left -->
+</div>
+
+<!-- Inline, in the normal document flow -->
 <DuFab
-  :mainAction="{ label: '↗', variant: 'primary' }"
+  :absolute="false"
+  :mainAction="{ label: '↗', variant: 'secondary' }"
   :items="[{ label: 'Test' }]"
-  position="top-right"
 />`,
     },
     {

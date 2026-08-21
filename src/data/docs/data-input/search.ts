@@ -9,12 +9,12 @@ export default {
     {
       title: 'modelValue',
       description: 'Selected value(s)',
-      type: 'SearchOption | SearchOption[]',
+      type: 'DuSearchOption | DuSearchOption[]',
     },
     {
       title: 'listValues',
       description: 'Array of options for autocomplete',
-      type: 'SearchOption[]',
+      type: 'DuSearchOption[]',
       required: true,
     },
     {

@@ -9,12 +9,12 @@ export default {
     {
       title: 'columns',
       description: 'Array of column definitions with key, label, and customClass',
-      type: 'TABLEColumn[]',
+      type: 'DuTableColumn[]',
     },
     {
       title: 'rows',
       description: 'Array of row data objects with id and values for each column key',
-      type: 'TABLERow[]',
+      type: 'DuTableRow[]',
     },
     {
       title: 'zebra',
@@ -255,16 +255,20 @@ export default {
     },
   ],
   classnames: {
-    modifier: [
-      { class: 'table-zebra', desc: 'Alternating row colors' },
-      { class: 'table-pin-rows', desc: 'Pins header/footer rows on scroll' },
-      { class: 'table-pin-cols', desc: 'Pins first/last columns on scroll' },
+    component: [
+      { class: 'table', desc: 'Base class, always applied. size="default" and variant="default" add no extra class.' },
     ],
     size: [
-      { class: 'table-xs', desc: 'Extra small rows' },
-      { class: 'table-sm', desc: 'Small rows' },
-      { class: 'table-md', desc: 'Medium rows', default: true },
-      { class: 'table-lg', desc: 'Large rows' },
+      { class: 'table-xs', desc: 'size="xs"' },
+      { class: 'table-sm', desc: 'size="sm"' },
+      { class: 'table-md', desc: 'size="md"' },
+      { class: 'table-lg', desc: 'size="lg"' },
+      { class: 'table-xl', desc: 'size="xl"' },
+    ],
+    modifier: [
+      { class: 'table-zebra', desc: 'Alternating row colors — zebra' },
+      { class: 'table-pin-rows', desc: 'Sticky header/footer rows — pinRows' },
+      { class: 'table-pin-cols', desc: 'Sticky first/last columns — pinCols' },
     ],
   },
   sections: [

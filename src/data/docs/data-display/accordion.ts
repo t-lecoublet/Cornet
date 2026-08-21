@@ -5,12 +5,41 @@ export default {
   description: 'Accordion is used to show and hide content in a collapsible panel. Uses a radio group so only one item can be open at a time.',
   category: 'Data Display',
   source: 'https://daisyui.com/components/accordion/',
+  props: [
+    {
+      title: 'items',
+      description: 'Array of accordion items with title, content, checked and customClass',
+      type: 'DuAccordionItemData[]',
+    },
+    {
+      title: 'name',
+      description: 'Radio group name — shared by all items so only one opens at a time',
+      type: 'string',
+      default: '"accordion"',
+    },
+    {
+      title: 'modifier',
+      description: 'Indicator style for the accordion items',
+      type: 'DuAccordionModifier',
+      options: ['collapse-arrow', 'collapse-plus', 'collapse-open', 'collapse-close'],
+    },
+    {
+      title: 'customClass',
+      description: 'Additional CSS classes for the root element',
+      type: 'string',
+    },
+  ],
   classnames: {
+    component: [
+      { class: 'collapse', desc: 'Base class on each item, always applied.' },
+      { class: 'collapse-title', desc: 'The clickable header.' },
+      { class: 'collapse-content', desc: 'The revealed body.' },
+    ],
     modifier: [
-      { class: 'collapse-arrow', desc: 'Chevron arrow indicator' },
-      { class: 'collapse-plus', desc: 'Plus/minus indicator' },
-      { class: 'collapse-open', desc: 'Force open state' },
-      { class: 'collapse-close', desc: 'Force closed state' },
+      { class: 'collapse-arrow', desc: 'Chevron indicator — modifier="collapse-arrow"' },
+      { class: 'collapse-plus', desc: 'Plus/minus indicator — modifier="collapse-plus"' },
+      { class: 'collapse-open', desc: 'Forced open — modifier="collapse-open"' },
+      { class: 'collapse-close', desc: 'Forced closed — modifier="collapse-close"' },
     ],
   },
   sections: [

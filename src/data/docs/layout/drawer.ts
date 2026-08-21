@@ -21,20 +21,21 @@ export default {
     },
     {
       title: 'responsive',
-      description: 'Makes drawer responsive (changes behavior based on screen size)',
-      type: 'boolean',
+      description: 'Breakpoint from which the drawer stops overlaying and becomes a permanent sidebar. `true` is equivalent to `"lg"`.',
+      type: "boolean | 'sm' | 'md' | 'lg' | 'xl'",
       default: 'false',
+      options: ['true', 'sm', 'md', 'lg', 'xl'],
     },
     {
       title: 'alwaysOpenOnLarge',
-      description: 'Drawer stays open as sidebar on large screens',
+      description: 'Drawer stays open as sidebar on large screens. Kept for backwards compatibility — prefer `responsive`, which takes precedence when both are set.',
       type: 'boolean',
       default: 'false',
     },
     {
       title: 'items',
       description: 'Menu items to display in sidebar (uses DuMenu)',
-      type: 'DRAWERItem[]',
+      type: 'DuDrawerItem[]',
     },
     {
       title: 'iconOnly',
@@ -119,12 +120,21 @@ export default {
     },
   ],
   classnames: {
-    placement: [
-      { class: 'start', desc: 'Slides from the left', default: true },
-      { class: 'end', desc: 'Slides from the right' },
+    component: [
+      { class: 'drawer', desc: 'Base class on the wrapper, always applied.' },
+      { class: 'drawer-toggle', desc: 'The hidden checkbox driving the open state.' },
+      { class: 'drawer-content', desc: 'The page-content side.' },
+      { class: 'drawer-side', desc: 'The sidebar side.' },
+      { class: 'drawer-overlay', desc: 'The click-outside backdrop.' },
     ],
     modifier: [
-      { class: 'responsive', desc: 'Always visible as a sidebar on lg+ screens' },
+      { class: 'sm:drawer-open', desc: 'Permanent sidebar from sm up — responsive="sm"' },
+      { class: 'md:drawer-open', desc: 'Permanent sidebar from md up — responsive="md"' },
+      { class: 'lg:drawer-open', desc: 'Permanent sidebar from lg up — responsive / responsive="lg"' },
+      { class: 'xl:drawer-open', desc: 'Permanent sidebar from xl up — responsive="xl"' },
+    ],
+    placement: [
+      { class: 'drawer-end', desc: 'position="end" — position="start" is the default and adds no class' },
     ],
   },
   sections: [
@@ -262,7 +272,7 @@ const drawerOpen = ref(false)
     },
     {
       title: 'Responsive sidebar',
-      description: 'The drawer becomes a persistent sidebar on large screens.',
+      description: 'The drawer stops overlaying and becomes a persistent sidebar from the `responsive` breakpoint up. Pass `sm`, `md`, `lg` or `xl` to pick it — bare `responsive` means `lg`.',
       script: `
         const drawerOpen = ref(false)
         const { width, onResizeStart } = useResize(700)
@@ -296,11 +306,46 @@ const drawerOpen = ref(false)
     <div class="w-1 h-1/2 bg-base-300 group-hover/itemdrag:bg-neutral rounded-full"></div>
   </div>
 </div>`,
-      code: `<DuDrawer responsive>
+      code: `<!-- Permanent sidebar from lg+ -->
+<DuDrawer responsive>
   <template #sidebar>
     <!-- Sidebar nav -->
   </template>
   <!-- Page content -->
+</DuDrawer>
+
+<!-- Pick a different breakpoint -->
+<DuDrawer responsive="md">…</DuDrawer>
+<DuDrawer responsive="xl">…</DuDrawer>`,
+    },
+    {
+      title: 'Keyboard & focus',
+      description: 'Pressing <kbd>Escape</kbd> closes an open drawer. Opening it moves focus into the sidebar, and closing restores focus to whatever was focused before — no extra wiring needed.',
+      script: `
+        const drawerOpen = ref(false)
+        return { drawerOpen }
+      `,
+      preview: `<div class="relative h-64 w-full overflow-hidden rounded-lg border border-base-300" style="transform: translate(0, 0)">
+  <DuDrawer v-model="drawerOpen">
+    <template #sidebar>
+      <nav class="p-4 bg-base-200 h-full w-48">
+        <ul class="menu text-sm">
+          <li><a>Dashboard</a></li>
+          <li><a>Projects</a></li>
+          <li><a>Settings</a></li>
+        </ul>
+      </nav>
+    </template>
+    <div class="p-4 text-sm">
+      <DuButton variant="primary" @click="drawerOpen = true">Open, then press Escape</DuButton>
+    </div>
+  </DuDrawer>
+</div>`,
+      code: `<DuDrawer v-model="drawerOpen">
+  <template #sidebar>
+    <!-- focus lands here on open -->
+  </template>
+  <!-- Escape closes and returns focus to the trigger -->
 </DuDrawer>`,
     },
     {

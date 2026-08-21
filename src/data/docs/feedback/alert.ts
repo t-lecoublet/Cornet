@@ -78,17 +78,25 @@ export default {
     },
   ],
   classnames: {
-    color: [
-      { class: 'alert-info', desc: 'Blue informational message' },
-      { class: 'alert-success', desc: 'Green success message' },
-      { class: 'alert-warning', desc: 'Yellow warning message' },
-      { class: 'alert-error', desc: 'Red error message' },
+    component: [
+      { class: 'alert', desc: 'Base class, always applied. variant="default" adds no color class.' },
+      { class: 'btn btn-sm btn-square btn-ghost', desc: 'The dismiss button — dismissible' },
     ],
     style: [
-      { class: 'alert-soft', desc: 'Low-contrast background' },
-      { class: 'alert-outline', desc: 'Outline border only' },
-      { class: 'alert-dash', desc: 'Dashed border' },
-      { class: 'alert-vertical', desc: 'Stack icon above text' },
+      { class: 'alert-soft', desc: 'Low-contrast background — soft' },
+      { class: 'alert-outline', desc: 'Border only — outline' },
+      { class: 'alert-dash', desc: 'Dashed border — dash' },
+    ],
+    color: [
+      { class: 'alert-info', desc: 'variant="info"' },
+      { class: 'alert-success', desc: 'variant="success"' },
+      { class: 'alert-warning', desc: 'variant="warning"' },
+      { class: 'alert-error', desc: 'variant="error"' },
+    ],
+    modifier: [
+      { class: 'alert-vertical', desc: 'Stack icon above text — direction="vertical"' },
+      { class: 'alert-horizontal', desc: 'Force the row layout — direction="horizontal"' },
+      { class: 'alert-vertical sm:alert-horizontal', desc: 'direction="responsive"' },
     ],
   },
   sections: [
@@ -131,6 +139,38 @@ export default {
       code: `<DuAlert variant="success" icon dismissible autoDismissible>
   Disappears after 5 seconds.
 </DuAlert>`,
+    },
+    {
+      title: 'close event',
+      description: 'The `close` event fires when the alert is dismissed — both by the close button and by `autoDismissible` timing out. Use it to drop the alert from your own state.',
+      script: `
+        const closed = ref(0)
+        return { closed }
+      `,
+      preview: `<div class="flex flex-col items-center gap-3">
+  <DuAlert variant="info" icon dismissible @close="closed++">
+    Dismiss me.
+  </DuAlert>
+  <p class="text-sm text-base-content/60">close fired: <strong class="text-base-content">{{ closed }}</strong></p>
+</div>`,
+      code: `<script setup lang="ts">
+import { ref } from 'vue'
+const alerts = ref([{ id: 1, text: 'Saved.' }])
+</script>
+
+<template>
+  <DuAlert
+    v-for="a in alerts"
+    :key="a.id"
+    variant="success"
+    icon
+    dismissible
+    autoDismissible
+    @close="alerts = alerts.filter(x => x.id !== a.id)"
+  >
+    {{ a.text }}
+  </DuAlert>
+</template>`,
     },
     {
       title: 'With actions',

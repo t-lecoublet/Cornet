@@ -5,6 +5,27 @@ export default {
   description: 'Toast is a fixed-position container for alert notifications.',
   category: 'Feedback',
   source: 'https://daisyui.com/components/toast/',
+  props: [
+    {
+      title: 'horizontalPosition',
+      description: 'Horizontal placement of the toast stack',
+      type: 'DuToastHorizontalPosition',
+      default: '"end"',
+      options: ['start', 'center', 'end'],
+    },
+    {
+      title: 'verticalPosition',
+      description: 'Vertical placement of the toast stack',
+      type: 'DuToastVerticalPosition',
+      default: '"bottom"',
+      options: ['top', 'middle', 'bottom'],
+    },
+    {
+      title: 'to',
+      description: 'Teleport target selector. Renders the toast in place when omitted.',
+      type: 'string',
+    },
+  ],
   classnames: {
     placement: [
       { class: 'toast-start', desc: 'Left side' },

@@ -5,12 +5,25 @@ export default {
   description: 'Kbd is used to display keyboard shortcuts in a styled badge.',
   category: 'Data Display',
   source: 'https://daisyui.com/components/kbd/',
+  props: [
+    {
+      title: 'size',
+      description: 'Size of the key cap',
+      type: 'Size',
+      default: '"default"',
+      options: ['default', 'xs', 'sm', 'md', 'lg', 'xl'],
+    },
+  ],
   classnames: {
+    component: [
+      { class: 'kbd', desc: 'Base class, always applied. size="default" and variant="default" add no extra class.' },
+    ],
     size: [
-      { class: 'kbd-xs', desc: 'Extra small' },
-      { class: 'kbd-sm', desc: 'Small' },
-      { class: 'kbd-md', desc: 'Medium', default: true },
-      { class: 'kbd-lg', desc: 'Large' },
+      { class: 'kbd-xs', desc: 'size="xs"' },
+      { class: 'kbd-sm', desc: 'size="sm"' },
+      { class: 'kbd-md', desc: 'size="md"' },
+      { class: 'kbd-lg', desc: 'size="lg"' },
+      { class: 'kbd-xl', desc: 'size="xl"' },
     ],
   },
   sections: [

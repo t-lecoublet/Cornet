@@ -14,7 +14,7 @@ export default {
     {
       title: 'items',
       description: 'Array of dock items',
-      type: 'DockItem[]',
+      type: 'DuDockItem[]',
     },
     {
       title: 'size',
@@ -235,7 +235,7 @@ import ChartBarIcon from '@heroicons/vue/24/outline/ChartBarIcon'
     },
     {
       title: '@change event',
-      description: 'Fires whenever the active item changes with the selected `DockItem` as payload. The component also exposes `activeItem` (index) and `selectedItem` (object) via `ref`.',
+      description: 'Fires whenever the active item changes with the selected `DuDockItem` as payload. The component also exposes `activeItem` (index) and `selectedItem` (object) via `ref`.',
       links: [
         { label: 'Vue template refs', href: 'https://vuejs.org/guide/essentials/template-refs.html' },
         { label: 'Vue defineExpose', href: 'https://vuejs.org/api/sfc-script-setup.html#defineexpose' },
@@ -258,9 +258,9 @@ import ChartBarIcon from '@heroicons/vue/24/outline/ChartBarIcon'
   <p class="text-sm text-center text-base-content/60">Active: <strong class="text-base-content">{{ selected }}</strong></p>
 </div>`,
       code: `<script setup lang="ts">
-import type { DockItem } from 'cornet/types'
+import type { DuDockItem } from 'cornet-ui/types'
 
-const selected = ref<DockItem | null>(null)
+const selected = ref<DuDockItem | null>(null)
 const dockRef = ref()
 </script>
 
@@ -271,12 +271,12 @@ const dockRef = ref()
     @change="(item) => selected = item"
   />
   <!-- dockRef.activeItem → current index -->
-  <!-- dockRef.selectedItem → current DockItem -->
+  <!-- dockRef.selectedItem → current DuDockItem -->
 </template>`,
     },
     {
       title: 'onClick per item',
-      description: 'Attach an `onClick` callback directly on each `DockItem`. It is called after `@change` fires.',
+      description: 'Attach an `onClick` callback directly on each `DuDockItem`. It is called after `@change` fires.',
       preview: `<div class="relative h-24 w-full rounded-xl border border-base-300 overflow-hidden">
   <DuDock class="absolute" :items="[
     { label: 'Home', icon: '${homeIcon}', active: true },

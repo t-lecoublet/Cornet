@@ -5,12 +5,47 @@ export default {
   description: 'Carousel shows several items along a scrollable axis with optional snap alignment.',
   category: 'Data Display',
   source: 'https://daisyui.com/components/carousel/',
+  props: [
+    {
+      title: 'items',
+      description: 'Array of carousel items with id, src, alt, content and customClass',
+      type: 'DuCarouselItemData[]',
+    },
+    {
+      title: 'start',
+      description: 'Snap items to the start of the viewport',
+      type: 'boolean',
+      default: 'true',
+    },
+    {
+      title: 'center',
+      description: 'Snap items to the center of the viewport',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'end',
+      description: 'Snap items to the end of the viewport',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'vertical',
+      description: 'Scroll vertically instead of horizontally',
+      type: 'boolean',
+      default: 'false',
+    },
+  ],
   classnames: {
+    component: [
+      { class: 'carousel', desc: 'Base class on the wrapper, always applied.' },
+      { class: 'carousel-item', desc: 'Each item, from DuCarouselItem or the items array.' },
+    ],
     modifier: [
-      { class: 'start', desc: 'Snaps to the start of each item (prop: start)', default: true },
-      { class: 'center', desc: 'Snaps to center of each item (prop: center)' },
-      { class: 'end', desc: 'Snaps to end of each item (prop: end)' },
-      { class: 'vertical', desc: 'Vertical scroll direction (prop: vertical)' },
+      { class: 'carousel-start', desc: 'Snap to the start — start (default)' },
+      { class: 'carousel-center', desc: 'Snap to the center — center' },
+      { class: 'carousel-end', desc: 'Snap to the end — end' },
+      { class: 'carousel-vertical', desc: 'Vertical scrolling — vertical' },
     ],
   },
   sections: [

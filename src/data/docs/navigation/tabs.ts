@@ -16,7 +16,7 @@ export default {
     {
       title: 'items',
       description: 'Array of tab items with label, icon, active, disabled, onClick, and content properties',
-      type: 'TabItem[]',
+      type: 'DuTabItem[]',
     },
     {
       title: 'type',
@@ -129,17 +129,22 @@ export default {
     },
   ],
   classnames: {
+    component: [
+      { class: 'tabs', desc: 'Base class on the wrapper, always applied.' },
+      { class: 'tab', desc: 'Each tab label.' },
+      { class: 'tab-content', desc: 'The panel below the active tab.' },
+    ],
     style: [
-      { class: 'tabs-lift', desc: 'Lifted tab style' },
-      { class: 'tabs-border', desc: 'Border underline style' },
-      { class: 'tabs-box', desc: 'Box/pill style' },
+      { class: 'tabs-lift', desc: 'type="lift"' },
+      { class: 'tabs-border', desc: 'type="border"' },
+      { class: 'tabs-box', desc: 'type="box"' },
     ],
     size: [
-      { class: 'tabs-xs', desc: 'Extra small' },
-      { class: 'tabs-sm', desc: 'Small' },
-      { class: 'tabs-md', desc: 'Medium', default: true },
-      { class: 'tabs-lg', desc: 'Large' },
-      { class: 'tabs-xl', desc: 'Extra large' },
+      { class: 'tabs-xs', desc: 'size="xs"' },
+      { class: 'tabs-sm', desc: 'size="sm"' },
+      { class: 'tabs-md', desc: 'size="md"' },
+      { class: 'tabs-lg', desc: 'size="lg"' },
+      { class: 'tabs-xl', desc: 'size="xl"' },
     ],
   },
   sections: [

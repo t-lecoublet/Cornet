@@ -1,7 +1,15 @@
 <script setup lang="ts">
 import { inject, ref, type Ref } from 'vue'
 import { useRoute, RouterLink, RouterView } from 'vue-router'
-import { docsNav } from '@/data/docs/registry'
+import { docsNav, docsCounts } from '@/data/docs/registry'
+import {
+  levelByPath,
+  LEVEL_GUIDANCE,
+  LEVEL_ICON,
+  LEVEL_ORDER,
+  LEVEL_STYLE,
+  type ComponentLevel,
+} from '@/data/component-levels'
 
 const route = useRoute()
 const sidebarOpen = inject<Ref<boolean>>('sidebarOpen', ref(false))
@@ -9,6 +17,26 @@ const sidebarOpen = inject<Ref<boolean>>('sidebarOpen', ref(false))
 function isActive(path: string) {
   return route.path === path
 }
+
+function levelTitle(level: ComponentLevel) {
+  return `${level} — ${LEVEL_GUIDANCE[level]}`
+}
+
+// docsNav is static, so merge each item's level in once at module scope rather
+// than looking it up on every render. Guide pages have no level and stay untagged.
+// The tooltip carries this component's own audit line, which is why the guide
+// no longer needs to repeat all 54 of them in a table.
+const nav = docsNav.map((cat) => ({
+  ...cat,
+  items: cat.items.map((item) => {
+    const entry = levelByPath[item.path]
+    return {
+      ...item,
+      level: entry?.level,
+      levelTooltip: entry ? `${entry.level} — ${entry.reason}\n\n${LEVEL_GUIDANCE[entry.level]}` : undefined,
+    }
+  }),
+}))
 </script>
 
 <template>
@@ -29,7 +57,7 @@ function isActive(path: string) {
       <!-- Nav -->
       <nav class="flex-1 overflow-y-auto py-3 px-2 space-y-4">
         <div
-          v-for="cat in docsNav"
+          v-for="cat in nav"
           :key="cat.category"
         >
           <div class="px-2 mb-1.5">
@@ -45,7 +73,27 @@ function isActive(path: string) {
                   : 'text-base-content/60 hover:text-base-content hover:bg-base-200/70'"
                 @click="sidebarOpen = false"
               >
-                {{ item.label }}
+                <span class="truncate">{{ item.label }}</span>
+
+                <!-- Internal-complexity tag: icon only — the footer legend decodes it. -->
+                <span
+                  v-if="item.level"
+                  class="ml-auto shrink-0 flex items-center justify-center p-1 rounded-full"
+                  :class="LEVEL_STYLE[item.level]"
+                  :title="item.levelTooltip"
+                >
+                  <svg
+                    class="w-3 h-3"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" :d="LEVEL_ICON[item.level]" />
+                  </svg>
+                  <span class="sr-only">{{ item.level }}</span>
+                </span>
               </RouterLink>
             </li>
           </ul>
@@ -53,8 +101,30 @@ function isActive(path: string) {
       </nav>
 
       <!-- Footer -->
-      <div class="px-4 py-3 border-t border-base-300 text-xs text-base-content/30">
-        55 components · 3 guides
+      <div class="border-t border-base-300">
+        <!-- Legend for the per-component complexity tags -->
+        <RouterLink
+          to="/docs/guides/when-to-use"
+          class="flex flex-wrap items-center gap-x-2 gap-y-1 px-4 pt-3 pb-2 hover:bg-base-200/70 transition-colors"
+          :title="'What these tags mean — ' + LEVEL_ORDER.map(levelTitle).join(' · ')"
+          @click="sidebarOpen = false"
+        >
+          <span
+            v-for="level in LEVEL_ORDER"
+            :key="level"
+            class="flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-semibold tracking-tight"
+            :class="LEVEL_STYLE[level]"
+          >
+            <svg class="w-2.5 h-2.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" :d="LEVEL_ICON[level]" />
+            </svg>
+            {{ level }}
+          </span>
+        </RouterLink>
+
+        <div class="px-4 pb-3 text-xs text-base-content/30">
+          {{ docsCounts.components }} components · {{ docsCounts.guides }} guides
+        </div>
       </div>
     </aside>
 

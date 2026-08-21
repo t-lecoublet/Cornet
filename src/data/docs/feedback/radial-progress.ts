@@ -5,6 +5,32 @@ export default {
   description: 'Radial progress shows a circular progress indicator.',
   category: 'Feedback',
   source: 'https://daisyui.com/components/radial-progress/',
+  props: [
+    {
+      title: 'value',
+      description: 'Progress percentage (0-100)',
+      type: 'number',
+      default: '0',
+    },
+    {
+      title: 'size',
+      description: 'Diameter of the circle — a Size keyword or any CSS length',
+      type: 'Size | string',
+      options: ['default', 'xs', 'sm', 'md', 'lg', 'xl'],
+    },
+    {
+      title: 'thickness',
+      description: 'Stroke thickness as a CSS length',
+      type: 'string',
+    },
+    {
+      title: 'variant',
+      description: 'Color variant of the component',
+      type: 'Variant',
+      default: '"default"',
+      options: ['default', 'neutral', 'primary', 'secondary', 'accent', 'info', 'success', 'warning', 'error'],
+    },
+  ],
   sections: [
     {
       title: 'Basic',

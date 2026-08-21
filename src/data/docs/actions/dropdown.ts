@@ -20,9 +20,10 @@ export default {
     },
     {
       title: 'placement',
-      description: 'Dropdown position (supports string, comma-separated, array, and object formats)',
-      type: 'string | string[] | object',
+      description: 'Dropdown position. Accepts a single value, a comma-separated string, an array, or an object — in object form only the keys set to `true` are applied.',
+      type: 'DuDropdownPlacementInput',
       default: '"bottom"',
+      options: ['start', 'center', 'end', 'top', 'bottom', 'left', 'right'],
     },
   ],
   slots: [
@@ -64,14 +65,22 @@ export default {
     },
   ],
   classnames: {
+    component: [
+      { class: 'dropdown', desc: 'Base class on the wrapper, always applied.' },
+      { class: 'dropdown-content', desc: 'The panel. Ships with bg-base-100 rounded-box shadow-sm.' },
+    ],
+    modifier: [
+      { class: 'dropdown-hover', desc: 'Opens on hover — hover' },
+      { class: 'dropdown-open', desc: 'Forced open — open' },
+    ],
     placement: [
-      { class: 'bottom', desc: 'Opens downward', default: true },
-      { class: 'top', desc: 'Opens upward' },
-      { class: 'left', desc: 'Opens to the left' },
-      { class: 'right', desc: 'Opens to the right' },
-      { class: 'start', desc: 'Aligns to start' },
-      { class: 'center', desc: 'Aligns to center' },
-      { class: 'end', desc: 'Aligns to end' },
+      { class: 'dropdown-top', desc: 'placement="top"' },
+      { class: 'dropdown-bottom', desc: 'placement="bottom"' },
+      { class: 'dropdown-left', desc: 'placement="left"' },
+      { class: 'dropdown-right', desc: 'placement="right"' },
+      { class: 'dropdown-start', desc: 'placement="start"' },
+      { class: 'dropdown-center', desc: 'placement="center"' },
+      { class: 'dropdown-end', desc: 'placement="end"' },
     ],
   },
   sections: [
@@ -232,18 +241,19 @@ export default {
     },
     {
       title: 'Combined placement',
+      description: 'In object form only the keys set to `true` are applied — `{ top: true, end: false }` yields `dropdown-top` alone.',
       preview: `<div class="flex gap-4 flex-wrap justify-center">
   <DuDropdown placement="top,end">
     <template #trigger><DuButton>top,end</DuButton></template>
-    <DuMenu :items="[{ label: 'Item' }]" class="bg-base-200" />
+    <DuMenu :items="[{ label: 'Item' }]" />
   </DuDropdown>
   <DuDropdown :placement="['bottom', 'start']">
     <template #trigger><DuButton>Array</DuButton></template>
-    <DuMenu :items="[{ label: 'Item' }]" class="bg-base-200" />
+    <DuMenu :items="[{ label: 'Item' }]" />
   </DuDropdown>
-  <DuDropdown :placement="{ right: true }">
+  <DuDropdown :placement="{ top: true, end: false }">
     <template #trigger><DuButton>Object</DuButton></template>
-    <DuMenu :items="[{ label: 'Item' }]" class="bg-base-200" />
+    <DuMenu :items="[{ label: 'Item' }]" />
   </DuDropdown>
 </div>`,
       code: `<!-- String with comma -->
@@ -251,7 +261,7 @@ export default {
   <template #trigger>
     <DuButton>top,end</DuButton>
   </template>
-  <DuMenu :items="[{ label: 'Item' }]" class="bg-base-200" />
+  <DuMenu :items="[{ label: 'Item' }]" />
 </DuDropdown>
 
 <!-- Array -->
@@ -259,15 +269,35 @@ export default {
   <template #trigger>
     <DuButton>Array</DuButton>
   </template>
-  <DuMenu :items="[{ label: 'Item' }]" class="bg-base-200" />
+  <DuMenu :items="[{ label: 'Item' }]" />
 </DuDropdown>
 
-<!-- Object shorthand -->
-<DuDropdown :placement="{ right: true }">
+<!-- Object: only truthy keys apply → dropdown-top -->
+<DuDropdown :placement="{ top: true, end: false }">
   <template #trigger>
     <DuButton>Object</DuButton>
   </template>
-  <DuMenu :items="[{ label: 'Item' }]" class="bg-base-200" />
+  <DuMenu :items="[{ label: 'Item' }]" />
+</DuDropdown>`,
+    },
+    {
+      title: 'Default content styling',
+      description: 'The `.dropdown-content` wrapper ships with `bg-base-100 rounded-box shadow-sm`, so a dropdown looks right out of the box — you no longer need to add a background to whatever you put inside it. Add your own classes to the child to override.',
+      preview: `<DuDropdown placement="bottom">
+  <template #trigger><DuButton>Open</DuButton></template>
+  <div class="p-4 w-52 text-sm">
+    <p class="font-medium">No background needed</p>
+    <p class="text-base-content/60 text-xs mt-1">The dropdown supplies it.</p>
+  </div>
+</DuDropdown>`,
+      code: `<DuDropdown placement="bottom">
+  <template #trigger>
+    <DuButton>Open</DuButton>
+  </template>
+  <!-- .dropdown-content already has bg-base-100 rounded-box shadow-sm -->
+  <div class="p-4 w-52">
+    Any content
+  </div>
 </DuDropdown>`,
     },
   ],

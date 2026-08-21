@@ -5,6 +5,42 @@ export default {
   description: 'Countdown gives a live animated countdown. Use DuCountdown for a single unit (seconds, minutes, hours, or days), or DuCountdownGroup for a full days/hours/minutes/seconds display tied to a target date.',
   category: 'Data Display',
   source: 'https://daisyui.com/components/countdown/',
+  props: [
+    {
+      title: 'value',
+      description: 'Static number to display. Takes precedence over `targetDate`.',
+      type: 'number',
+    },
+    {
+      title: 'targetDate',
+      description: 'Date to count down to — the value updates every second',
+      type: 'Date',
+    },
+    {
+      title: 'format',
+      description: 'Which unit of the remaining time to display',
+      type: 'DuCountdownFormat',
+      default: '"seconds"',
+      options: ['days', 'hours', 'minutes', 'seconds'],
+    },
+    {
+      title: 'separator',
+      description: 'Separator rendered after the value',
+      type: 'string',
+      default: '":"',
+    },
+    {
+      title: 'autoStart',
+      description: 'Start the timer as soon as the component mounts',
+      type: 'boolean',
+      default: 'true',
+    },
+    {
+      title: 'customClass',
+      description: 'Additional CSS classes for the root element',
+      type: 'string',
+    },
+  ],
   sections: [
     {
       title: 'Single value',

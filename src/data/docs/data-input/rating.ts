@@ -63,18 +63,31 @@ export default {
     {
       title: 'items',
       description: 'Custom items array for dynamic rendering',
-      type: 'RatingItem[]',
+      type: 'DuRatingItemData[]',
     },
   ],
   classnames: {
+    component: [
+      { class: 'rating', desc: 'Base class, always applied. size="default" adds no size class.' },
+      { class: 'mask', desc: 'On every item, alongside its shape class.' },
+    ],
+    style: [
+      { class: 'mask-star', desc: 'shape="star"' },
+      { class: 'mask-star-2', desc: 'shape="star-2"' },
+      { class: 'mask-heart', desc: 'shape="heart"' },
+      { class: 'mask-circle', desc: 'shape="circle"' },
+    ],
     size: [
-      { class: 'rating-xs', desc: 'Extra small' },
-      { class: 'rating-sm', desc: 'Small' },
-      { class: 'rating-md', desc: 'Medium', default: true },
-      { class: 'rating-lg', desc: 'Large' },
+      { class: 'rating-xs', desc: 'size="xs"' },
+      { class: 'rating-sm', desc: 'size="sm"' },
+      { class: 'rating-md', desc: 'size="md"' },
+      { class: 'rating-lg', desc: 'size="lg"' },
+      { class: 'rating-xl', desc: 'size="xl"' },
     ],
     modifier: [
-      { class: 'rating-half', desc: 'Half-star increments (prop: halfStar)' },
+      { class: 'rating-half', desc: 'Half-step increments on the container — halfStar' },
+      { class: 'mask-half-1', desc: 'Left half of an item, in halfStar mode.' },
+      { class: 'mask-half-2', desc: 'Right half of an item, in halfStar mode.' },
     ],
   },
   sections: [

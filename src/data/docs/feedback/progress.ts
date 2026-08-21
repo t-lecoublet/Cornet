@@ -5,14 +5,46 @@ export default {
   description: 'Progress bar displays how much of a task has been completed.',
   category: 'Feedback',
   source: 'https://daisyui.com/components/progress/',
+  props: [
+    {
+      title: 'value',
+      description: 'Current progress value',
+      type: 'number',
+      default: '0',
+    },
+    {
+      title: 'max',
+      description: 'Value that represents 100%',
+      type: 'number',
+      default: '100',
+    },
+    {
+      title: 'indeterminate',
+      description: 'Render the indeterminate (unknown progress) animation',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'variant',
+      description: 'Color variant of the component',
+      type: 'Variant',
+      default: '"default"',
+      options: ['default', 'neutral', 'primary', 'secondary', 'accent', 'info', 'success', 'warning', 'error'],
+    },
+  ],
   classnames: {
+    component: [
+      { class: 'progress', desc: 'Base class, always applied. size="default" and variant="default" add no extra class.' },
+    ],
     color: [
-      { class: 'progress-primary', desc: 'Primary color' },
-      { class: 'progress-secondary', desc: 'Secondary color' },
-      { class: 'progress-accent', desc: 'Accent color' },
-      { class: 'progress-success', desc: 'Success color' },
-      { class: 'progress-warning', desc: 'Warning color' },
-      { class: 'progress-error', desc: 'Error color' },
+      { class: 'progress-primary', desc: 'variant="primary"' },
+      { class: 'progress-secondary', desc: 'variant="secondary"' },
+      { class: 'progress-accent', desc: 'variant="accent"' },
+      { class: 'progress-neutral', desc: 'variant="neutral"' },
+      { class: 'progress-info', desc: 'variant="info"' },
+      { class: 'progress-success', desc: 'variant="success"' },
+      { class: 'progress-warning', desc: 'variant="warning"' },
+      { class: 'progress-error', desc: 'variant="error"' },
     ],
   },
   sections: [

@@ -8,8 +8,8 @@ export default {
   props: [
     {
       title: 'items',
-      description: 'Array of timeline items with start, middle, end, customClass, valid, and hrClass properties',
-      type: 'TIMELINEItem[]',
+      description: 'Array of timeline items with start, middle, end, customClass, valid, hrClass and boxed properties',
+      type: 'DuTimelineItemData[]',
     },
     {
       title: 'direction',
@@ -20,9 +20,15 @@ export default {
     },
     {
       title: 'modifier',
-      description: 'Timeline style modifier',
+      description: 'Root-level layout modifier. Note `timeline-box` is not one of these — it applies per start/end box, use the `boxed` prop instead.',
       type: 'string',
-      options: ['timeline-snap-icon', 'timeline-box', 'timeline-compact'],
+      options: ['timeline-snap-icon', 'timeline-compact'],
+    },
+    {
+      title: 'boxed',
+      description: 'Apply `timeline-box` styling to every item\'s start/end boxes. A per-item `boxed` overrides this.',
+      type: 'boolean',
+      default: 'false',
     },
     {
       title: 'customClass',
@@ -98,12 +104,19 @@ export default {
     },
   ],
   classnames: {
+    component: [
+      { class: 'timeline', desc: 'Base class on the <ul>, always applied.' },
+      { class: 'timeline-start', desc: 'The start box of an item.' },
+      { class: 'timeline-middle', desc: 'The icon slot between the two boxes.' },
+      { class: 'timeline-end', desc: 'The end box of an item.' },
+      { class: 'timeline-box', desc: 'Box styling applied per start/end box — boxed (not a root modifier)' },
+    ],
     modifier: [
-      { class: 'timeline-vertical', desc: 'Vertical layout', default: true },
-      { class: 'timeline-horizontal', desc: 'Horizontal layout' },
-      { class: 'timeline-snap-icon', desc: 'Snaps icon to middle of item' },
-      { class: 'timeline-box', desc: 'Adds box styling to end content' },
-      { class: 'timeline-compact', desc: 'Compact single-side layout' },
+      { class: 'timeline-vertical', desc: 'Vertical layout — direction (default)' },
+      { class: 'timeline-horizontal', desc: 'Horizontal layout — direction' },
+      { class: 'lg:timeline-horizontal', desc: 'Horizontal only from lg up — responsive' },
+      { class: 'timeline-snap-icon', desc: 'Snaps the icon to the middle — modifier' },
+      { class: 'timeline-compact', desc: 'Compact single-side layout — modifier' },
     ],
   },
   sections: [
@@ -123,7 +136,7 @@ export default {
     },
     {
       title: 'With validation state',
-      description: 'Set `valid` on each item to color the connector line: `true` = primary (done), `false` = error, `undefined` = neutral (pending).',
+      description: 'Set `valid` on each item to color the connector line: `true` = success (done), `false` = error, `undefined` = neutral (pending).',
       preview: `<DuTimeline>
   <DuTimelineItem start="Step 1" end="Account created" :valid="true" />
   <DuTimelineItem start="Step 2" end="Email verified" :valid="true" />
@@ -165,6 +178,28 @@ export default {
     { start: '2020', end: 'Company founded', valid: true },
     { start: '2022', end: 'First product launch', valid: true },
     { start: '2024', end: 'Series A funding' },
+  ]"
+/>`,
+    },
+    {
+      title: 'Boxed items',
+      description: 'Set `boxed` on DuTimeline to give every item\'s start/end content the `timeline-box` treatment. A per-item `boxed` overrides the parent — set it to `false` to opt a single item out.',
+      preview: `<DuTimeline boxed>
+  <DuTimelineItem start="2020" end="Company founded" :valid="true" />
+  <DuTimelineItem start="2022" end="First product launch" :valid="true" />
+  <DuTimelineItem start="2024" end="Series A funding" />
+</DuTimeline>`,
+      code: `<!-- Every item boxed -->
+<DuTimeline boxed>
+  <DuTimelineItem start="2020" end="Company founded" />
+  <DuTimelineItem start="2022" end="First product launch" />
+</DuTimeline>
+
+<!-- Per-item override in dynamic mode -->
+<DuTimeline
+  :items="[
+    { start: '2020', end: 'Company founded', boxed: true },
+    { start: '2022', end: 'First product launch' },
   ]"
 />`,
     },

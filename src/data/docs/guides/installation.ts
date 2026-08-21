@@ -6,6 +6,20 @@ export default {
   category: 'Guides',
   sections: [
     {
+      title: 'Prerequisites',
+      description: 'Cornet declares these as peer dependencies — install or upgrade them in your app if they are not there already.',
+      lang: 'json',
+      code: `{
+  "engines": { "node": "^18.0.0 || >=20.0.0" },
+  "peerDependencies": {
+    "vue": ">=3.5.0",
+    "vite": ">=6.0.0",
+    "tailwindcss": ">=4.0.0",
+    "daisyui": "^5.6.3"
+  }
+}`,
+    },
+    {
       title: '1. Install from npm',
       description: 'Install cornet-ui directly from the npm registry.',
       lang: 'bash',
@@ -48,7 +62,7 @@ npm install ./lib`,
     },
     {
       title: '2. Add the Vite plugin (optional)',
-      description: 'At build time, the plugin detects which Cornet components your app uses and excludes the unused ones from Tailwind scanning, reducing the generated CSS. It is fail-safe: without it everything still works, you just ship a bit more CSS. Options: srcDirs (source folders to scan, default [\'src\']), libPath and packageNames for custom layouts, showOutput, failOnError.',
+      description: 'At build time, the plugin detects which Cornet components your app uses and excludes the unused ones from Tailwind scanning, reducing the generated CSS. It is fail-safe: without it everything still works, you just ship a bit more CSS. Commented-out imports and commented-out template tags are ignored, so a leftover `<!-- <DuSearch /> -->` no longer drags an unused component\'s CSS into the build. Options: srcDirs (source folders to scan, default [\'src\']), libPath and packageNames for custom layouts, showOutput, failOnError.',
       links: [
         { label: 'Vite plugin docs', href: 'https://vite.dev/guide/using-plugins#adding-a-plugin' },
       ],

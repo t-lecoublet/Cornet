@@ -9,7 +9,7 @@ export default {
     {
       title: 'items',
       description: 'Array of chat message objects with message, placement, variant, image, header, footer, and customClass',
-      type: 'ChatItem[]',
+      type: 'DuChatItemData[]',
     },
     {
       title: 'placement',
@@ -166,7 +166,7 @@ export default {
     },
     {
       title: 'Bubble variants',
-      description: 'Use `variant` on DuChatItem or in the items array to color the bubble.',
+      description: 'Use `variant` on DuChatItem or in the items array to color the bubble. It takes a plain variant name (`"primary"`, `"info"`…) — the `chat-bubble-` prefix is added for you.',
       preview: `<div class="flex flex-col gap-2">
   <DuChat>
     <DuChatItem placement="start" variant="info">

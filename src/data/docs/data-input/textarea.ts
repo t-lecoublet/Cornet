@@ -5,7 +5,50 @@ export default {
   description: 'TextArea is a multiline text input.',
   category: 'Data Input',
   source: 'https://daisyui.com/components/textarea/',
+  props: [
+    {
+      title: 'modelValue',
+      description: 'Text value (use with `v-model`)',
+      type: 'string',
+      default: "''",
+    },
+    {
+      title: 'placeholder',
+      description: 'Placeholder text',
+      type: 'string',
+      default: "''",
+    },
+    {
+      title: 'variant',
+      description: 'Color variant of the component',
+      type: 'Variant',
+      default: '"default"',
+      options: ['default', 'neutral', 'primary', 'secondary', 'accent', 'info', 'success', 'warning', 'error'],
+    },
+    {
+      title: 'size',
+      description: 'Size of the component',
+      type: 'Size',
+      default: '"default"',
+      options: ['default', 'xs', 'sm', 'md', 'lg', 'xl'],
+    },
+    {
+      title: 'ghost',
+      description: 'Ghost style — no background until focused',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'disabled',
+      description: 'Disable the textarea',
+      type: 'boolean',
+      default: 'false',
+    },
+  ],
   classnames: {
+    component: [
+      { class: 'textarea', desc: 'Base class, always applied. size="default" and variant="default" add no extra class.' },
+    ],
     style: [
       { class: 'textarea-ghost', desc: 'Transparent ghost style' },
     ],
@@ -13,14 +56,18 @@ export default {
       { class: 'textarea-primary', desc: 'Primary border on focus' },
       { class: 'textarea-secondary', desc: 'Secondary border' },
       { class: 'textarea-accent', desc: 'Accent border' },
-      { class: 'textarea-error', desc: 'Error state' },
+      { class: 'textarea-neutral', desc: 'Neutral border' },
+      { class: 'textarea-info', desc: 'Info state' },
       { class: 'textarea-success', desc: 'Success state' },
+      { class: 'textarea-warning', desc: 'Warning state' },
+      { class: 'textarea-error', desc: 'Error state' },
     ],
     size: [
       { class: 'textarea-xs', desc: 'Extra small' },
       { class: 'textarea-sm', desc: 'Small' },
-      { class: 'textarea-md', desc: 'Medium', default: true },
+      { class: 'textarea-md', desc: 'Medium' },
       { class: 'textarea-lg', desc: 'Large' },
+      { class: 'textarea-xl', desc: 'Extra large' },
     ],
   },
   sections: [

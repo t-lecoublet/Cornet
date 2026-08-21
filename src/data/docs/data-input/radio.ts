@@ -5,11 +5,49 @@ export default {
   description: 'Radio buttons allow the user to select one option from a set. DuRadio renders a styled `<input type="radio">`. The `name` and `value` HTML attributes are passed through via Vue\'s attribute fallthrough. Use `:checked` to control selection and `@change` to handle updates.',
   category: 'Data Input',
   source: 'https://daisyui.com/components/radio/',
+  props: [
+    {
+      title: 'modelValue',
+      description: 'Selected value (use with `v-model`)',
+      type: 'any',
+    },
+    {
+      title: 'checked',
+      description: 'Initial checked state for uncontrolled usage',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'disabled',
+      description: 'Disable the radio',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'variant',
+      description: 'Color variant of the component',
+      type: 'Variant',
+      default: '"default"',
+      options: ['default', 'neutral', 'primary', 'secondary', 'accent', 'info', 'success', 'warning', 'error'],
+    },
+    {
+      title: 'size',
+      description: 'Size of the component',
+      type: 'Size',
+      default: '"default"',
+      options: ['default', 'xs', 'sm', 'md', 'lg', 'xl'],
+    },
+  ],
   classnames: {
+    component: [
+      { class: 'radio', desc: 'Base class, always applied. size="default" and variant="default" add no extra class.' },
+    ],
     color: [
       { class: 'radio-primary', desc: 'Primary color' },
       { class: 'radio-secondary', desc: 'Secondary color' },
       { class: 'radio-accent', desc: 'Accent color' },
+      { class: 'radio-neutral', desc: 'Neutral color' },
+      { class: 'radio-info', desc: 'Info color' },
       { class: 'radio-success', desc: 'Success color' },
       { class: 'radio-warning', desc: 'Warning color' },
       { class: 'radio-error', desc: 'Error color' },
@@ -17,7 +55,7 @@ export default {
     size: [
       { class: 'radio-xs', desc: 'Extra small' },
       { class: 'radio-sm', desc: 'Small' },
-      { class: 'radio-md', desc: 'Medium', default: true },
+      { class: 'radio-md', desc: 'Medium' },
       { class: 'radio-lg', desc: 'Large' },
       { class: 'radio-xl', desc: 'Extra large' },
     ],

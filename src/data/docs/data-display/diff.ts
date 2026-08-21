@@ -5,6 +5,24 @@ export default {
   description: 'Diff component shows a comparison between two elements side by side.',
   category: 'Data Display',
   source: 'https://daisyui.com/components/diff/',
+  props: [
+    {
+      title: 'item1',
+      description: 'Content of the first (left) pane',
+      type: 'string',
+    },
+    {
+      title: 'item2',
+      description: 'Content of the second (right) pane',
+      type: 'string',
+    },
+    {
+      title: 'aspectRatio',
+      description: 'Aspect ratio class for the diff container',
+      type: 'DuDiffAspectRatio | string | null',
+      default: "''",
+    },
+  ],
   sections: [
     {
       title: 'Basic (images)',

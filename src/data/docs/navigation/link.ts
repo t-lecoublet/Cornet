@@ -5,17 +5,44 @@ export default {
   description: 'Link renders a styled `<a>` element. The `href` attribute is passed through via Vue\'s attribute fallthrough (not a declared prop). Use `onlyUnderlineOnHover` to hide the underline until hover.',
   category: 'Navigation',
   source: 'https://daisyui.com/components/link/',
+  props: [
+    {
+      title: 'variant',
+      description: 'Color variant of the component',
+      type: 'Variant',
+      default: '"default"',
+      options: ['default', 'neutral', 'primary', 'secondary', 'accent', 'info', 'success', 'warning', 'error'],
+    },
+    {
+      title: 'onlyUnderlineOnHover',
+      description: 'Only underline the link while hovered',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'ghost',
+      description: 'Ghost style — inherits the surrounding text color',
+      type: 'boolean',
+      default: 'false',
+    },
+  ],
   classnames: {
+    component: [
+      { class: 'link', desc: 'Base class, always applied. size="default" and variant="default" add no extra class.' },
+    ],
     color: [
-      { class: 'link-primary', desc: 'Primary color' },
-      { class: 'link-secondary', desc: 'Secondary color' },
-      { class: 'link-accent', desc: 'Accent color' },
-      { class: 'link-neutral', desc: 'Neutral color' },
-      { class: 'link-success', desc: 'Success color' },
-      { class: 'link-error', desc: 'Error color' },
+      { class: 'link-primary', desc: 'variant="primary"' },
+      { class: 'link-secondary', desc: 'variant="secondary"' },
+      { class: 'link-accent', desc: 'variant="accent"' },
+      { class: 'link-neutral', desc: 'variant="neutral"' },
+      { class: 'link-info', desc: 'variant="info"' },
+      { class: 'link-success', desc: 'variant="success"' },
+      { class: 'link-warning', desc: 'variant="warning"' },
+      { class: 'link-error', desc: 'variant="error"' },
     ],
     modifier: [
-      { class: 'link-hover', desc: 'Only shows underline on hover (prop: onlyUnderlineOnHover)' },
+      { class: 'link-hover', desc: 'Underline only on hover — onlyUnderlineOnHover' },
+      { class: 'link-ghost', desc: 'Inherit the surrounding text color — ghost' },
     ],
   },
   sections: [

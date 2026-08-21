@@ -6,6 +6,7 @@ import quickStart from './guides/quick-start'
 import theming from './guides/theming'
 import copyComponents from './guides/copy-components'
 import mcp from './guides/mcp'
+import whenToUse from './guides/when-to-use'
 
 // ─── Actions ────────────────────────────────────────────────
 import button from './actions/button'
@@ -62,7 +63,6 @@ import join from './layout/join'
 
 // ─── Navigation ─────────────────────────────────────────────
 import breadcrumbs from './navigation/breadcrumbs'
-import buttonLink from './navigation/button-link'
 import dock from './navigation/dock'
 import link from './navigation/link'
 import menu from './navigation/menu'
@@ -79,6 +79,7 @@ export const docsRegistry: Record<string, DocPageData> = {
   '/docs/guides/theming': theming,
   '/docs/guides/copy-components': copyComponents,
   '/docs/guides/mcp': mcp,
+  '/docs/guides/when-to-use': whenToUse,
 
   // Actions
   '/docs/actions/button': button,
@@ -135,7 +136,6 @@ export const docsRegistry: Record<string, DocPageData> = {
 
   // Navigation
   '/docs/navigation/breadcrumbs': breadcrumbs,
-  // '/docs/navigation/button-link': buttonLink,
   '/docs/navigation/dock': dock,
   '/docs/navigation/link': link,
   '/docs/navigation/menu': menu,
@@ -166,6 +166,7 @@ export const docsNav: NavCategory[] = [
       { label: 'Theming', path: '/docs/guides/theming', description: 'Cornet inherits DaisyUI 5 themes. Switch between built-in themes or create your own.' },
       { label: 'Copy Components', path: '/docs/guides/copy-components', description: 'Skip the submodule — download only the components and composables you need.' },
       { label: 'MCP Server', path: '/docs/guides/mcp', description: 'Use Cornet components directly in your AI assistant via the Model Context Protocol (MCP).' },
+      { label: 'When to Use Cornet', path: '/docs/guides/when-to-use', description: 'Where a Cornet component earns its keep, and where plain DaisyUI markup does the same job.' },
     ],
   },
   {
@@ -240,7 +241,6 @@ export const docsNav: NavCategory[] = [
     category: 'Navigation',
     items: [
       { label: 'Breadcrumbs', path: '/docs/navigation/breadcrumbs', description: 'Breadcrumbs show the current page location within a hierarchical navigation structure.' },
-      // { label: 'ButtonLink', path: '/docs/navigation/button-link' },
       { label: 'Dock', path: '/docs/navigation/dock', description: 'Fixed bottom navigation bar (macOS dock style). Supports icons, labels, sizes.' },
       { label: 'Link', path: '/docs/navigation/link', description: 'Link renders a styled anchor element with variant and size support.' },
       { label: 'Menu', path: '/docs/navigation/menu', description: 'Menu is used for navigation and list-style layouts with optional sub-menus.' },
@@ -251,3 +251,21 @@ export const docsNav: NavCategory[] = [
     ],
   },
 ]
+
+/**
+ * Counts derived from `docsNav` so the sidebar, home page and marketing copy
+ * can never drift apart again. `components` counts documented pages — the
+ * library exports more than that, since sub-components (DuMenuItem,
+ * DuTableItem, DuChatItem…) are documented inside their parent's page.
+ */
+export const docsCounts = {
+  guides: docsNav.find((c) => c.category === 'Guides')?.items.length ?? 0,
+  components: docsNav
+    .filter((c) => c.category !== 'Guides')
+    .reduce((total, c) => total + c.items.length, 0),
+}
+
+/** Documented page count per category, keyed by category label. */
+export const docsCountByCategory: Record<string, number> = Object.fromEntries(
+  docsNav.map((c) => [c.category, c.items.length]),
+)

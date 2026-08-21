@@ -36,8 +36,8 @@ function copyAnchor(id: string, idx: number) {
   }).catch(() => {})
 }
 
-function getFullCode(section: { code: string }): string {
-  return transformUrl(section.code)
+function getFullCode(section: { code?: string }): string {
+  return section.code ? transformUrl(section.code) : ''
 }
 
 function sectionKey(data: DocPageData, idx: number): string {
@@ -98,9 +98,12 @@ onMounted(async () => {
       <SlotsDocs :slots="data.slots" />
     </section>
 
-    <!-- ─── Classnames / Props table ────────────────────── -->
+    <!-- ─── Emitted DaisyUI classes ─────────────────────── -->
     <section v-if="data.classnames" class="mb-10">
-      <h2 class="text-base font-bold text-base-content mb-3">Props &amp; Classes</h2>
+      <h2 class="text-base font-bold text-base-content mb-1">CSS classes</h2>
+      <p class="text-sm text-base-content/50 mb-3">
+        The DaisyUI classes this component emits — useful for writing the markup by hand.
+      </p>
       <PropsTable :classnames="data.classnames" />
     </section>
 
@@ -159,13 +162,14 @@ onMounted(async () => {
         <!-- Live Vue preview -->
         <div
           v-if="section.preview"
-          class="border border-base-300 rounded-t-xl bg-base-100 px-6 py-8"
+          class="border border-base-300 bg-base-100 px-6 py-8"
+          :class="section.code ? 'rounded-t-xl' : 'rounded-xl'"
         >
           <LivePreview :code="section.preview" :script="section.script" />
         </div>
 
-        <!-- Code block -->
-        <div :class="section.preview ? 'rounded-b-xl overflow-hidden border border-t-0 border-base-300' : 'rounded-xl overflow-hidden border border-base-300'">
+        <!-- Code block — omitted entirely for explanatory sections -->
+        <div v-if="section.code" :class="section.preview ? 'rounded-b-xl overflow-hidden border border-t-0 border-base-300' : 'rounded-xl overflow-hidden border border-base-300'">
           <div class="flex items-center justify-between bg-base-200/80 px-4 py-2 border-b border-base-300/60">
             <span class="text-xs font-mono text-base-content/40">{{ section.lang || 'vue' }}</span>
             <button

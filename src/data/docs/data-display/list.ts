@@ -5,6 +5,13 @@ export default {
   description: 'List component displays a vertical list of items with optional actions.',
   category: 'Data Display',
   source: 'https://daisyui.com/components/list/',
+  props: [
+    {
+      title: 'class',
+      description: 'Additional CSS classes for the list element',
+      type: 'string',
+    },
+  ],
   sections: [
     {
       title: 'Basic',

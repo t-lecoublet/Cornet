@@ -5,6 +5,13 @@ export default {
   description: 'Skeleton is a placeholder that mimics the shape of content while it is loading.',
   category: 'Feedback',
   source: 'https://daisyui.com/components/skeleton/',
+  props: [
+    {
+      title: 'class',
+      description: 'Additional CSS classes — set the width and height here',
+      type: 'string',
+    },
+  ],
   sections: [
     {
       title: 'Basic',

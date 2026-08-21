@@ -5,6 +5,28 @@ export default {
   description: 'Stat displays a single statistic. It is entirely slot-based: use #title, #value, #desc, #figure, and #actions named slots to populate each section. Style props (titleClass, valueClass, descClass, figureClass) allow per-section class overrides.',
   category: 'Data Display',
   source: 'https://daisyui.com/components/stat/',
+  props: [
+    {
+      title: 'titleClass',
+      description: 'Additional CSS classes for the title element',
+      type: 'string',
+    },
+    {
+      title: 'valueClass',
+      description: 'Additional CSS classes for the value element',
+      type: 'string',
+    },
+    {
+      title: 'descClass',
+      description: 'Additional CSS classes for the description element',
+      type: 'string',
+    },
+    {
+      title: 'figureClass',
+      description: 'Additional CSS classes for the figure element',
+      type: 'string',
+    },
+  ],
   sections: [
     {
       title: 'Basic',

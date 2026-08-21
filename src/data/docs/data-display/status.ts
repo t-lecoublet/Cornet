@@ -5,25 +5,58 @@ export default {
   description: 'Status is a small colored indicator dot used to show the status of an item.',
   category: 'Data Display',
   source: 'https://daisyui.com/components/status/',
+  props: [
+    {
+      title: 'size',
+      description: 'Size of the component',
+      type: 'Size',
+      default: '"default"',
+      options: ['default', 'xs', 'sm', 'md', 'lg', 'xl'],
+    },
+    {
+      title: 'variant',
+      description: 'Color variant of the component',
+      type: 'Variant',
+      default: '"default"',
+      options: ['default', 'neutral', 'primary', 'secondary', 'accent', 'info', 'success', 'warning', 'error'],
+    },
+    {
+      title: 'ping',
+      description: 'Animate the indicator with a ping effect',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'bounce',
+      description: 'Animate the indicator with a bounce effect',
+      type: 'boolean',
+      default: 'false',
+    },
+  ],
   classnames: {
-    color: [
-      { class: 'status-primary', desc: 'Primary color' },
-      { class: 'status-secondary', desc: 'Secondary color' },
-      { class: 'status-accent', desc: 'Accent color' },
-      { class: 'status-success', desc: 'Green — online/active' },
-      { class: 'status-warning', desc: 'Yellow — idle/pending' },
-      { class: 'status-error', desc: 'Red — offline/error' },
-      { class: 'status-info', desc: 'Blue — informational' },
+    component: [
+      { class: 'status', desc: 'Base class, always applied. size="default" and variant="default" add no extra class.' },
     ],
-    modifier: [
-      { class: 'status-ping', desc: 'Pulsing ping animation' },
+    color: [
+      { class: 'status-primary', desc: 'variant="primary"' },
+      { class: 'status-secondary', desc: 'variant="secondary"' },
+      { class: 'status-accent', desc: 'variant="accent"' },
+      { class: 'status-neutral', desc: 'variant="neutral"' },
+      { class: 'status-info', desc: 'variant="info"' },
+      { class: 'status-success', desc: 'variant="success"' },
+      { class: 'status-warning', desc: 'variant="warning"' },
+      { class: 'status-error', desc: 'variant="error"' },
     ],
     size: [
-      { class: 'status-xs', desc: 'Extra small' },
-      { class: 'status-sm', desc: 'Small' },
-      { class: 'status-md', desc: 'Medium', default: true },
-      { class: 'status-lg', desc: 'Large' },
-      { class: 'status-xl', desc: 'Extra large' },
+      { class: 'status-xs', desc: 'size="xs"' },
+      { class: 'status-sm', desc: 'size="sm"' },
+      { class: 'status-md', desc: 'size="md"' },
+      { class: 'status-lg', desc: 'size="lg"' },
+      { class: 'status-xl', desc: 'size="xl"' },
+    ],
+    animation: [
+      { class: 'animate-ping', desc: 'Pulsing halo — ping (a Tailwind utility, not status-ping)' },
+      { class: 'animate-bounce', desc: 'Bouncing dot — bounce' },
     ],
   },
   sections: [

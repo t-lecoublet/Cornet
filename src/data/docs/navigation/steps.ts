@@ -9,7 +9,7 @@ export default {
     {
       title: 'items',
       description: 'Array of step items with label, active, customClass, and dataContent properties',
-      type: 'StepItem[]',
+      type: 'DuStepsItem[]',
     },
     {
       title: 'direction',
@@ -115,9 +115,13 @@ export default {
     },
   ],
   classnames: {
+    component: [
+      { class: 'steps', desc: 'Base class on the <ul>, always applied.' },
+      { class: 'step', desc: 'Each item, from DuStepItem or the items array.' },
+    ],
     modifier: [
-      { class: 'steps-horizontal', desc: 'Horizontal layout', default: true },
-      { class: 'steps-vertical', desc: 'Vertical layout' },
+      { class: 'steps-horizontal', desc: 'Row layout — direction (default)' },
+      { class: 'steps-vertical', desc: 'Column layout — direction' },
     ],
   },
   sections: [

@@ -5,6 +5,34 @@ export default {
   description: 'FileInput is a styled file upload input.',
   category: 'Data Input',
   source: 'https://daisyui.com/components/file-input/',
+  props: [
+    {
+      title: 'variant',
+      description: 'Color variant of the component',
+      type: 'Variant',
+      default: '"default"',
+      options: ['default', 'neutral', 'primary', 'secondary', 'accent', 'info', 'success', 'warning', 'error'],
+    },
+    {
+      title: 'size',
+      description: 'Size of the component',
+      type: 'Size',
+      default: '"default"',
+      options: ['default', 'xs', 'sm', 'md', 'lg', 'xl'],
+    },
+    {
+      title: 'ghost',
+      description: 'Ghost style — no background until focused',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'disabled',
+      description: 'Disable the input',
+      type: 'boolean',
+      default: 'false',
+    },
+  ],
   sections: [
     {
       title: 'Basic',

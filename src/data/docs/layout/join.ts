@@ -5,10 +5,28 @@ export default {
   description: 'Join merges adjacent elements visually, removing gaps and borders between them.',
   category: 'Layout',
   source: 'https://daisyui.com/components/join/',
+  props: [
+    {
+      title: 'as',
+      description: 'Element the join container renders as',
+      type: 'string',
+      default: '"div"',
+    },
+    {
+      title: 'direction',
+      description: 'Direction the children are joined in',
+      type: 'DuJoinDirection',
+      options: ['horizontal', 'vertical'],
+    },
+  ],
   classnames: {
+    component: [
+      { class: 'join', desc: 'Base class on the wrapper, always applied.' },
+      { class: 'join-item', desc: 'Added by children that opt into the group (DuButton, DuInputField…).' },
+    ],
     modifier: [
-      { class: 'join-horizontal', desc: 'Horizontal group', default: true },
-      { class: 'join-vertical', desc: 'Vertical group' },
+      { class: 'join-horizontal', desc: 'Row layout — direction="horizontal" (default)' },
+      { class: 'join-vertical', desc: 'Column layout — direction="vertical"' },
     ],
   },
   sections: [

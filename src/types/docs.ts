@@ -41,7 +41,8 @@ export interface DocSection {
   description?: string
   links?: DocLink[]
   preview?: string
-  code: string
+  /** Omit for explanatory sections — the code block is then not rendered at all. */
+  code?: string
   script?: string
   lang?: string
   showFor?: ('gitlab' | 'github' | 'npm')[]

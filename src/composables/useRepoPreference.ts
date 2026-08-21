@@ -5,10 +5,10 @@ export type RepoPref = 'gitlab' | 'github' | 'npm'
 const STORAGE_KEY = 'cornet-repo-preference'
 
 const GITLAB_BASE = 'https://gitlab.limos.fr/hub-isima/daisyui-vue-kit'
-const GITHUB_BASE = 'https://github.com/t-lecoublet/Cornet'
+const GITHUB_BASE = 'https://github.com/t-lecoublet/Cornet-UI'
 const NPM_BASE    = 'https://www.npmjs.com/package/cornet-ui'
 const GITLAB_SSH  = 'git@gitlab.limos.fr:hub-isima/daisyui-vue-kit.git'
-const GITHUB_SSH  = 'git@github.com:t-lecoublet/Cornet.git'
+const GITHUB_SSH  = 'git@github.com:t-lecoublet/Cornet-UI.git'
 
 const stored = typeof localStorage !== 'undefined'
   ? (localStorage.getItem(STORAGE_KEY) as RepoPref | null)
@@ -26,7 +26,10 @@ export function useRepoPreference() {
     if (preference.value !== 'github') return text
     return text
       .replace(/https:\/\/gitlab\.limos\.fr\/hub-isima\/daisyui-vue-kit\/-\/tree\//g, `${GITHUB_BASE}/tree/`)
-      .replace(/https:\/\/gitlab\.limos\.fr\/hub-isima\/daisyui-vue-kit/g, GITHUB_BASE)
+      // The `(?![-\w])` boundary matters: without it this also matches the
+      // `daisyui-vue-kit-nuxt-starter` repo and rewrites it to a Cornet-UI-nuxt-starter
+      // that does not exist. Sibling repos have no GitHub mirror, so leave them on GitLab.
+      .replace(/https:\/\/gitlab\.limos\.fr\/hub-isima\/daisyui-vue-kit(?![-\w])/g, GITHUB_BASE)
       .replace(/git@gitlab\.limos\.fr:hub-isima\/daisyui-vue-kit\.git/g, GITHUB_SSH)
   }
 

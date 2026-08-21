@@ -5,11 +5,50 @@ export default {
   description: 'Checkboxes allow the user to select one or more items from a set.',
   category: 'Data Input',
   source: 'https://daisyui.com/components/checkbox/',
+  props: [
+    {
+      title: 'modelValue',
+      description: 'Checked state (use with `v-model`). Bind an array to build a checkbox group.',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'indeterminate',
+      description: 'Render the checkbox in the indeterminate state. Reactive — updates after mount too.',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'disabled',
+      description: 'Disable the checkbox',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'variant',
+      description: 'Color variant of the component',
+      type: 'Variant',
+      default: '"default"',
+      options: ['default', 'neutral', 'primary', 'secondary', 'accent', 'info', 'success', 'warning', 'error'],
+    },
+    {
+      title: 'size',
+      description: 'Size of the component',
+      type: 'Size',
+      default: '"default"',
+      options: ['default', 'xs', 'sm', 'md', 'lg', 'xl'],
+    },
+  ],
   classnames: {
+    component: [
+      { class: 'checkbox', desc: 'Base class, always applied. size="default" and variant="default" add no extra class.' },
+    ],
     color: [
       { class: 'checkbox-primary', desc: 'Primary color' },
       { class: 'checkbox-secondary', desc: 'Secondary color' },
       { class: 'checkbox-accent', desc: 'Accent color' },
+      { class: 'checkbox-neutral', desc: 'Neutral color' },
+      { class: 'checkbox-info', desc: 'Info color' },
       { class: 'checkbox-success', desc: 'Success color' },
       { class: 'checkbox-warning', desc: 'Warning color' },
       { class: 'checkbox-error', desc: 'Error color' },
@@ -17,7 +56,7 @@ export default {
     size: [
       { class: 'checkbox-xs', desc: 'Extra small' },
       { class: 'checkbox-sm', desc: 'Small' },
-      { class: 'checkbox-md', desc: 'Medium', default: true },
+      { class: 'checkbox-md', desc: 'Medium' },
       { class: 'checkbox-lg', desc: 'Large' },
       { class: 'checkbox-xl', desc: 'Extra large' },
     ],
@@ -25,38 +64,60 @@ export default {
   sections: [
     {
       title: 'Basic',
+      description: 'The checked state is driven by `v-model` — there is no `checked` prop.',
+      script: `
+        const accepted = ref(true)
+        return { accepted }
+      `,
       preview: `<label class="flex items-center gap-2 cursor-pointer">
-  <DuCheckbox :checked="true" />
+  <DuCheckbox v-model="accepted" />
   <span class="text-sm">Accept terms</span>
 </label>`,
-      code: `<label class="flex items-center gap-2">
-  <DuCheckbox v-model="accepted" />
-  Accept terms
-</label>`,
+      code: `<script setup lang="ts">
+import { ref } from 'vue'
+const accepted = ref(true)
+</script>
+
+<template>
+  <label class="flex items-center gap-2">
+    <DuCheckbox v-model="accepted" />
+    Accept terms
+  </label>
+</template>`,
     },
     {
       title: 'Variants',
+      script: `
+        const val = ref(true)
+        return { val }
+      `,
       preview: `<div class="flex flex-wrap gap-3">
-  <DuCheckbox variant="primary" :checked="true" />
-  <DuCheckbox variant="secondary" :checked="true" />
-  <DuCheckbox variant="accent" :checked="true" />
-  <DuCheckbox variant="success" :checked="true" />
-  <DuCheckbox variant="error" :checked="true" />
+  <DuCheckbox v-model="val" variant="primary" />
+  <DuCheckbox v-model="val" variant="secondary" />
+  <DuCheckbox v-model="val" variant="accent" />
+  <DuCheckbox v-model="val" variant="neutral" />
+  <DuCheckbox v-model="val" variant="success" />
+  <DuCheckbox v-model="val" variant="error" />
 </div>`,
       code: `<DuCheckbox v-model="val" variant="primary" />
 <DuCheckbox v-model="val" variant="secondary" />
 <DuCheckbox v-model="val" variant="accent" />
+<DuCheckbox v-model="val" variant="neutral" />
 <DuCheckbox v-model="val" variant="success" />
 <DuCheckbox v-model="val" variant="error" />`,
     },
     {
       title: 'Sizes',
+      script: `
+        const val = ref(true)
+        return { val }
+      `,
       preview: `<div class="flex items-center gap-3">
-  <DuCheckbox size="xs" :checked="true" />
-  <DuCheckbox size="sm" :checked="true" />
-  <DuCheckbox :checked="true" />
-  <DuCheckbox size="lg" :checked="true" />
-  <DuCheckbox size="xl" :checked="true" />
+  <DuCheckbox v-model="val" size="xs" />
+  <DuCheckbox v-model="val" size="sm" />
+  <DuCheckbox v-model="val" />
+  <DuCheckbox v-model="val" size="lg" />
+  <DuCheckbox v-model="val" size="xl" />
 </div>`,
       code: `<DuCheckbox v-model="val" size="xs" />
 <DuCheckbox v-model="val" size="sm" />
@@ -66,7 +127,11 @@ export default {
     },
     {
       title: 'Disabled',
-      preview: `<DuCheckbox disabled :checked="true" />`,
+      script: `
+        const val = ref(true)
+        return { val }
+      `,
+      preview: `<DuCheckbox v-model="val" disabled />`,
       code: `<DuCheckbox v-model="val" disabled />`,
     },
     {

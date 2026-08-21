@@ -5,12 +5,35 @@ export default {
   description: 'Collapse is used to show or hide content with a smooth animation. It supports an items array (dynamic mode) or a default slot (manual mode). Unlike Accordion, collapse items use checkboxes — multiple can be open simultaneously.',
   category: 'Data Display',
   source: 'https://daisyui.com/components/collapse/',
+  props: [
+    {
+      title: 'items',
+      description: 'Array of collapse items with title, content, open and customClass',
+      type: 'DuCollapseItem[]',
+    },
+    {
+      title: 'modifier',
+      description: 'Indicator style for the collapse items',
+      type: 'DuCollapseModifier',
+      options: ['collapse-arrow', 'collapse-plus', 'collapse-open', 'collapse-close'],
+    },
+    {
+      title: 'customClass',
+      description: 'Additional CSS classes for the root element',
+      type: 'string',
+    },
+  ],
   classnames: {
+    component: [
+      { class: 'collapse', desc: 'Base class on each item, always applied.' },
+      { class: 'collapse-title', desc: 'The clickable header.' },
+      { class: 'collapse-content', desc: 'The revealed body.' },
+    ],
     modifier: [
-      { class: 'collapse-arrow', desc: 'Shows a chevron arrow indicator' },
-      { class: 'collapse-plus', desc: 'Shows a plus/minus indicator' },
-      { class: 'collapse-open', desc: 'Forces open state' },
-      { class: 'collapse-close', desc: 'Forces closed state' },
+      { class: 'collapse-arrow', desc: 'Chevron indicator — modifier="collapse-arrow"' },
+      { class: 'collapse-plus', desc: 'Plus/minus indicator — modifier="collapse-plus"' },
+      { class: 'collapse-open', desc: 'Forced open — modifier="collapse-open"' },
+      { class: 'collapse-close', desc: 'Forced closed — modifier="collapse-close"' },
     ],
   },
   sections: [

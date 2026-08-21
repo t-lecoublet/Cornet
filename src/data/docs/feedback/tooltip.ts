@@ -63,20 +63,29 @@ export default {
     },
   ],
   classnames: {
-    placement: [
-      { class: 'tooltip-top', desc: 'Shows above (default)', default: true },
-      { class: 'tooltip-bottom', desc: 'Shows below' },
-      { class: 'tooltip-left', desc: 'Shows to the left' },
-      { class: 'tooltip-right', desc: 'Shows to the right' },
+    component: [
+      { class: 'tooltip', desc: 'Base class, always applied. size="default" and variant="default" add no extra class.' },
+      { class: 'tooltip-content', desc: 'Wrapper for the content slot, when used instead of the tip prop.' },
+      { class: 'lg:tooltip', desc: 'Only show the tooltip from lg up — responsive' },
     ],
     color: [
-      { class: 'tooltip-primary', desc: 'Primary background' },
-      { class: 'tooltip-secondary', desc: 'Secondary background' },
-      { class: 'tooltip-accent', desc: 'Accent background' },
-      { class: 'tooltip-info', desc: 'Info background' },
-      { class: 'tooltip-success', desc: 'Success background' },
-      { class: 'tooltip-warning', desc: 'Warning background' },
-      { class: 'tooltip-error', desc: 'Error background' },
+      { class: 'tooltip-primary', desc: 'variant="primary"' },
+      { class: 'tooltip-secondary', desc: 'variant="secondary"' },
+      { class: 'tooltip-accent', desc: 'variant="accent"' },
+      { class: 'tooltip-neutral', desc: 'variant="neutral"' },
+      { class: 'tooltip-info', desc: 'variant="info"' },
+      { class: 'tooltip-success', desc: 'variant="success"' },
+      { class: 'tooltip-warning', desc: 'variant="warning"' },
+      { class: 'tooltip-error', desc: 'variant="error"' },
+    ],
+    modifier: [
+      { class: 'tooltip-open', desc: 'Force the tooltip visible — open' },
+    ],
+    placement: [
+      { class: 'tooltip-top', desc: 'position="top" (default)' },
+      { class: 'tooltip-bottom', desc: 'position="bottom"' },
+      { class: 'tooltip-left', desc: 'position="left"' },
+      { class: 'tooltip-right', desc: 'position="right"' },
     ],
   },
   sections: [

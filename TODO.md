@@ -22,7 +22,6 @@ Documenter TOUTES les props de chaque composant avec:
 - `navigation/steps.ts` - props, slots, manual mode, all directions, variants, responsive
 - `navigation/pagination.ts` - props, slots, manual mode, all variants, outline, soft, sizes
 - `navigation/breadcrumbs.ts` ✓
-- `navigation/button-link.ts` ✓
 - `navigation/dock.ts` ✓
 - `navigation/link.ts` ✓
 
