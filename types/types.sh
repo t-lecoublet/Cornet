@@ -26,7 +26,9 @@ extract_and_write_types() {
     local relative_path=${file#$BASE_DIR/}
     local import_path="../components/${relative_path%.ts}"
     
-    types=$(grep -oP 'export type \K[A-Za-z_][A-Za-z0-9_]*(?=\s*=)' "$file" 2>/dev/null)
+    # The optional `<...>` group keeps generic aliases (export type X<O> = ...)
+    # in the barrel — their type parameters may carry defaults containing `=`.
+    types=$(grep -oP 'export type \K[A-Za-z_][A-Za-z0-9_]*(?=\s*(<.*>)?\s*=)' "$file" 2>/dev/null)
 
     interfaces=$(grep -oP 'export interface \K[A-Za-z_][A-Za-z0-9_]*' "$file" 2>/dev/null)
     

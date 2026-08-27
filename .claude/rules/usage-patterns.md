@@ -61,9 +61,22 @@
 <DuSearch
   v-model="author"
   name="author"
-  id="author-search"
-  :listValues="[{ id: 1, name: 'John' }, { id: 2, name: 'Jane' }]"
-  :limit="5"
+  :options="[{ id: 1, name: 'John' }, { id: 2, name: 'Jane' }]"
+  :resultsLimit="5"
+/>
+```
+
+### Search against a server, letting the user add a new entry
+
+```vue
+<DuSearch
+  v-model="author"
+  :options="results"
+  externalFilter
+  creatable
+  commitOnClose="auto"
+  @query="fetchAuthors"
+  @add="createAuthor"
 />
 ```
 

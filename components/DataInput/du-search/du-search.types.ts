@@ -12,50 +12,99 @@ export const SEARCH_SIZES = ['default', 'input-xs', 'input-sm', 'input-md', 'inp
 // DuSearch's dropdown needs it. This local copy keeps them scanned regardless.
 export const SEARCH_MENU_SIZES = ['menu-xs', 'menu-sm', 'menu-md', 'menu-lg', 'menu-xl'] as const
 
+// The chips inside du-search.vue (badge) and their remove button (btn) are
+// sized from the component's own size via `nestedSize`. Their literals live in
+// DuBadge and DuButton, which DuSearch doesn't import, so the same
+// embedded-mode scan gap applies: these local copies keep them generated.
+export const SEARCH_CHIP_SIZES = ['badge-xs', 'badge-sm', 'badge-md', 'badge-lg', 'badge-xl'] as const
+export const SEARCH_NESTED_BUTTON_SIZES = ['btn-xs', 'btn-sm', 'btn-md', 'btn-lg', 'btn-xl'] as const
+
 export type DuSearchVariant = (typeof SEARCH_VARIANTS)[number]
 export type DuSearchSize = (typeof SEARCH_SIZES)[number]
 export type DuSearchMenuSize = (typeof SEARCH_MENU_SIZES)[number]
 
-export interface DuSearchOption {
-  id: any
-  name: string
-  [key: string]: any
-}
+/** Validation failures reported by the component. */
+export type DuSearchErrorCode = 'required' | 'minlength' | 'maxlength'
 
-export type DuSearchEmit = {
-  (e: 'update:modelValue', value: any): void
-  (e: 'select', option: DuSearchOption): void
-  (e: 'remove', option: DuSearchOption): void
-  (e: 'add', option: DuSearchOption): void
+/** How a query still in the field is resolved when the dropdown closes (single only). */
+export type DuSearchCommitMode = 'none' | 'match' | 'auto'
+
+export type DuSearchEmit<O = any, V = any> = {
+  (e: 'update:modelValue', value: V | V[] | null): void
+  (e: 'select', option: O): void
+  (e: 'remove', option: O): void
+  (e: 'add', option: O): void
   (e: 'query', query: string): void
+  (e: 'open'): void
+  (e: 'close'): void
 }
 
-export interface DuSearchProps {
-  modelValue?: any | any[]
-  name: string
-  id: string
-  placeholder?: string
-  listValues: DuSearchOption[]
-  limit?: number
-  addOption?: boolean
-  /** Label prefix shown before the query in the "add option" entry (default: 'Add') */
-  addOptionText?: string
-  /** Text shown when no option matches the query (default: 'No results') */
-  noResultsText?: string
-  autoCommit?: boolean
-  /** Disables internal filtering — results come from an external search */
-  remoteSearch?: boolean
-  /** Option key used as the displayed label (default: 'name') */
-  labelBy?: string
-  type?: string
-  required?: boolean
-  pattern?: string
+export interface DuSearchProps<O = any, V = any> {
+  /** v-model. Whole options by default (`returnObject`), an array in `multiple` mode. */
+  modelValue?: V | V[] | null
+  options?: O[]
   multiple?: boolean
+  disabled?: boolean
+  /** Focusable and readable, but cannot open or change. */
+  readonly?: boolean
+  /** Requires a selection (validation only — no native form constraint). */
+  required?: boolean
+  /** Multiple: minimum number of selected options (validation). */
+  minSelected?: number
+  /** Multiple: maximum number of selected options. Blocks selecting more. */
+  maxSelected?: number
+  /** Override the default validation messages. */
+  errorMessages?: Partial<Record<DuSearchErrorCode, string>>
+  /** Object key identifying an option. Falls back to `value`, then `id`, then the option itself. */
+  trackBy?: string
+  /** Object key displayed for an option. Falls back to `label`, then `name`, then `String(option)`. */
+  labelBy?: string
+  /** Full control over the value stored in the model. Takes precedence over `trackBy` and `returnObject`. */
+  optionValue?: (option: O) => V
+  /** Full control over the displayed label. Takes precedence over `labelBy`. */
+  optionLabel?: (option: O) => string
+  /** Custom filter. Defaults to a case-insensitive substring match on the label. */
+  optionFilter?: (option: O, query: string) => boolean
+  /** Options that cannot be picked. Defaults to `option.disabled === true`. */
+  optionDisabled?: (option: O) => boolean
+  /** Emit whole options (default) instead of their `trackBy` value. */
+  returnObject?: boolean
+  /** Offer an "Add «query»" entry when nothing matches exactly. */
+  creatable?: boolean
+  /** Prefix of the creatable entry (default: 'Add'). */
+  createOptionText?: string
+  /** Builds the option to create from the query. Defaults to `{ [trackBy]: null, [labelBy]: query }`. */
+  createOption?: (query: string) => O
+  /** What to do with a query still in the field when the dropdown closes. */
+  commitOnClose?: DuSearchCommitMode
+  /** Skip local filtering — `options` already are the search result (listen to `query`). */
+  externalFilter?: boolean
+  /** Cap how many results are shown. */
+  resultsLimit?: number
+  /** Close after selecting. `null` (default) means `true` for single, `false` for multiple. */
+  closeOnSelect?: boolean | null
+  closeOnClickOutside?: boolean
+  /** Tab selects the highlighted option before leaving the field. */
+  selectOnTab?: boolean
+  /** Single: picking the selected option again clears it. Also shows a ✕ on the selected row. */
+  clearable?: boolean
+  placeholder?: string
+  /** Shown when no option matches the query (default: 'No results'). */
+  noResultsText?: string
+  /** Base id for the ARIA wiring. Auto-generated when omitted. */
+  id?: string
+  /** Render the dropdown in the top layer (Popover API), immune to `overflow: hidden` parents. */
+  popover?: boolean
+  /** Accessible label of a chip's remove button (multiple). */
+  removeItemLabel?: string
+  /** Native input attributes. */
+  name?: string
+  type?: string
+  pattern?: string
   size?: Size
+  /** Size of the dropdown list. Defaults to `size`. */
   subSize?: Size
   variant?: Variant
   ghost?: boolean
-  disabled?: boolean
   customClass?: string
-  clearable?: boolean
 }

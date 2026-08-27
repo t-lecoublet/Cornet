@@ -1,0 +1,59 @@
+// Pure DOM helpers for the combobox engine. No state, no Vue — everything
+// here is unit-testable with plain objects.
+
+const FOCUSABLE_SELECTOR
+  = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]'
+
+/** Every element in the document a Tab press could land on right now. */
+export function focusableInDocument(): HTMLElement[] {
+  return [...document.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)]
+    .filter((el) => el.tabIndex >= 0 && el.getClientRects().length > 0)
+}
+
+/**
+ * Whether the event target currently holds editable text. While it does,
+ * Backspace/Delete keep their native meaning (edit the text) instead of
+ * removing selections.
+ */
+export function hasEditableText(target: EventTarget | null): boolean {
+  if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) {
+    return target.value.length > 0
+  }
+  return target instanceof HTMLElement && target.isContentEditable && (target.textContent ?? '').length > 0
+}
+
+// Input types that behave like buttons/pickers rather than text entry.
+const NON_TEXT_INPUT_TYPES = ['button', 'submit', 'reset', 'checkbox', 'radio', 'range', 'color', 'file']
+
+/** Elements the user types into — focus must never be stolen from these. */
+export function isTextField(el: Element | null): boolean {
+  if (el instanceof HTMLTextAreaElement) {
+    return true
+  }
+  if (el instanceof HTMLInputElement) {
+    return !NON_TEXT_INPUT_TYPES.includes(el.type)
+  }
+  return el instanceof HTMLElement && el.isContentEditable
+}
+
+/**
+ * Scroll `el` vertically into `container`'s viewport.
+ *
+ * Client rects carry any CSS scale an opening animation applies, while
+ * `scrollTop` is in unscaled content units — so the scale divides out of the
+ * correction.
+ */
+export function revealInContainer(el: HTMLElement, container: HTMLElement | null) {
+  if (container == null) {
+    return
+  }
+  const viewport = container.getBoundingClientRect()
+  const target = el.getBoundingClientRect()
+  const scale = (container.offsetWidth > 0 ? viewport.width / container.offsetWidth : 1) || 1
+
+  if (target.top < viewport.top) {
+    container.scrollTop -= (viewport.top - target.top) / scale
+  } else if (target.bottom > viewport.bottom) {
+    container.scrollTop += (target.bottom - viewport.bottom) / scale
+  }
+}

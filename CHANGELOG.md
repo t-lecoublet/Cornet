@@ -3,6 +3,54 @@
 All notable changes to Cornet are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/) and the project follows [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+`DuSelect` and `DuSearch` are rebuilt on a shared headless combobox engine (`components/DataInput/core/combobox/`) implementing the WAI-ARIA combobox pattern once — popup lifecycle, filtering, keyboard navigation, focus management and the ARIA prop bags — with the two components as styled facades over it. The engine is internal: the components stay the public API. The twelve `useSelect*` / `useSearch*` composables are gone.
+
+### Removed (breaking)
+
+- `DuSelect`: the `search` prop is removed — it was declared but never read.
+- `DuSearch`: the `DuSearchOption` type is removed. Both components are now generic over their option type (`DuSelectProps<O, V>`, `DuSearchProps<O, V>`), so any option shape works.
+- `DuSearch`: `name` and `id` are no longer required props. `id` defaults to Vue's `useId()`.
+
+### Changed (breaking)
+
+- `DuSearch`: `listValues` → `options`, `limit` → `resultsLimit`, `remoteSearch` → `externalFilter`, `addOption` → `creatable`, `addOptionText` → `createOptionText`.
+- `DuSearch`: `autoCommit: boolean` → `commitOnClose: 'none' | 'match' | 'auto'`. `autoCommit: true` becomes `commitOnClose="auto"`; the default `'none'` matches the old `autoCommit: false`. Emptying the field and leaving it still clears the selection in every mode.
+- `DuSearch`: slots `add-option` → `create-option` and `no-results` → `no-options`.
+- `DuSearch`: multiple mode renders chips plus an input, instead of joining the selected labels with commas inside one text input. Typing a comma still validates the segment before it.
+- `DuSearch`: the "Add «query»" row no longer appears when an option already carries that exact label.
+- `DuSelect`: `searchNoResultsText` → `noResultsText` (aligned with `DuSearch`).
+- `DuSelect`: `closeOnSelect` now defaults to `null`, meaning "close in single mode, stay open in multiple". It used to close in multiple mode too.
+- `DuSelect`: `searchableInside` no longer needs `searchable` alongside it.
+- `DuSelect`: the field's trigger is a real `<button>` instead of a `<div tabindex="0">`, and the chevron is a `tabindex="-1"` button, so the field is a single tab stop.
+- Both: the highlighted option is styled through `data-highlighted` and the selected one through `aria-selected`, instead of index comparisons — custom styling should target those attributes.
+
+### Added
+
+- Both: `readonly`, `required`, `minSelected`, `maxSelected`, `errorMessages` and an `error` slot rendering the validation message once the field has been visited. `valid`, `errors` and `validationMessage` are also exposed to a parent through the component instance.
+- Both: `optionValue`, `optionLabel`, `optionFilter` and `optionDisabled` callbacks for option shapes `trackBy`/`labelBy` cannot describe. Disabled options are a new concept — `option.disabled === true` by default — and are skipped by the keyboard, marked `aria-disabled` and inert on click.
+- Both: `popover` renders the dropdown in the top layer (Popover API + CSS anchor positioning), so it is no longer clipped by an `overflow: hidden` ancestor.
+- Both: `closeOnClickOutside`, `selectOnTab`, `subSize`, and the `open` / `close` / `query` emits (`query` is new on `DuSelect`; `open`/`close` are new on `DuSearch`).
+- `DuSelect`: the `tag` slot scope gains the resolved `option` and a pre-wired `remove()`; the `option` slot scope gains `selected`, `highlighted` and `disabled`.
+- `DuSearch`: a `tag` slot for the chips, and a `createOption` prop to build the created option yourself.
+
+### Fixed
+
+- Both: an empty result list no longer produces a `NaN` highlight index.
+- Both: element ids come from `useId()` instead of `Math.random()`, so server-rendered markup matches on hydration.
+- Both: options now carry ids and the field exposes `aria-activedescendant`, so screen readers follow the highlight. `aria-selected` reflects the actual selection — it used to mirror the highlight on `DuSearch`.
+- Both: full keyboard support — `Home`, `End`, `PageUp`, `PageDown`, wrapping arrows that skip unselectable options, `Backspace`/`Delete` removing the last selection, and `Tab` leaving the widget instead of walking into the listbox.
+- Both: closing is driven by the popup lifecycle instead of a `focusout` + `setTimeout(0)` race, and the click-outside listener is only meaningful while open.
+- `DuSearch`: `role="combobox"` and `aria-expanded` are on the input (they were on the wrapping `<div>`), and `aria-controls` replaces the deprecated `aria-owns`.
+- `DuSearch`: `labelBy` now applies to filtering and to the comma parsing — both were hardcoded to `name`.
+- `DuSearch`: clicking an option no longer depends on the mousedown/blur ordering.
+- `DuSelect`: the per-option checkbox no longer double-toggles the selection.
+
+### Internal
+
+- `types/types.sh` keeps generic type aliases (`export type X<O> = …`) in the public type barrel; they were silently dropped before.
+
 ## [0.1.0-beta.21]
 
 ### Fixed

@@ -875,112 +875,76 @@ export interface DuRatingProps {
 
 ### DuSelect
 **File:** components/DataInput/du-select/du-select.vue
-<!-- @see-if-needed: components/DataInput/du-select/du-select.vue (logique de recherche et sélection multiple) -->
+<!-- @see-if-needed: components/DataInput/du-select/du-select.vue (facade over the combobox engine) -->
+
+Generic over its option (`O`) and value (`V`) types. Built on the internal
+combobox engine in `components/DataInput/core/combobox/` (keyboard, focus,
+ARIA, filtering) — the component only supplies the DaisyUI markup.
 
 **Props:**
-- ghost?: boolean
-- variant?: Variant
-- size?: Size
-- disabled?: boolean
+- modelValue?: V | V[] | null
+- options?: O[]
 - multiple?: boolean
-- modelValue?: any
-- placeholder?: string
-- search?: boolean
-- searchable?: boolean
-- searchableInside?: boolean
-- searchPlaceholder?: string
-- searchNoResultsText?: string
-- options?: any[]
-- checkboxes?: boolean
-- closeOnSelect?: boolean
-- trackBy?: string
-- labelBy?: string
+- disabled?: boolean
+- readonly?: boolean
+- required?: boolean
+- minSelected?: number
+- maxSelected?: number
+- errorMessages?: Partial<Record<'required' | 'minlength' | 'maxlength', string>>
+- trackBy?: string (default 'id')
+- labelBy?: string (default 'name')
+- optionValue?: (option: O) => V
+- optionLabel?: (option: O) => string
+- optionFilter?: (option: O, query: string) => boolean
+- optionDisabled?: (option: O) => boolean (default: `option.disabled === true`)
 - returnObject?: boolean
+- closeOnSelect?: boolean | null (default null = close in single, stay open in multiple)
+- closeOnClickOutside?: boolean
+- selectOnTab?: boolean
+- clearable?: boolean
+- placeholder?: string
+- noResultsText?: string
+- id?: string (defaults to useId())
+- popover?: boolean (dropdown in the top layer, immune to overflow: hidden)
+- searchable?: boolean (type in the field itself)
+- searchableInside?: boolean (type in a box at the top of the dropdown)
+- searchPlaceholder?: string
+- checkboxes?: boolean
+- removeItemLabel?: string
+- size?: Size / subSize?: Size (dropdown size) / variant?: Variant / ghost?: boolean / customClass?: string
 
-**Types (du-select.types.ts):**
-```typescript
-export const SELECT_VARIANTS = ['default', 'select-primary', 'select-secondary', 'select-accent', 'select-info', 'select-success', 'select-warning', 'select-error'] as const
-export const SELECT_SIZES = ['default', 'select-xs', 'select-sm', 'select-md', 'select-lg', 'select-xl'] as const
+**Emits:** update:modelValue, select(option), remove(option), query(string), open, close
 
-export type DuSelectVariant = (typeof SELECT_VARIANTS)[number]
-export type DuSelectSize = (typeof SELECT_SIZES)[number]
-
-export interface DuSelectProps {
-  ghost?: boolean
-  variant?: Variant
-  size?: Size
-  disabled?: boolean
-  multiple?: boolean
-  modelValue?: any
-  placeholder?: string
-  search?: boolean
-  searchPlaceholder?: string
-  searchNoResultsText?: string
-  options?: any[]
-  searchable?: boolean
-  searchableInside?: boolean
-  checkboxes?: boolean
-  closeOnSelect?: boolean
-  trackBy?: string
-  labelBy?: string
-  returnObject?: boolean
-}
-```
+**Slots:** tag `{ option, value, index, remove }`, selected `{ selected }`,
+option `{ option, index, selected, highlighted, disabled }`,
+no-options `{ query }`, error `{ errors, message }`
 
 ### DuSearch
 **File:** components/DataInput/du-search/du-search.vue
-<!-- @see-if-needed: components/DataInput/du-search/du-search.vue -->
+<!-- @see-if-needed: components/DataInput/du-search/du-search.vue (facade over the combobox engine) -->
 
-**Props:**
-- modelValue?: any | any[]
-- name: string
-- id: string
-- placeholder?: string
-- listValues: DuSearchOption[]
-- limit?: number
-- addOption?: boolean
-- type?: string
-- required?: boolean
-- pattern?: string
-- multiple?: boolean
-- size?: Size
-- variant?: Variant
-- ghost?: boolean
-- disabled?: boolean
-- customClass?: string
+Typeahead sibling of DuSelect: one text input that is itself the combobox.
+Same engine, same option adapters. `returnObject` defaults to `true`, so the
+model holds whole options.
 
-**Types (du-search.types.ts):**
-```typescript
-export const SEARCH_VARIANTS = ['default', 'input-primary', 'input-secondary', 'input-accent', 'input-info', 'input-success', 'input-warning', 'input-error'] as const
-export const SEARCH_SIZES = ['default', 'input-xs', 'input-sm', 'input-md', 'input-lg', 'input-xl'] as const
+**Props:** everything DuSelect takes except `searchable*` and `checkboxes`, plus:
+- creatable?: boolean (offer an "Add «query»" entry when nothing matches exactly)
+- createOptionText?: string (default 'Add')
+- createOption?: (query: string) => O (default `{ [trackBy]: null, [labelBy]: query }`)
+- commitOnClose?: 'none' | 'match' | 'auto' — what happens to text left in the
+  field when the dropdown closes: dropped, an exact label match is selected, or
+  (auto) exact match → first external result → created option → selection cleared.
+  Emptying the field and leaving it clears the selection in every mode.
+- externalFilter?: boolean (options already are the search result; listen to `query`)
+- resultsLimit?: number
+- name?: string / type?: string / pattern?: string (native input attributes)
 
-export type DuSearchVariant = (typeof SEARCH_VARIANTS)[number]
-export type DuSearchSize = (typeof SEARCH_SIZES)[number]
+**Emits:** update:modelValue, select(option), remove(option), add(option), query(string), open, close
 
-export interface DuSearchOption {
-  id: any
-  name: string
-}
+**Slots:** tag `{ option, value, index, remove }`,
+option `{ option, index, selected, highlighted, disabled }`,
+create-option `{ query }`, no-options `{ query }`, error `{ errors, message }`
 
-export interface DuSearchProps {
-  modelValue?: any | any[]
-  name: string
-  id: string
-  placeholder?: string
-  listValues: DuSearchOption[]
-  limit?: number
-  addOption?: boolean
-  type?: string
-  required?: boolean
-  pattern?: string
-  multiple?: boolean
-  size?: Size
-  variant?: Variant
-  ghost?: boolean
-  disabled?: boolean
-  customClass?: string
-}
-```
 
 ### DuTextArea
 **File:** components/DataInput/du-text-area/du-text-area.vue

@@ -34,6 +34,9 @@ const meta: Meta<typeof DuSelect> = {
     placeholder: { control: "text", description: "Texte de placeholder" },
     searchPlaceholder: { control: "text", description: "Placeholder de la recherche" },
     returnObject: { control: "boolean", description: "Retourner l'objet complet" },
+    readonly: { control: "boolean", description: "Lecture seule" },
+    popover: { control: "boolean", description: "Dropdown dans le top layer" },
+    noResultsText: { control: "text", description: "Texte quand aucune option ne correspond" },
   },
 }
 
@@ -234,5 +237,103 @@ export const Disabled: Story = {
     options: sampleOptions,
     disabled: true,
     placeholder: "Disabled select...",
+  },
+}
+// READ-ONLY: focusable and readable, but the dropdown never opens.
+export const Readonly: Story = {
+  render: (args: any) => ({
+    components: { DuSelect },
+    setup() {
+      return { args }
+    },
+    template: defaultTplStr,
+  }),
+  args: {
+    options: sampleOptions,
+    modelValue: 2,
+    readonly: true,
+  },
+}
+
+// DISABLED OPTIONS: `option.disabled`, or your own `optionDisabled` predicate.
+export const DisabledOptions: Story = {
+  render: (args: any) => ({
+    components: { DuSelect },
+    setup() {
+      return { args }
+    },
+    template: defaultTplStr,
+  }),
+  args: {
+    options: [
+      { id: 1, name: "Disponible" },
+      { id: 2, name: "En rupture", disabled: true },
+      { id: 3, name: "Disponible aussi" },
+    ],
+    placeholder: "Certaines options sont bloquées...",
+  },
+}
+
+// VALIDATION: required and min/max selections feed the `error` slot.
+export const Validation: Story = {
+  render: (args: any) => ({
+    components: { DuSelect },
+    setup() {
+      return { args }
+    },
+    template: `
+      <div class="flex flex-col gap-6">
+        <DuSelect v-bind="args" required placeholder="Obligatoire — ouvrez puis refermez" />
+        <DuSelect v-bind="args" multiple :model-value="[]" :min-selected="2" :max-selected="3"
+          :error-messages="{ minlength: 'Choisissez-en au moins deux' }" placeholder="Entre 2 et 3 options" />
+      </div>
+    `,
+  }),
+  args: {
+    options: sampleOptions,
+  },
+}
+
+// TOP LAYER: the dropdown escapes an `overflow: hidden` ancestor.
+export const PopoverInOverflow: Story = {
+  render: (args: any) => ({
+    components: { DuSelect },
+    setup() {
+      return { args }
+    },
+    template: `
+      <div class="flex gap-8">
+        <div class="w-72 h-24 overflow-hidden border border-base-300 rounded-box p-2">
+          <div class="text-xs mb-1">Par défaut : coupé par le parent</div>
+          <DuSelect v-bind="args" />
+        </div>
+        <div class="w-72 h-24 overflow-hidden border border-base-300 rounded-box p-2">
+          <div class="text-xs mb-1">popover : rendu dans le top layer</div>
+          <DuSelect v-bind="args" popover />
+        </div>
+      </div>
+    `,
+  }),
+  args: {
+    options: sampleOptions,
+  },
+}
+
+// DROPDOWN SIZE: subSize sizes the list independently of the field.
+export const SubSize: Story = {
+  render: (args: any) => ({
+    components: { DuSelect },
+    setup() {
+      return { args }
+    },
+    template: `
+      <div class="flex flex-col gap-4">
+        <DuSelect v-bind="args" size="lg" sub-size="xs" placeholder="Grand champ, petite liste" />
+        <DuSelect v-bind="args" size="sm" sub-size="lg" placeholder="Petit champ, grande liste" />
+      </div>
+    `,
+  }),
+  args: {
+    options: sampleOptions,
   },
 }

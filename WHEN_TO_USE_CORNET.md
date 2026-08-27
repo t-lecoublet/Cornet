@@ -84,8 +84,8 @@ wrapper you could inline yourself.
 | DuRadio | Simple | Pure class-mapping wrapper. | Keep as is |
 | DuRange | Intermediate | Manual model sync (ref + watch + dual emit) plus exposed computed value. | Polish only |
 | DuRating | Intermediate/Rich borderline | Value sync + clear-on-reclick business rule, multiple rendering modes. | Split (composable: `useRatingValue`) |
-| DuSearch | Rich | Query/filter, selection, input parsing, commit, keyboard nav, dismiss. | Split (composables: `useSearchQuery`, `useSearchSelection`, `useSearchInput`, `useSearchCommit`, `useSearchKeyboardNav`, `useSearchDismiss`) |
-| DuSelect | Rich | Open state, selection, options normalization, keyboard nav, dismiss. | Split (composables: `useSelectOpenState`, `useSelectOptions`, `useSelectSelection`, plus keyboard nav/dismiss) |
+| DuSearch | Rich | Typeahead: query/filter, selection, creatable entry, commit on close, keyboard nav, dismiss. | Facade over the shared combobox engine (`components/DataInput/core/combobox/`) |
+| DuSelect | Rich | Open state, selection, options normalization, keyboard nav, dismiss. | Facade over the shared combobox engine (`components/DataInput/core/combobox/`) |
 | DuTextArea | Simple | Manual value/input passthrough, no independent state. | Keep as is |
 
 ## Feedback
@@ -125,5 +125,5 @@ wrapper you could inline yourself.
 
 - **Simple:** 27 components — no action needed.
 - **Intermediate:** 20 components — `Polish only` unless flagged below.
-- **Rich, split into composables:** DuSelect, DuSearch, DuDrawer, DuFab, DuRating, DuPagination, DuCountdown (7 total).
+- **Rich, split out of the component:** DuDrawer, DuFab, DuRating, DuPagination, DuCountdown (own composables); DuSelect and DuSearch (facades over the shared combobox engine in `components/DataInput/core/combobox/`) — 7 total.
 - **`Factorize later` (real but non-urgent complexity):** DuTimeline (multi-layer line-class fallback logic), DuMenu (recursive rendering + router resolution + slot forwarding).

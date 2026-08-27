@@ -32,27 +32,38 @@ paths:
 
 **Files:** `components/DataInput/du-select/du-select.vue` | `.types.ts` | `.stories.ts`
 
-> **Complex component**: Search logic, multi-selection, object management. Read the complete source before modifying.
+> **Complex component**: a styled facade over the internal combobox engine in
+> `components/DataInput/core/combobox/`.
+> The engine owns open/close, the query, the highlight, focus, the keyboard and the
+> ARIA prop bags; the component owns markup and DaisyUI classes only. Never
+> reintroduce local `open` / `query` / `highlightedIndex` state here — pass a
+> new option to `useCombobox` (or extend the engine) instead.
+
+Generic: `<script setup generic="O = any, V = any">`. Read the source and
+`tests/du-select.spec.ts` before modifying.
 
 **Props:**
-- `ghost?`: boolean
-- `variant?`: Variant
-- `size?`: Size
-- `disabled?`: boolean
-- `multiple?`: boolean
-- `modelValue?`: any (v-model)
-- `placeholder?`: string
-- `search?`: boolean - External search
-- `searchable?`: boolean - Search enabled
-- `searchableInside?`: boolean - Search integrated in dropdown
-- `searchPlaceholder?`: string
-- `searchNoResultsText?`: string
-- `options?`: any[]
+- `modelValue?`: V | V[] | null (v-model)
+- `options?`: O[]
+- `multiple?` / `disabled?` / `readonly?` / `required?`: boolean
+- `minSelected?` / `maxSelected?`: number
+- `errorMessages?`: Partial<Record<'required' | 'minlength' | 'maxlength', string>>
+- `trackBy?`: string (default `'id'`) - key identifying an option
+- `labelBy?`: string (default `'name'`) - key displayed for an option
+- `optionValue?` / `optionLabel?` / `optionFilter?` / `optionDisabled?`: callbacks, win over trackBy/labelBy
+- `returnObject?`: boolean - emit whole options
+- `closeOnSelect?`: boolean | null (default `null` = single closes, multiple stays open)
+- `closeOnClickOutside?` / `selectOnTab?` / `clearable?`: boolean
+- `placeholder?` / `noResultsText?` / `searchPlaceholder?` / `removeItemLabel?`: string
+- `id?`: string (defaults to `useId()`)
+- `popover?`: boolean - dropdown in the top layer
+- `searchable?`: boolean - type in the field; `searchableInside?`: boolean - type in the dropdown
 - `checkboxes?`: boolean
-- `closeOnSelect?`: boolean
-- `trackBy?`: string - Key property for objects
-- `labelBy?`: string - Label property for objects
-- `returnObject?`: boolean - Return complete object
+- `size?` / `subSize?`: Size, `variant?`: Variant, `ghost?`: boolean, `customClass?`: string
+
+**Emits:** `update:modelValue`, `select`, `remove`, `query`, `open`, `close`
+
+**Slots:** `tag`, `selected`, `option`, `no-options`, `error`
 
 ---
 
@@ -60,33 +71,23 @@ paths:
 
 **Files:** `components/DataInput/du-search/du-search.vue` | `.types.ts` | `.stories.ts`
 
-> **Complex component**: Autocomplete, multi-selection.
+> **Complex component**: same engine as DuSelect, typeahead shape — a single
+> input that is itself the combobox. Same rule: no local state here.
 
-**Props:**
-- `modelValue?`: any | any[] (v-model)
-- `name`: string (required)
-- `id`: string (required)
-- `placeholder?`: string
-- `listValues`: DuSearchOption[] (required)
-- `limit?`: number
-- `addOption?`: boolean
-- `type?`: string
-- `required?`: boolean
-- `pattern?`: string
-- `multiple?`: boolean
-- `size?`: Size
-- `variant?`: Variant
-- `ghost?`: boolean
-- `disabled?`: boolean
-- `customClass?`: string
+Generic like DuSelect. `returnObject` defaults to **`true`** (the model holds
+whole options).
 
-**Types :**
-```typescript
-export interface DuSearchOption {
-  id: any
-  name: string
-}
-```
+**Props:** DuSelect's, minus `searchable*` / `checkboxes`, plus:
+- `creatable?`: boolean - offer an "Add «query»" entry when nothing matches exactly
+- `createOptionText?`: string (default `'Add'`), `createOption?`: (query: string) => O
+- `commitOnClose?`: `'none' | 'match' | 'auto'` - what happens to text left in the field on close
+- `externalFilter?`: boolean - server-side search: options already are the result
+- `resultsLimit?`: number
+- `name?` / `type?` / `pattern?`: string - native input attributes
+
+**Emits:** `update:modelValue`, `select`, `remove`, `add`, `query`, `open`, `close`
+
+**Slots:** `tag`, `option`, `create-option`, `no-options`, `error`
 
 ---
 
