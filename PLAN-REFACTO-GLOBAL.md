@@ -7,6 +7,8 @@
 >
 > `PLAN-REFONTE-COMBOBOX.md` décrit une approche par *vendoring* d'une lib tierce qui a été **abandonnée en cours de route** au profit d'une réimplémentation native : il est conservé comme archive et ne doit plus servir de référence.
 >
+> **Avancement au 2026-08-27** — §2.0 (déplacement du moteur + écouteurs attachés à l'ouverture) et **tout le jalon G2** (§3.1 à §3.6) sont faits. La lib est à 30 specs / 461 tests + 22 skippés, zéro `any` en code livré, lint a11y et axe bloquants, build de contrôle embedded bloquant. Reste : l'extraction des primitives §2.1–2.2, qui attend son deuxième consommateur (G3).
+>
 > Breaking changes assumés (beta). Chaque section « Composant » est conçue comme une PR autonome.
 
 ---
@@ -35,12 +37,16 @@
 | T6 | Emits sans v-model là où un v-model est attendu | du-filter (`change` seul), du-accordion/du-collapse (pas de contrôle de l'état ouvert), du-dropdown (`open` prop sans `update:open`) | v-model systématique (§4, §5) |
 | T7 | `aria-*` absent de composants qui en nécessitent | du-carousel, du-accordion, du-collapse, du-swap, du-toast (pas d'`aria-live`), du-diff | §4–§6 |
 | T8 | Le mécanisme Tailwind-scanner (constantes `*_SIZES`/`*_VARIANTS` exportées des `.types.ts`) est **déjà couvert** par `tests/class-literals-invariant.spec.ts`, qui exige, pour chaque appel `useSizeMapping`/`useVariantMapping`, que les littéraux correspondants soient atteignables dans le dossier du composant ou d'une dépendance | Reste à documenter la règle et à ajouter un build de contrôle « embedded » | §3.5 |
-| T9 | Classes de taille figées dans des composants eux-mêmes dimensionnés : un contrôle imbriqué garde sa taille quelle que soit celle du parent | `du-modal` (`btn-sm` du bouton de fermeture), `du-alert` (`btn-sm` du bouton dismiss) — corrigé dans DuSelect/DuSearch en Phase 1 | Généraliser `nestedSize` (§3.6) |
+| ~~T9~~ | ~~Classes de taille figées dans des composants eux-mêmes dimensionnés~~ — **audit fait, faux problème** : aucun composant exposant `size` ne code en dur une classe suffixée. `du-modal` et `du-alert` codent bien `btn-sm`, mais n'exposent pas `size` : il n'y a pas de taille parente à suivre | — | Résolu par la Phase 1. La règle reste écrite (§3.6, `docs/architecture.md` §8) |
+
+| T10 | `tests/` n'est pas type-checké : le `include` du tsconfig s'arrête aux sources. L'y ajouter révèle ~20 erreurs préexistantes (contexte `this` des hooks Rollup dans `plugin-vite.spec.ts`, casts `VueNode`, un composant générique non assignable à `Component`) | `tsconfig.json` | Chantier isolé, hors G2 |
+| T11 | Un `<style scoped>` de composant est une source de vérité invisible aux outils : `avatar-*` y est défini, pas dans daisyUI. Toute vérification de classes doit en tenir compte | du-avatar, du-tooltip | Pris en compte dans `check:css` (§3.5) |
 
 ### 1.3 Acquis à préserver
 
-- `tests/` contient 28 specs / 420 tests (alert, breadcrumbs, card, chat, checkbox, countdown, dock, drawer, dropdown, fab, fieldset, filter, menu, modal, pagination, rating, stats, tabs, timeline, composables, class-literals-invariant, plugin-vite, + `core-combobox`, `core-combobox-dom`, `du-select`, `du-search` issus de la Phase 1). **Ils servent de filet : chaque refonte commence par les lire et les étendre, jamais par les supprimer.**
+- `tests/` contient **30 specs / 461 tests (+22 skippés)** (alert, breadcrumbs, card, chat, checkbox, countdown, dock, drawer, dropdown, fab, fieldset, filter, menu, modal, pagination, rating, stats, tabs, timeline, composables, class-literals-invariant, plugin-vite, + `core-combobox`, `core-combobox-dom`, `du-select`, `du-search` issus de la Phase 1). **Ils servent de filet : chaque refonte commence par les lire et les étendre, jamais par les supprimer.**
 - **Le patron livré par la Phase 1 est la référence des Phases 2+** : façade générique (`generic="O = any, V = any"`), zéro état local d'ouverture/surlignage, prop bags ARIA `v-bind`és, `useId()`, validation par `errorMessages` + slot `error` avec timing « touched », état stylé par `data-highlighted`/`aria-selected`. Les nouvelles façades s'y conforment plutôt que d'inventer.
+- `composables/useIconSource.ts` expose **`IconSource` / `resolveIconKind` / `iconAsText`** : le type partagé des champs `icon` / `figure`. Ne jamais réécrire une chaîne de `typeof` dans un template — les trois qui existaient reconnaissaient chacune un sous-ensemble différent.
 - `composables/useSizeProps.ts` expose désormais **`nestedSize(size)`** (un cran en dessous, `default` compté comme `md`) : c'est l'utilitaire à réutiliser pour T9, pas un nouveau mécanisme.
 - `du-modal` utilise déjà `<dialog>.showModal()` — bonne base native, à consolider, pas à remplacer.
 - `du-tabs` s'appuie sur le pattern radio-group DaisyUI qui donne la navigation flèches native — le remplacement (§5.1) doit être un gain net, pas un recul.
@@ -106,14 +112,14 @@ Règles :
 - [ ] `useFocusTrap` : implémentation minimale maison (listage des focusables visibles via `dom.ts`, wrap Tab), ~80 lignes + tests. Pas de dépendance externe.
 - [ ] `useControllableState(propRef, emit, internalDefault)` : si la prop est fournie (non `undefined`), mode contrôlé (l'état suit la prop, les mutations émettent seulement) ; sinon état interne. C'est le contrat de tous les `open`/`modelValue` de la suite du plan.
 
-### 2.0 Deux corrections préalables (avant toute extraction)
+### 2.0 Deux corrections préalables (avant toute extraction) — ✅ **fait**
 
-- [ ] **Déplacer le moteur** : `git mv components/DataInput/core components/core`. Le chemin actuel devient un contresens dès que DuDropdown ou DuModal en consomment. Met à jour 2 imports de façade et 3 imports de tests. `core/` n'étant pas exporté depuis `index.ts`, le plugin Vite n'est pas censé le voir — le confirmer par `plugin-vite.spec.ts` et un `npm run build`.
-- [ ] **Écouteurs document attachés à l'ouverture** dans `useCombobox.ts` : aujourd'hui `mousedown` et `keydown` sont posés sur `document` dans `onMounted` et sortent immédiatement si le popup est fermé. Passer à un `watch(isOpen)` qui attache à l'ouverture et retire à la fermeture (`onUnmounted` gardé en filet). Sur une page à 50 selects : 0 écouteur au repos au lieu de 100. C'est la règle que §10.3 énonce déjà et que le moteur ne respecte pas encore ; `usePopoverState` en hérite ensuite. Les tests de clic-extérieur et d'Escape (`core-combobox.spec.ts`, « popup lifecycle ») couvrent les deux chemins et doivent rester verts sans modification.
+- [x] **Déplacer le moteur** : `git mv components/DataInput/core components/core`. Le chemin actuel devient un contresens dès que DuDropdown ou DuModal en consomment. Met à jour 2 imports de façade et 3 imports de tests. `core/` n'étant pas exporté depuis `index.ts`, le plugin Vite n'est pas censé le voir — le confirmer par `plugin-vite.spec.ts` et un `npm run build`.
+- [x] **Écouteurs document attachés à l'ouverture** dans `useCombobox.ts` : aujourd'hui `mousedown` et `keydown` sont posés sur `document` dans `onMounted` et sortent immédiatement si le popup est fermé. Passer à un `watch(isOpen)` qui attache à l'ouverture et retire à la fermeture (`onUnmounted` gardé en filet). Sur une page à 50 selects : 0 écouteur au repos au lieu de 100. C'est la règle que §10.3 énonce déjà et que le moteur ne respecte pas encore ; `usePopoverState` en hérite ensuite. Les tests de clic-extérieur et d'Escape (`core-combobox.spec.ts`, « popup lifecycle ») couvrent les deux chemins et doivent rester verts sans modification.
 
 ### 2.2 Définition de done de la phase
 
-- [ ] §2.0 fait : moteur à `components/core/`, écouteurs document attachés à l'ouverture.
+- [x] §2.0 fait : moteur à `components/core/`, écouteurs document attachés à l'ouverture. Un test dédié vérifie la souscription elle-même (`core-combobox.spec.ts`, « only listens to the document while open »). `components/core/shared/` existe déjà avec `useComponentId` (§3.2 l'exigeait).
 - [ ] Primitives extraites **uniquement pour les consommateurs de G3–G5** (popover, positioning, focus, shared) ; `useRovingIndex` peut attendre G6 si Menu ne le réclame pas avant.
 - [ ] Moteur combobox reposant sur les primitives extraites, **ses 103 tests verts sans modification des assertions**.
 - [ ] Tests dédiés des primitives (~40 tests : popover open/close/outside/escape/popover-API, roving index avec wrap/skip/typeahead, focus trap, focus return, controllable state).
@@ -123,28 +129,43 @@ Règles :
 
 ### 3.1 `docs/architecture.md`
 
-- [ ] Rédiger le document de conventions : structure de dossier d'un composant (`du-x.vue`, `du-x.types.ts`, `du-x.stories.ts`, `composables/` locaux interdits pour la logique popup/focus/clavier → primitives `core/`), nommage (props booléens sans préfixe `is`, emits `update:x` pour tout état contrôlable, slots kebab-case avec scope typé), typage (générique dès que des données traversent, `defineSlots` typé, zéro `any`), ARIA (référencer le pattern APG visé en commentaire de tête de template), data-attributes pour l'état (`data-open`, `data-highlighted`, `data-active`), règle Tailwind-scanner (T8), barre de tests.
+- [x] **Fait** — `lib/docs/architecture.md` (276 lignes). Rédigé : structure de dossier d'un composant (`du-x.vue`, `du-x.types.ts`, `du-x.stories.ts`, `composables/` locaux interdits pour la logique popup/focus/clavier → primitives `core/`), nommage (props booléens sans préfixe `is`, emits `update:x` pour tout état contrôlable, slots kebab-case avec scope typé), typage (générique dès que des données traversent, `defineSlots` typé, zéro `any`), ARIA (référencer le pattern APG visé en commentaire de tête de template), data-attributes pour l'état (`data-open`, `data-highlighted`, `data-active`), règle Tailwind-scanner (T8), barre de tests. Le document signale explicitement les règles pas encore appliquées partout plutôt que de décrire une bibliothèque idéale. `CONTRIBUTING.md` (qui disait l'inverse sur les composables locaux) et `.claude/CLAUDE.md` y renvoient.
 
 ### 3.2 useId partout (T1)
 
-- [ ] Remplacer `Math.random()` dans les **5 occurrences restantes** (vérifié) : `du-accordion.vue` l. 17, `du-collapse.vue` l. 15, `du-filter.vue` l. 19, `du-rating.vue` l. 30, `du-drawer/composables/useDrawerClasses.ts` l. 18. Utiliser `core/shared/ids.ts`. DuSelect/DuSearch sont déjà passés à `useId()` en Phase 1.
-- [ ] Attention aux `provide` : du-filter fournit **la string, pas la ref** (commentaire existant dans le code : DuButton lit via `inject` sans unwrap). Conserver ce contrat en passant `useId()` résolu.
-- [ ] Test SSR simple : monter deux instances du même composant, vérifier l'absence de collision d'ids et le déterminisme (pas de random).
+- [x] Remplacer `Math.random()` dans les **5 occurrences restantes** (vérifié) : `du-accordion.vue` l. 17, `du-collapse.vue` l. 15, `du-filter.vue` l. 19, `du-rating.vue` l. 30, `du-drawer/composables/useDrawerClasses.ts` l. 18. Utiliser `core/shared/ids.ts`. DuSelect/DuSearch sont déjà passés à `useId()` en Phase 1.
+- [x] Attention aux `provide` : du-filter fournit **la string, pas la ref** (commentaire existant dans le code : DuButton lit via `inject` sans unwrap). Conserver ce contrat en passant `useId()` résolu.
+- [x] Test SSR simple : `tests/generated-ids.spec.ts` — deux instances ne collisionnent pas, deux rendus identiques produisent la même valeur.
+
+**Deux bugs trouvés au passage :**
+- `du-accordion` avait `name: 'accordion'` en défaut littéral, donc la branche `Math.random` était morte et **deux accordions d'une même page partageaient leur groupe de radios** : ouvrir un panneau dans l'un fermait un panneau dans l'autre. Défaut retiré.
+- `du-collapse` fournissait un `collapseId` que personne n'injectait. Supprimé.
 
 ### 3.3 Passe de typage (T2)
 
 La dette est bien plus faible qu'annoncé initialement, mais elle est mal mesurée par un compte d'`any` : ce qui manque surtout, ce sont les **génériques**.
 
-- [ ] **Les 14 `any` de production**, tous dans des `.types.ts` sauf un : du-stat (3), du-fab (3), du-tabs (2), du-dock (2), du-drawer (2), du-table (1), du-radial-progress (1, dans le `.vue`). Quelques heures de travail : ce sont des props d'items → interfaces dédiées exportées des `.types.ts`.
-- [ ] **Le vrai chantier** : rendre génériques les composants dont les données utilisateur traversent des slots — du-table (`Row`), du-timeline, du-list, du-menu, du-chat — sur le modèle des façades de Phase 1 (`generic="O = any, V = any"` + `defineSlots` typé). Aucun compte d'`any` ne le signale, d'où l'oubli facile.
-- [ ] Activer `@typescript-eslint/no-explicit-any` en `error` sur `components/` **une fois les deux points ci-dessus faits**, avec `// eslint-disable-next-line` justifiés pour les rares survivants. La règle est aujourd'hui `off` dans `eslint.config.js`, sous un commentaire (« DuSelect, DuSearch, DuTable accept arbitrary user data ») devenu **faux pour DuSelect et DuSearch**, désormais génériques : le réécrire en même temps.
-- [ ] Exclure les `.stories.ts` de la règle : `render: (args: any)` fait partie de la signature Storybook — c'est la confusion qui avait gonflé T2 à « ~60 ».
-- [ ] `strict: true` (dont `strictNullChecks`) vérifié dans le tsconfig de build lib ; typecheck bloquant en CI.
+- [x] **Les `any` de production** — 16 au décompte final (les 14 annoncés plus `du-button` (1, `Record<string, any>`) et un second dans `du-radial-progress`). Tous traités. Le point commun des `icon` / `figure` / `actions` était un type partagé qui manquait : `composables/useIconSource.ts` (`IconSource = Component | string | null`, `resolveIconKind`, `iconAsText`), exporté publiquement. Les index signatures `[key: string]: any` sont passées à `unknown`.
+- [x] **Effet de bord du typage** : trois composants narrowaient `icon` différemment — du-dock ratait les composants fonctions, du-stats les chemins d'image racine-relatifs, du-menu-item les deux. Ils partagent désormais un seul helper.
+- [x] **Le vrai chantier** : `du-table` (`R extends DuTableRowBase`, `DuTableColumn.key` vérifié contre le type de ligne), `du-timeline`, `du-chat`, `du-menu` (+ `du-menu-item`) sont génériques. `DuMenuItemData.subItems` est `this[]`, pour que les champs du consommateur survivent d'un niveau. **`du-list` n'a pas de prop `items` du tout** — c'est un pur conteneur à slots, il n'y avait rien à rendre générique : à retirer de la liste.
+  - Contrainte à retenir : contraindre sur le **minimum nécessaire** (`DuTableRowBase`), pas sur la forme par défaut. Une interface consommateur n'a pas d'index signature implicite et ne satisferait pas `DuTableRow`.
+- [x] Activer `@typescript-eslint/no-explicit-any` en `error` sur `components/` **une fois les deux points ci-dessus faits**, avec `// eslint-disable-next-line` justifiés pour les rares survivants. La règle est aujourd'hui `off` dans `eslint.config.js`, sous un commentaire (« DuSelect, DuSearch, DuTable accept arbitrary user data ») devenu **faux pour DuSelect et DuSearch**, désormais génériques : le réécrire en même temps.
+- [x] Exclure les `.stories.ts` de la règle : `render: (args: any)` fait partie de la signature Storybook — c'est la confusion qui avait gonflé T2 à « ~60 ».
+- [x] `strict: true` déjà hérité de `@vue/tsconfig` ; `type-check`, `lint`, `test`, `build` et `types-drift` sont déjà bloquants dans `.gitlab-ci.yml`. **Rien à faire.**
+- [ ] **Reste ouvert** : `tests/` n'est pas type-checké (le `include` du tsconfig s'arrête à `components/`, `composables/`, `index.ts`, `plugin-vite.ts`, `types/`). L'ajouter fait apparaître ~20 erreurs préexistantes (contexte `this` des hooks Rollup dans `plugin-vite.spec.ts`, casts `VueNode`, un composant générique non assignable à `Component`). Chantier propre et isolé, à faire à part.
 
 ### 3.4 Lint & CI a11y
 
-- [ ] Ajouter `eslint-plugin-vuejs-accessibility` (config recommended, dérogations justifiées au cas par cas).
-- [ ] Job CI : axe-core exécuté sur chaque story (via test-runner Storybook ou vitest + axe sur les montages des specs). Seuil : zéro violation `serious`/`critical`.
+- [x] `eslint-plugin-vuejs-accessibility` (recommended). Dérogations ligne par ligne avec la raison écrite à côté ; une seule au niveau config (`form-control-has-label` sur les six primitives de formulaire, qui rendent le contrôle nu et laissent le label au consommateur — une frontière que la règle ne voit pas). `label-has-for` est configurée pour accepter l'imbrication, qui **est** une association valide.
+- [x] axe-core en vitest sur un montage représentatif de chaque composant (`tests/a11y.spec.ts`), seuil `serious`/`critical`, bloquant en CI. Storybook n'est pas installé dans la lib, donc la route « test-runner Storybook » n'était pas disponible ; c'est la seconde option du plan.
+  - Les composants qui échouent **structurellement** portent une entrée `knownIssues` nommant la règle et la section du plan — et le spec vérifie que chaque règle listée **échoue toujours**, pour qu'une entrée ne survive pas au bug qu'elle documente. Concernés : du-accordion et du-collapse (input caché, §5.2), du-menu et du-drawer qui l'embarque (sémantique listbox sur de la navigation, §4.2).
+
+**Ce que les deux outils ont trouvé, et qui est corrigé :**
+- `DuInputField` a une racine de template fragment (input + datalist optionnelle), donc Vue n'héritait pas les attributs : **un `aria-label` passé par le consommateur n'atterrissait nulle part** et le champ était innommable hors `<label>`. `inheritAttrs: false` + `v-bind="$attrs"` sur l'input.
+- `DuSelect` / `DuSearch` tiraient le nom accessible du champ du placeholder ou de la sélection courante : sans l'un ni l'autre, aucun nom. Nouveaux props `ariaLabel` / `ariaLabelledby`.
+- Le bouton de fermeture de `DuAlert` et `DuProgress` n'avaient aucun nom accessible (`dismissLabel`, `ariaLabel`).
+- `DuSwap` en mode `useCheckbox: false` était un `<div @click>` : inatteignable au clavier, n'annonçant rien. C'est un `<button aria-pressed>` (breaking pour qui stylait `div.swap`).
+- L'overlay de `DuDrawer` portait un `aria-label` sur un `<label>`, ce qu'ARIA interdit.
 
 ### 3.5 Invariant Tailwind-scanner (T8)
 
@@ -152,13 +173,16 @@ La dette est bien plus faible qu'annoncé initialement, mais elle est mal mesur�
 
 Restent :
 
-- [ ] Documenter la règle dans `docs/architecture.md` (le test la fait respecter, il ne l'explique pas).
-- [ ] Build de contrôle « embedded » : une app témoin qui importe un seul composant, build, et diff des classes générées vs classes utilisées.
+- [x] Documenter la règle dans `docs/architecture.md` (§9) — avec la raison, pas seulement la règle.
+- [x] Build de contrôle « embedded » : `scripts/check-embedded-css.mjs` (`npm run check:css`, bloquant en CI). Plutôt qu'une app témoin, il compile **le vrai pipeline** — Tailwind 4 + le plugin daisyUI, sur les candidats que le scanner de Tailwind trouve dans les sources, exactement comme un build embedded — et échoue sur toute classe construite à l'exécution qui ne produit **aucune règle CSS**. Le `<style>` d'un composant compte comme définition (l'échelle de tailles de DuAvatar y vit).
+  - **Trouvé du premier coup** : `tooltip-neutral` n'existe pas dans daisyUI. `variant="neutral"` paraissait correct uniquement parce que neutral est le fond par défaut du tooltip — l'invariant unitaire ne pouvait pas le voir, il ne vérifie que la *scannabilité*. Règle désormais écrite dans le composant.
+  - Bilan : 218 classes construites à l'exécution sur 114 fichiers source, toutes scannées, toutes stylées.
 
-### 3.6 Tailles imbriquées (T9)
+### 3.6 Tailles imbriquées (T9) — ⚠️ **le constat était faux, rien à faire**
 
-- [ ] Utiliser `nestedSize()` de `composables/useSizeProps.ts` pour les contrôles rendus **à l'intérieur** d'un composant dimensionné, au lieu d'une classe figée : `du-modal` (bouton de fermeture `btn-sm`), `du-alert` (bouton dismiss `btn-sm`). Le patron est dans DuSelect/DuSearch : `reactive({ get size() { return nestedSize(props.size) } })` passé à `useSizeMapping`, ce qui déclenche aussi l'invariant scanner et force les constantes correspondantes.
-- [ ] Auditer les autres composants au moment de leur passe d'hygiène (§7) : toute classe DaisyUI suffixée en dur dans un composant qui expose `size` est suspecte.
+- [x] **Audit fait** : aucun composant exposant `size` ne code en dur une classe daisyUI suffixée. La seule occurrence (`avatar-xs`…`avatar-xl` dans du-avatar) est une **définition CSS** dans le `<style>` du composant, pas une classe figée dans le markup.
+- [x] `du-modal` et `du-alert` codent bien `btn-sm` en dur, **mais aucun des deux n'expose de prop `size`** — il n'y a pas de taille parente à suivre, et `nestedSize()` n'a rien à dériver. daisyUI 5.6 ne définit ni `modal-*` ni `alert-*` en tailles, donc leur en ajouter une n'affecterait que ce bouton : ce serait une feature discutable, pas de l'hygiène. Leur `btn-sm` est un choix de taille, pas un bug.
+- **T9 est donc entièrement résolu par la Phase 1.** Ce qui reste utile est la règle, pas le chantier : elle est écrite dans `docs/architecture.md` §8 (« un `btn-sm` codé en dur dans un composant qui expose `size` est un bug ») et rappelée en §7 pour les passes d'hygiène à venir.
 
 ---
 
@@ -338,8 +362,8 @@ Mocks d'environnement à centraliser dans un setup vitest partagé : Popover API
 
 | Jalon | Contenu | Dépend de | Estimation |
 |---|---|---|---|
-| G1 | §2.0 (déplacement + écouteurs) puis §2 extraction à la demande + tests | Phase 1 finie ✅ | 4-5 j (revu à la hausse : découpage d'une closure, pas une remontée de modules) |
-| G2 | §3 Standards (docs, useId, typage, lint, CI, tailles imbriquées) | — (parallélisable avec G1 sauf 3.2 qui veut `core/shared/ids`) | 2-3 j (revu à la baisse : la dette de typage était surévaluée) |
+| G1 | §2.0 ✅ **fait** ; §2 extraction à la demande + tests — **en attente d'un deuxième consommateur** (G3) | Phase 1 finie ✅ | 3-4 j restants |
+| G2 | §3 Standards — ✅ **fait** (docs, useId, typage + génériques, lint a11y + axe, build de contrôle CSS ; T9 clos par audit) | — | — |
 | G3 | §4.1–4.2 Dropdown + Menu | G1, G2 | 3 j |
 | G4 | §4.3–4.4 Tooltip + Modal | G1 | 2-3 j |
 | G5 | §4.5–4.6 Drawer + Toast | G1 | 2-3 j |
@@ -355,8 +379,11 @@ Total ≈ **24-29 jours**, largement parallélisable : G3–G9 sont indépendant
 
 1. **Ne jamais casser un pattern DaisyUI qui rend un service natif sans le remplacer par mieux** : les radios de du-tabs donnaient les flèches gratuites — la refonte APG doit les réimplémenter via `useRovingIndex` avant de supprimer les radios (§5.1). Idem l'animation grid de collapse (§5.2).
 2. **`useControllableState` est le contrat unique** pour toute prop `open`/`modelValue` : pas de variantes locales, sinon la lib redevient incohérente en six mois.
-3. **Les listeners document** (click-outside, Escape) ne sont montés que quand l'overlay est ouvert. À noter : le moteur combobox ne le fait **pas encore** — il les pose dans `onMounted` et sort si fermé ; c'est une des deux corrections préalables du §2.0, à faire avant que `usePopoverState` n'hérite du défaut.
+3. **Les listeners document** (click-outside, Escape) ne sont montés que quand l'overlay est ouvert. Le moteur combobox s'y conforme depuis §2.0 (`watch(isOpen)`, `onUnmounted` en filet, test dédié) : `usePopoverState` hérite de la bonne règle, pas du défaut.
 4. **`role="menu"` est réservé aux vrais menus d'actions** (§4.2) — l'anti-pattern « role menu sur une sidebar de navigation » est explicitement interdit par `docs/architecture.md`.
 5. **Chaque suppression de comportement est un item de changelog** : tout ce qui figure dans « État actuel » des sections §4–§7 doit se retrouver soit dans la cible, soit dans le changelog comme retrait volontaire.
 6. **Vérifier le plugin Vite maison** avant tout renommage d'exports/chemins (il a ses propres tests — `plugin-vite.spec.ts` — qui peuvent dépendre de la structure des dossiers).
+7. **Un outil qu'on configure jusqu'au silence ne sert à rien.** Le lint a11y et axe ont été pointés sur la lib puis triés finding par finding : chaque dérogation porte sa raison à côté, et les échecs structurels portent une entrée qui **expire toute seule** (le test échoue si la règle allowlistée cesse d'échouer). Reproduire ce schéma pour tout nouvel outil de vérification.
+8. **Un compte d'`any` ne mesure pas la dette de typage.** Les 16 `any` réels étaient quelques heures ; ce qui manquait vraiment, c'étaient les génériques — que rien ne signale. Chercher plutôt : quelles données du consommateur traversent un slot ou un emit en étant aplaties ?
+9. **Une classe safelistée n'est pas une classe qui existe.** L'invariant unitaire prouve la scannabilité, pas la réalité (`tooltip-neutral`). `npm run check:css` compile le vrai pipeline ; le lancer après toute modification d'un `useSizeMapping`/`useVariantMapping` ou d'une constante `*_SIZES`/`*_VARIANTS`.
 7. Les estimations supposent un développeur connaissant la codebase ; les jalons G3–G9 peuvent être livrés dans n'importe quel ordre après G1/G2 si les priorités produit changent.

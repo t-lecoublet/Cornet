@@ -22,7 +22,8 @@
 - **WAI-APG compliant ARIA**, applied through *prop bags* provided by `core/` (`v-bind="triggerProps"`), never hand-rolled in facades
 - **Ids via `useId()`** — `Math.random()` is banned (SSR-safe)
 - **State styled through data-attributes** (`data-open`, `data-highlighted`, ...), not class ternaries
-- **One `core/` primitive** for every popup / dismiss / focus / keyboard behavior — no local reimplementations
+- **One `core/` primitive** for every popup / dismiss / focus / keyboard behavior — no local reimplementations, and document-level listeners live only while the popup is open
+- **A verification tool is pointed at the library, not configured until it goes quiet** — every exemption carries its reason, and an allowlist for a scheduled fix expires on its own
 - **Test bar** — every interactive component ships black-box tests covering v-model, emits, full keyboard support, and ARIA attributes
 - **Tailwind scanner invariant** — class constants exported from `.types.ts` files (embedded mode) are maintained on all new markup
 
@@ -48,19 +49,23 @@
 
 > Generalize what Phase 1 established, without touching component behavior.
 
-- [ ] **2.1** — Write `docs/architecture.md`: typing conventions, props/emits/slots naming, ARIA, data-attributes, folder structure, test bar, Tailwind scanner rule
-- [ ] **2.2** — Move the engine from `components/DataInput/core/` to `components/core/`, switch its document listeners to open-time attachment, then extract reusable primitives out of `core/combobox/` — **one at a time, only when a second consumer actually needs one** (the engine is a single closure by design, so each extraction is a split, not a move):
+- [x] **2.1** — `docs/architecture.md`: two layers and what each may import, when a `core/` primitive is worth extracting, generics, naming, the controllable-state contract, ids, ARIA, data-attribute styling, the Tailwind scanner rule and the test bar. It marks the rules not yet applied everywhere instead of describing an ideal library
+- [x] Engine moved to `components/core/`; its document listeners are attached on open and removed on close, with a dedicated test on the subscription itself. `components/core/shared/` holds `useComponentId`.
+- [ ] **2.2** — Extract reusable primitives out of `core/combobox/` — **one at a time, only when a second consumer actually needs one** (the engine is a single closure by design, so each extraction is a split, not a move):
   - `core/popover/` — open/close, click-outside, `clickOutsideFilter` (reintroduced), Popover API
   - `core/positioning/` — CSS anchor positioning
   - `core/focus/` — focus trap, focus return, generalized "focus past this container"
   - `core/navigation/` — generic roving index / highlight
   - The combobox engine becomes their first consumer; its 103 tests must stay green untouched
-- [ ] **2.3** — Eradicate `Math.random()` → `useId()` (5 remaining: du-accordion, du-collapse, du-filter, du-rating, du-drawer's `useDrawerClasses` — combobox already handled in Phase 1)
-- [ ] **2.4** — Typing pass: 14 `any` left in shipped code (du-stat, du-fab, du-tabs, du-dock, du-drawer, du-table, du-radial-progress — nearly all in `.types.ts`), then the real work: make du-table, du-timeline, du-list, du-menu and du-chat generic like the Phase 1 facades. Enable `no-explicit-any` + strict typecheck in CI afterwards, excluding `.stories.ts` (`render: (args: any)` is Storybook's own signature)
-- [ ] **2.6** — Nested sizes: controls rendered inside a sized component must follow it via `nestedSize()` instead of a hardcoded class (du-modal's close button, du-alert's dismiss button)
-- [ ] **2.5** — Automated a11y linting: `eslint-plugin-vuejs-accessibility` + axe-core on stories in CI
+- [x] **2.3** — `Math.random()` eradicated (du-accordion, du-collapse, du-filter, du-rating, `useDrawerClasses`), all five through `core/shared/useComponentId`, with `tests/generated-ids.spec.ts` asserting no collision between instances and determinism across renders. Two bugs surfaced: DuAccordion's literal `name: 'accordion'` default made two accordions on a page share one radio group, and DuCollapse provided a `collapseId` nobody injected
+- [x] **2.4** — Typing pass: zero `any` in shipped code, with `no-explicit-any` an error (`.stories.ts` excluded). `icon` / `figure` / `actions` share one `IconSource` type; index signatures are `unknown`. DuTable, DuTimeline, DuChat and DuMenu are generic over their item type — DuList turned out to have no `items` prop at all, so there was nothing to make generic there
+- [ ] **2.4b** — Type-check `tests/` too: the tsconfig `include` stops at the sources, and adding them surfaces ~20 pre-existing errors (Rollup hook `this` context in `plugin-vite.spec.ts`, `VueNode` casts, a generic component not assignable to `Component`)
+- [x] **2.6** — Nested sizes: audited, nothing to do. No component that exposes `size` hardcodes a suffixed daisyUI class. DuModal and DuAlert do hardcode `btn-sm`, but neither exposes `size` and daisyUI gives neither a size scale — that is a choice of size, not a bug. The rule is written down in `docs/architecture.md` §8 for future components
+- [x] **2.5** — `eslint-plugin-vuejs-accessibility` plus axe-core over a representative mount of every component (`tests/a11y.spec.ts`), both blocking in CI at `serious`/`critical`. Exemptions carry their reason inline; the four components that fail structurally carry an allowlist that expires on its own — the spec fails if a listed rule stops firing. It found five real bugs: DuInputField dropped consumer attributes entirely (fragment root, no `inheritAttrs`), DuSelect/DuSearch had no accessible name without a placeholder, DuAlert's dismiss button and DuProgress had none at all, and DuSwap's non-checkbox mode was a `<div @click>`
+- [x] **2.7** — Embedded-mode control build (`npm run check:css`, blocking in CI): compiles Tailwind + daisyUI over the library sources and fails on any runtime-built class that produces no CSS rule. The class-literal invariant proves a class is scannable; this proves it exists. It caught `tooltip-neutral`, which daisyUI does not define
 
 > **Exit criteria:** standards are tooled and enforced in CI; primitives are ready for migrations.
+> Standards side: met. Primitives: pending — they are extracted on demand, when Phase 3 gives them a second consumer.
 
 ## Phase 3 — Popup widgets on `core/` primitives
 
@@ -103,8 +108,8 @@
 
 | Phase | Scope | Status |
 | --- | --- | --- |
-| 1 | Combobox engine + DuSelect/DuSearch | 🔲 Todo |
-| 2 | Foundation — docs, `core/` primitives, lint, `useId` | 🔲 Todo |
+| 1 | Combobox engine + DuSelect/DuSearch | ✅ Done (a11y audit 1.6 still owed) |
+| 2 | Foundation — docs, `core/` primitives, lint, `useId` | 🟡 Standards done; primitive extraction waits on Phase 3 |
 | 3 | Popups — dropdown, menu, tooltip, modal, drawer, toast | 🔲 Todo |
 | 4 | Selection — tabs, accordion, filter, rating, range, pagination | 🔲 Todo |
 | 5 | Data display + hygiene + coverage | 🔲 Todo |
