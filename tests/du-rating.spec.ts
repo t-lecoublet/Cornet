@@ -67,6 +67,6 @@ describe('DuRating', () => {
 
   it('exposes the current value via defineExpose', () => {
     const wrapper = mount(DuRating, { props: { count: 5, modelValue: 4 } })
-    expect((wrapper.vm as any).value).toBe(4)
+    expect((wrapper.vm as unknown as { value: number }).value).toBe(4)
   })
 })

@@ -1,10 +1,10 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="R extends DuTableRowBase = DuTableRow">
 import { computed } from "vue"
-import { type DuTableProps } from './du-table.types'
+import { type DuTableProps, type DuTableRow, type DuTableRowBase } from './du-table.types'
 import { useSizeMapping } from "../../../composables/useSizeProps"
 
 const props = withDefaults(
-  defineProps<DuTableProps>(),
+  defineProps<DuTableProps<R>>(),
   {
     columns: undefined,
     rows: undefined,

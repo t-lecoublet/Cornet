@@ -23,7 +23,7 @@ export type { DuStatItem,DuStatProps } from '../components/DataDisplay/du-stat/d
 export type { DuStatsItem,DuStatsProps } from '../components/DataDisplay/du-stats/du-stats.types'
 export type { DuStatusSize,DuStatusVariant,DuStatusProps } from '../components/DataDisplay/du-status/du-status.types'
 export type { DuTableItemProps } from '../components/DataDisplay/du-table/du-table-item.types'
-export type { DuTableSize,DuTableSizeClass,DuTableColumn,DuTableRow,DuTableProps } from '../components/DataDisplay/du-table/du-table.types'
+export type { DuTableSize,DuTableSizeClass,DuTableRowBase,DuTableRow,DuTableColumn,DuTableProps } from '../components/DataDisplay/du-table/du-table.types'
 export type { DuTimelineDirection,DuTimelineModifier,DuTimelineItemData,DuTimelineProps } from '../components/DataDisplay/du-timeline/du-timeline.types'
 export type { DuCheckboxVariant,DuCheckboxSize,DuCheckboxProps } from '../components/DataInput/du-checkbox/du-checkbox.types'
 export type { DuFieldsetProps } from '../components/DataInput/du-fieldset/du-fieldset.types'

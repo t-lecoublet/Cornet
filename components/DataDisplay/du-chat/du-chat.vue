@@ -1,10 +1,10 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends DuChatItemData = DuChatItemData">
 import { provide } from "vue";
-import { type DuChatProps } from './du-chat.types';
+import { type DuChatItemData, type DuChatProps } from './du-chat.types';
 import { type Variant } from '../../../composables/useVariantProps';
 
 const props = withDefaults(
-  defineProps<DuChatProps>(),
+  defineProps<DuChatProps<T>>(),
   {
     items: undefined,
     placement: "start",

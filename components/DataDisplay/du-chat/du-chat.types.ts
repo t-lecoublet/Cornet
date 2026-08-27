@@ -18,8 +18,12 @@ export interface DuChatItemData {
   customClass?: string;
 }
 
-export interface DuChatProps {
-  items?: DuChatItemData[];
+/**
+ * Generic over the item type: a consumer's own fields (an author id, a
+ * timestamp) stay typed inside `#message-N`, `#header-N` and friends.
+ */
+export interface DuChatProps<T extends DuChatItemData = DuChatItemData> {
+  items?: T[];
   placement?: DuChatPlacement;
   customClass?: string;
 } 

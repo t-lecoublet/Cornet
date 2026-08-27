@@ -15,14 +15,17 @@ const props = withDefaults(
 );
 const { colorClass } = useVariantMapping(props, "text");
 
+// daisyUI's radial-progress reads three CSS custom properties. `size` is
+// overloaded here: one of the shared `Size` keywords styles through a class,
+// anything else (`"6rem"`, `"120px"`) is a raw length and goes to `--size`.
+const isSizeKeyword = (size: string): boolean => (AvailableSizes as string[]).includes(size)
+
 const styleVar = computed(() => {
-  const styleObject: any = {
+  const styleObject: Record<string, string> = {
     "--value": props.value?.toString() || "0",
   }
-  // let styles = `--value: ${props.value};`;
 
-  if (props.size && AvailableSizes.indexOf(props.size as any) === -1) {
-    // styles += `--size: ${props.size};`;
+  if (props.size && !isSizeKeyword(props.size)) {
     styleObject["--size"] = props.size;
   }
 

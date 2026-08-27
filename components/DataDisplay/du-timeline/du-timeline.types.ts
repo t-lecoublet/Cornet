@@ -25,8 +25,12 @@ export interface DuTimelineItemData {
   boxed?: boolean
 }
 
-export interface DuTimelineProps {
-  items?: DuTimelineItemData[]
+/**
+ * Generic over the item type so a consumer's own fields survive into the
+ * scoped slots: `<template #start="{ item }">` sees `T`, not the base shape.
+ */
+export interface DuTimelineProps<T extends DuTimelineItemData = DuTimelineItemData> {
+  items?: T[]
   direction?: DuTimelineDirection
   modifier?: DuTimelineModifier
   customClass?: string

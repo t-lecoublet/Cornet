@@ -9,9 +9,7 @@ export default defineConfigWithVueTs(
   vueTsConfigs.recommended,
   {
     rules: {
-      // The library deliberately uses `any` for generic option/model values
-      // (DuSelect, DuSearch, DuTable accept arbitrary user data).
-      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-explicit-any': 'error',
       'vue/multi-word-component-names': 'off',
       'no-console': ['error', { allow: ['warn', 'error'] }],
       '@typescript-eslint/no-unused-vars': [
@@ -21,9 +19,12 @@ export default defineConfigWithVueTs(
     },
   },
   {
-    // Stories are example fixtures: unused render args are part of the Storybook signature.
+    // Stories are example fixtures: unused render args are part of the Storybook
+    // signature, and so is `render: (args: any)` — Storybook types the args bag
+    // itself, and re-deriving it per story buys nothing.
     files: ['**/*.stories.ts'],
     rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
       'vue/return-in-computed-property': 'off',
     },

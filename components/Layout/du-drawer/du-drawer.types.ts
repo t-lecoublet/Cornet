@@ -1,3 +1,4 @@
+import { type IconSource } from '../../../composables/useIconSource'
 import { type DuMenuItemData } from '../../Navigation/du-menu/du-menu.types'
 
 export const DRAWER_POSITIONS = ['start', 'end'] as const
@@ -5,9 +6,10 @@ export const DRAWER_POSITIONS = ['start', 'end'] as const
 export type DuDrawerPosition = (typeof DRAWER_POSITIONS)[number]
 
 export interface DuDrawerItem extends DuMenuItemData {
-    icon?: any
+    icon?: IconSource
     customClass?: string
-    [key: string]: any
+    /** Extra keys ride along untouched, for a consumer's own slot bindings. */
+    [key: string]: unknown
 }
 
 export type DuDrawerEmit = {

@@ -200,12 +200,12 @@ export interface DuStatItem {
   title?: string
   value?: string | number
   description?: string
-  figure?: any
+  figure?: IconSource
   figureClass?: string
   valueClass?: string
   descClass?: string
   titleClass?: string
-  actions?: any
+  actions?: IconSource
 }
 ```
 
@@ -265,7 +265,7 @@ export interface DuTableColumn {
 
 export interface DuTableRow {
   id: string | number
-  [key: string]: any
+  [key: string]: unknown
   customClass?: string
 }
 ```

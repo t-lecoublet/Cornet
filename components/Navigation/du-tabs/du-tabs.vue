@@ -2,6 +2,7 @@
 import { computed } from "vue";
 import { type DuTabsProps, type DuTabItem } from './du-tabs.types';
 import { useSizeMapping } from "../../../composables/useSizeProps";
+import { iconAsText, resolveIconKind } from "../../../composables/useIconSource";
 
 const props = withDefaults(
   defineProps<DuTabsProps>(),
@@ -61,20 +62,17 @@ const typeClass = computed(() => {
                 <slot name="icon" :item="item">
                   <component class="w-5 h-5"
                     :is="item.icon"
-                    v-if="typeof item.icon === 'object' || typeof item.icon === 'function'"
+                    v-if="resolveIconKind(item.icon) === 'component'"
                   />
                   <img
                     class="w-5 h-5"
-                    v-else-if="
-                      typeof item.icon === 'string' &&
-                      (item.icon.startsWith('http') || item.icon.startsWith('/'))
-                    "
-                    :src="item.icon"
+                    v-else-if="resolveIconKind(item.icon) === 'image'"
+                    :src="iconAsText(item.icon)"
                     :alt="item.label"
                   />
                   <div
-                    v-else-if="typeof item.icon === 'string'"
-                    v-html="item.icon"
+                    v-else-if="resolveIconKind(item.icon) === 'html'"
+                    v-html="iconAsText(item.icon)"
                   ></div>
                 </slot>
                 {{ item.label }}

@@ -1,7 +1,9 @@
-import { AvailableSizes, useSizeMapping, type Size } from './composables/useSizeProps'
+import { iconAsText, resolveIconKind, type IconKind, type IconSource } from './composables/useIconSource'
+import { AvailableSizes, nestedSize, useSizeMapping, type Size } from './composables/useSizeProps'
 import { useVariantMapping, type Variant } from './composables/useVariantProps'
 
-export { AvailableSizes, useSizeMapping, type Size, useVariantMapping, type Variant }
+export { AvailableSizes, nestedSize, useSizeMapping, type Size, useVariantMapping, type Variant }
+export { iconAsText, resolveIconKind, type IconKind, type IconSource }
 
 export * from './types'
 

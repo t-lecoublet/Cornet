@@ -34,6 +34,14 @@ export type DuSelectMenuSize = (typeof SELECT_MENU_SIZES)[number]
 /** Validation failures reported by the component. */
 export type DuSelectErrorCode = 'required' | 'minlength' | 'maxlength'
 
+// The two type parameters default to `any`, not `unknown`, and that is
+// deliberate. `O` and `V` are inferred from `options` and the v-model at every
+// real call site; the default only applies when the type is named bare
+// (`const props: DuSelectProps = …`) or when the component is used with no
+// options at all. `unknown` there would type every callback parameter
+// `unknown` and force a cast in consumer code for no safety gained — nothing
+// inside the component ever reads a field off `O`.
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 export type DuSelectEmit<O = any, V = any> = {
   (e: 'update:modelValue', value: V | V[] | null): void
   (e: 'select', option: O): void
@@ -43,6 +51,7 @@ export type DuSelectEmit<O = any, V = any> = {
   (e: 'close'): void
 }
 
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any -- see the note above `DuSelectEmit`. */
 export interface DuSelectProps<O = any, V = any> {
   /** v-model. A single value (or option, with `returnObject`), an array in `multiple` mode. */
   modelValue?: V | V[] | null

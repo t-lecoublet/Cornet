@@ -6,6 +6,7 @@ import DuButton from '../du-button/du-button.vue'
 import DuTooltip from '../../Feedback/du-tooltip/du-tooltip.vue'
 import { useFabClasses } from './composables/useFabClasses'
 import { useFabIcon } from './composables/useFabIcon'
+import { iconAsText } from '../../../composables/useIconSource'
 
 const props = withDefaults(
   defineProps<DuFabProps>(),
@@ -89,13 +90,13 @@ const { resolveIconKind, getTooltipPosition } = useFabIcon()
             />
             <img
               v-else-if="resolveIconKind(mainAction.icon) === 'image'"
-              :src="mainAction.icon"
+              :src="iconAsText(mainAction.icon)"
               :alt="mainAction.label"
               class="w-6 h-6"
             />
             <div
               v-else-if="resolveIconKind(mainAction.icon) === 'html'"
-              v-html="mainAction.icon"
+              v-html="iconAsText(mainAction.icon)"
             ></div>
             <template v-else>
               {{ mainAction.label || 'M' }}
@@ -128,13 +129,13 @@ const { resolveIconKind, getTooltipPosition } = useFabIcon()
                 />
                 <img
                   v-else-if="resolveIconKind(item.icon) === 'image'"
-                  :src="item.icon"
+                  :src="iconAsText(item.icon)"
                   :alt="item.label"
                   class="w-6 h-6"
                 />
                 <div
                   v-else-if="resolveIconKind(item.icon) === 'html'"
-                  v-html="item.icon"
+                  v-html="iconAsText(item.icon)"
                 ></div>
                 <template v-else>
                   {{ item.label || index + 1 }}
@@ -165,13 +166,13 @@ const { resolveIconKind, getTooltipPosition } = useFabIcon()
                   />
                   <img
                     v-else-if="resolveIconKind(item.icon) === 'image'"
-                    :src="item.icon"
+                    :src="iconAsText(item.icon)"
                     :alt="item.label"
                     class="w-6 h-6"
                   />
                   <div
                     v-else-if="resolveIconKind(item.icon) === 'html'"
-                    v-html="item.icon"
+                    v-html="iconAsText(item.icon)"
                   ></div>
                   <template v-else>
                     {{ index + 1 }}
@@ -199,13 +200,13 @@ const { resolveIconKind, getTooltipPosition } = useFabIcon()
                 />
                 <img
                   v-else-if="resolveIconKind(item.icon) === 'image'"
-                  :src="item.icon"
+                  :src="iconAsText(item.icon)"
                   :alt="item.label"
                   class="w-6 h-6"
                 />
                 <div
                   v-else-if="resolveIconKind(item.icon) === 'html'"
-                  v-html="item.icon"
+                  v-html="iconAsText(item.icon)"
                 ></div>
                 <template v-else>
                   {{ item.label || index + 1 }}

@@ -85,12 +85,12 @@ export interface DuMenuItemData {
 ```typescript
 export interface DuTabItem {
   label?: string
-  icon?: any
+  icon?: IconSource
   class?: string
   active?: boolean
   onClick?: () => void
   content?: string
-  [key: string]: any
+  [key: string]: unknown
 }
 ```
 
@@ -130,11 +130,11 @@ Fixed navigation bar at the bottom (macOS dock style).
 ```typescript
 export interface DuDockItem {
   label?: string
-  icon?: any
+  icon?: IconSource
   class?: string
   active?: boolean
   onClick?: () => void
-  [key: string]: any
+  [key: string]: unknown
 }
 ```
 

@@ -29,6 +29,14 @@ export type DuSearchErrorCode = 'required' | 'minlength' | 'maxlength'
 /** How a query still in the field is resolved when the dropdown closes (single only). */
 export type DuSearchCommitMode = 'none' | 'match' | 'auto'
 
+// The two type parameters default to `any`, not `unknown`, and that is
+// deliberate. `O` and `V` are inferred from `options` and the v-model at every
+// real call site; the default only applies when the type is named bare
+// (`const props: DuSearchProps = …`) or when the component is used with no
+// options at all. `unknown` there would type every callback parameter
+// `unknown` and force a cast in consumer code for no safety gained — nothing
+// inside the component ever reads a field off `O`.
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 export type DuSearchEmit<O = any, V = any> = {
   (e: 'update:modelValue', value: V | V[] | null): void
   (e: 'select', option: O): void
@@ -39,6 +47,7 @@ export type DuSearchEmit<O = any, V = any> = {
   (e: 'close'): void
 }
 
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any -- see the note above `DuSearchEmit`. */
 export interface DuSearchProps<O = any, V = any> {
   /** v-model. Whole options by default (`returnObject`), an array in `multiple` mode. */
   modelValue?: V | V[] | null

@@ -1,3 +1,4 @@
+import { type IconSource } from "../../../composables/useIconSource";
 import { type Size } from "../../../composables/useSizeProps";
 
 export const DU_TABS_TYPES = ["lift", "border", "box"] as const;
@@ -10,12 +11,13 @@ export type DuTabsSize = (typeof TABS_SIZES)[number];
 
 export interface DuTabItem {
   label?: string;
-  icon?: any;
+  icon?: IconSource;
   class?: string;
   active?: boolean;
   onClick?: () => void;
   content?: string;
-  [key: string]: any;
+  /** Extra keys ride along untouched, for a consumer's own slot bindings. */
+  [key: string]: unknown;
 }
 
 export interface DuTabsProps {

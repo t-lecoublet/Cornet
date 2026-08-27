@@ -1,4 +1,5 @@
 import type { Component } from "vue";
+import { type IconSource } from "../../../composables/useIconSource";
 import { type Size } from "../../../composables/useSizeProps";
 
 export const DU_MENU_DIRECTIONS = ["default", "vertical", "horizontal", "responsive"] as const;
@@ -13,29 +14,38 @@ export interface DuMenuItemData {
   as?: string | Component;
   disabled?: boolean;
   isTitle?: boolean;
-  subItems?: DuMenuItemData[];
+  /**
+   * `this[]`, not `DuMenuItemData[]`: a sub-item has the same shape as its
+   * parent, so a consumer's own fields survive one level down and the
+   * recursive `DuMenuItem` stays typed against a single `T`.
+   */
+  subItems?: this[];
   value?: string | number;
   onClick?: () => void;
   checked?: boolean;
   multiple?: boolean;
   active?: boolean;
-  icon?: Component | string | object | unknown;
+  icon?: IconSource;
 }
 
-export interface DuMenuProps {
+/**
+ * Generic over the item type: a consumer's own fields (a route object, a
+ * permission flag) stay typed in the `itemClick` payload and the scoped slots.
+ */
+export interface DuMenuProps<T extends DuMenuItemData = DuMenuItemData> {
   direction?: DuMenuDirection;
   size?: Size;
   rounded?: boolean;
-  items?: DuMenuItemData[];
+  items?: T[];
   activeItem?: string;
-  onItemClick?: (item: DuMenuItemData) => void;
-  onSubItemClick?: (item: DuMenuItemData) => void;
+  onItemClick?: (item: T) => void;
+  onSubItemClick?: (item: T) => void;
 }
 
-export interface DuMenuItemProps {
-  item: DuMenuItemData;
+export interface DuMenuItemProps<T extends DuMenuItemData = DuMenuItemData> {
+  item: T;
   index: number;
   parentIndex?: string;
-  onItemClick?: (item: DuMenuItemData) => void;
-  onSubItemClick?: (item: DuMenuItemData) => void;
+  onItemClick?: (item: T) => void;
+  onSubItemClick?: (item: T) => void;
 }

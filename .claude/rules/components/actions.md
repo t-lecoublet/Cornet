@@ -120,7 +120,7 @@ Floating Action Button.
 ```typescript
 export interface DuFabItem {
   label?: string
-  icon?: any
+  icon?: IconSource
   customClass?: string
   onClick?: () => void
   tooltip?: string
@@ -129,7 +129,7 @@ export interface DuFabItem {
 
 export interface DuFabMainAction {
   label?: string
-  icon?: any
+  icon?: IconSource
   customClass?: string
   variant?: string
   onClick?: () => void

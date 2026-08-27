@@ -173,17 +173,17 @@ export type DuFabModifier = (typeof FAB_MODIFIERS)[number]
 
 export interface DuFabItem {
   label?: string
-  icon?: any
+  icon?: IconSource
   customClass?: string
   onClick?: () => void
   tooltip?: string
   tooltipPosition?: 'left' | 'top' | 'right' | 'bottom'
-  [key: string]: any
+  [key: string]: unknown
 }
 
 export interface DuFabMainAction {
   label?: string
-  icon?: any
+  icon?: IconSource
   customClass?: string
   variant?: string
   onClick?: () => void
@@ -475,13 +475,13 @@ export interface DuStatItem {
   title?: string
   value?: string | number
   description?: string
-  figure?: any
+  figure?: IconSource
   figureClass?: string
   valueClass?: string
   descClass?: string
   titleClass?: string
-  actions?: any
-  [key: string]: any
+  actions?: IconSource
+  [key: string]: unknown
 }
 ```
 
@@ -549,7 +549,7 @@ export interface DuTableColumn {
 
 export interface DuTableRow {
   id: string | number
-  [key: string]: any
+  [key: string]: unknown
   customClass?: string
 }
 ```
@@ -1180,9 +1180,9 @@ export const DRAWER_POSITIONS = ['start', 'end'] as const
 export type DuDrawerPosition = (typeof DRAWER_POSITIONS)[number]
 
 export interface DuDrawerItem extends DuMenuItemData {
-  icon?: any
+  icon?: IconSource
   customClass?: string
-  [key: string]: any
+  [key: string]: unknown
 }
 
 export interface DuDrawerProps {
@@ -1238,11 +1238,11 @@ export interface DuBreadcrumbsProps {
 ```typescript
 export interface DuDockItem {
   label?: string
-  icon?: any
+  icon?: IconSource
   class?: string
   active?: boolean
   onClick?: () => void
-  [key: string]: any
+  [key: string]: unknown
 }
 
 export interface DuDockProps {
@@ -1447,12 +1447,12 @@ export type DuTabsType = (typeof DU_TABS_TYPES)[number]
 
 export interface DuTabItem {
   label?: string
-  icon?: any
+  icon?: IconSource
   class?: string
   active?: boolean
   onClick?: () => void
   content?: string
-  [key: string]: any
+  [key: string]: unknown
 }
 
 export interface DuTabsProps {

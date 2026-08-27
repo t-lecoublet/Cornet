@@ -2,6 +2,7 @@
 import { computed } from "vue"
 import DuStat from "../du-stat/du-stat.vue"
 import { type DuStatsProps } from './du-stats.types'
+import { iconAsText, resolveIconKind } from "../../../composables/useIconSource"
 
 const props = defineProps<DuStatsProps>()
 
@@ -40,19 +41,16 @@ const hasValue = (value: string | number | undefined) => value != null && value 
           <slot name="figure" :item="item">
             <component
               :is="item.figure"
-              v-if="item.figure && typeof item.figure === 'object'"
+              v-if="resolveIconKind(item.figure) === 'component'"
             />
             <img
-              v-else-if="
-                typeof item.figure === 'string' &&
-                item.figure.startsWith('http')
-              "
-              :src="item.figure"
+              v-else-if="resolveIconKind(item.figure) === 'image'"
+              :src="iconAsText(item.figure)"
               :alt="item.title"
             />
             <div
-              v-else-if="typeof item.figure === 'string'"
-              v-html="item.figure"
+              v-else-if="resolveIconKind(item.figure) === 'html'"
+              v-html="iconAsText(item.figure)"
             ></div>
           </slot>
         </template>
@@ -73,7 +71,7 @@ const hasValue = (value: string | number | undefined) => value != null && value 
           <slot name="actions" :item="item">
             <component
               :is="item.actions"
-              v-if="item.actions && typeof item.actions === 'object'"
+              v-if="resolveIconKind(item.actions) === 'component'"
             />
           </slot>
         </template>

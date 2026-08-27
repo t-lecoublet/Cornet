@@ -1,3 +1,4 @@
+import { type IconSource } from '../../../composables/useIconSource'
 import { type Size } from '../../../composables/useSizeProps'
 import { type Variant } from '../../../composables/useVariantProps'
 
@@ -7,17 +8,18 @@ export type DuFabModifier = (typeof FAB_MODIFIERS)[number]
 
 export interface DuFabItem {
   label?: string
-  icon?: any
+  icon?: IconSource
   customClass?: string
   onClick?: () => void
   tooltip?: string
   tooltipPosition?: 'left' | 'top' | 'right' | 'bottom'
-  [key: string]: any
+  /** Extra keys ride along untouched, for a consumer's own slot bindings. */
+  [key: string]: unknown
 }
 
 export interface DuFabMainAction {
   label?: string
-  icon?: any
+  icon?: IconSource
   customClass?: string
   variant?: Variant
   onClick?: () => void

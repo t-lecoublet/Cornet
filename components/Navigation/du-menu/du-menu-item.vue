@@ -1,8 +1,9 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends DuMenuItemData = DuMenuItemData">
 import { computed } from 'vue';
-import { type DuMenuItemProps } from './du-menu.types';
+import { type DuMenuItemData, type DuMenuItemProps } from './du-menu.types';
+import { iconAsText, resolveIconKind } from '../../../composables/useIconSource';
 
-const props = defineProps<DuMenuItemProps>();
+const props = defineProps<DuMenuItemProps<T>>();
 
 // Typed via defineSlots so the recursive slot forwarding below stays type-safe.
 const _slots = defineSlots();
@@ -108,10 +109,10 @@ function handleClick() {
           'menu-disabled': item.disabled,
           'menu-active': isActive
         }" @click.stop="handleClick">
-          <component :is="item.icon" v-if="typeof item.icon === 'object'" />
-          <img v-else-if="typeof item.icon === 'string' && (item.icon.startsWith('http') || item.icon.startsWith('/'))" :src="item.icon"
+          <component :is="item.icon" v-if="resolveIconKind(item.icon) === 'component'" />
+          <img v-else-if="resolveIconKind(item.icon) === 'image'" :src="iconAsText(item.icon)"
             :alt="item.label" class="w-5 h-5" />
-          <div v-else-if="typeof item.icon === 'string'" v-html="item.icon"></div>
+          <div v-else-if="resolveIconKind(item.icon) === 'html'" v-html="iconAsText(item.icon)"></div>
           {{ item.label }}
           <slot name="additional" :item="item" :index="index"></slot>
         </component>
@@ -141,10 +142,10 @@ function handleClick() {
           <!-- Checkbox pour sélection multiple -->
           <input v-if="item.multiple && item.value !== undefined" type="checkbox"
             class="invisible w-0 h-0 overflow-clip" :checked="item.checked" disabled>
-          <component :is="item.icon" v-if="typeof item.icon === 'object'" />
-          <img v-else-if="typeof item.icon === 'string' && (item.icon.startsWith('http') || item.icon.startsWith('/'))" :src="item.icon"
+          <component :is="item.icon" v-if="resolveIconKind(item.icon) === 'component'" />
+          <img v-else-if="resolveIconKind(item.icon) === 'image'" :src="iconAsText(item.icon)"
             :alt="item.label" class="w-5 h-5" />
-          <div v-else-if="typeof item.icon === 'string'" v-html="item.icon"></div>
+          <div v-else-if="resolveIconKind(item.icon) === 'html'" v-html="iconAsText(item.icon)"></div>
           {{ item.label }}
           <slot name="additional" :item="item" :index="index"></slot>
         </component>

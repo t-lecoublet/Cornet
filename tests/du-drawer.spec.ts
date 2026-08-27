@@ -6,6 +6,9 @@ function mountDrawer(props: Record<string, unknown> = {}) {
   return mount(DuDrawer, { props })
 }
 
+/** What the drawer hands back through `defineExpose`. */
+const exposed = (wrapper: { vm: unknown }) => wrapper.vm as { toggleDrawer: () => void }
+
 describe('DuDrawer', () => {
   it('starts closed by default', () => {
     const wrapper = mountDrawer()
@@ -21,7 +24,7 @@ describe('DuDrawer', () => {
 
   it('toggleDrawer() exposed method flips state and emits both update events', async () => {
     const wrapper = mountDrawer()
-    await (wrapper.vm as any).toggleDrawer()
+    await exposed(wrapper).toggleDrawer()
     expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([true])
     expect(wrapper.emitted('update:open')?.at(-1)).toEqual([true])
     const checkbox = wrapper.find('input.drawer-toggle')
@@ -133,7 +136,7 @@ describe('DuDrawer', () => {
 
   it('moves focus into the sidebar when opened via toggleDrawer()', async () => {
     const wrapper = mount(DuDrawer, { attachTo: document.body })
-    await (wrapper.vm as any).toggleDrawer()
+    await exposed(wrapper).toggleDrawer()
     const sidebar = wrapper.find('.drawer-side > div').element as HTMLElement
     expect(document.activeElement).toBe(sidebar)
     wrapper.unmount()
@@ -145,10 +148,10 @@ describe('DuDrawer', () => {
     button.focus()
 
     const wrapper = mount(DuDrawer, { attachTo: document.body })
-    await (wrapper.vm as any).toggleDrawer()
+    await exposed(wrapper).toggleDrawer()
     expect(document.activeElement).not.toBe(button)
 
-    await (wrapper.vm as any).toggleDrawer()
+    await exposed(wrapper).toggleDrawer()
     expect(document.activeElement).toBe(button)
 
     wrapper.unmount()

@@ -28,9 +28,9 @@ paths:
 import { type DuMenuItemData } from '../../Navigation/du-menu/du-menu.types'
 
 export interface DuDrawerItem extends DuMenuItemData {
-  icon?: any
+  icon?: IconSource
   customClass?: string
-  [key: string]: any
+  [key: string]: unknown
 }
 ```
 

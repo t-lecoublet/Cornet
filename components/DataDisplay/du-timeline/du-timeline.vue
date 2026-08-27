@@ -1,9 +1,9 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends DuTimelineItemData = DuTimelineItemData">
 import { computed } from "vue"
 import { type DuTimelineProps, type DuTimelineItemData } from './du-timeline.types'
 
 const props = withDefaults(
-  defineProps<DuTimelineProps>(),
+  defineProps<DuTimelineProps<T>>(),
   {
     items: undefined,
     direction: "timeline-vertical",

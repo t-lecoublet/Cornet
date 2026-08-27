@@ -47,8 +47,12 @@ const elementTag = computed((): DuButtonElementTag => {
 const isInputElement = computed(() => elementTag.value === 'input')
 const isAnchorElement = computed(() => elementTag.value === 'a')
 
+// The element this renders as changes with the context (a radio inside a
+// DuFilter, an anchor, a div inside a dropdown trigger), and so do the
+// attributes it needs. `string` covers them all: `tabindex` and `type` are
+// attributes, not properties, so the DOM stringifies them anyway.
 const buttonAttributes = computed(() => {
-  const attrs: Record<string, any> = {}
+  const attrs: Record<string, string> = {}
 
   if (filterName) {
     attrs.name = filterName

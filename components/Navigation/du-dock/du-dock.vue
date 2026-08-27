@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { type DuDockItem, type DuDockProps } from './du-dock.types';
 import { useSizeMapping } from "../../../composables/useSizeProps";
+import { iconAsText, resolveIconKind } from "../../../composables/useIconSource";
 
 const props = withDefaults(
   defineProps<DuDockProps>(),
@@ -52,11 +53,13 @@ defineExpose({
         :class="[item.class, isActive(index) && 'dock-active']">
         <slot name="icon" :item="item" :index="index">
           <slot :name="`icon-${index}`" :item="item" :index="index">
-            <component :is="item.icon" v-if="item.icon && typeof item.icon === 'object'" />
-            <img v-else-if="
-              typeof item.icon === 'string' && item.icon.startsWith('http')
-            " :src="item.icon" :alt="item.label" />
-            <div v-else-if="typeof item.icon === 'string'" v-html="item.icon"></div>
+            <component :is="item.icon" v-if="resolveIconKind(item.icon) === 'component'" />
+            <img
+              v-else-if="resolveIconKind(item.icon) === 'image'"
+              :src="iconAsText(item.icon)"
+              :alt="item.label"
+            />
+            <div v-else-if="resolveIconKind(item.icon) === 'html'" v-html="iconAsText(item.icon)"></div>
           </slot>
         </slot>
 

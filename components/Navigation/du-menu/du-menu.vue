@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends DuMenuItemData = DuMenuItemData">
 import { computed, ref } from "vue";
 import { type DuMenuProps, type DuMenuItemData } from './du-menu.types';
 import { useSizeMapping } from "../../../composables/useSizeProps";
@@ -6,7 +6,7 @@ import { useMenuKeyboardNav } from "./composables/useMenuKeyboardNav";
 import DuMenuItem from './du-menu-item.vue';
 
 const props = withDefaults(
-  defineProps<DuMenuProps>(),
+  defineProps<DuMenuProps<T>>(),
   {
     direction: "vertical",
     size: "default",
@@ -15,16 +15,16 @@ const props = withDefaults(
 );
 
 const emit = defineEmits<{
-  itemClick: [item: DuMenuItemData];
-  subItemClick: [item: DuMenuItemData];
+  itemClick: [item: T];
+  subItemClick: [item: T];
 }>();
 
-function handleItemClick(item: DuMenuItemData) {
+function handleItemClick(item: T) {
   props.onItemClick?.(item);
   emit('itemClick', item);
 }
 
-function handleSubItemClick(item: DuMenuItemData) {
+function handleSubItemClick(item: T) {
   props.onSubItemClick?.(item);
   emit('subItemClick', item);
 }
