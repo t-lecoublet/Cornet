@@ -36,6 +36,10 @@ provide('accordionName', accordionName)
         item.customClass || customClass,
       ]"
     >
+      <!-- The radio is the DaisyUI open/close mechanism, not a form control a
+           user labels. §5.2 of PLAN-REFACTO-GLOBAL.md replaces it with a
+           button + aria-expanded, which removes this exemption. -->
+      <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
       <input
         type="radio"
         :name="accordionName"

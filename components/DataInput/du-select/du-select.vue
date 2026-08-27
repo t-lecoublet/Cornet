@@ -27,6 +27,8 @@ const props = withDefaults(defineProps<Omit<DuSelectProps<O, V>, 'modelValue'>>(
   trackBy: 'id',
   labelBy: 'name',
   returnObject: false,
+  ariaLabel: undefined,
+  ariaLabelledby: undefined,
   removeItemLabel: 'Remove',
   ghost: false,
   variant: 'default',
@@ -262,6 +264,12 @@ defineSlots<{
 
 <template>
   <div class="relative" :class="[isInLabel && 'w-full']" :ref="setContainerRef">
+    <!--
+      The field is a surface, not the control: it forwards a click on the
+      chips to the `<button>` trigger it contains, which owns the whole
+      keyboard surface through `triggerProps`.
+    -->
+    <!-- eslint-disable-next-line vuejs-accessibility/no-static-element-interactions, vuejs-accessibility/click-events-have-key-events -->
     <div class="input input-bordered flex items-center gap-2 w-full overflow-x-clip" :class="[
       colorClass,
       inputSizeClass,
@@ -285,9 +293,11 @@ defineSlots<{
       </template>
 
       <input v-if="typeahead" v-bind="comboboxInputProps" :ref="setTypeaheadRef" :value="displayValue"
-        :placeholder="placeholder" class="flex-1 min-w-24 bg-transparent outline-none" @keydown="handleKeydown" />
+        :placeholder="placeholder" :aria-label="ariaLabel" :aria-labelledby="ariaLabelledby"
+        class="flex-1 min-w-24 bg-transparent outline-none" @keydown="handleKeydown" />
 
       <button v-else type="button" v-bind="triggerProps" :ref="setTriggerElement"
+        :aria-label="ariaLabel" :aria-labelledby="ariaLabelledby"
         class="flex-1 text-left truncate bg-transparent outline-none cursor-pointer">
         <template v-if="multiple">
           <span v-if="!selectedEntries.length" class="text-base-content/50">{{ placeholder }}</span>

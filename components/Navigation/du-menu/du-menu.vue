@@ -52,6 +52,13 @@ const { onKeydown } = useMenuKeyboardNav(root);
 </script>
 
 <template>
+  <!--
+    The role is the real bug, not the missing tabindex: this is a navigation
+    menu wearing listbox semantics. §4.2 of PLAN-REFACTO-GLOBAL.md replaces
+    the whole thing with the APG menu / plain nav split. Adding a tabindex
+    here would only add a second tab stop to an already-wrong pattern.
+  -->
+  <!-- eslint-disable-next-line vuejs-accessibility/interactive-supports-focus -->
   <ul ref="root" role="listbox" :aria-orientation="ariaOrientation" :class="['menu', 'bg-base-200', roundedClass, directionClass, sizeClass]" @keydown="onKeydown">
     <!-- Mode automatique (items) -->
     <template v-if="items && !$slots.default">

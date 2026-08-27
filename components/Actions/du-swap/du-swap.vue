@@ -9,6 +9,7 @@ const props = withDefaults(
     rotate: false,
     flip: false,
     useCheckbox: true,
+    ariaLabel: undefined,
   },
 )
 
@@ -53,12 +54,22 @@ const classes = computed(() => ({
       <slot name="indeterminate" />
     </div>
   </label>
-  <div v-else class="swap" :class="[classes, { 'swap-active': isActive }]" @click="isActive = !isActive">
+  <!-- A toggle a user can operate: a button, not a div with a click handler.
+       `aria-pressed` is what announces which of the two states is showing. -->
+  <button
+    v-else
+    type="button"
+    class="swap"
+    :class="[classes, { 'swap-active': isActive }]"
+    :aria-pressed="isActive"
+    :aria-label="ariaLabel"
+    @click="isActive = !isActive"
+  >
     <div class="swap-on">
       <slot name="on" />
     </div>
     <div class="swap-off">
       <slot name="off" />
     </div>
-  </div>
+  </button>
 </template> 

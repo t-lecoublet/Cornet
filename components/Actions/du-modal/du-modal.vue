@@ -85,6 +85,11 @@ function handleEscapeKey(_event: KeyboardEvent) {
 </script>
 
 <template>
+  <!--
+    The click handler implements backdrop dismissal, which has no keyboard
+    equivalent to miss: Escape closes the dialog, natively and explicitly.
+  -->
+  <!-- eslint-disable-next-line vuejs-accessibility/no-static-element-interactions -->
   <dialog
     ref="dialogRef"
     :id="id"

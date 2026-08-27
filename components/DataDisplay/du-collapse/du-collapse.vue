@@ -24,6 +24,9 @@ withDefaults(
         item.customClass || customClass,
       ]"
     >
+      <!-- Open/close mechanism, not a form control. §5.2 of
+           PLAN-REFACTO-GLOBAL.md replaces it with a button + aria-expanded. -->
+      <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
       <input type="checkbox" :checked="item.open ?? false" />
       <div class="collapse-title">
         <slot :name="`title-${index}`" :item="item" :index="index">

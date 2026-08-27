@@ -23,10 +23,17 @@ const invalidClass = computed(() => (props.invalid ? "input-bordered focus:inval
 
 const isInput = inject("isInInput", false)
 const inJoin = inject("isInJoin", false)
+
+// The template's root is a fragment (input + optional datalist), so Vue cannot
+// auto-inherit attributes — without this, an `aria-label` or `aria-describedby`
+// passed by the consumer would land nowhere and the field would have no
+// accessible name outside a wrapping `<label>`.
+defineOptions({ inheritAttrs: false })
 </script>
 
 <template>
   <input
+    v-bind="$attrs"
     :disabled="disabled"
     :type="type"
     :placeholder="placeholder"

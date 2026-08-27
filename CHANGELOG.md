@@ -26,12 +26,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 - `DuSelect`: `searchableInside` no longer needs `searchable` alongside it.
 - `DuSelect`: the field's trigger is a real `<button>` instead of a `<div tabindex="0">`, and the chevron is a `tabindex="-1"` button, so the field is a single tab stop.
 - Both: the highlighted option is styled through `data-highlighted` and the selected one through `aria-selected`, instead of index comparisons — custom styling should target those attributes.
+- `DuSwap`: with `useCheckbox: false` the toggle renders a `<button type="button" aria-pressed>` instead of a `<div @click>`. It was unreachable by keyboard and announced nothing; a consumer styling `div.swap` should target `button.swap`.
+- `DuDrawer`: the overlay `<label>` no longer carries `aria-label="close sidebar"` — ARIA prohibits naming a `<label>`, and axe flags it. It is `aria-hidden` now: the overlay is a click surface, and Escape or the toggle closes the drawer for keyboard users.
 - Item types no longer use `any`: `icon` / `figure` / `actions` are `IconSource`, and the `[key: string]: any` index signatures on `DuStatItem`, `DuFabItem`, `DuTabItem`, `DuDockItem`, `DuDrawerItem` and `DuTableRow` are `unknown`. Reading an unlisted key now needs a narrowing step.
 - `DuMenuItemData.subItems` is `this[]` instead of `DuMenuItemData[]`, so a consumer's own fields survive one level down.
 - `DuAccordion`: the `name` prop no longer defaults to the literal `"accordion"`. Two accordions on a page shared that radio-group name, so opening a panel in one closed a panel in the other. Each instance now derives its own; pass `name` explicitly to keep a fixed one.
 
 ### Added
 
+- `DuSelect` / `DuSearch`: `ariaLabel` and `ariaLabelledby`. The field's trigger took its accessible name from the placeholder or the current selection, so a select with neither had none.
+- `DuAlert`: `dismissLabel` (default `'Dismiss'`) — the dismiss button's only content is an icon, so it had no accessible name.
+- `DuProgress`: `ariaLabel`.
+- `DuSwap`: `ariaLabel`.
 - `IconSource`, `IconKind`, `resolveIconKind` and `iconAsText` are exported from the package root: one shared type for the `icon` / `figure` fields, which may hold a Vue component, an image URL, or an HTML string. `nestedSize` is exported too.
 - `DuTable`, `DuMenu`, `DuTimeline` and `DuChat` are generic over their item type, like `DuSelect` and `DuSearch`: a consumer's own fields survive into the scoped slots and the emit payloads. `DuTableColumn.key` is now checked against the row type, so a typo in a column no longer renders a blank cell.
 - Both: `readonly`, `required`, `minSelected`, `maxSelected`, `errorMessages` and an `error` slot rendering the validation message once the field has been visited. `valid`, `errors` and `validationMessage` are also exposed to a parent through the component instance.
@@ -43,6 +49,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 
 ### Fixed
 
+- `DuInputField`: attributes passed by the consumer (`aria-label`, `aria-describedby`, `autocomplete`, …) now reach the `<input>`. The template's root is a fragment, so Vue could not auto-inherit them and they landed nowhere — the field could not be given an accessible name outside a wrapping `<label>`.
 - `DuAccordion`, `DuCollapse`, `DuFilter`, `DuRating`, `DuDrawer`: element ids and radio-group names come from `useId()` instead of `Math.random()`. A random id differs between the server render and the client render, which Vue reports as a hydration mismatch and which breaks every `for`/`id` and `aria-controls` pair spanning the boundary.
 - Both: an empty result list no longer produces a `NaN` highlight index.
 - Both: element ids come from `useId()` instead of `Math.random()`, so server-rendered markup matches on hydration.
@@ -56,6 +63,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 
 ### Internal
 
+- `eslint-plugin-vuejs-accessibility` (recommended config) and an axe-core pass over a representative mount of every component (`tests/a11y.spec.ts`), both blocking in CI. Components with a structural bug scheduled for a later phase carry a documented allowlist, and the spec fails if an allowlisted rule stops firing — so the entry cannot outlive the bug.
 - `@typescript-eslint/no-explicit-any` is an error on shipped code (`.stories.ts` excluded — `render: (args: any)` is Storybook's own signature). The only survivors are the `O = any, V = any` generic defaults of `DuSelect`/`DuSearch`, with the reasoning recorded next to them.
 - `DuDock`, `DuTabs`, `DuStats`, `DuMenuItem` and `DuFab` share one icon-narrowing helper instead of three divergent `typeof` chains — the old ones each recognized a different subset (one missed function components, another missed root-relative image paths).
 - The combobox engine moved from `components/DataInput/core/` to `components/core/`, alongside a new `components/core/shared/` holding `useComponentId`. `core/` stays internal — it is not exported from the package barrel.

@@ -103,6 +103,10 @@ export interface DuSelectProps<O = any, V = any> {
   searchPlaceholder?: string
   /** Show a checkbox on each option. */
   checkboxes?: boolean
+  /** Accessible name of the field, when no visible label names it. */
+  ariaLabel?: string
+  /** id of the element that names the field. */
+  ariaLabelledby?: string
   /** Accessible label of a chip's remove button (multiple). */
   removeItemLabel?: string
   size?: Size

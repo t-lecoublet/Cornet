@@ -10,4 +10,6 @@ export interface DuProgressProps {
   max?: number;
   indeterminate?: boolean;
   variant?: Variant;
-} 
+  /** Accessible name of the progress bar. */
+  ariaLabel?: string
+}

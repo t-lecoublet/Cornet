@@ -139,9 +139,12 @@ function handleClick() {
       <li :class="{ 'menu-disabled': item.disabled }">
         <component :is="linkTag" :role="item.disabled ? undefined : 'option'" :tabindex="item.disabled ? undefined : 0" v-bind="linkProps" :class="{ 'menu-active': isActive }"
           @click.stop="handleClick">
-          <!-- Checkbox pour sélection multiple -->
+          <!-- Multi-select state marker: disabled and visually hidden, so it
+               carries nothing for assistive tech and is hidden from it. §4.2 of
+               PLAN-REFACTO-GLOBAL.md replaces it with aria-checked. -->
+          <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
           <input v-if="item.multiple && item.value !== undefined" type="checkbox"
-            class="invisible w-0 h-0 overflow-clip" :checked="item.checked" disabled>
+            class="invisible w-0 h-0 overflow-clip" :checked="item.checked" disabled aria-hidden="true">
           <component :is="item.icon" v-if="resolveIconKind(item.icon) === 'component'" />
           <img v-else-if="resolveIconKind(item.icon) === 'image'" :src="iconAsText(item.icon)"
             :alt="item.label" class="w-5 h-5" />

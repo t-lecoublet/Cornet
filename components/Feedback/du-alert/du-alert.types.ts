@@ -13,4 +13,6 @@ export interface DuAlertProps {
   dismissible?: boolean;
   autoDismissible?: boolean;
   icon?: boolean;
+  /** Accessible name of the dismiss button (its only content is an icon). */
+  dismissLabel?: string;
 } 

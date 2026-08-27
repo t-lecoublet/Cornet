@@ -17,6 +17,8 @@ const accordionName = inject('accordionName', '')
 
 <template>
   <div :class="['collapse', 'bg-base-100 border border-base-300', customClass]">
+    <!-- Open/close mechanism, not a form control: see du-accordion.vue. -->
+    <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
     <input
       type="radio"
       :name="accordionName"

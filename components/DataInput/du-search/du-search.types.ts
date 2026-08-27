@@ -104,6 +104,10 @@ export interface DuSearchProps<O = any, V = any> {
   id?: string
   /** Render the dropdown in the top layer (Popover API), immune to `overflow: hidden` parents. */
   popover?: boolean
+  /** Accessible name of the field, when no visible label names it. */
+  ariaLabel?: string
+  /** id of the element that names the field. */
+  ariaLabelledby?: string
   /** Accessible label of a chip's remove button (multiple). */
   removeItemLabel?: string
   /** Native input attributes. */

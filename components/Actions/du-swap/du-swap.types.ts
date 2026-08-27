@@ -7,4 +7,6 @@ export interface DuSwapProps {
   rotate?: boolean
   flip?: boolean
   useCheckbox?: boolean
+  /** Accessible name of the toggle. Required in practice when both faces are icons. */
+  ariaLabel?: string
 }

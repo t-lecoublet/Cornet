@@ -266,6 +266,19 @@ Cover:
 `core/` primitives get their own spec on top of the facade tests that exercise
 them.
 
+`tests/a11y.spec.ts` runs axe-core over a representative mount of every
+component and blocks on `serious` and `critical` findings. Treat it as a
+floor: automated rules see a missing accessible name, not a navigation list
+wearing listbox semantics. A component with a structural bug scheduled for a
+later phase carries a `knownIssues` entry naming the rule and the plan section
+— and the spec asserts each listed rule *still fires*, so an entry cannot
+outlive the bug it documents.
+
+`eslint-plugin-vuejs-accessibility` runs in the same pass as the rest of the
+lint. Its exemptions are per line with the reason written next to them; the
+one config-level exemption is `form-control-has-label` on the form primitives,
+which render the bare control and leave the label to the consumer.
+
 The green bar before any merge request:
 
 ```bash

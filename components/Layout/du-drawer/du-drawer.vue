@@ -65,7 +65,13 @@ defineExpose({
 
         <!-- Drawer Side -->
         <div :class="drawerSideClasses">
-            <label :for="drawerId" aria-label="close sidebar" :class="drawerOverlayClasses"></label>
+            <!--
+              The overlay is a click-to-close surface, not an affordance to
+              announce: ARIA prohibits naming a `<label>`, and a keyboard user
+              closes with Escape or the toggle. §4.5 of PLAN-REFACTO-GLOBAL.md
+              replaces the checkbox pattern, and with it this element.
+            -->
+            <label :for="drawerId" aria-hidden="true" :class="drawerOverlayClasses"></label>
 
             <div ref="sidebarRef" :class="sidebarWrapperClasses" tabindex="-1">
                 <!-- Dynamic items mode -->

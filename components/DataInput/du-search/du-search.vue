@@ -29,6 +29,8 @@ const props = withDefaults(defineProps<Omit<DuSearchProps<O, V>, 'modelValue'>>(
   labelBy: 'name',
   // DuSearch has always handed whole options back; it is now opt-out.
   returnObject: true,
+  ariaLabel: undefined,
+  ariaLabelledby: undefined,
   removeItemLabel: 'Remove',
   ghost: false,
   variant: 'default',
@@ -299,6 +301,12 @@ defineSlots<{
 
 <template>
   <div class="relative" :ref="setContainerRef">
+    <!--
+      The field is a surface, not the control: it forwards a click on the
+      chips to the `<input role="combobox">` it contains, which owns the
+      whole keyboard surface.
+    -->
+    <!-- eslint-disable-next-line vuejs-accessibility/no-static-element-interactions, vuejs-accessibility/click-events-have-key-events -->
     <div :class="fieldClass" :style="popover ? { anchorName: cssAnchorName } : undefined"
       @click="onFieldClick">
       <template v-for="(entry, index) in (multiple ? selectedEntries : [])"
@@ -312,8 +320,14 @@ defineSlots<{
         </slot>
       </template>
 
+      <!--
+        Labelled through `comboboxInputProps` (aria-label / aria-labelledby,
+        forwarded from the props), which a v-bind hides from the rule.
+      -->
+      <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
       <input v-bind="comboboxInputProps" :ref="setFieldRef" :name="name" :type="type" :pattern="pattern"
         :placeholder="placeholder" :value="displayValue" autocomplete="off"
+        :aria-label="ariaLabel" :aria-labelledby="ariaLabelledby"
         class="flex-1 min-w-24 bg-transparent outline-none" @keydown="handleKeydown" @input="commitCommaSegments" />
     </div>
 

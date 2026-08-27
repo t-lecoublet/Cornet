@@ -22,6 +22,9 @@ const typeClass = computed(() => {
 </script>
 
 <template>
+  <!-- The control this labels is nested by the consumer through the slot
+       (`<DuLabel>Email <DuInputField/></DuLabel>`), which the rule cannot see. -->
+  <!-- eslint-disable-next-line vuejs-accessibility/label-has-for -->
   <label :class="[typeClass]">
     <slot />
   </label>
