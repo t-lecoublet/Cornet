@@ -32,6 +32,15 @@ test:
   script:
     - npm test
 
+# Embedded-mode control build: compiles Tailwind + daisyUI over the library
+# sources and checks that every class useSizeMapping/useVariantMapping builds at
+# runtime actually comes out as a CSS rule. The unit invariant proves the
+# literals are scannable; this proves they are real.
+embedded-css:
+  stage: check
+  script:
+    - npm run check:css
+
 build:
   stage: check
   script:

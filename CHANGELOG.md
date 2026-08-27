@@ -49,6 +49,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 
 ### Fixed
 
+- `DuTooltip`: `variant="neutral"` produced a `tooltip-neutral` class daisyUI does not define. The rule now lives in the component. It happened to look right because neutral is daisyUI's tooltip default, so nothing would have caught it before `npm run check:css`.
 - `DuInputField`: attributes passed by the consumer (`aria-label`, `aria-describedby`, `autocomplete`, …) now reach the `<input>`. The template's root is a fragment, so Vue could not auto-inherit them and they landed nowhere — the field could not be given an accessible name outside a wrapping `<label>`.
 - `DuAccordion`, `DuCollapse`, `DuFilter`, `DuRating`, `DuDrawer`: element ids and radio-group names come from `useId()` instead of `Math.random()`. A random id differs between the server render and the client render, which Vue reports as a hydration mismatch and which breaks every `for`/`id` and `aria-controls` pair spanning the boundary.
 - Both: an empty result list no longer produces a `NaN` highlight index.
@@ -63,6 +64,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 
 ### Internal
 
+- `npm run check:css` (`scripts/check-embedded-css.mjs`), blocking in CI: compiles Tailwind + daisyUI over the library sources the way a consumer's embedded build does, and fails on any class `useSizeMapping`/`useVariantMapping` builds at runtime that produces no CSS rule. The existing invariant test proves the literals are scannable; this proves they are real.
 - `eslint-plugin-vuejs-accessibility` (recommended config) and an axe-core pass over a representative mount of every component (`tests/a11y.spec.ts`), both blocking in CI. Components with a structural bug scheduled for a later phase carry a documented allowlist, and the spec fails if an allowlisted rule stops firing — so the entry cannot outlive the bug.
 - `@typescript-eslint/no-explicit-any` is an error on shipped code (`.stories.ts` excluded — `render: (args: any)` is Storybook's own signature). The only survivors are the `O = any, V = any` generic defaults of `DuSelect`/`DuSearch`, with the reasoning recorded next to them.
 - `DuDock`, `DuTabs`, `DuStats`, `DuMenuItem` and `DuFab` share one icon-narrowing helper instead of three divergent `typeof` chains — the old ones each recognized a different subset (one missed function components, another missed root-relative image paths).

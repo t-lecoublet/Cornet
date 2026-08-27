@@ -247,6 +247,15 @@ unless DuPagination imports DuButton.
 Adding a `useSizeMapping` call with a new suffix therefore means adding the
 matching constant in the same commit.
 
+The invariant proves a class is *scannable*. It cannot prove daisyUI defines
+it — a safelist can be complete and still name a class that does not exist, in
+which case the prop silently does nothing. `npm run check:css`
+(`scripts/check-embedded-css.mjs`) closes that: it compiles Tailwind plus the
+daisyUI plugin over the library sources, exactly as a consumer's embedded
+build does, and fails on any runtime class that produces no rule — counting a
+component's own `<style>` block as a valid definition, which is how DuAvatar's
+size scale and DuTooltip's neutral variant are styled. It runs in CI.
+
 ---
 
 ## 10. Test bar

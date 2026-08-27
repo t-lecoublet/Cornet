@@ -52,4 +52,19 @@ const { colorClass } = useVariantMapping(props, "tooltip");
     </div>
     <slot />
   </div>
-</template> 
+</template>
+
+<style scoped>
+/* daisyUI ships tooltip-primary … tooltip-error but no tooltip-neutral: its
+   neutral colouring is the tooltip's default, so `variant="neutral"` produced
+   a class with no rule behind it. Stated explicitly here, so the variant means
+   the same thing whatever daisyUI picks as its default. */
+.tooltip-neutral {
+  --tt-bg: var(--color-neutral);
+}
+
+.tooltip-neutral > .tooltip-content,
+.tooltip-neutral[data-tip]::before {
+  color: var(--color-neutral-content);
+}
+</style> 

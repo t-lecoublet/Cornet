@@ -90,6 +90,7 @@ Toggle between two states with animations.
 - `modelValue?`: boolean (v-model)
 - `rotate?`: boolean - Rotation animation
 - `flip?`: boolean - Flip animation
+- `ariaLabel?`: string - accessible name (`useCheckbox: false` renders a `<button aria-pressed>`)
 
 **Types :**
 ```typescript

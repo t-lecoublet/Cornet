@@ -16,6 +16,7 @@
     "lint:fix": "eslint . --fix",
     "test": "vitest run",
     "test:watch": "vitest",
+    "check:css": "node scripts/check-embedded-css.mjs",
     "generate:types": "cd types && bash types.sh",
     "prepack": "node scripts/prepack.mjs",
     "postpack": "node scripts/postpack.mjs"

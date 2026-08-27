@@ -18,6 +18,7 @@ paths:
 - `dismissible?`: boolean
 - `autoDismissible?`: boolean
 - `icon?`: boolean
+- `dismissLabel?`: string — accessible name of the dismiss button (default `'Dismiss'`)
 
 ---
 
@@ -41,6 +42,7 @@ paths:
 - `max?`: number
 - `indeterminate?`: boolean
 - `variant?`: Variant
+- `ariaLabel?`: string
 
 ---
 
