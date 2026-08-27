@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed, provide } from 'vue'
 import { type DuCollapseProps } from './du-collapse.types'
 
 withDefaults(
@@ -10,11 +9,6 @@ withDefaults(
     customClass: '',
   },
 )
-
-const collapseId = computed(
-  () => `collapse-${Math.random().toString(36).substring(2, 9)}`,
-)
-provide('collapseId', collapseId.value)
 </script>
 
 <template>

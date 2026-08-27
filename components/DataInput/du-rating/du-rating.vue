@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, provide } from "vue";
+import { useComponentId } from "../../core/shared";
 import { useSizeMapping } from "../../../composables/useSizeProps";
 import DuRatingItem from "./du-rating-item.vue";
 import { type DuRatingProps, type DuRatingEmits } from "./du-rating.types";
@@ -26,11 +27,10 @@ const emit = defineEmits<DuRatingEmits>();
 
 const { internalValue, handleChange } = useRatingValue(props, emit);
 
-const ratingName = computed(() => {
-  return props.name || `rating-${Math.random().toString(36).substring(2, 9)}`;
-});
+// Radio group name: deterministic for SSR, unique per instance.
+const ratingName = useComponentId(props.name, "rating");
 
-provide("ratingName", ratingName.value);
+provide("ratingName", ratingName);
 
 const { sizeClass } = useSizeMapping(props, "rating");
 

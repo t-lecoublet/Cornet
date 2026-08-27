@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 
 ### Removed (breaking)
 
+- `DuCollapse`: the `collapseId` injection key is removed. It was provided but never injected — no component read it, and the value it carried was a fresh random string on every render.
 - `DuSelect`: the `search` prop is removed — it was declared but never read.
 - `DuSearch`: the `DuSearchOption` type is removed. Both components are now generic over their option type (`DuSelectProps<O, V>`, `DuSearchProps<O, V>`), so any option shape works.
 - `DuSearch`: `name` and `id` are no longer required props. `id` defaults to Vue's `useId()`.
@@ -25,6 +26,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 - `DuSelect`: `searchableInside` no longer needs `searchable` alongside it.
 - `DuSelect`: the field's trigger is a real `<button>` instead of a `<div tabindex="0">`, and the chevron is a `tabindex="-1"` button, so the field is a single tab stop.
 - Both: the highlighted option is styled through `data-highlighted` and the selected one through `aria-selected`, instead of index comparisons — custom styling should target those attributes.
+- `DuAccordion`: the `name` prop no longer defaults to the literal `"accordion"`. Two accordions on a page shared that radio-group name, so opening a panel in one closed a panel in the other. Each instance now derives its own; pass `name` explicitly to keep a fixed one.
 
 ### Added
 
@@ -37,6 +39,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 
 ### Fixed
 
+- `DuAccordion`, `DuCollapse`, `DuFilter`, `DuRating`, `DuDrawer`: element ids and radio-group names come from `useId()` instead of `Math.random()`. A random id differs between the server render and the client render, which Vue reports as a hydration mismatch and which breaks every `for`/`id` and `aria-controls` pair spanning the boundary.
 - Both: an empty result list no longer produces a `NaN` highlight index.
 - Both: element ids come from `useId()` instead of `Math.random()`, so server-rendered markup matches on hydration.
 - Both: options now carry ids and the field exposes `aria-activedescendant`, so screen readers follow the highlight. `aria-selected` reflects the actual selection — it used to mirror the highlight on `DuSearch`.
@@ -49,6 +52,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 
 ### Internal
 
+- The combobox engine moved from `components/DataInput/core/` to `components/core/`, alongside a new `components/core/shared/` holding `useComponentId`. `core/` stays internal — it is not exported from the package barrel.
+- The engine's document-level `mousedown` and `keydown` listeners are attached when the popup opens and removed when it closes, instead of living for the lifetime of every instance. A page holding fifty closed comboboxes now holds no idle listeners.
 - `types/types.sh` keeps generic type aliases (`export type X<O> = …`) in the public type barrel; they were silently dropped before.
 
 ## [0.1.0-beta.21]

@@ -9,7 +9,8 @@
 // (selecting closes the popup, closing commits the pending query, typing
 // re-highlights, Tab must know the widget boundary…), and a shared scope keeps
 // that wiring direct instead of threading callbacks between modules.
-import { computed, nextTick, onUnmounted, reactive, ref, toRaw, useId, watch } from 'vue'
+import { computed, nextTick, onUnmounted, reactive, ref, toRaw, watch } from 'vue'
+import { useComponentId } from '../shared'
 import type { Ref } from 'vue'
 import type {
   ComboboxErrorCode,
@@ -45,8 +46,8 @@ const CREATED_OPTION_KEY = Symbol('cornet.combobox.createdOption')
  * ```
  *
  * The second argument receives every selection change; write it back to your
- * state. Call from `setup()` — the engine registers document-level listeners
- * and derives its accessibility ids from `useId()`.
+ * state. Call from `setup()` — the engine derives its accessibility ids from
+ * `useComponentId()` and subscribes to the document while the popup is open.
  */
 export function useCombobox<O, V = O, Q = string>(
   propsSource: ComboboxPropsSource<O, V, Q>,
@@ -66,9 +67,7 @@ export function useCombobox<O, V = O, Q = string>(
   let queryDirty = false
 
   // --- accessibility ids ---------------------------------------------------
-  // ':' (from Vue's default useId in some setups) breaks CSS custom property
-  // usage, so it is normalized away.
-  const instanceId = (props.id || useId()).replace(/:/g, '-')
+  const instanceId = useComponentId(props.id)
   const listboxId = `${instanceId}-listbox`
   const triggerId = `${instanceId}-trigger`
   const inputId = `${instanceId}-input`

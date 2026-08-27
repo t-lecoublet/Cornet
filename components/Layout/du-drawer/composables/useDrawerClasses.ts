@@ -1,4 +1,5 @@
 import { computed } from 'vue'
+import { useComponentId } from '../../../core/shared'
 
 interface DrawerClassesProps {
   id?: string
@@ -14,9 +15,11 @@ interface DrawerClassesProps {
 
 /** Derives every DaisyUI class list the drawer needs from its layout/responsive props. */
 export function useDrawerClasses(props: DrawerClassesProps) {
-  const drawerId = computed(() => {
-    return props.id || `drawer-${Math.random().toString(36).substring(2, 11)}`
-  })
+  // Called from the drawer's setup(), so `useId()` has an instance to hang off.
+  // Deterministic: the checkbox `id` and the overlay `for` must match after
+  // hydration, which a random id cannot guarantee.
+  const generatedId = useComponentId(undefined, 'drawer')
+  const drawerId = computed(() => props.id || generatedId)
 
   const drawerClasses = computed(() => {
     const classes = ['drawer']

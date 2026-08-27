@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, provide } from "vue";
+import { provide } from "vue";
+import { useComponentId } from "../../core/shared";
 import DuButton from "../../Actions/du-button/du-button.vue";
 import { type DuFilterProps, type DuFilterItem } from "./du-filter.types";
 
@@ -15,14 +16,12 @@ const emit = defineEmits<{
   change: [item: DuFilterItem | undefined];
 }>();
 
-const filterName = computed(() => {
-  return props.name || `filter-${Math.random().toString(36).substring(2, 9)}`;
-});
+const filterName = useComponentId(props.name, "filter");
 
-// Provide the string, not the ref: DuButton reads this via a plain
+// Provide the string, not a ref: DuButton reads this via a plain
 // `inject('filterName', undefined)` and uses it directly (no `.value`
 // unwrap, and a Ref object is always truthy regardless of its value).
-provide("filterName", filterName.value);
+provide("filterName", filterName);
 </script>
 
 <template>

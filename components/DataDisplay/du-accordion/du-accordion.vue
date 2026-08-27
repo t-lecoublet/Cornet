@@ -1,25 +1,26 @@
 <script setup lang="ts">
-import { computed, provide } from 'vue'
+import { provide } from 'vue'
+import { useComponentId } from '../../core/shared'
 import { type DuAccordionProps } from './du-accordion.types'
 
 const props = withDefaults(
   defineProps<DuAccordionProps>(),
   {
     items: undefined,
-    name: 'accordion',
+    // No literal default: every instance needs its own radio group name, or
+    // two accordions on a page fight over the same one.
+    name: undefined,
     modifier: undefined,
     customClass: '',
   },
 )
 
-const accordionName = computed(() => {
-  return (
-    props.name || `accordion-${Math.random().toString(36).substring(2, 9)}`
-  )
-})
+// The radio group name shared by every panel. Deterministic, so server and
+// client agree, and unique per instance, so two accordions never collide.
+const accordionName = useComponentId(props.name, 'accordion')
 
 // Provide the accordion name to child components
-provide('accordionName', accordionName.value)
+provide('accordionName', accordionName)
 </script>
 
 <template>
