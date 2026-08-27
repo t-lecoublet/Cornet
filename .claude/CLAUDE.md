@@ -2,6 +2,13 @@
 
 Vue 3 component library based on DaisyUI 5 and Tailwind CSS 4.
 
+## Architecture reference
+
+`docs/architecture.md` is the reference for layers (`core/` vs `du-*`
+facades), typing and generics, naming, controllable state, ids, ARIA, styling
+by data attributes, the Tailwind-scanner invariant and the test bar. Read it
+before adding or reworking a component.
+
 ## All rules
 
 All rules are in the `./rules/` directory next to this file. Each rule has a `.md`. Each component rule has a `.md` file in the `rules/components/` directory.

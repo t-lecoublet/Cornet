@@ -26,17 +26,19 @@ npm run build       # dist build (vite + declaration emit)
 
 ## Project conventions
 
+> The full reference is [`docs/architecture.md`](docs/architecture.md) — layers,
+> typing, ARIA, state contracts, the Tailwind-scanner invariant and the test
+> bar. What follows is the short version.
+
 - **One component = three files** in `components/{Category}/du-{name}/`:
   `du-{name}.vue`, `du-{name}.types.ts`, `du-{name}.stories.ts`. Never skip one.
 - Components are prefixed `Du` (`DuButton`); types live in the `.types.ts`
   file, constants in `UPPER_SNAKE_CASE`, files in `kebab-case`.
-- **Rich components** (internal state + model sync + keyboard/focus/dismiss +
-  multiple modes — e.g. `DuSelect`, `DuSearch`, `DuDrawer`, `DuMenu`) extract
-  their logic into a local `composables/` folder next to the `.vue` file
-  (`components/{Category}/du-{name}/composables/use{Thing}.ts`), one
-  composable per concern (open state, keyboard nav, dismiss, …). This is
-  separate from the shared cross-cutting `composables/` at the repo root
-  (`useSizeMapping`, `useVariantMapping`). Write characterization tests
+- **Popup lifecycle, focus, dismiss and keyboard navigation live in
+  `components/core/`**, not in a local composable. A local `composables/`
+  folder next to the `.vue` is for logic that is genuinely this component's
+  own (`useRatingValue`, `usePaginationPages`). Several existing ones predate
+  this rule and are scheduled for migration. Write characterization tests
   against the current behavior *before* extracting, so the refactor is
   provably behavior-preserving.
 - Export every new component from `index.ts`, then run

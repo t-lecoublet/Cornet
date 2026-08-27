@@ -1,0 +1,276 @@
+# Cornet architecture
+
+How a Cornet component is built, and why. This is the reference the review
+checklist points at: if a component disagrees with this document, one of the
+two is wrong and it is usually the component.
+
+Cornet is in beta. Where a convention is not yet applied everywhere, it says
+so — an aspiration written as a fact is worse than no document.
+
+---
+
+## 1. Two layers
+
+```
+┌──────────────────────────────────────────────────────────┐
+│  du-* facades — daisyUI markup, variants, sizes          │  ← the public API
+├──────────────────────────────────────────────────────────┤
+│  components/core/ — state, keyboard, focus, dismiss,     │  ← internal, no CSS,
+│  positioning, ARIA prop bags                             │     no dependency
+└──────────────────────────────────────────────────────────┘
+```
+
+**`core/` is internal.** It is not exported from `index.ts` and carries no
+semver promise. Consumers use components; `core/` exists so that the popup
+behaviour of a dropdown, a select and a tooltip is written and tested once.
+
+Rules that hold without exception:
+
+- `core/` imports Vue and nothing else. No daisyUI class, no Tailwind
+  utility, no import from a facade.
+- A facade owns markup, classes and daisyUI conventions. It holds no state
+  that `core/` already holds — no local `isOpen`, no local highlight index.
+- Anything a facade must put on an element for accessibility comes from a
+  **prop bag** it spreads (`v-bind="triggerProps"`), never from `aria-*`
+  attributes hand-written in the template. The bag is where the pattern
+  lives; a hand-written attribute is where it drifts.
+
+**Today** `core/` holds `combobox/` (the engine behind DuSelect and DuSearch)
+and `shared/ids.ts`. `popover/`, `positioning/`, `focus/` and `navigation/`
+are planned — see `PLAN-REFACTO-GLOBAL.md` §2.
+
+### When to extract a primitive
+
+Only when a **second real consumer** needs it. The combobox engine is
+deliberately one closure: its features are coupled (selecting closes the
+popup, closing commits the pending query, typing re-highlights, Tab needs to
+know the widget boundary) and a shared scope makes that wiring direct.
+Splitting it into seven modules "for later" would buy back the indirection
+that writing it as one closure removed.
+
+So: DuDropdown arrives, `popover/` gets extracted. Not before.
+
+---
+
+## 2. Files of a component
+
+```
+components/{Category}/du-{name}/
+├── du-{name}.vue          # markup + wiring
+├── du-{name}.types.ts     # every exported type, plus the scanner constants
+└── du-{name}.stories.ts   # one story per variant
+```
+
+Categories: `Actions`, `DataDisplay`, `DataInput`, `Feedback`, `Layout`,
+`Navigation`. Never ship fewer than three files.
+
+A local `composables/` folder next to the `.vue` is allowed for logic that is
+genuinely this component's own (`useRatingValue`, `usePaginationPages`,
+`useFabClasses`). It is **not** the place for popup lifecycle, focus, dismiss
+or keyboard navigation: those belong in `core/`, or the library grows six
+subtly different implementations of Escape-to-close. Several existing local
+composables predate this rule and are scheduled for migration
+(`useMenuKeyboardNav`, `useDrawerDismiss`, `useDrawerOpenState`).
+
+Export from `index.ts`, then `npm run generate:types` — CI fails on drift.
+
+---
+
+## 3. Typing
+
+**Generic whenever consumer data flows through.** If a component takes
+`items` and hands them back through a slot or an emit, it is generic over the
+item type, or the consumer's own fields are erased at the boundary:
+
+```vue
+<script setup lang="ts" generic="T extends DuChatItemData = DuChatItemData">
+const props = withDefaults(defineProps<DuChatProps<T>>(), { items: undefined })
+</script>
+```
+
+The matching interface takes the parameter with the same default, so
+`DuChatProps` still means something written bare.
+
+Constrain on the **minimum the component needs**, not on the default shape.
+`DuTableProps<R extends DuTableRowBase>` accepts a consumer's
+`interface Invoice { id: number }`; constraining on `DuTableRow` would not,
+because an interface has no implicit index signature.
+
+**`any` is a lint error** (`@typescript-eslint/no-explicit-any`), with two
+exemptions:
+
+- `.stories.ts` — `render: (args: any)` is Storybook's own signature.
+- The `O = any, V = any` defaults on `DuSelect`/`DuSearch`, justified in a
+  comment next to them: both are inferred at every real call site, and
+  `unknown` there would only force casts in consumer code.
+
+`unknown` is the right type for an index signature (`[key: string]: unknown`)
+— reading an unlisted key should require a narrowing step.
+
+`strict` is on (inherited from `@vue/tsconfig`), and `npm run type-check`
+blocks CI. It covers `components/`, `composables/`, `index.ts`,
+`plugin-vite.ts` and `types/`; `tests/` is not yet type-checked.
+
+---
+
+## 4. Naming
+
+| Thing | Convention |
+| --- | --- |
+| Component | `DuButton`, file `du-button.vue` |
+| Types | `Du{Component}Props`, `Du{Component}Size`, `Du{Component}Emit` |
+| Constants | `UPPER_SNAKE_CASE` (`BUTTON_SIZES`, `MODAL_PLACEMENTS`) |
+| Boolean props | no `is` prefix — `disabled`, `open`, `readonly` |
+| Controllable state | the prop plus `update:{prop}` |
+| Slots | kebab-case (`no-options`, `create-option`), scope typed |
+
+Default UI strings are English and every one of them is overridable through a
+prop or a slot. Code comments are in English.
+
+---
+
+## 5. State a consumer can control
+
+Every prop that represents state a consumer might want to drive — `open`,
+`modelValue`, `activeIndex` — follows one contract:
+
+- Prop absent (`undefined`): the component keeps the state internally and
+  emits changes.
+- Prop present: the component follows the prop and only emits; it never
+  writes its own copy.
+
+Do not invent a local variant of this per component. (`core/shared/
+useControllableState` is planned to hold it — see `PLAN-REFACTO-GLOBAL.md`
+§2.1; until it lands, follow the contract by hand.)
+
+An emit-only component with no `v-model` is a bug, not a design: a consumer
+who cannot set the state cannot restore it.
+
+---
+
+## 6. Ids
+
+`useId()` through `core/shared/useComponentId`, never `Math.random()`.
+
+A random id is a different string on the server and on the client, so Vue
+reports a hydration mismatch and every `for`/`id` and `aria-controls` pair
+spanning the boundary breaks. `useComponentId` also strips `:`, which is legal
+in an `id` attribute but not in a CSS custom property name.
+
+Two properties are worth testing for anything that generates one, and
+`tests/generated-ids.spec.ts` does: two instances on a page do not collide,
+and two identical renders produce the same value.
+
+A literal default for a group name (`name: 'accordion'`) is the same bug in
+disguise: two instances on a page share the group.
+
+---
+
+## 7. Accessibility
+
+Name the WAI-ARIA APG pattern the component implements in a comment at the top
+of its template, and implement that pattern rather than an approximation of it.
+
+- Roles and `aria-*` come from prop bags provided by `core/`.
+- Full keyboard support means arrows, `Home`/`End`, `PageUp`/`PageDown` where
+  the list is long, `Escape` to dismiss, and `Tab` leaving the widget instead
+  of walking into it.
+- `role="menu"` is for menus of actions. A navigation sidebar is a list of
+  links; giving it `role="menu"` tells a screen reader user to expect
+  application menu behaviour that is not there.
+- Icon-only controls take an accessible label through a prop with an English
+  default.
+- Anything that appears on hover must also appear on keyboard focus, and must
+  be dismissible with `Escape` (WCAG 1.4.13).
+
+**Document-level listeners** (click-outside, `Escape`) are attached when the
+popup opens and removed when it closes, with an `onUnmounted` safety net. A
+page holding fifty closed comboboxes must hold zero idle listeners. The
+combobox engine's `watch(isOpen)` is the reference implementation.
+
+---
+
+## 8. Styling state
+
+State is styled through data attributes, not through class ternaries driven by
+index comparisons:
+
+```html
+<li :class="'data-highlighted:bg-base-200 aria-selected:font-medium'">
+```
+
+`data-highlighted`, `aria-selected` and `aria-disabled` are already on the
+element for accessibility reasons; reusing them for styling means the visual
+state and the announced state cannot disagree. A consumer restyling a
+component targets the same attributes.
+
+### Nested sizes
+
+A control rendered **inside** a sized component follows it, one step down,
+through `nestedSize()`:
+
+```ts
+const inner = reactive({ get size() { return nestedSize(props.size) } })
+const { sizeClass } = useSizeMapping(inner, 'btn')
+```
+
+A hardcoded `btn-sm` inside a component that exposes `size` is a bug. (A
+hardcoded one inside a component with no size scale — `DuModal`, `DuAlert`,
+neither of which daisyUI gives sizes to — is just a choice of size.)
+
+---
+
+## 9. The Tailwind scanner invariant
+
+Cornet ships in two modes. In **embedded** mode the consumer's Tailwind scans
+the library source, and Tailwind only generates a utility whose class name
+appears **as a literal string** in a scanned file. A class built at runtime —
+`` `btn-${props.size}` ``, which is what `useSizeMapping` does — appears
+nowhere, so it is never generated, and the component renders unstyled in a
+consumer's build while looking fine in the repo.
+
+The fix is a constant in the component's own `.types.ts`:
+
+```ts
+// Tailwind-scan safelist: useSizeMapping(props, 'btn') builds these literals
+// at runtime; keep them here so they're always scanned.
+export const BUTTON_SIZES = ['btn-xs', 'btn-sm', 'btn-md', 'btn-lg', 'btn-xl'] as const
+```
+
+`tests/class-literals-invariant.spec.ts` enforces it: for every
+`useSizeMapping(props, 'x')` / `useVariantMapping(props, 'x')` call, the
+`x-xs`…`x-xl` (or `x-primary`…`x-error`) literals must be reachable in the
+component's own directory or in a directly imported component's directory.
+The directory matters — a `btn-*` list in DuButton does not cover DuPagination
+unless DuPagination imports DuButton.
+
+Adding a `useSizeMapping` call with a new suffix therefore means adding the
+matching constant in the same commit.
+
+---
+
+## 10. Test bar
+
+Every interactive component ships black-box tests — mount it, drive it like a
+user, assert what a user or a screen reader would observe. Reaching into
+internals means the test will survive a refactor that breaks the component.
+
+Cover:
+
+- `v-model` in both modes, controlled and uncontrolled;
+- every emit, including the ones that fire on dismissal;
+- the whole keyboard surface, not the happy path;
+- the ARIA attributes the pattern requires;
+- two instances mounted together, for id collisions.
+
+`core/` primitives get their own spec on top of the facade tests that exercise
+them.
+
+The green bar before any merge request:
+
+```bash
+npm run lint
+npm run type-check
+npm test
+npm run build
+```
