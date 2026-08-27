@@ -68,6 +68,27 @@ const rangeValue = ref(50)
 const ratingValue = ref(3)
 const selectValue = ref('')
 const searchValue = ref('')
+
+// Combobox test bench (DuSelect / DuSearch on the shared engine)
+const selectMulti = ref<number[]>([])
+const selectChecks = ref<number[]>([])
+const selectTypeahead = ref<number | null>(null)
+const selectInside = ref<number | null>(null)
+const selectClearable = ref<number | null>(null)
+const selectObject = ref<ComboOption | null>(null)
+const selectReadonly = ref<number>(2)
+const selectDisabledOpts = ref<number | null>(null)
+const selectRequired = ref<number | null>(null)
+const selectMinMax = ref<number[]>([])
+const selectPopover = ref<number | null>(null)
+
+const searchMulti = ref<ComboOption[]>([])
+const searchCreatable = ref<ComboOption | null>(null)
+const searchCommitAuto = ref<ComboOption | null>(null)
+const searchCommitMatch = ref<ComboOption | null>(null)
+const searchLimited = ref<ComboOption | null>(null)
+const searchExternal = ref<ComboOption | null>(null)
+const searchPopover = ref<ComboOption | null>(null)
 const textAreaValue = ref('')
 const inputValue = ref('')
 const currentPage = ref(1)
@@ -143,6 +164,42 @@ const searchOptions = [
   { id: 3, name: 'Angular' },
   { id: 4, name: 'Svelte' },
 ]
+
+interface ComboOption {
+  id: number | null
+  name: string
+  disabled?: boolean
+}
+
+const comboOptions: ComboOption[] = [
+  { id: 1, name: 'Alpha' },
+  { id: 2, name: 'Bravo' },
+  { id: 3, name: 'Charlie (indisponible)', disabled: true },
+  { id: 4, name: 'Delta' },
+  { id: 5, name: 'Echo' },
+  { id: 6, name: 'Foxtrot' },
+  { id: 7, name: 'Golf' },
+  { id: 8, name: 'Hotel' },
+  { id: 9, name: 'India' },
+  { id: 10, name: 'Juliett' },
+]
+
+// Fake server-side search for the externalFilter demo: answers the `query`
+// emit, reversed so the external origin of the results is visible.
+const externalResults = ref<ComboOption[]>([...searchOptions])
+function onExternalQuery(query: string) {
+  const q = query.toLowerCase()
+  externalResults.value = q === ''
+    ? [...searchOptions]
+    : searchOptions.filter((option) => option.name.toLowerCase().includes(q)).reverse()
+}
+
+// Rolling log of the combobox emits, to watch select/remove/add/query live.
+const comboLog = ref<string[]>([])
+function logCombo(source: string, event: string, payload?: unknown) {
+  const detail = payload === undefined ? '' : ` → ${JSON.stringify(payload)}`
+  comboLog.value = [`${source} · ${event}${detail}`, ...comboLog.value].slice(0, 10)
+}
 
 const filterItems = [
   { title: 'All' },
@@ -724,18 +781,139 @@ const themesItems = [
         <div class="grid md:grid-cols-2 gap-6 mb-6">
           <DuCard dash title="DuSelect">
             <p class="text-base-content/70 mb-4">Dropdown select with search support.</p>
-            <DuSelect size="lg" v-model="selectValue" :options="selectOptions" placeholder="Choose an option" track-by="id" label-by="name" />
-            <DuSelect size="md" v-model="selectValue" :options="selectOptions" placeholder="Choose an option" track-by="id" label-by="name" />
-            <DuSelect size="sm" v-model="selectValue" :options="selectOptions" placeholder="Choose an option" track-by="id" label-by="name" />
-            <DuSelect size="xs" v-model="selectValue" :options="selectOptions" placeholder="Choose an option" track-by="id" label-by="name" />
+            <DuSelect size="lg" v-model="selectValue" multiple :options="selectOptions" placeholder="Choose an option" track-by="id" label-by="name" />
+            <DuSelect size="md" v-model="selectValue" multiple :options="selectOptions" placeholder="Choose an option" track-by="id" label-by="name" />
+            <DuSelect size="sm" v-model="selectValue" multiple :options="selectOptions" placeholder="Choose an option" track-by="id" label-by="name" />
+            <DuSelect size="xs" v-model="selectValue" multiple :options="selectOptions" placeholder="Choose an option" track-by="id" label-by="name" />
           </DuCard>
 
           <DuCard dash title="DuSearch">
             <p class="text-base-content/70 mb-4">Search input with autocomplete.</p>
-            <DuSearch size="lg" v-model="searchValue" name="framework-search" id="framework-search" :list-values="searchOptions" placeholder="Search frameworks..." />
-            <DuSearch size="md" v-model="searchValue" name="framework-search" id="framework-search" :list-values="searchOptions" placeholder="Search frameworks..." />
-            <DuSearch size="sm" v-model="searchValue" name="framework-search" id="framework-search" :list-values="searchOptions" placeholder="Search frameworks..." />
-            <DuSearch size="xs" v-model="searchValue" name="framework-search" id="framework-search" :list-values="searchOptions" placeholder="Search frameworks..." />
+            <DuSearch size="lg" v-model="searchValue" name="framework-search" :options="searchOptions" placeholder="Search frameworks..." />
+            <DuSearch size="md" v-model="searchValue" name="framework-search" :options="searchOptions" placeholder="Search frameworks..." />
+            <DuSearch size="sm" v-model="searchValue" name="framework-search" :options="searchOptions" placeholder="Search frameworks..." />
+            <DuSearch size="xs" v-model="searchValue" name="framework-search" :options="searchOptions" placeholder="Search frameworks..." />
+          </DuCard>
+        </div>
+
+        <!-- Combobox test bench -->
+        <div class="grid md:grid-cols-2 gap-6 mb-6">
+          <DuCard dash title="DuSelect — modes">
+            <div class="flex flex-col gap-3">
+              <div>
+                <div class="text-xs mb-1">multiple (chips) — {{ selectMulti }}</div>
+                <DuSelect v-model="selectMulti" :options="comboOptions" multiple placeholder="Plusieurs options..."
+                  @select="(o) => logCombo('select-multi', 'select', o)"
+                  @remove="(o) => logCombo('select-multi', 'remove', o)" />
+              </div>
+              <div>
+                <div class="text-xs mb-1">multiple + checkboxes + recherche dans le dropdown</div>
+                <DuSelect v-model="selectChecks" :options="comboOptions" multiple checkboxes searchableInside />
+              </div>
+              <div>
+                <div class="text-xs mb-1">searchable (typeahead, le champ filtre) — {{ selectTypeahead }}</div>
+                <DuSelect v-model="selectTypeahead" :options="comboOptions" searchable placeholder="Tapez pour filtrer..."
+                  @query="(q) => logCombo('select-typeahead', 'query', q)" />
+              </div>
+              <div>
+                <div class="text-xs mb-1">searchableInside (single)</div>
+                <DuSelect v-model="selectInside" :options="comboOptions" searchableInside />
+              </div>
+              <div>
+                <div class="text-xs mb-1">clearable (re-cliquer la sélection la retire) — {{ selectClearable }}</div>
+                <DuSelect v-model="selectClearable" :options="comboOptions" clearable />
+              </div>
+              <div>
+                <div class="text-xs mb-1">returnObject — {{ selectObject }}</div>
+                <DuSelect v-model="selectObject" :options="comboOptions" returnObject />
+              </div>
+            </div>
+          </DuCard>
+
+          <DuCard dash title="DuSelect — états & validation">
+            <div class="flex flex-col gap-3">
+              <div>
+                <div class="text-xs mb-1">readonly (focusable, ne s'ouvre pas)</div>
+                <DuSelect v-model="selectReadonly" :options="comboOptions" readonly />
+              </div>
+              <div>
+                <div class="text-xs mb-1">disabled</div>
+                <DuSelect :options="comboOptions" disabled placeholder="Désactivé" />
+              </div>
+              <div>
+                <div class="text-xs mb-1">option désactivée (Charlie : sautée au clavier, inerte au clic)</div>
+                <DuSelect v-model="selectDisabledOpts" :options="comboOptions" />
+              </div>
+              <div>
+                <div class="text-xs mb-1">required (ouvrir puis fermer sans choisir → message)</div>
+                <DuSelect v-model="selectRequired" :options="comboOptions" required />
+              </div>
+              <div>
+                <div class="text-xs mb-1">multiple, entre 2 et 3 sélections, message custom</div>
+                <DuSelect v-model="selectMinMax" :options="comboOptions" multiple :minSelected="2" :maxSelected="3"
+                  :errorMessages="{ minlength: 'Choisissez-en au moins deux' }" placeholder="2 à 3 options..." />
+              </div>
+            </div>
+          </DuCard>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6 mb-6">
+          <DuCard dash title="DuSearch — modes">
+            <div class="flex flex-col gap-3">
+              <div>
+                <div class="text-xs mb-1">creatable ("Add" si aucun label exact) — {{ searchCreatable }}</div>
+                <DuSearch v-model="searchCreatable" :options="comboOptions" creatable placeholder="Tapez un nouveau nom..."
+                  @add="(o) => logCombo('search-creatable', 'add', o)"
+                  @select="(o) => logCombo('search-creatable', 'select', o)" />
+              </div>
+              <div>
+                <div class="text-xs mb-1">multiple (chips + raccourci virgule) — {{ searchMulti.map(v => v.name) }}</div>
+                <DuSearch v-model="searchMulti" :options="comboOptions" multiple placeholder="Alpha, Bravo, ..." />
+              </div>
+              <div>
+                <div class="text-xs mb-1">commitOnClose="auto" + creatable (taper puis cliquer ailleurs) — {{ searchCommitAuto }}</div>
+                <DuSearch v-model="searchCommitAuto" :options="comboOptions" commitOnClose="auto" creatable />
+              </div>
+              <div>
+                <div class="text-xs mb-1">commitOnClose="match" (seul un label exact est retenu) — {{ searchCommitMatch }}</div>
+                <DuSearch v-model="searchCommitMatch" :options="comboOptions" commitOnClose="match" />
+              </div>
+              <div>
+                <div class="text-xs mb-1">resultsLimit=3</div>
+                <DuSearch v-model="searchLimited" :options="comboOptions" :resultsLimit="3" />
+              </div>
+              <div>
+                <div class="text-xs mb-1">externalFilter (faux serveur, résultats inversés) — {{ searchExternal }}</div>
+                <DuSearch v-model="searchExternal" :options="externalResults" externalFilter
+                  placeholder="Recherche côté serveur..." @query="onExternalQuery" />
+              </div>
+            </div>
+          </DuCard>
+
+          <DuCard dash title="Popover top-layer & événements">
+            <div class="flex flex-col gap-3">
+              <div class="grid grid-cols-2 gap-3">
+                <div class="h-28 overflow-hidden border border-base-300 rounded-box p-2">
+                  <div class="text-xs mb-1">défaut : coupé par overflow</div>
+                  <DuSelect v-model="selectPopover" :options="comboOptions" size="sm" />
+                </div>
+                <div class="h-28 overflow-hidden border border-base-300 rounded-box p-2">
+                  <div class="text-xs mb-1">popover : passe au-dessus</div>
+                  <DuSelect v-model="selectPopover" :options="comboOptions" size="sm" popover />
+                </div>
+              </div>
+              <div class="h-28 overflow-hidden border border-base-300 rounded-box p-2">
+                <div class="text-xs mb-1">DuSearch popover dans un conteneur overflow-hidden</div>
+                <DuSearch v-model="searchPopover" :options="comboOptions" size="sm" popover />
+              </div>
+              <div>
+                <div class="text-xs mb-1">derniers événements (select / remove / add / query)</div>
+                <ul class="text-xs font-mono bg-base-200 rounded-box p-2 min-h-24 max-h-40 overflow-auto">
+                  <li v-for="(line, i) in comboLog" :key="comboLog.length - i">{{ line }}</li>
+                  <li v-if="!comboLog.length" class="text-base-content/50">interagissez avec les composants marqués…</li>
+                </ul>
+              </div>
+            </div>
           </DuCard>
         </div>
 
