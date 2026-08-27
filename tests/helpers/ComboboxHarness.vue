@@ -7,8 +7,8 @@
 // (`scope.isOpen`, `scope.visibleOptions`) instead of refs.
 // Not part of the published package (`files` excludes `tests`).
 import { reactive } from 'vue'
-import { useCombobox } from '../../components/DataInput/core/combobox'
-import type { ComboboxProps, ComboboxPropsSource, ComboboxSlotProps } from '../../components/DataInput/core/combobox'
+import { useCombobox } from '../../components/core/combobox'
+import type { ComboboxProps, ComboboxPropsSource, ComboboxSlotProps } from '../../components/core/combobox'
 
 const props = withDefaults(defineProps<Omit<ComboboxProps<O, V, Q>, 'modelValue'>>(), {
   // Auto per mode (single: close, multiple: stay open) — Vue would cast an

@@ -9,7 +9,7 @@
 // (selecting closes the popup, closing commits the pending query, typing
 // re-highlights, Tab must know the widget boundary…), and a shared scope keeps
 // that wiring direct instead of threading callbacks between modules.
-import { computed, nextTick, onMounted, onUnmounted, reactive, ref, toRaw, useId, watch } from 'vue'
+import { computed, nextTick, onUnmounted, reactive, ref, toRaw, useId, watch } from 'vue'
 import type { Ref } from 'vue'
 import type {
   ComboboxErrorCode,
@@ -669,14 +669,36 @@ export function useCombobox<O, V = O, Q = string>(
     }
   }
 
-  onMounted(() => {
+  // Document listeners exist only while the popup is open: a page holding fifty
+  // closed comboboxes must not hold a hundred idle listeners. Attaching runs on
+  // the default pre-flush tick, so the very event that opened the popup has
+  // finished propagating before the dismissal listeners are watching.
+  let documentListening = false
+
+  function stopDocumentListening() {
+    if (!documentListening) {
+      return
+    }
+    documentListening = false
+    document.removeEventListener('mousedown', onDocumentMousedown)
+    document.removeEventListener('keydown', onDocumentKeydown)
+  }
+
+  watch(isOpen, (open) => {
+    if (!open) {
+      stopDocumentListening()
+      return
+    }
+    if (documentListening) {
+      return
+    }
+    documentListening = true
     document.addEventListener('mousedown', onDocumentMousedown)
     document.addEventListener('keydown', onDocumentKeydown)
   })
-  onUnmounted(() => {
-    document.removeEventListener('mousedown', onDocumentMousedown)
-    document.removeEventListener('keydown', onDocumentKeydown)
-  })
+
+  // Safety net: unmounting while open would otherwise leak both listeners.
+  onUnmounted(stopDocumentListening)
 
   // --- positioning ---------------------------------------------------------
   // CSS anchor positioning — merged onto the dropdown's style by the consumer.

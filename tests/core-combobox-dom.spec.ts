@@ -7,7 +7,7 @@ import {
   hasEditableText,
   isTextField,
   revealInContainer,
-} from '../components/DataInput/core/combobox/dom'
+} from '../components/core/combobox/dom'
 
 describe('hasEditableText', () => {
   it('counts the value of an input or a textarea', () => {

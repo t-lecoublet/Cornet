@@ -33,7 +33,7 @@ paths:
 **Files:** `components/DataInput/du-select/du-select.vue` | `.types.ts` | `.stories.ts`
 
 > **Complex component**: a styled facade over the internal combobox engine in
-> `components/DataInput/core/combobox/`.
+> `components/core/combobox/`.
 > The engine owns open/close, the query, the highlight, focus, the keyboard and the
 > ARIA prop bags; the component owns markup and DaisyUI classes only. Never
 > reintroduce local `open` / `query` / `highlightedIndex` state here — pass a

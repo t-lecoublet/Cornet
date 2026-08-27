@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 
 ## [Unreleased]
 
-`DuSelect` and `DuSearch` are rebuilt on a shared headless combobox engine (`components/DataInput/core/combobox/`) implementing the WAI-ARIA combobox pattern once — popup lifecycle, filtering, keyboard navigation, focus management and the ARIA prop bags — with the two components as styled facades over it. The engine is internal: the components stay the public API. The twelve `useSelect*` / `useSearch*` composables are gone.
+`DuSelect` and `DuSearch` are rebuilt on a shared headless combobox engine (`components/core/combobox/`) implementing the WAI-ARIA combobox pattern once — popup lifecycle, filtering, keyboard navigation, focus management and the ARIA prop bags — with the two components as styled facades over it. The engine is internal: the components stay the public API. The twelve `useSelect*` / `useSearch*` composables are gone.
 
 ### Removed (breaking)
 

@@ -2,7 +2,7 @@
 import { computed, reactive, ref, watch } from 'vue'
 import { nestedSize, useSizeMapping, type Size } from '../../../composables/useSizeProps'
 import { useVariantMapping } from '../../../composables/useVariantProps'
-import { useCombobox } from '../core/combobox'
+import { useCombobox } from '../../core/combobox'
 import type { DuSearchEmit, DuSearchProps } from './du-search.types'
 
 const props = withDefaults(defineProps<Omit<DuSearchProps<O, V>, 'modelValue'>>(), {

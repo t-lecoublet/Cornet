@@ -11,8 +11,8 @@ import { mount } from '@vue/test-utils'
 import { computed, defineComponent, h, nextTick, reactive, ref } from 'vue'
 import type { VNode } from 'vue'
 import Harness from './helpers/ComboboxHarness.vue'
-import { useCombobox } from '../components/DataInput/core/combobox'
-import type { ComboboxProps, ComboboxScope, ComboboxSlotProps } from '../components/DataInput/core/combobox'
+import { useCombobox } from '../components/core/combobox'
+import type { ComboboxProps, ComboboxScope, ComboboxSlotProps } from '../components/core/combobox'
 
 interface Tag {
   /** `null` marks a tag the user is creating rather than picking. */
@@ -241,6 +241,39 @@ describe('popup lifecycle', () => {
     await tags.scope().open()
     tags.outside.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }))
     expect(tags.scope().isOpen).toBe(true)
+  })
+
+  // A page can hold dozens of closed comboboxes; none of them should be
+  // listening to the document until it actually has a popup to dismiss.
+  it('only listens to the document while open', async () => {
+    const dismissal = ['mousedown', 'keydown']
+    const add = vi.spyOn(document, 'addEventListener')
+    const remove = vi.spyOn(document, 'removeEventListener')
+    const count = (spy: typeof add) => spy.mock.calls.filter(([type]) => dismissal.includes(type)).length
+
+    try {
+      const tags = picker()
+      await nextTick()
+      expect(count(add), 'closed').toBe(0)
+
+      await tags.scope().open()
+      expect(count(add), 'open').toBe(dismissal.length)
+
+      tags.scope().close()
+      await nextTick()
+      expect(count(remove), 'closed again').toBe(dismissal.length)
+
+      // Reopening subscribes afresh rather than doubling up.
+      await tags.scope().open()
+      expect(count(add), 'reopened').toBe(dismissal.length * 2)
+
+      tags.wrapper.unmount()
+      expect(count(remove), 'unmounted while open').toBe(dismissal.length * 2)
+    }
+    finally {
+      add.mockRestore()
+      remove.mockRestore()
+    }
   })
 })
 
