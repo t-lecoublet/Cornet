@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { h } from 'vue'
 import DuFab from '../components/Actions/du-fab/du-fab.vue'
+import DuTooltip from '../components/Feedback/du-tooltip/du-tooltip.vue'
 
 describe('DuFab', () => {
   it('renders the default slot in manual mode', () => {
@@ -81,9 +82,21 @@ describe('DuFab', () => {
 
   it('wraps items with a tooltip when item.tooltip is set', () => {
     const wrapper = mount(DuFab, {
+      props: { items: [{ label: 'Tip me', tooltip: 'Hello tooltip', tooltipPosition: 'top' }] },
+    })
+    // The tip itself is only in the DOM while it is shown; what DuFab owns is
+    // wrapping the item and handing DuTooltip the text and the side.
+    const tooltip = wrapper.findComponent(DuTooltip)
+    expect(tooltip.exists()).toBe(true)
+    expect(tooltip.props('dataTip')).toBe('Hello tooltip')
+    expect(tooltip.props('position')).toBe('top')
+  })
+
+  it('defaults a tooltip to the left, where a speed-dial column has room', () => {
+    const wrapper = mount(DuFab, {
       props: { items: [{ label: 'Tip me', tooltip: 'Hello tooltip' }] },
     })
-    expect(wrapper.html()).toContain('Hello tooltip')
+    expect(wrapper.findComponent(DuTooltip).props('position')).toBe('left')
   })
 
   it('triggers item onClick handler', async () => {

@@ -86,9 +86,29 @@ Positioned notification container.
 
 **Files:** `components/Feedback/du-tooltip/du-tooltip.vue` | `.types.ts` | `.stories.ts`
 
+WAI-ARIA tooltip pattern, built on `core/popover` + `core/positioning`.
+
+**A tooltip is a description, never a place for interactive content** — a
+keyboard user cannot reach inside one. Buttons or links in a popup mean
+`DuDropdown`.
+
 **Props:**
 - `variant?`: Variant
-- `dataTip?`: string - Tooltip content
-- `open?`: boolean - Always visible
+- `dataTip?`: string — the tip, when it is plain text (the `content` slot takes markup)
+- `open?`: boolean — omit it and the tooltip owns its state (hover + focus); pass it (`v-model:open`) and yours decides
 - `position?`: `'top'` | `'right'` | `'bottom'` | `'left'`
-- `responsive?`: boolean
+- `responsive?`: boolean — only apply the tooltip above the `lg` breakpoint
+- `openDelay?` / `closeDelay?`: number (ms, defaults 300 / 100)
+- `popover?`: boolean — top layer, immune to `overflow: hidden`
+- `disabled?`: boolean
+
+**Emits:** `update:open`
+
+Opens on hover after `openDelay` and on keyboard focus immediately; dismisses
+on Escape (WCAG 1.4.13). The tip is a real element with `role="tooltip"`,
+rendered only while shown, and `aria-describedby` is wired onto the first
+focusable element in the default slot while it is up.
+
+The `data-tip` **attribute is no longer set** — daisyUI reveals a tip on
+`:hover` from that attribute alone, with no delay and no way to dismiss it. The
+`dataTip` prop is unchanged.

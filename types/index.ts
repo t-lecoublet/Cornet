@@ -44,7 +44,7 @@ export type { DuProgressVariant,DuProgressProps } from '../components/Feedback/d
 export type { DuRadialProgressVariant,DuRadialProgressProps } from '../components/Feedback/du-radial-progress/du-radial-progress.types'
 export type { DuSkeletonProps } from '../components/Feedback/du-skeleton/du-skeleton.types'
 export type { DuToastHorizontalPosition,DuToastVerticalPosition,DuToastProps } from '../components/Feedback/du-toast/du-toast.types'
-export type { DuTooltipPosition,DuTooltipVariant,DuTooltipProps } from '../components/Feedback/du-tooltip/du-tooltip.types'
+export type { DuTooltipPosition,DuTooltipVariant,DuTooltipEmit,DuTooltipProps } from '../components/Feedback/du-tooltip/du-tooltip.types'
 export type { DuDrawerPosition,DuDrawerEmit,DuDrawerItem,DuDrawerProps } from '../components/Layout/du-drawer/du-drawer.types'
 export type { DuJoinDirection,DuJoinProps } from '../components/Layout/du-join/du-join.types'
 export type { DuBreadcrumbItem,DuBreadcrumbsProps } from '../components/Navigation/du-breadcrumbs/du-breadcrumbs.types'

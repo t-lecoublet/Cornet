@@ -23,6 +23,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 
 ### Changed (breaking)
 
+- `DuTooltip` is rebuilt on `core/popover` + `core/positioning`. It was classes only: no ARIA, no keyboard trigger, no way to dismiss it — a tooltip that answers to the mouse alone fails WCAG 1.4.13 twice over.
+  - The tip is a real element carrying `role="tooltip"`, rendered **only while shown**, and `aria-describedby` is wired onto the first focusable element in the default slot for as long as it is up.
+  - The **`data-tip` attribute is no longer set on the root** (the `dataTip` prop is unchanged). daisyUI reveals a tip from that attribute on `:hover` alone, instantly and undismissably — the delays and Escape below only work if the tip is not in the DOM when closed. Styling that targeted `[data-tip]` needs to target `.tooltip-content`.
+  - `open` no longer defaults to `false`. Omit it and the tooltip owns its state; pass it and yours decides, with `update:open` emitted.
+
 - `DuMenu` gains a **`role` prop** that decides what it is. `nav` (the default) is a list of links: plain `<ul>`, no ARIA role, native Tab, `aria-current="page"` on the active item. `menu` is the WAI-ARIA menu pattern: `role="menu"` / `menuitem` / `menuitemcheckbox` over presentational `<li>`s, one tab stop with arrow keys, `Home`/`End`, typeahead and `Enter`/`Space`, and submenus that collapse behind `aria-expanded` (ArrowRight opens and focuses the first child, ArrowLeft closes and steps back).
   - Arrow-key navigation therefore no longer applies in the default mode. A sidebar of links is walked with Tab, which is what it always should have been.
   - Submenus are always visible in `nav` mode, as before; they start collapsed in `menu` mode.
@@ -50,6 +55,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 - `DuAccordion`: the `name` prop no longer defaults to the literal `"accordion"`. Two accordions on a page shared that radio-group name, so opening a panel in one closed a panel in the other. Each instance now derives its own; pass `name` explicitly to keep a fixed one.
 
 ### Added
+
+- `DuTooltip`: opens on keyboard focus as well as hover, and dismisses on Escape. New props `openDelay` / `closeDelay` (300 / 100 ms), `popover` (top layer, so a tip inside `overflow: hidden` is not clipped) and `disabled`. The tip stays hoverable — moving the pointer from the trigger onto it does not close it.
 
 - `DuMenu`: `ariaLabel`, and the `MenuButton` story pairing `DuDropdown` with `DuMenu role="menu"` — the APG menu-button pattern.
 

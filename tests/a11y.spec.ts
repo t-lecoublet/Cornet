@@ -40,6 +40,7 @@ import DuSteps from '../components/Navigation/du-steps/du-steps.vue'
 import DuSwap from '../components/Actions/du-swap/du-swap.vue'
 import DuTable from '../components/DataDisplay/du-table/du-table.vue'
 import DuTabs from '../components/Navigation/du-tabs/du-tabs.vue'
+import DuTooltip from '../components/Feedback/du-tooltip/du-tooltip.vue'
 import DuTextArea from '../components/DataInput/du-text-area/du-text-area.vue'
 import DuTimeline from '../components/DataDisplay/du-timeline/du-timeline.vue'
 
@@ -107,6 +108,12 @@ const cases: Case[] = [
 
   { name: 'DuAlert', component: DuAlert, props: { variant: 'info', dismissible: true }, slots: { default: 'Saved.' } },
   { name: 'DuProgress', component: DuProgress, props: { value: 40, ariaLabel: 'Upload' } },
+  {
+    name: 'DuTooltip',
+    component: DuTooltip,
+    props: { open: true, dataTip: 'Saves the document' },
+    slots: { default: '<button type="button">Save</button>' },
+  },
 
   {
     name: 'DuDrawer',

@@ -19,6 +19,10 @@ const meta: Meta<typeof DuTooltip> = {
       control: { type: "select" },
       options: DU_TOOLTIP_POSITIONS,
     },
+    openDelay: { control: "number" },
+    closeDelay: { control: "number" },
+    popover: { control: "boolean" },
+    disabled: { control: "boolean" },
   },
 };
 
@@ -28,7 +32,7 @@ type Story = StoryObj<typeof DuTooltip>;
 
 const DefaultTplStr = `
 <div class="m-12">
-  <DuTooltip v-bind="args" data-tip="Hello world">
+  <DuTooltip v-bind="args" dataTip="Hello world">
     <DuButton>Hover me</DuButton>
   </DuTooltip>
 </div>`;
@@ -44,61 +48,61 @@ const WithTooltipContentTplStr = `
 `;
 const ForceOpenTooltipTplStr = `
 <div class="m-12">
-  <DuTooltip :open="true" v-bind="args" data-tip="Hello world">
+  <DuTooltip :open="true" v-bind="args" dataTip="Hello world">
     <DuButton>Force open</DuButton>
   </DuTooltip>
 </div>
 `;
 const TopTooltipTplStr = `
 <div class="m-12">
-  <DuTooltip v-bind="args" data-tip="Hello world" position="top" :open="true">
+  <DuTooltip v-bind="args" dataTip="Hello world" position="top" :open="true">
     <DuButton>Top</DuButton>
   </DuTooltip>
 </div>
 `;
 const BottomTooltipTplStr = `
 <div class="m-12">
-  <DuTooltip v-bind="args" data-tip="Hello world" position="bottom" :open="true">
+  <DuTooltip v-bind="args" dataTip="Hello world" position="bottom" :open="true">
     <DuButton>Bottom</DuButton>
   </DuTooltip>
 </div>`;
 const LeftTooltipTplStr = `
 <div class="m-12 ml-48">
-  <DuTooltip v-bind="args" data-tip="Hello world" position="left" :open="true">
+  <DuTooltip v-bind="args" dataTip="Hello world" position="left" :open="true">
     <DuButton>Left</DuButton>
   </DuTooltip>
 </div>`;
 const RightTooltipTplStr = `
 <div class="m-12">
-  <DuTooltip v-bind="args" data-tip="Hello world" position="right" :open="true">
+  <DuTooltip v-bind="args" dataTip="Hello world" position="right" :open="true">
     <DuButton>Right</DuButton>
   </DuTooltip>
 </div>
 `;
 const ColorsTooltipTplStr = `
 <div class="m-16 flex gap-4">
-  <DuTooltip v-bind="args" data-tip="neutral" variant="neutral" :open="true">
+  <DuTooltip v-bind="args" dataTip="neutral" variant="neutral" :open="true">
     <DuButton variant="neutral">neutral</DuButton>
   </DuTooltip>
-  <DuTooltip v-bind="args" data-tip="primary" variant="primary" :open="true">
+  <DuTooltip v-bind="args" dataTip="primary" variant="primary" :open="true">
     <DuButton variant="primary">primary</DuButton>
   </DuTooltip>
-  <DuTooltip v-bind="args" data-tip="secondary" variant="secondary" :open="true">
+  <DuTooltip v-bind="args" dataTip="secondary" variant="secondary" :open="true">
     <DuButton variant="secondary">secondary</DuButton>
   </DuTooltip>
-  <DuTooltip v-bind="args" data-tip="accent" variant="accent" :open="true">
+  <DuTooltip v-bind="args" dataTip="accent" variant="accent" :open="true">
     <DuButton variant="accent">accent</DuButton>
   </DuTooltip>
-  <DuTooltip v-bind="args" data-tip="info" variant="info" :open="true">
+  <DuTooltip v-bind="args" dataTip="info" variant="info" :open="true">
     <DuButton variant="info">info</DuButton>
   </DuTooltip>
-  <DuTooltip v-bind="args" data-tip="success" variant="success" :open="true">
+  <DuTooltip v-bind="args" dataTip="success" variant="success" :open="true">
     <DuButton variant="success">success</DuButton>
   </DuTooltip>
-  <DuTooltip v-bind="args" data-tip="warning" variant="warning" :open="true">
+  <DuTooltip v-bind="args" dataTip="warning" variant="warning" :open="true">
     <DuButton variant="warning">warning</DuButton>
   </DuTooltip>
-  <DuTooltip v-bind="args" data-tip="error" variant="error" :open="true">
+  <DuTooltip v-bind="args" dataTip="error" variant="error" :open="true">
     <DuButton variant="error">error</DuButton>
   </DuTooltip>
 </div>
@@ -207,4 +211,78 @@ const ColorsTooltipTemplate: Story = {
     template: ColorsTooltipTplStr,
   }),
 };
-export const ColorsTooltip = { ...ColorsTooltipTemplate }; 
+export const ColorsTooltip = { ...ColorsTooltipTemplate };
+
+/**
+ * A tooltip has to be reachable and dismissable from the keyboard, not only
+ * from the pointer (WCAG 1.4.13). Tab to the button: the tip appears at once,
+ * with no delay to stutter through, and Escape dismisses it while focus stays
+ * put. Moving the pointer onto the tip keeps it open, so its text can be
+ * selected.
+ */
+const KeyboardTplStr = `
+<div class="m-12 flex gap-4">
+  <DuTooltip dataTip="Tab here, then press Escape">
+    <DuButton>First</DuButton>
+  </DuTooltip>
+  <DuTooltip dataTip="And here">
+    <DuButton>Second</DuButton>
+  </DuTooltip>
+</div>`;
+
+export const KeyboardAndEscape: Story = {
+  render: () => ({
+    components: { DuTooltip, DuButton },
+    template: KeyboardTplStr,
+  }),
+  parameters: { docs: { source: { code: KeyboardTplStr.trim(), language: "html" } } },
+};
+
+/**
+ * `openDelay` keeps a pointer merely crossing the trigger from flashing the
+ * tip; `closeDelay` leaves it up long enough to move onto it.
+ */
+const DelaysTplStr = `
+<div class="m-12 flex gap-4">
+  <DuTooltip dataTip="Slow: 800ms" :openDelay="800">
+    <DuButton>Patient</DuButton>
+  </DuTooltip>
+  <DuTooltip dataTip="Instant" :openDelay="0">
+    <DuButton>Eager</DuButton>
+  </DuTooltip>
+</div>`;
+
+export const Delays: Story = {
+  render: () => ({
+    components: { DuTooltip, DuButton },
+    template: DelaysTplStr,
+  }),
+  parameters: { docs: { source: { code: DelaysTplStr.trim(), language: "html" } } },
+};
+
+/**
+ * A tooltip inside `overflow: hidden` — a table cell, a card — is clipped by
+ * its ancestor. `popover` renders the tip in the top layer instead, pinned to
+ * the trigger with CSS anchor positioning.
+ */
+const ClippedTplStr = `
+<div class="m-12 flex gap-8">
+  <div class="overflow-hidden h-20 w-40 rounded-box border border-base-300 p-4">
+    <DuTooltip dataTip="Clipped by the card" :open="true">
+      <DuButton size="sm">Default</DuButton>
+    </DuTooltip>
+  </div>
+  <div class="overflow-hidden h-20 w-40 rounded-box border border-base-300 p-4">
+    <DuTooltip dataTip="Escapes the card" :open="true" popover>
+      <DuButton size="sm">popover</DuButton>
+    </DuTooltip>
+  </div>
+</div>`;
+
+export const TooltipInOverflowHidden: Story = {
+  render: () => ({
+    components: { DuTooltip, DuButton },
+    template: ClippedTplStr,
+  }),
+  parameters: { docs: { source: { code: ClippedTplStr.trim(), language: "html" } } },
+};
