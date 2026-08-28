@@ -245,6 +245,19 @@ describe('useFocusTrap', () => {
     expect(document.activeElement).toBe(t.behind)
   })
 
+  it('lets go the instant the flag flips, not a tick later', async () => {
+    // A consumer that hands focus back while closing does it synchronously,
+    // before any watcher has run. The trap must already be out of the way.
+    const t = trap()
+    await t.open()
+
+    t.active.value = false
+    t.behind.focus()
+    t.behind.dispatchEvent(new FocusEvent('focusin', { bubbles: true }))
+
+    expect(document.activeElement).toBe(t.behind)
+  })
+
   it('lets go on unmount, even while still open', async () => {
     const t = trap()
     await t.open()

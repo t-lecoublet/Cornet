@@ -115,13 +115,11 @@ const cases: Case[] = [
     slots: { default: '<button type="button">Save</button>' },
   },
 
+  { name: 'DuDrawer', component: DuDrawer, props: { items: [{ label: 'Home', href: '/' }] } },
   {
-    name: 'DuDrawer',
+    name: 'DuDrawer (open)',
     component: DuDrawer,
-    props: { items: [{ label: 'Home', href: '/' }] },
-    // The drawer's open state still rides on a hidden checkbox nobody can
-    // label. PLAN-REFACTO-GLOBAL.md §4.5 replaces the pattern.
-    knownIssues: { rules: ['label'], because: 'hidden checkbox toggle (§4.5)' },
+    props: { open: true, ariaLabel: 'Main navigation', items: [{ label: 'Home', href: '/' }] },
   },
 
   { name: 'DuBreadcrumbs', component: DuBreadcrumbs, props: { items: [{ label: 'Home', href: '/' }, { label: 'Docs' }] } },

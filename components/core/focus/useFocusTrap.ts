@@ -68,7 +68,10 @@ export function useFocusTrap(options: FocusTrapOptions): FocusTrap {
   }
 
   function onKeydown(event: KeyboardEvent) {
-    if (event.key !== 'Tab') {
+    // The flag is read at event time, not only when the watcher fires. A trap
+    // must let go the instant it is told to, and a consumer that restores focus
+    // while closing does so before any watcher has had a chance to run.
+    if (!options.active() || event.key !== 'Tab') {
       return
     }
     const reachable = focusables()
@@ -99,7 +102,7 @@ export function useFocusTrap(options: FocusTrapOptions): FocusTrap {
   let restoring = false
 
   function onFocusin(event: FocusEvent) {
-    if (restoring || isInside(event.target as Node)) {
+    if (restoring || !options.active() || isInside(event.target as Node)) {
       return
     }
     // Focus got out by some route other than Tab. Pull it back rather than

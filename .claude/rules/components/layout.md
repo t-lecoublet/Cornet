@@ -11,17 +11,31 @@ paths:
 
 > **Complex component**: Responsive management and overlay. Read the complete source before modifying.
 
+**Two layouts, decided by the viewport** — the same breakpoint the
+`*:drawer-open` classes use, matched in JS because the behaviour is not
+expressible in CSS:
+
+| | Layout | Behaviour |
+| --- | --- | --- |
+| **pinned** (≥ the breakpoint) | beside the content | no role, no focus trap, nothing inert |
+| **overlay** (below it, or no `responsive`) | floating over the content | `role="dialog"` + `aria-modal`, focus trapped, background `inert`, focus handed back on close |
+
 **Props:**
 - `id?`: string
 - `position?`: `'start'` | `'end'`
-- `open?`: boolean
-- `responsive?`: boolean
+- `open?` / `modelValue?`: boolean — omit both and the drawer owns its state; pass either (`v-model`) and yours decides. `open` wins when both are given
+- `responsive?`: boolean | `'sm'` | `'md'` | `'lg'` | `'xl'`
 - `alwaysOpenOnLarge?`: boolean
-- `modelValue?`: boolean (v-model)
+- `ariaLabel?`: string — the dialog's accessible name while it floats (default `'Sidebar'`)
+- `inertTarget?`: string — CSS selector for what to make `inert` behind the overlay (default: the drawer's own content pane)
+- `closeOnEscape?` / `closeOnClickOutside?`: boolean (default true; the outside press only dismisses while floating)
 - `sidebarClass?`: string
 - `contentClass?`: string
 - `overlayClass?`: string
 - `items?`: DuDrawerItem[]
+
+**Emits:** `update:open`, `update:modelValue`
+**Exposes:** `toggleDrawer()`, `open()`, `close()`
 
 **Types :**
 ```typescript

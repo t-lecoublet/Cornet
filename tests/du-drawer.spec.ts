@@ -1,13 +1,27 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { nextTick } from 'vue'
 import DuDrawer from '../components/Layout/du-drawer/du-drawer.vue'
 
-function mountDrawer(props: Record<string, unknown> = {}) {
-  return mount(DuDrawer, { props })
+const mounted: { unmount: () => void }[] = []
+
+afterEach(() => {
+  mounted.splice(0).forEach((wrapper) => wrapper.unmount())
+  document.body.innerHTML = ''
+})
+
+function mountDrawer(props: Record<string, unknown> = {}, options: Record<string, unknown> = {}) {
+  const wrapper = mount(DuDrawer, { props, ...options })
+  mounted.push(wrapper)
+  return wrapper
 }
 
 /** What the drawer hands back through `defineExpose`. */
 const exposed = (wrapper: { vm: unknown }) => wrapper.vm as { toggleDrawer: () => void }
+
+const escape = () => document.dispatchEvent(
+  new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }),
+)
 
 describe('DuDrawer', () => {
   it('starts closed by default', () => {
@@ -100,61 +114,150 @@ describe('DuDrawer', () => {
     expect(wrapper.text()).toContain('Manual sidebar')
   })
 
-  it('closes on Escape when open', async () => {
-    const wrapper = mountDrawer({ open: true })
-    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
-    await wrapper.vm.$nextTick()
+  it('closes on Escape when it owns its state', async () => {
+    const wrapper = mountDrawer()
+    await exposed(wrapper).toggleDrawer()
+
+    escape()
+    await nextTick()
+
     const checkbox = wrapper.find('input.drawer-toggle')
     expect((checkbox.element as HTMLInputElement).checked).toBe(false)
     expect(wrapper.emitted('update:open')?.at(-1)).toEqual([false])
-    wrapper.unmount()
+    expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([false])
+  })
+
+  it('asks to close on Escape when the parent owns it, and waits', async () => {
+    const wrapper = mountDrawer({ open: true })
+
+    escape()
+    await nextTick()
+
+    expect(wrapper.emitted('update:open')?.at(-1), 'it asks').toEqual([false])
+    const checkbox = wrapper.find('input.drawer-toggle')
+    expect((checkbox.element as HTMLInputElement).checked, 'the parent decides').toBe(true)
+  })
+
+  it('honours closeOnEscape: false', async () => {
+    const wrapper = mountDrawer({ closeOnEscape: false })
+    await exposed(wrapper).toggleDrawer()
+
+    escape()
+    await nextTick()
+
+    const checkbox = wrapper.find('input.drawer-toggle')
+    expect((checkbox.element as HTMLInputElement).checked).toBe(true)
   })
 
   it('does nothing on Escape when already closed', async () => {
-    const wrapper = mountDrawer({ open: false })
-    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
-    await wrapper.vm.$nextTick()
+    const wrapper = mountDrawer()
+    escape()
+    await nextTick()
     expect(wrapper.emitted('update:open')).toBeUndefined()
-    wrapper.unmount()
   })
 
   it('ignores non-Escape keys', async () => {
-    const wrapper = mountDrawer({ open: true })
-    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }))
-    await wrapper.vm.$nextTick()
+    const wrapper = mountDrawer()
+    await exposed(wrapper).toggleDrawer()
+
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }))
+    await nextTick()
+
     const checkbox = wrapper.find('input.drawer-toggle')
     expect((checkbox.element as HTMLInputElement).checked).toBe(true)
-    wrapper.unmount()
   })
 
-  it('removes the Escape listener on unmount', async () => {
-    const wrapper = mountDrawer({ open: true })
+  it('holds no document listener once unmounted', async () => {
+    const wrapper = mountDrawer()
+    await exposed(wrapper).toggleDrawer()
     wrapper.unmount()
-    // Should not throw and should not affect anything post-unmount.
-    expect(() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))).not.toThrow()
+
+    expect(() => escape()).not.toThrow()
+  })
+})
+
+describe('DuDrawer as a dialog', () => {
+  // With no `matchMedia` to say otherwise, the sidebar floats — which is the
+  // safe default and the mode that carries all the behaviour.
+  it('takes the dialog role only while it floats open', async () => {
+    const wrapper = mountDrawer({}, { attachTo: document.body })
+    const panel = () => wrapper.find('.drawer-side > div')
+
+    expect(panel().attributes('role'), 'closed').toBeUndefined()
+
+    await exposed(wrapper).toggleDrawer()
+    expect(panel().attributes('role')).toBe('dialog')
+    expect(panel().attributes('aria-modal')).toBe('true')
+    expect(panel().attributes('aria-label')).toBe('Sidebar')
   })
 
-  it('moves focus into the sidebar when opened via toggleDrawer()', async () => {
-    const wrapper = mount(DuDrawer, { attachTo: document.body })
+  it('takes its accessible name from ariaLabel', async () => {
+    const wrapper = mountDrawer({ ariaLabel: 'Main navigation' }, { attachTo: document.body })
     await exposed(wrapper).toggleDrawer()
-    const sidebar = wrapper.find('.drawer-side > div').element as HTMLElement
-    expect(document.activeElement).toBe(sidebar)
-    wrapper.unmount()
+    expect(wrapper.find('.drawer-side > div').attributes('aria-label')).toBe('Main navigation')
   })
 
-  it('restores focus to the previously focused element on close', async () => {
-    const button = document.createElement('button')
-    document.body.appendChild(button)
-    button.focus()
-
-    const wrapper = mount(DuDrawer, { attachTo: document.body })
-    await exposed(wrapper).toggleDrawer()
-    expect(document.activeElement).not.toBe(button)
+  it('makes the content behind it inert, and reachable again on close', async () => {
+    const wrapper = mountDrawer({}, { attachTo: document.body })
+    const content = () => wrapper.find('.drawer-content')
 
     await exposed(wrapper).toggleDrawer()
-    expect(document.activeElement).toBe(button)
+    await nextTick()
+    expect(content().attributes('inert')).toBeDefined()
 
-    wrapper.unmount()
-    button.remove()
+    await exposed(wrapper).toggleDrawer()
+    await nextTick()
+    expect(content().attributes('inert')).toBeUndefined()
+  })
+
+  it('can be told to inert something else', async () => {
+    const outside = document.createElement('div')
+    outside.id = 'page-chrome'
+    document.body.appendChild(outside)
+
+    const wrapper = mountDrawer({ inertTarget: '#page-chrome' }, { attachTo: document.body })
+    await exposed(wrapper).toggleDrawer()
+    await nextTick()
+
+    expect(outside.hasAttribute('inert')).toBe(true)
+    expect(wrapper.find('.drawer-content').attributes('inert'), 'left alone').toBeUndefined()
+  })
+
+  it('keeps Tab inside the sidebar', async () => {
+    const wrapper = mountDrawer(
+      { items: [{ label: 'Home', href: '/' }, { label: 'Docs', href: '/docs' }] },
+      { attachTo: document.body },
+    )
+    const behind = document.createElement('button')
+    document.body.appendChild(behind)
+
+    await exposed(wrapper).toggleDrawer()
+    await nextTick()
+
+    const links = wrapper.findAll('.drawer-side a').map((w) => w.element as HTMLElement)
+    links[links.length - 1]!.focus()
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true }))
+
+    expect(document.activeElement, 'wrapped to the first link, not out to the page').toBe(links[0])
+  })
+
+  it('hands focus back to whatever opened it', async () => {
+    const opener = document.createElement('button')
+    document.body.appendChild(opener)
+    opener.focus()
+
+    const wrapper = mountDrawer({}, { attachTo: document.body })
+    await exposed(wrapper).toggleDrawer()
+    expect(document.activeElement).not.toBe(opener)
+
+    await exposed(wrapper).toggleDrawer()
+    expect(document.activeElement).toBe(opener)
+  })
+
+  it('hides the layout checkbox from assistive tech — it is a mechanism, not a control', () => {
+    const wrapper = mountDrawer()
+    const checkbox = wrapper.find('input.drawer-toggle')
+    expect(checkbox.attributes('aria-hidden')).toBe('true')
+    expect(checkbox.attributes('tabindex')).toBe('-1')
   })
 })

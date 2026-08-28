@@ -23,6 +23,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 
 ### Changed (breaking)
 
+- `DuDrawer`: `open` and `modelValue` no longer default to `false`, so the controlled/uncontrolled contract can tell the two apart. **Omit both and the drawer owns its state; pass either one and yours decides** — `<DuDrawer :open="x">` without an `@update:open` listener (or a `v-model`) will now emit and stay put instead of closing itself. `v-model` users are unaffected.
+- `DuDrawer`: below the pinned breakpoint the sidebar is a dialog — `role="dialog"`, `aria-modal="true"`, an accessible name from `ariaLabel`, focus trapped inside it, and the content behind it `inert`. Above the breakpoint it stays a plain part of the page, with none of that. `useDrawerDismiss` is gone, replaced by `core/popover` + `core/focus`.
+- `DuDrawer`: the layout checkbox is `aria-hidden` and out of the tab order. It is daisyUI's mechanism, not a control — the state lives in JS.
+
 - `DuTooltip` is rebuilt on `core/popover` + `core/positioning`. It was classes only: no ARIA, no keyboard trigger, no way to dismiss it — a tooltip that answers to the mouse alone fails WCAG 1.4.13 twice over.
   - The tip is a real element carrying `role="tooltip"`, rendered **only while shown**, and `aria-describedby` is wired onto the first focusable element in the default slot for as long as it is up.
   - The **`data-tip` attribute is no longer set on the root** (the `dataTip` prop is unchanged). daisyUI reveals a tip from that attribute on `:hover` alone, instantly and undismissably — the delays and Escape below only work if the tip is not in the DOM when closed. Styling that targeted `[data-tip]` needs to target `.tooltip-content`.
@@ -55,6 +59,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 - `DuAccordion`: the `name` prop no longer defaults to the literal `"accordion"`. Two accordions on a page shared that radio-group name, so opening a panel in one closed a panel in the other. Each instance now derives its own; pass `name` explicitly to keep a fixed one.
 
 ### Added
+
+- `DuDrawer`: `ariaLabel`, `inertTarget`, `closeOnEscape`, `closeOnClickOutside`, and `open()` / `close()` alongside the exposed `toggleDrawer()`.
 
 - `DuTooltip`: opens on keyboard focus as well as hover, and dismisses on Escape. New props `openDelay` / `closeDelay` (300 / 100 ms), `popover` (top layer, so a tip inside `overflow: hidden` is not clipped) and `disabled`. The tip stays hoverable — moving the pointer from the trigger onto it does not close it.
 
