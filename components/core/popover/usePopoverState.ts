@@ -6,6 +6,14 @@ type Get<T> = () => T
 
 export interface PopoverStateOptions {
   /**
+   * The open flag to drive, when the consumer already owns one — typically a
+   * `useControllableState` ref. Passing it makes the consumer's state the
+   * single source of truth: in controlled mode a request to open only emits,
+   * the flag does not move, and the primitive shows nothing. Omit it and the
+   * primitive keeps its own.
+   */
+  state?: Ref<boolean>
+  /**
    * Everything that counts as "inside". A pointer press landing in any of them
    * is not an outside click. Read fresh on every event: refs move.
    */
@@ -73,7 +81,10 @@ export interface PopoverState {
  * `onOpening` → (paint) → `onOpened`, and `onClosing` → (hide) → `onClosed`.
  */
 export function usePopoverState(options: PopoverStateOptions): PopoverState {
-  const isOpen = ref(false)
+  const isOpen = options.state ?? ref(false)
+  // Whether the shown-side effects have run. `isOpen` alone cannot say: a
+  // controlled flag can move without anyone calling `open()`.
+  let shown = false
 
   const enabled = (get: Get<boolean> | undefined) => get?.() !== false
 
@@ -90,11 +101,12 @@ export function usePopoverState(options: PopoverStateOptions): PopoverState {
     return options.boundary().some((el) => el != null && el.contains(target))
   }
 
-  async function open() {
-    if (isOpen.value || options.disabled?.() === true) {
+  /** The shown-side effects, whoever flipped the flag. */
+  async function reveal() {
+    if (shown || !isOpen.value) {
       return
     }
-    isOpen.value = true
+    shown = true
     options.onOpening?.()
 
     await nextTick()
@@ -103,6 +115,28 @@ export function usePopoverState(options: PopoverStateOptions): PopoverState {
       popover.showPopover()
     }
     options.onOpened?.()
+  }
+
+  /** The hidden-side effects. */
+  function conceal() {
+    if (!shown) {
+      return
+    }
+    shown = false
+    const popover = popoverApi()
+    if (popover != null && popover.matches(':popover-open')) {
+      popover.hidePopover()
+    }
+    options.onClosed?.()
+  }
+
+  async function open() {
+    if (isOpen.value || options.disabled?.() === true) {
+      return
+    }
+    isOpen.value = true
+    // Controlled and not (yet) granted: the flag did not move, so nothing shows.
+    await reveal()
   }
 
   // `onClosing` may itself trigger a close (resolving a pending value can
@@ -121,12 +155,13 @@ export function usePopoverState(options: PopoverStateOptions): PopoverState {
       closing = false
     }
 
-    const popover = popoverApi()
-    if (popover != null && popover.matches(':popover-open')) {
-      popover.hidePopover()
-    }
     isOpen.value = false
-    options.onClosed?.()
+    if (isOpen.value) {
+      // Controlled and refused. `onClosing` has already run — it exists to
+      // resolve state *while still open*, so it cannot wait for the answer.
+      return
+    }
+    conceal()
 
     if (returnFocus) {
       options.returnFocusTo?.()?.focus()
@@ -177,17 +212,21 @@ export function usePopoverState(options: PopoverStateOptions): PopoverState {
   }
 
   watch(isOpen, (nowOpen) => {
-    if (!nowOpen) {
-      stopListening()
+    // A controlled flag can move without `open()`/`close()` being called at
+    // all — the consumer's parent flipped its own state. Catch up on both the
+    // side effects and the subscription.
+    if (nowOpen) {
+      void reveal()
+      if (!listening) {
+        listening = true
+        document.addEventListener('mousedown', onDocumentPointerdown)
+        document.addEventListener('keydown', onDocumentKeydown)
+      }
       return
     }
-    if (listening) {
-      return
-    }
-    listening = true
-    document.addEventListener('mousedown', onDocumentPointerdown)
-    document.addEventListener('keydown', onDocumentKeydown)
-  })
+    conceal()
+    stopListening()
+  }, { immediate: true })
 
   // Unmounting while open would otherwise leak both listeners.
   onUnmounted(stopListening)

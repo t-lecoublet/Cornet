@@ -4,7 +4,7 @@
  */
 
 export type { DuButtonSize,DuButtonColor,DuButtonElementTag,DuButtonProps } from '../components/Actions/du-button/du-button.types'
-export type { DuDropdownPlacement,DuDropdownPlacementValue,DuDropdownPlacementInput,DuDropdownProps } from '../components/Actions/du-dropdown/du-dropdown.types'
+export type { DuDropdownPlacement,DuDropdownState,DuDropdownPlacementValue,DuDropdownPlacementInput,DuDropdownEmit,DuDropdownTriggerProps,DuDropdownProps } from '../components/Actions/du-dropdown/du-dropdown.types'
 export type { DuFabModifier,DuFabItem,DuFabMainAction,DuFabCloseButton,DuFabProps } from '../components/Actions/du-fab/du-fab.types'
 export type { DuModalPlacement,DuModalProps } from '../components/Actions/du-modal/du-modal.types'
 export type { DuSwapProperty,DuSwapProps } from '../components/Actions/du-swap/du-swap.types'

@@ -29,7 +29,6 @@ const props = withDefaults(
   },
 )
 
-const isInDropdownTrigger = inject('isDropdownTrigger', false)
 const inJoin = inject("isInJoin", false)
 const filterName = inject('filterName', undefined)
 
@@ -38,7 +37,6 @@ const { colorClass } = useVariantMapping(props, 'btn')
 
 const elementTag = computed((): DuButtonElementTag => {
   if (props.as) return props.as
-  if (isInDropdownTrigger) return 'div'
   if (filterName) return 'input'
 
   return 'button'
@@ -62,9 +60,6 @@ const buttonAttributes = computed(() => {
     attrs.value = props.value || ''
   } else if (isAnchorElement.value) {
     attrs.href = props.href || '#'
-    attrs.role = 'button'
-  } else if (isInDropdownTrigger) {
-    attrs.tabindex = '0'
     attrs.role = 'button'
   } else {
     attrs.type = props.type || 'button'

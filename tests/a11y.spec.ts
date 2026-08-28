@@ -67,7 +67,15 @@ const OPTIONS = [
 const cases: Case[] = [
   { name: 'DuButton', component: DuButton, props: { label: 'Save' } },
   { name: 'DuSwap', component: DuSwap, props: { useCheckbox: false, ariaLabel: 'Toggle theme' }, slots: { on: 'on', off: 'off' } },
-  { name: 'DuDropdown', component: DuDropdown, slots: { trigger: '<button type="button">Open</button>', default: '<p>Panel</p>' } },
+  {
+    name: 'DuDropdown',
+    component: DuDropdown,
+    props: { open: true },
+    slots: {
+      trigger: '<template #trigger="{ triggerProps }"><button type="button" v-bind="triggerProps">Open</button></template>',
+      default: '<p>Panel</p>',
+    },
+  },
   { name: 'DuFab', component: DuFab, props: { mainAction: { label: 'Compose' }, items: [{ label: 'Photo' }] } },
   { name: 'DuModal', component: DuModal, props: { open: true, ariaLabel: 'Confirm' }, slots: { default: '<p>Sure?</p>' } },
 

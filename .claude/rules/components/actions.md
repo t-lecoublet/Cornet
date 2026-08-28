@@ -43,16 +43,39 @@ export type DuButtonColor = (typeof BUTTON_COLORS)[number]
 
 ## DuDropdown
 
-**Fichiers :** `components/Actions/du-dropdown/du-dropdown.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/Actions/du-dropdown/du-dropdown.vue` | `.types.ts` | `.stories.ts`
 
-**Props :**
-- `placement?`: `'start'` | `'center'` | `'end'` | `'top'` | `'bottom'` | `'left'` | `'right'`
-- `hover?`: boolean
-- `open?`: boolean
+WAI-ARIA disclosure pattern, built on `core/popover` + `core/positioning`.
+
+**Props:**
+- `open?`: boolean — omit it and the dropdown owns its state; pass it (`v-model:open`) and yours decides
+- `hover?`: boolean — opens on pointer hover **and** on keyboard focus
+- `openDelay?` / `closeDelay?`: number (ms, default 100)
+- `placement?`: `'start'` | `'center'` | `'end'` | `'top'` | `'bottom'` | `'left'` | `'right'` (also a comma string, an array, or an object of flags)
+- `popover?`: boolean — top layer, immune to `overflow: hidden`
+- `closeOnClickOutside?` / `closeOnEscape?`: boolean (default true)
+- `disabled?`: boolean
+- `contentClass?`: string
+
+**Emits:** `update:open`, `open`, `close`
+
+**Slots:**
+- `trigger` — scope `{ open, toggle, triggerProps }`. **Spread `triggerProps`** on the trigger or nothing opens.
+- `content` / default — scope `{ open, close }`
+
+```vue
+<DuDropdown>
+  <template #trigger="{ triggerProps }">
+    <DuButton v-bind="triggerProps">Open</DuButton>
+  </template>
+  <DuMenu :items="items" />
+</DuDropdown>
+```
 
 **Types :**
 ```typescript
 export const DROPDOWN_PLACEMENTS = ['dropdown-start', 'dropdown-center', 'dropdown-end', 'dropdown-top', 'dropdown-bottom', 'dropdown-left', 'dropdown-right'] as const
+export const DROPDOWN_STATES = ['dropdown-open', 'dropdown-close'] as const
 export type DuDropdownPlacement = (typeof DROPDOWN_PLACEMENTS)[number]
 ```
 

@@ -9,12 +9,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 
 ### Removed (breaking)
 
+- `DuDropdown`: the `isDropdownTrigger` provide is gone, and with it `DuButton`'s hidden `<div role="button" tabindex="0">` rendering inside a dropdown trigger. A `DuButton` in a trigger slot is now a real `<button>` — the open state is driven in JS, so the div-with-a-role was only ever there to satisfy daisyUI's CSS.
+
 - `DuCollapse`: the `collapseId` injection key is removed. It was provided but never injected — no component read it, and the value it carried was a fresh random string on every render.
 - `DuSelect`: the `search` prop is removed — it was declared but never read.
 - `DuSearch`: the `DuSearchOption` type is removed. Both components are now generic over their option type (`DuSelectProps<O, V>`, `DuSearchProps<O, V>`), so any option shape works.
 - `DuSearch`: `name` and `id` are no longer required props. `id` defaults to Vue's `useId()`.
 
 ### Changed (breaking)
+
+- `DuDropdown` is rebuilt on `core/popover` + `core/positioning`. It had no state at all: an `open` prop that added a class, no dismissal, no keyboard, and a `triggerProps` slot scope its own template comment promised but never provided.
+  - **The trigger must now spread `triggerProps`** (`<DuButton v-bind="triggerProps">`) — without it nothing opens. The scope is real now: `aria-expanded`, `aria-haspopup`, `aria-controls`, the click toggle and ArrowDown-to-open.
+  - `open` no longer defaults to `false`. Omit it and the dropdown owns its state; pass it and yours decides, with `update:open` emitted — the library-wide controlled/uncontrolled contract.
+  - `hover` is driven in JS with `openDelay` / `closeDelay` (100 ms) instead of daisyUI's `dropdown-hover`, so the panel and `aria-expanded` cannot disagree, and it opens on **keyboard focus** as well as on hover.
+  - The root always carries `dropdown-open` or `dropdown-close`. daisyUI also reveals the panel on `:focus-within`, which used to show it while `aria-expanded` said false.
 
 - `DuSearch`: `listValues` → `options`, `limit` → `resultsLimit`, `remoteSearch` → `externalFilter`, `addOption` → `creatable`, `addOptionText` → `createOptionText`.
 - `DuSearch`: `autoCommit: boolean` → `commitOnClose: 'none' | 'match' | 'auto'`. `autoCommit: true` becomes `commitOnClose="auto"`; the default `'none'` matches the old `autoCommit: false`. Emptying the field and leaving it still clears the selection in every mode.
@@ -33,6 +41,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 - `DuAccordion`: the `name` prop no longer defaults to the literal `"accordion"`. Two accordions on a page shared that radio-group name, so opening a panel in one closed a panel in the other. Each instance now derives its own; pass `name` explicitly to keep a fixed one.
 
 ### Added
+
+- `DuDropdown`: `popover` (top layer via the Popover API + CSS anchor positioning, so an `overflow: hidden` ancestor cannot clip the panel), `closeOnClickOutside`, `closeOnEscape`, `disabled`, `contentClass`, `openDelay` / `closeDelay`, the `open` / `close` emits, and a `content` slot alongside the default one. Escape and outside presses dismiss; Escape hands focus back to the trigger; tabbing out closes.
 
 - `DuSelect` / `DuSearch`: `ariaLabel` and `ariaLabelledby`. The field's trigger took its accessible name from the placeholder or the current selection, so a select with neither had none.
 - `DuAlert`: `dismissLabel` (default `'Dismiss'`) — the dismiss button's only content is an icon, so it had no accessible name.
