@@ -138,6 +138,31 @@ A hardcoded `btn-sm` inside a component that exposes `size` is always a bug.
 
 ---
 
+## useToasts
+
+**File:** `composables/useToasts.ts`
+
+Module-scope toast queue, rendered by a single `<DuToast />` in the layout.
+
+```typescript
+export function useToasts(): {
+  toasts: DeepReadonly<Ref<Toast[]>>
+  push(options?: ToastOptions): string
+  dismiss(id: string): void
+  clear(): void
+  pause(): void
+  resume(): void
+}
+```
+
+Module scope is the point: anything in the app can raise a toast without
+reaching the right component first. `duration` defaults to 5000 ms and `0`
+means until dismissed. `pause()` / `resume()` are called for you by `DuToast`
+on hover and focus-within — WCAG 2.2.1 — and each countdown picks up where it
+stopped rather than restarting.
+
+---
+
 ## core/ primitives (internal)
 
 Not composables in the `composables/` sense — they live in

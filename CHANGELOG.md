@@ -60,6 +60,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 
 ### Added
 
+- `useToasts()`, exported from the package root: a module-scope toast queue (`push`, `dismiss`, `clear`, plus `pause` / `resume`), rendered by a single `<DuToast />` anywhere in the layout. `duration` defaults to 5000 ms, `0` means until dismissed.
+- `DuToast` now renders that queue, inside **two live regions** — `role="status"` / `aria-live="polite"` and `role="alert"` / `aria-live="assertive"` — that exist whether or not they hold anything, because a live region only announces what arrives after it exists. An `error` toast goes to the assertive one unless `politeness` says otherwise. Each toast gets a named close button (`dismissLabel`), and hovering the container or tabbing into it holds every countdown (WCAG 2.2.1), resuming from where it stopped. New `toast` slot for rendering a queued toast yourself; the handwritten-toasts slot still works unchanged.
+
 - `DuDrawer`: `ariaLabel`, `inertTarget`, `closeOnEscape`, `closeOnClickOutside`, and `open()` / `close()` alongside the exposed `toggleDrawer()`.
 
 - `DuTooltip`: opens on keyboard focus as well as hover, and dismisses on Escape. New props `openDelay` / `closeDelay` (300 / 100 ms), `popover` (top layer, so a tip inside `overflow: hidden` is not clipped) and `disabled`. The tip stays hoverable — moving the pointer from the trigger onto it does not close it.

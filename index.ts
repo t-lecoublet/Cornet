@@ -1,9 +1,11 @@
 import { iconAsText, resolveIconKind, type IconKind, type IconSource } from './composables/useIconSource'
+import { useToasts, type Toast, type ToastOptions, type ToastPoliteness, type Toasts } from './composables/useToasts'
 import { AvailableSizes, nestedSize, useSizeMapping, type Size } from './composables/useSizeProps'
 import { useVariantMapping, type Variant } from './composables/useVariantProps'
 
 export { AvailableSizes, nestedSize, useSizeMapping, type Size, useVariantMapping, type Variant }
 export { iconAsText, resolveIconKind, type IconKind, type IconSource }
+export { useToasts, type Toast, type ToastOptions, type ToastPoliteness, type Toasts }
 
 export * from './types'
 

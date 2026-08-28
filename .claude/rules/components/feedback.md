@@ -72,13 +72,34 @@ Loading placeholder. Shape is controlled by CSS classes.
 ## DuToast
 
 **Files:** `components/Feedback/du-toast/du-toast.vue` | `.types.ts` | `.stories.ts`
+**Queue:** `composables/useToasts.ts`
 
-Positioned notification container.
+The positioned corner **and** the two live regions inside it. Put one
+`<DuToast />` in the layout; raise toasts from anywhere with `useToasts()`.
+
+```ts
+const { push, dismiss, clear } = useToasts()
+push({ message: 'Saved', variant: 'success' })
+push({ message: 'Could not save', variant: 'error', duration: 0 })
+```
 
 **Props:**
 - `horizontalPosition?`: `'start'` | `'center'` | `'end'`
 - `verticalPosition?`: `'top'` | `'middle'` | `'bottom'`
-- `to?`: string - Teleport target
+- `to?`: string — Teleport target
+- `dismissLabel?`: string — accessible name of each close button (default `'Dismiss'`)
+
+**Slots:** `toast` (scope `{ toast, dismiss }`) to render a queued toast your
+own way; default slot for handwritten toasts, which still works.
+
+**`useToasts()`** — `push(options): id`, `dismiss(id)`, `clear()`, `pause()`,
+`resume()`, and the readonly `toasts` list. `duration` defaults to 5000 ms,
+`0` means until dismissed. An `error` toast is announced assertively, anything
+else politely; `politeness` overrules that.
+
+Both live regions are rendered even when empty — a region only announces what
+arrives **after** it exists. Hovering the container or tabbing into it holds
+every countdown (WCAG 2.2.1), and each resumes from where it stopped.
 
 ---
 
