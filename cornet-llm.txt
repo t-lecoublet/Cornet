@@ -1,3 +1,15 @@
+> ⚠️ **This file is a snapshot, not the source of truth.**
+>
+> It was written before the Phase 2–5 refactor and roughly twenty components
+> have changed API since: DuDropdown, DuMenu, DuTooltip, DuDrawer, DuToast,
+> DuTabs, DuAccordion, DuCollapse, DuFilter, DuRating, DuRange, DuTable,
+> DuCarousel, DuDiff, DuButton, DuInputField, DuFileInput and the presentational
+> pass. Entries below may name props that no longer exist.
+>
+> The maintained documentation is `.claude/rules/components/*.md` for the
+> per-component API and `docs/architecture.md` for the conventions. Check a prop
+> against the component's own `.types.ts` before relying on anything here.
+
 # DaisyUI Vue Kit - Components documentation
 
 ## AI Instructions
@@ -1281,8 +1293,10 @@ export interface DuLinkProps {
 - rounded?: boolean
 - items?: DuMenuItemData[]
 - activeItem?: string
-- onItemClick?: (item: DuMenuItemData) => void
-- onSubItemClick?: (item: DuMenuItemData) => void
+- role?: 'nav' | 'menu'
+- ariaLabel?: string
+
+**Emits:** itemClick, subItemClick
 
 **Types (du-menu.types.ts):**
 ```typescript
@@ -1308,8 +1322,7 @@ export interface DuMenuProps {
   rounded?: boolean
   items?: DuMenuItemData[]
   activeItem?: string
-  onItemClick?: (item: DuMenuItemData) => void
-  onSubItemClick?: (item: DuMenuItemData) => void
+
 }
 ```
 

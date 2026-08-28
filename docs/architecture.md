@@ -105,9 +105,10 @@ A local `composables/` folder next to the `.vue` is allowed for logic that is
 genuinely this component's own (`useRatingValue`, `usePaginationPages`,
 `useFabClasses`). It is **not** the place for popup lifecycle, focus, dismiss
 or keyboard navigation: those belong in `core/`, or the library grows six
-subtly different implementations of Escape-to-close. Several existing local
-composables predate this rule and are scheduled for migration
-(`useMenuKeyboardNav`, `useDrawerDismiss`, `useDrawerOpenState`).
+subtly different implementations of Escape-to-close. `useMenuKeyboardNav` and
+`useDrawerDismiss` used to break this rule and are gone; `useDrawerOpenState`
+and `useDrawerClasses` remain because they are the drawer's own — one wraps
+`useControllableState` for its two props, the other derives class lists.
 
 Export from `index.ts`, then `npm run generate:types` — CI fails on drift.
 

@@ -32,7 +32,6 @@ const meta: Meta<typeof DuTabs> = {
     size: "default",
     type: undefined,
     bottom: false,
-    name: "my_tabs",
   },
 };
 
