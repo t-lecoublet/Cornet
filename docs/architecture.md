@@ -35,9 +35,36 @@ Rules that hold without exception:
   attributes hand-written in the template. The bag is where the pattern
   lives; a hand-written attribute is where it drifts.
 
-**Today** `core/` holds `combobox/` (the engine behind DuSelect and DuSearch)
-and `shared/ids.ts`. `popover/`, `positioning/`, `focus/` and `navigation/`
-are planned — see `PLAN-REFACTO-GLOBAL.md` §2.
+### What `core/` holds today
+
+| Module | Contract | Consumers |
+| --- | --- | --- |
+| `combobox/useCombobox` | the whole combobox state machine, in one closure | DuSelect, DuSearch |
+| `popover/usePopoverState` | open flag, Popover API, outside/Escape dismissal, focus return | combobox, DuDropdown |
+| `positioning/useAnchorPosition` | CSS anchor positioning: `side` × `align` × `matchWidth` → inline style | combobox, DuDropdown |
+| `navigation/useRovingIndex` | roving tabindex: arrows, Home/End, typeahead, skip disabled | DuMenu |
+| `shared/useControllableState` | the controlled/uncontrolled contract of §5 | DuDropdown |
+| `shared/useComponentId` | SSR-safe ids (§6) | combobox, five facades |
+| `shared/dom` | `focusableInDocument`, `isTextField`, `hasEditableText`, `revealInContainer` | combobox |
+
+`focus/useFocusTrap` and `focus/useFocusReturn` are **not written yet**: nothing
+needs them until DuModal and DuDrawer arrive. That is the rule, not an
+oversight.
+
+Three notes that are easy to lose:
+
+- **`usePopoverState` can follow a flag it does not own.** Pass `state` — a
+  `useControllableState` ref — and the consumer's prop is the single truth: in
+  controlled mode a request to open only emits, the flag does not move, and
+  nothing is shown. Its four hooks run `onOpening` → paint → `onOpened` and
+  `onClosing` → hide → `onClosed`; `onClosing` runs *while still open*, so in
+  controlled mode it can run without a close following.
+- **`useAnchorPosition` never sets `position`.** A top-layer element gets
+  `fixed` from the UA stylesheet and an inline one keeps the consumer's;
+  setting it here would fight both.
+- **`useRovingIndex` returns whether it consumed the key**, and does not call
+  `preventDefault` itself — only the caller knows what else the key means in
+  its widget.
 
 ### When to extract a primitive
 
