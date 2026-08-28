@@ -83,10 +83,10 @@
 
 - [x] **4.1** — **DuTabs**: APG tabs pattern, roving tabindex via `core/navigation`, `v-model` by stable value, `activation: automatic | manual`, per-item `disabled`. No mirror class was needed — daisyUI 5 already styles `.tab[aria-selected=true]`. The `name` prop is gone with the radios: its `"my_tabs"` default made two tab groups on a page share one
 - [x] **4.2** — **DuAccordion / DuCollapse**: `<button aria-expanded>` headers naming `role="region"` panels, no hidden inputs left, `v-model` on both, `multiple` and `collapsible` on the accordion. DuCollapse turned out to be a list of *independent* disclosures rather than one panel — the difference from the accordion that neither API expressed
-- [ ] **4.3** — **DuFilter**: generic item typing, v-model (currently emit-only `change`), fieldset/legend
-- [ ] **4.4** — **DuRating**: ARIA radio-group pattern, keyboard support (arrows, Home/End), half values, readonly
-- [ ] **4.5** — **DuRange**: `aria-valuetext`, optional dual thumb (min/max), fine-grained keyboard (PageUp/Down, Home/End)
-- [ ] **4.6** — **DuPagination**: `aria-current="page"`, keyboard navigation, i18n labels
+- [x] **4.3** — **DuFilter**: generic over its item type, `v-model` alongside the `change` emit, `<fieldset>` + `<legend>` (sr-only unless `showLegend`), named reset button. No `alwaysShowReset`: daisyUI hides `.filter-reset` with `visibility: hidden` when nothing is checked, so the prop could not have delivered
+- [x] **4.4** — **DuRating**: the radio group is kept (it is the right pattern, and the browser gives the arrows) and now named, with `itemLabel` naming each star. `readonly` renders plain elements exposed as `role="img"` with the value as its name, rather than a row of disabled radios
+- [x] **4.5** — **DuRange**: `valueText` → `aria-valuetext`, `ariaLabel` / `ariaLabelledby`, `ticks` → a `<datalist>`. The keyboard is the browser's and stays that way. Dual thumb remains out of scope — it needs a `core/` primitive, not a prop
+- [x] **4.6** — **DuPagination**: checked, nothing to do. The labelled nav landmark, `aria-current="page"`, i18n labels and non-focusable `aria-hidden` ellipses were all already there, with 16 tests and no `any`
 
 ## Phase 5 — Data display & polish
 
@@ -111,7 +111,7 @@
 | 1 | Combobox engine + DuSelect/DuSearch | ✅ Done (a11y audit 1.6 still owed) |
 | 2 | Foundation — docs, `core/` primitives, lint, `useId` | ✅ Done (`core/focus` waits for its first consumer) |
 | 3 | Popups — dropdown, menu, tooltip, modal, drawer, toast | ✅ Done (modal deliberately left native) |
-| 4 | Selection — tabs, accordion, filter, rating, range, pagination | 🟡 Tabs + accordion/collapse done; filter, rating, range, pagination to go |
+| 4 | Selection — tabs, accordion, filter, rating, range, pagination | ✅ Done (pagination was already there) |
 | 5 | Data display + hygiene + coverage | 🔲 Todo |
 | 6 | API freeze, docs, audits, v1.0 | 🔲 Todo |
 

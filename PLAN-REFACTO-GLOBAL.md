@@ -7,7 +7,7 @@
 >
 > `PLAN-REFONTE-COMBOBOX.md` décrit une approche par *vendoring* d'une lib tierce qui a été **abandonnée en cours de route** au profit d'une réimplémentation native : il est conservé comme archive et ne doit plus servir de référence.
 >
-> **Avancement au 2026-08-28** — **G1 à G6 sont faits.** Phase 3 close (dropdown, menu, tooltip, drawer, toast ; DuModal écarté, son contrôle est natif et vérifié correct) et §5.1–5.2 avec elle : tabs, accordion et collapse ont perdu leurs `<input>` cachés. **Il ne reste aucune entrée dans l'allowlist axe.** §2.0, les primitives §2.1–2.2, tout le socle §3, puis §4.1 à §4.6 et §5.1–5.2. La lib est à 38 specs / 643 tests + 30 skippés, zéro `any` en code livré, lint a11y + axe + build de contrôle CSS bloquants en CI. Prochain jalon : G7 (§5.3–5.6 Filter, Rating, Range, Pagination).
+> **Avancement au 2026-08-28** — **G1 à G7 sont faits.** Phase 3 close (dropdown, menu, tooltip, drawer, toast ; DuModal écarté, son contrôle est natif et vérifié correct) et §5.1–5.2 avec elle : tabs, accordion et collapse ont perdu leurs `<input>` cachés. **Il ne reste aucune entrée dans l'allowlist axe.** DuModal (§4.4) et DuPagination (§5.6) ont été vérifiés puis écartés : leur cible était déjà atteinte. §2.0, les primitives §2.1–2.2, tout le socle §3, puis §4.1 à §4.6 et §5.1–5.6. La lib est à 39 specs / 673 tests + 32 skippés, zéro `any` en code livré, lint a11y + axe + build de contrôle CSS bloquants en CI. Prochain jalon : G8 (§6 Data display) puis G9 (§7 Hygiène).
 >
 > Breaking changes assumés (beta). Chaque section « Composant » est conçue comme une PR autonome.
 
@@ -296,27 +296,28 @@ Ce qui reste ci-dessous relève du confort, pas du défaut — conservé pour m�
 - [x] Animation : elle survit. `.collapse-open` pose `grid-template-rows: max-content 1fr` et la transition est déjà sur `.collapse` sous `@media (prefers-reduced-motion: no-preference)` — rien à réécrire.
 - [x] Tests (~12 par composant) : v-model single/multiple/collapsible, aria, clavier bouton, deux instances sans collision d'ids.
 
-### 5.3 DuFilter
+### 5.3 DuFilter — ✅ **fait**
 
-**État actuel** : boutons radio via DuButton, `provide('filterName', string)` avec `Math.random`, emit `change` sans v-model, bouton reset `×` en dur, 4 `any`.
+**État de départ** : boutons radio via DuButton, `provide('filterName', string)` avec `Math.random`, emit `change` sans v-model, bouton reset `×` en dur, 4 `any`.
 
 **Cible** :
-- [ ] Générique `O` sur les items ; `modelValue?: O | null` + `update:modelValue` (le `change` reste, aligné). `useId` (§3.2, en respectant le contrat provide-string documenté dans le code).
-- [ ] Markup : envelopper dans `<fieldset>` + `<legend>` (prop `legend`, sr-only par défaut) — c'est un radio-group de filtrage, la sémantique radio DaisyUI est ici correcte et conservée.
-- [ ] Bouton reset : `aria-label` paramétrable (`resetLabel`, défaut 'Reset filters'), affichage conditionnel (masqué si rien de sélectionné — prop `alwaysShowReset` pour l'ancien comportement).
-- [ ] Tests : étendre `du-filter.spec.ts`.
+- [x] Générique `O` sur les items ; `modelValue?: O | null` + `update:modelValue` (le `change` reste, aligné). `useId` (§3.2, en respectant le contrat provide-string documenté dans le code).
+- [x] Markup : envelopper dans `<fieldset>` + `<legend>` (prop `legend`, sr-only par défaut) — c'est un radio-group de filtrage, la sémantique radio DaisyUI est ici correcte et conservée.
+- [x] Bouton reset : `aria-label` paramétrable (`resetLabel`), retiré du DOM quand rien n'est sélectionné.
+  - **`alwaysShowReset` n'existe pas**, et ne peut pas exister : daisyUI masque `.filter-reset` avec `visibility: hidden` via `.filter:not(:has(:checked:not(.filter-reset)))`. Une prop promettant de le garder visible ne pourrait pas tenir — la feuille de style le cacherait quand même. Le retirer du DOM à la même condition ne fait qu'aligner le markup sur ce qui était déjà vrai visuellement.
+- [x] Tests : étendre `du-filter.spec.ts`.
 
-### 5.4 DuRating
+### 5.4 DuRating — ✅ **fait**
 
 **Cible** : conserver le pattern radio-group DaisyUI (correct pour un rating) mais : `useId` pour `name` (§3.2) ; chaque input avec `aria-label` « n sur max » (props `itemLabel: (n, max) => string` pour i18n) ; prop `readonly` (rend des éléments non-input) ; vérifier le clavier natif radios (flèches OK) ; `modelValue` number strict, demi-valeurs si `half` ; purger les `any` ; étendre `du-rating.spec.ts`.
 
-### 5.5 DuRange
+### 5.5 DuRange — ✅ **fait**
 
 **Cible** : input range natif conservé ; ajouter `aria-valuetext` (prop `valueText: (v) => string`, ex. unités) ; `list`/ticks accessibles ; vérifier `aria-label`/labelledby ; option double curseur **hors scope** (noter comme feature future, nécessiterait `core/` dédié) ; tests.
 
-### 5.6 DuPagination
+### 5.6 DuPagination — ⛔ **rien à faire, vérifié**
 
-**Cible** : `<nav aria-label>` autour, `aria-current="page"` sur la page active, boutons prev/next avec labels i18n (`prevLabel`/`nextLabel`), `usePaginationPages` conservé (déjà testé) mais typé strict ; ellipses non focusables `aria-hidden` ; tests étendus.
+**Vérifié le 2026-08-28** : tout ce que la cible demandait est déjà là. `<nav :aria-label>`, `aria-current="page"` sur la page active, labels i18n (`previousAriaLabel`, `nextAriaLabel`, `firstAriaLabel`, `lastAriaLabel`), ellipses en `aria-hidden` **et** `tabindex="-1"`, `usePaginationPages` sans aucun `any`, 16 tests répartis sur `du-pagination.spec.ts` et `use-pagination-pages.spec.ts`, et axe propre. La cible décrivait un travail déjà accompli.
 
 ## 6. Phase 5.a — Data display riches
 
@@ -373,7 +374,7 @@ Mocks d'environnement à centraliser dans un setup vitest partagé : Popover API
 | G4 | §4.3 Tooltip — ✅ **fait**. §4.4 Modal — ⛔ écarté : le contrôle est natif et correct | G1 | — |
 | G5 | §4.5–4.6 Drawer + Toast — ✅ **fait** | G1 | — |
 | G6 | §5.1–5.2 Tabs + Accordion/Collapse — ✅ **fait** | G1, G2 | — |
-| G7 | §5.3–5.6 Filter, Rating, Range, Pagination | G2 | 2 j |
+| G7 | §5.3–5.6 Filter, Rating, Range — ✅ **fait**. Pagination : rien à faire, vérifié | G2 | — |
 | G8 | §6 Data display | G2 | 2 j |
 | G9 | §7 Hygiène + form plumbing | G2 (+ Phase 1 pour 7.3) | 3 j |
 | G10 | §8 verrouillage CI, revue de cohérence finale | tout | 1-2 j |
