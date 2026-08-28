@@ -7,7 +7,7 @@
 >
 > `PLAN-REFONTE-COMBOBOX.md` décrit une approche par *vendoring* d'une lib tierce qui a été **abandonnée en cours de route** au profit d'une réimplémentation native : il est conservé comme archive et ne doit plus servir de référence.
 >
-> **Avancement au 2026-08-27** — §2.0 (déplacement du moteur + écouteurs attachés à l'ouverture) et **tout le jalon G2** (§3.1 à §3.6) sont faits. La lib est à 30 specs / 461 tests + 22 skippés, zéro `any` en code livré, lint a11y et axe bloquants, build de contrôle embedded bloquant. Reste : l'extraction des primitives §2.1–2.2, qui attend son deuxième consommateur (G3).
+> **Avancement au 2026-08-28** — **G1, G2 et G3 sont faits.** §2.0, les primitives §2.1–2.2 extraites à la demande, tout le socle §3, puis §4.1 DuDropdown et §4.2 DuMenu. La lib est à 34 specs / 539 tests + 24 skippés, zéro `any` en code livré, lint a11y + axe + build de contrôle CSS bloquants en CI. Prochain jalon : G4 (Tooltip + Modal), qui réclamera `focus/useFocusReturn` et `focus/useFocusTrap` — les seules primitives encore non écrites, faute de consommateur jusque-là.
 >
 > Breaking changes assumés (beta). Chaque section « Composant » est conçue comme une PR autonome.
 
@@ -67,7 +67,7 @@ L'extraction est donc un **découpage**, pas un déplacement : plus coûteux et 
 - **Extraire à la demande, jamais par anticipation.** Une primitive ne sort du moteur que lorsqu'un deuxième consommateur réel existe (DuDropdown pour `popover`, DuModal/DuDrawer pour `focus`, DuMenu/DuTabs pour `navigation`). Sortir les sept modules « au cas où » recréerait le câblage indirect qu'on vient d'éliminer.
 - **Les 103 tests du moteur sont le filet** : aucun ne doit changer d'assertion. S'ils cassent, c'est l'extraction qui est mauvaise, pas eux.
 
-### 2.1 Arborescence cible
+### 2.1 Arborescence cible — ✅ **faite pour les consommateurs de G3**
 
 **Point de départ réel** — `components/DataInput/core/combobox/` : `useCombobox.ts`, `dom.ts` (`isTextField`, `focusableInDocument`, `hasEditableText`, `revealInContainer`), `types.ts`, `index.ts`.
 
@@ -107,10 +107,10 @@ components/core/                 # ← déplacement depuis DataInput/core (§2.0
 
 Règles :
 
-- [ ] `core/` n'importe **rien** de DaisyUI/Tailwind ni des façades. Dépendances : Vue uniquement.
-- [ ] Chaque module extrait a son fichier de tests dédié (`tests/core-popover.spec.ts`, etc.), en plus des tests combobox qui le couvrent indirectement.
-- [ ] `useFocusTrap` : implémentation minimale maison (listage des focusables visibles via `dom.ts`, wrap Tab), ~80 lignes + tests. Pas de dépendance externe.
-- [ ] `useControllableState(propRef, emit, internalDefault)` : si la prop est fournie (non `undefined`), mode contrôlé (l'état suit la prop, les mutations émettent seulement) ; sinon état interne. C'est le contrat de tous les `open`/`modelValue` de la suite du plan.
+- [x] `core/` n'importe **rien** de DaisyUI/Tailwind ni des façades. Dépendances : Vue uniquement.
+- [x] Chaque module extrait a son fichier de tests dédié : `core-popover.spec.ts` (18), `core-positioning.spec.ts` (10), `core-navigation.spec.ts` (18), `core-controllable-state.spec.ts` (8), `core-dom.spec.ts` (8).
+- [ ] `useFocusTrap` : **pas encore écrit** — aucun consommateur avant DuModal/DuDrawer (G4/G5). C'est la règle du §2, pas un oubli.
+- [x] `useControllableState(propRef, emit, internalDefault)` : fait. Deux ajouts par rapport au contrat annoncé — il **n'émet pas** quand on lui réassigne la valeur qu'il porte déjà, et `usePopoverState` accepte ce ref comme `state` pour que la prop contrôlée soit la seule vérité (en mode contrôlé, une demande d'ouverture émet et rien ne s'affiche).
 
 ### 2.0 Deux corrections préalables (avant toute extraction) — ✅ **fait**
 
@@ -119,11 +119,11 @@ Règles :
 
 ### 2.2 Définition de done de la phase
 
-- [x] §2.0 fait : moteur à `components/core/`, écouteurs document attachés à l'ouverture. Un test dédié vérifie la souscription elle-même (`core-combobox.spec.ts`, « only listens to the document while open »). `components/core/shared/` existe déjà avec `useComponentId` (§3.2 l'exigeait).
-- [ ] Primitives extraites **uniquement pour les consommateurs de G3–G5** (popover, positioning, focus, shared) ; `useRovingIndex` peut attendre G6 si Menu ne le réclame pas avant.
-- [ ] Moteur combobox reposant sur les primitives extraites, **ses 103 tests verts sans modification des assertions**.
-- [ ] Tests dédiés des primitives (~40 tests : popover open/close/outside/escape/popover-API, roving index avec wrap/skip/typeahead, focus trap, focus return, controllable state).
-- [ ] Doc courte par primitive dans `docs/architecture.md` (contrat, exemple d'usage).
+- [x] §2.0 fait : moteur à `components/core/`, écouteurs document attachés à l'ouverture. Un test dédié vérifie la souscription elle-même (`core-combobox.spec.ts`, « only listens to the document while open »).
+- [x] Primitives extraites pour leurs consommateurs réels : `popover`, `positioning`, `shared/useControllableState` (DuDropdown), `navigation/useRovingIndex` (DuMenu). `focus/` attend G4.
+- [x] Moteur combobox reposant sur `usePopoverState` + `useAnchorPosition`, **ses 96 tests verts sans une assertion modifiée** — la seule preuve qui comptait.
+- [x] Tests dédiés des primitives : **62 tests** (popover 18, roving 18, positioning 10, controllable state 8, dom 8).
+- [x] Doc par primitive dans `docs/architecture.md` : tableau contrat / consommateurs, plus les trois pièges (le flag qu'on ne possède pas, le `position` jamais posé, la touche consommée sans `preventDefault`).
 
 ## 3. Phase 2.b — Standards transversaux outillés
 
@@ -190,31 +190,31 @@ Restent :
 
 Ordre choisi pour maximiser la réutilisation : dropdown → menu (dépend du dropdown pour le pattern menu-button) → tooltip → modal → drawer → toast.
 
-### 4.1 DuDropdown
+### 4.1 DuDropdown — ✅ **fait**
 
-**État actuel** : purement CSS (classes `dropdown`, `dropdown-open`, `dropdown-hover`, placement par classes), prop `open` sans emit, `provide('isDropdownTrigger')`, aucun dismiss ni clavier ; le commentaire du template promet des `triggerProps` qui n'existent pas.
-
-**Cible** :
-- [ ] État via `useControllableState` : prop `open?: boolean` + emit `update:open` + emits `open`/`close`. Défaut : non contrôlé, toggle au clic du trigger.
-- [ ] `core/popover` : click-outside (`closeOnClickOutside` défaut `true`, et `clickOutsideFilter` — **à réintroduire ici**, il a été retiré du moteur faute de consommateur), Escape ferme + rend le focus au trigger (`useFocusReturn`).
-- [ ] Slots : `trigger` (scope `{ open, toggle, triggerProps }` — **fournir enfin les `triggerProps` promis** : `aria-expanded`, `aria-haspopup`, `aria-controls`, `onClick`, `onKeydown` ArrowDown ouvre) et défaut (contenu, scope `{ open, close }`).
-- [ ] Prop `hover` conservée (délai d'ouverture/fermeture ~100 ms géré en JS, plus par CSS seul, pour que l'état JS et le visuel restent synchrones) ; `hover` implique aussi ouverture au focus clavier.
-- [ ] Prop `popover?: boolean` : rendu top-layer via Popover API + `useAnchorPosition` (sinon classes de placement DaisyUI actuelles conservées — mapper la prop `placement` existante, dont la forme string/array/objet est conservée telle quelle).
-- [ ] Contenu : `tabindex` non forcé ; Tab depuis le contenu sort et ferme (comportement `focusNextOutside` si `popover`, natif sinon).
-- [ ] Tests (~15) : contrôlé/non contrôlé, outside/Escape/focus return, hover + focus, aria du trigger, placement classes, popover mode (mocks Popover API).
-- [ ] Stories : cas dans un conteneur `overflow: hidden` (démo `popover`).
-
-### 4.2 DuMenu
-
-**État actuel** : rendu `menu` DaisyUI (ul/li), `useMenuKeyboardNav` local, emits `itemClick`/`subItemClick`, items typés `DuMenuItemData`, sous-menus via `du-menu-item.vue`.
+**État de départ** : purement CSS (classes `dropdown`, `dropdown-open`, `dropdown-hover`, placement par classes), prop `open` sans emit, `provide('isDropdownTrigger')`, aucun dismiss ni clavier ; le commentaire du template promet des `triggerProps` qui n'existent pas.
 
 **Cible** :
-- [ ] Décision de sémantique **explicite via prop `role`** : `'menu'` (pattern APG menu : `role="menu"`/`menuitem`, roving tabindex, typeahead) ou `'nav'` (défaut : liste de liens de navigation, PAS de rôle menu — c'est l'usage sidebar). L'erreur classique à éviter : mettre `role="menu"` sur de la navigation.
-- [ ] En mode `'menu'` : remplacer `useMenuKeyboardNav` par `core/navigation/useRovingIndex` (flèches selon `direction`, Home/End, typeahead premières lettres, skip `disabled`), items `role="menuitem"` `tabindex` géré, sous-menus `aria-haspopup="menu"` + `aria-expanded`, ouverture ArrowRight/fermeture ArrowLeft.
-- [ ] Ajouter `disabled` par item (nouveau concept, aligné combobox : clé `disabled` sur l'objet).
-- [ ] Intégration menu-button : story + doc du combo `DuDropdown(trigger) + DuMenu(role="menu")` — le dropdown passe `aria-haspopup="menu"`, ArrowDown ouvre et focus le premier item, Escape referme et rend le focus.
-- [ ] Emits : conserver `itemClick`/`subItemClick` ; supprimer les callbacks props `onItemClick`/`onSubItemClick` (doublon emit/prop — breaking assumé).
-- [ ] Tests (~15) et mise à jour des specs existantes (`du-menu.spec.ts`).
+- [x] État via `useControllableState` : prop `open?: boolean` + emit `update:open` + emits `open`/`close`. Défaut : non contrôlé, toggle au clic du trigger.
+- [x] `core/popover` : click-outside (`closeOnClickOutside` défaut `true`, et `clickOutsideFilter` — **à réintroduire ici**, il a été retiré du moteur faute de consommateur), Escape ferme + rend le focus au trigger (`useFocusReturn`).
+- [x] Slots : `trigger` (scope `{ open, toggle, triggerProps }` — **fournir enfin les `triggerProps` promis** : `aria-expanded`, `aria-haspopup`, `aria-controls`, `onClick`, `onKeydown` ArrowDown ouvre) et défaut (contenu, scope `{ open, close }`).
+- [x] Prop `hover` conservée (délai d'ouverture/fermeture ~100 ms géré en JS, plus par CSS seul, pour que l'état JS et le visuel restent synchrones) ; `hover` implique aussi ouverture au focus clavier.
+- [x] Prop `popover?: boolean` : rendu top-layer via Popover API + `useAnchorPosition` (sinon classes de placement DaisyUI actuelles conservées — mapper la prop `placement` existante, dont la forme string/array/objet est conservée telle quelle).
+- [x] Contenu : `tabindex` non forcé ; Tab depuis le contenu sort et ferme (comportement `focusNextOutside` si `popover`, natif sinon).
+- [x] Tests (~15) : contrôlé/non contrôlé, outside/Escape/focus return, hover + focus, aria du trigger, placement classes, popover mode (mocks Popover API).
+- [x] Stories : cas dans un conteneur `overflow: hidden` (démo `popover`).
+
+### 4.2 DuMenu — ✅ **fait**
+
+**État de départ** : rendu `menu` DaisyUI (ul/li), `useMenuKeyboardNav` local, emits `itemClick`/`subItemClick`, items typés `DuMenuItemData`, sous-menus via `du-menu-item.vue`.
+
+**Cible** :
+- [x] Décision de sémantique **explicite via prop `role`** : `'menu'` (pattern APG menu : `role="menu"`/`menuitem`, roving tabindex, typeahead) ou `'nav'` (défaut : liste de liens de navigation, PAS de rôle menu — c'est l'usage sidebar). L'erreur classique à éviter : mettre `role="menu"` sur de la navigation.
+- [x] En mode `'menu'` : remplacer `useMenuKeyboardNav` par `core/navigation/useRovingIndex` (flèches selon `direction`, Home/End, typeahead premières lettres, skip `disabled`), items `role="menuitem"` `tabindex` géré, sous-menus `aria-haspopup="menu"` + `aria-expanded`, ouverture ArrowRight/fermeture ArrowLeft.
+- [x] ~~Ajouter `disabled` par item~~ — la clé `disabled` **existait déjà** sur `DuMenuItemData`. Ce qui manquait, c'est qu'elle soit honorée : un item désactivé sort du parcours clavier (`aria-disabled`, enjambé par le roving index) et n'a plus de `href`, donc plus de tab stop.
+- [x] Intégration menu-button : story + doc du combo `DuDropdown(trigger) + DuMenu(role="menu")` — le dropdown passe `aria-haspopup="menu"`, ArrowDown ouvre et focus le premier item, Escape referme et rend le focus.
+- [x] Emits : conserver `itemClick`/`subItemClick` ; supprimer les callbacks props `onItemClick`/`onSubItemClick` (doublon emit/prop — breaking assumé).
+- [x] Tests (~15) et mise à jour des specs existantes (`du-menu.spec.ts`).
 
 ### 4.3 DuTooltip
 
@@ -362,9 +362,9 @@ Mocks d'environnement à centraliser dans un setup vitest partagé : Popover API
 
 | Jalon | Contenu | Dépend de | Estimation |
 |---|---|---|---|
-| G1 | §2.0 ✅ **fait** ; §2 extraction à la demande + tests — **en attente d'un deuxième consommateur** (G3) | Phase 1 finie ✅ | 3-4 j restants |
+| G1 | §2.0 + §2 extraction à la demande + tests — ✅ **fait** (reste `focus/`, qui attend G4) | Phase 1 finie ✅ | — |
 | G2 | §3 Standards — ✅ **fait** (docs, useId, typage + génériques, lint a11y + axe, build de contrôle CSS ; T9 clos par audit) | — | — |
-| G3 | §4.1–4.2 Dropdown + Menu | G1, G2 | 3 j |
+| G3 | §4.1–4.2 Dropdown + Menu — ✅ **fait** | G1, G2 | — |
 | G4 | §4.3–4.4 Tooltip + Modal | G1 | 2-3 j |
 | G5 | §4.5–4.6 Drawer + Toast | G1 | 2-3 j |
 | G6 | §5.1–5.2 Tabs + Accordion/Collapse | G1, G2 | 3 j |
@@ -385,5 +385,6 @@ Total ≈ **24-29 jours**, largement parallélisable : G3–G9 sont indépendant
 6. **Vérifier le plugin Vite maison** avant tout renommage d'exports/chemins (il a ses propres tests — `plugin-vite.spec.ts` — qui peuvent dépendre de la structure des dossiers).
 7. **Un outil qu'on configure jusqu'au silence ne sert à rien.** Le lint a11y et axe ont été pointés sur la lib puis triés finding par finding : chaque dérogation porte sa raison à côté, et les échecs structurels portent une entrée qui **expire toute seule** (le test échoue si la règle allowlistée cesse d'échouer). Reproduire ce schéma pour tout nouvel outil de vérification.
 8. **Un compte d'`any` ne mesure pas la dette de typage.** Les 16 `any` réels étaient quelques heures ; ce qui manquait vraiment, c'étaient les génériques — que rien ne signale. Chercher plutôt : quelles données du consommateur traversent un slot ou un emit en étant aplaties ?
-9. **Une classe safelistée n'est pas une classe qui existe.** L'invariant unitaire prouve la scannabilité, pas la réalité (`tooltip-neutral`). `npm run check:css` compile le vrai pipeline ; le lancer après toute modification d'un `useSizeMapping`/`useVariantMapping` ou d'une constante `*_SIZES`/`*_VARIANTS`.
+9. **Un allowlist de dette doit expirer tout seul.** Le spec axe vérifie que chaque règle tolérée **échoue toujours** : quand DuMenu a cessé de violer les quatre règles listées, le test est passé au rouge jusqu'à ce que l'entrée soit supprimée. Sans ça, un allowlist survit au bug qu'il documente et devient une couverture permanente.
+10. **Une classe safelistée n'est pas une classe qui existe.** L'invariant unitaire prouve la scannabilité, pas la réalité (`tooltip-neutral`). `npm run check:css` compile le vrai pipeline ; le lancer après toute modification d'un `useSizeMapping`/`useVariantMapping` ou d'une constante `*_SIZES`/`*_VARIANTS`.
 7. Les estimations supposent un développeur connaissant la codebase ; les jalons G3–G9 peuvent être livrés dans n'importe quel ordre après G1/G2 si les priorités produit changent.

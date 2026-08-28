@@ -51,12 +51,12 @@
 
 - [x] **2.1** — `docs/architecture.md`: two layers and what each may import, when a `core/` primitive is worth extracting, generics, naming, the controllable-state contract, ids, ARIA, data-attribute styling, the Tailwind scanner rule and the test bar. It marks the rules not yet applied everywhere instead of describing an ideal library
 - [x] Engine moved to `components/core/`; its document listeners are attached on open and removed on close, with a dedicated test on the subscription itself. `components/core/shared/` holds `useComponentId`.
-- [ ] **2.2** — Extract reusable primitives out of `core/combobox/` — **one at a time, only when a second consumer actually needs one** (the engine is a single closure by design, so each extraction is a split, not a move):
+- [x] **2.2** — Extract reusable primitives out of `core/combobox/` — **one at a time, only when a second consumer actually needs one** (the engine is a single closure by design, so each extraction is a split, not a move):
   - `core/popover/` — open/close, click-outside, `clickOutsideFilter` (reintroduced), Popover API
   - `core/positioning/` — CSS anchor positioning
   - `core/focus/` — focus trap, focus return, generalized "focus past this container"
   - `core/navigation/` — generic roving index / highlight
-  - The combobox engine becomes their first consumer; its 103 tests must stay green untouched
+  - Done for the consumers that arrived: `popover/usePopoverState`, `positioning/useAnchorPosition`, `shared/useControllableState` (DuDropdown) and `navigation/useRovingIndex` (DuMenu), with 62 tests of their own. The engine leans on the first two and its 96 tests passed with no assertion touched. `core/focus/` is deliberately unwritten until DuModal and DuDrawer ask for it
 - [x] **2.3** — `Math.random()` eradicated (du-accordion, du-collapse, du-filter, du-rating, `useDrawerClasses`), all five through `core/shared/useComponentId`, with `tests/generated-ids.spec.ts` asserting no collision between instances and determinism across renders. Two bugs surfaced: DuAccordion's literal `name: 'accordion'` default made two accordions on a page share one radio group, and DuCollapse provided a `collapseId` nobody injected
 - [x] **2.4** — Typing pass: zero `any` in shipped code, with `no-explicit-any` an error (`.stories.ts` excluded). `icon` / `figure` / `actions` share one `IconSource` type; index signatures are `unknown`. DuTable, DuTimeline, DuChat and DuMenu are generic over their item type — DuList turned out to have no `items` prop at all, so there was nothing to make generic there
 - [ ] **2.4b** — Type-check `tests/` too: the tsconfig `include` stops at the sources, and adding them surfaces ~20 pre-existing errors (Rollup hook `this` context in `plugin-vite.spec.ts`, `VueNode` casts, a generic component not assignable to `Component`)
@@ -64,16 +64,15 @@
 - [x] **2.5** — `eslint-plugin-vuejs-accessibility` plus axe-core over a representative mount of every component (`tests/a11y.spec.ts`), both blocking in CI at `serious`/`critical`. Exemptions carry their reason inline; the four components that fail structurally carry an allowlist that expires on its own — the spec fails if a listed rule stops firing. It found five real bugs: DuInputField dropped consumer attributes entirely (fragment root, no `inheritAttrs`), DuSelect/DuSearch had no accessible name without a placeholder, DuAlert's dismiss button and DuProgress had none at all, and DuSwap's non-checkbox mode was a `<div @click>`
 - [x] **2.7** — Embedded-mode control build (`npm run check:css`, blocking in CI): compiles Tailwind + daisyUI over the library sources and fails on any runtime-built class that produces no CSS rule. The class-literal invariant proves a class is scannable; this proves it exists. It caught `tooltip-neutral`, which daisyUI does not define
 
-> **Exit criteria:** standards are tooled and enforced in CI; primitives are ready for migrations.
-> Standards side: met. Primitives: pending — they are extracted on demand, when Phase 3 gives them a second consumer.
+> **Exit criteria:** standards are tooled and enforced in CI; primitives are ready for migrations. Met.
 
 ## Phase 3 — Popup widgets on `core/` primitives
 
 > The components that share the combobox mechanics.
 > Detailed plan: `PLAN-REFACTO-GLOBAL.md`
 
-- [ ] **3.1** — **DuDropdown**: from CSS-only DaisyUI to `core/popover` (controlled/uncontrolled state, dismiss, Escape, `aria-expanded` / `aria-haspopup`, optional top-layer)
-- [ ] **3.2** — **DuMenu**: `menu` / `menuitem` roles, roving-tabindex navigation via `core/navigation` (replaces `useMenuKeyboardNav`), accessible submenus — documented DuDropdown + DuMenu integration (APG menu-button pattern)
+- [x] **3.1** — **DuDropdown**: real state on `core/popover` + `core/positioning`. It had none — an `open` prop that added a class, no dismissal, no keyboard, and a `triggerProps` slot scope its own template comment promised but never provided. Now: controlled/uncontrolled `open`, outside press and Escape (returning focus), tab-out, JS-driven `hover` with delays that also opens on keyboard focus, and `popover` for the top layer
+- [x] **3.2** — **DuMenu**: split by a `role` prop into a nav list (default: plain `<ul>`, native Tab, `aria-current`) and an APG menu (`menuitem` / `menuitemcheckbox`, one tab stop, arrows, typeahead, collapsible submenus). It used to wear `role="listbox"` over navigation links. `useMenuKeyboardNav` is replaced by `core/navigation/useRovingIndex`; the `onItemClick` / `onSubItemClick` props are gone (they duplicated the emits); a `MenuButton` story documents the DuDropdown pairing
 - [ ] **3.3** — **DuTooltip**: wired `aria-describedby`, hover + keyboard-focus triggers, Escape dismiss, delays, optional top-layer (escapes `overflow: hidden`)
 - [ ] **3.4** — **DuModal**: consolidation around native `<dialog>` (focus return, `open` / native-event sync, automatic `aria-labelledby`, `initialFocus`)
 - [ ] **3.5** — **DuDrawer**: migrate `useDrawerDismiss` / `useDrawerOpenState` onto `core/popover` + `core/focus` (overlay focus trap, Escape, inert background)
@@ -109,8 +108,8 @@
 | Phase | Scope | Status |
 | --- | --- | --- |
 | 1 | Combobox engine + DuSelect/DuSearch | ✅ Done (a11y audit 1.6 still owed) |
-| 2 | Foundation — docs, `core/` primitives, lint, `useId` | 🟡 Standards done; primitive extraction waits on Phase 3 |
-| 3 | Popups — dropdown, menu, tooltip, modal, drawer, toast | 🔲 Todo |
+| 2 | Foundation — docs, `core/` primitives, lint, `useId` | ✅ Done (`core/focus` waits for its first consumer) |
+| 3 | Popups — dropdown, menu, tooltip, modal, drawer, toast | 🟡 Dropdown + menu done; tooltip, modal, drawer, toast to go |
 | 4 | Selection — tabs, accordion, filter, rating, range, pagination | 🔲 Todo |
 | 5 | Data display + hygiene + coverage | 🔲 Todo |
 | 6 | API freeze, docs, audits, v1.0 | 🔲 Todo |
