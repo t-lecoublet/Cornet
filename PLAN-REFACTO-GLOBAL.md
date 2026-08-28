@@ -7,7 +7,7 @@
 >
 > `PLAN-REFONTE-COMBOBOX.md` décrit une approche par *vendoring* d'une lib tierce qui a été **abandonnée en cours de route** au profit d'une réimplémentation native : il est conservé comme archive et ne doit plus servir de référence.
 >
-> **Avancement au 2026-08-28** — **G1, G2 et G3 sont faits.** §2.0, les primitives §2.1–2.2 extraites à la demande, tout le socle §3, puis §4.1 DuDropdown et §4.2 DuMenu. La lib est à 34 specs / 539 tests + 24 skippés, zéro `any` en code livré, lint a11y + axe + build de contrôle CSS bloquants en CI. Prochain jalon : G4 (Tooltip + Modal), qui réclamera `focus/useFocusReturn` et `focus/useFocusTrap` — les seules primitives encore non écrites, faute de consommateur jusque-là.
+> **Avancement au 2026-08-28** — **G1, G2 et G3 sont faits**, et `core/focus/` est écrit en avance. §2.0, les primitives §2.1–2.2, tout le socle §3, puis §4.1 DuDropdown et §4.2 DuMenu. La lib est à 35 specs / 556 tests + 24 skippés, zéro `any` en code livré, lint a11y + axe + build de contrôle CSS bloquants en CI. Prochain jalon : G4 (Tooltip + Modal) — DuModal ne consommera que `useFocusReturn`, le piège attend le mode overlay du drawer en G5.
 >
 > Breaking changes assumés (beta). Chaque section « Composant » est conçue comme une PR autonome.
 
@@ -109,7 +109,9 @@ Règles :
 
 - [x] `core/` n'importe **rien** de DaisyUI/Tailwind ni des façades. Dépendances : Vue uniquement.
 - [x] Chaque module extrait a son fichier de tests dédié : `core-popover.spec.ts` (18), `core-positioning.spec.ts` (10), `core-navigation.spec.ts` (18), `core-controllable-state.spec.ts` (8), `core-dom.spec.ts` (8).
-- [ ] `useFocusTrap` : **pas encore écrit** — aucun consommateur avant DuModal/DuDrawer (G4/G5). C'est la règle du §2, pas un oubli.
+- [x] `useFocusTrap` : **écrit** (`core/focus/`), avec `useFocusReturn`. Implémentation maison, ~100 lignes, `focusableWithin` en brique. Elle couvre les **deux** voies de sortie — Tab, et un focus qui arrive par ailleurs (clic, script) — parce qu'un piège qui ne gère que Tab n'en est pas un. Les tests ont fait apparaître un troisième cas : **deux pièges actifs se renvoient le focus jusqu'à saturer la pile** ; un garde de ré-entrance transforme la boucle infinie en simple conflit borné, mais c'est au consommateur de n'en activer qu'un.
+  - `useFocusReturn` remplace la copie manuscrite qui vivait dans `useDrawerDismiss` — c'était la seule implémentation de la lib.
+  - **Le piège n'a pas encore de consommateur** : c'est une entorse assumée à la règle « extraire à la demande », pas un oubli de celle-ci. Il atterrit en G5 sur le mode overlay du drawer, où rien n'empêche aujourd'hui Tab de sortir du panneau ouvert vers la page derrière. DuModal (`showModal()`) n'en voudra jamais : le top layer rend le reste du document inerte gratuitement.
 - [x] `useControllableState(propRef, emit, internalDefault)` : fait. Deux ajouts par rapport au contrat annoncé — il **n'émet pas** quand on lui réassigne la valeur qu'il porte déjà, et `usePopoverState` accepte ce ref comme `state` pour que la prop contrôlée soit la seule vérité (en mode contrôlé, une demande d'ouverture émet et rien ne s'affiche).
 
 ### 2.0 Deux corrections préalables (avant toute extraction) — ✅ **fait**
