@@ -60,7 +60,7 @@
   - `core/focus/` adds `useFocusReturn` — which `useDrawerDismiss` had rewritten by hand, and now calls — and `useFocusTrap`, written ahead of its consumer: it lands on the drawer's overlay mode in Phase 3, where Tab currently walks out of the open panel into the page behind it. A native `<dialog>` needs no trap, so DuModal will only want the return
 - [x] **2.3** — `Math.random()` eradicated (du-accordion, du-collapse, du-filter, du-rating, `useDrawerClasses`), all five through `core/shared/useComponentId`, with `tests/generated-ids.spec.ts` asserting no collision between instances and determinism across renders. Two bugs surfaced: DuAccordion's literal `name: 'accordion'` default made two accordions on a page share one radio group, and DuCollapse provided a `collapseId` nobody injected
 - [x] **2.4** — Typing pass: zero `any` in shipped code, with `no-explicit-any` an error (`.stories.ts` excluded). `icon` / `figure` / `actions` share one `IconSource` type; index signatures are `unknown`. DuTable, DuTimeline, DuChat and DuMenu are generic over their item type — DuList turned out to have no `items` prop at all, so there was nothing to make generic there
-- [ ] **2.4b** — Type-check `tests/` too: the tsconfig `include` stops at the sources, and adding them surfaces ~20 pre-existing errors (Rollup hook `this` context in `plugin-vite.spec.ts`, `VueNode` casts, a generic component not assignable to `Component`)
+- [x] **2.4b** — `tests/` is type-checked. A test is the only place a component is used the way a consumer uses it, so it is the only place a props type is exercised at all — and turning it on found `DuTableColumn.key` rejecting the ordinary way of declaring columns
 - [x] **2.6** — Nested sizes: audited, nothing to do. No component that exposes `size` hardcodes a suffixed daisyUI class. DuModal and DuAlert do hardcode `btn-sm`, but neither exposes `size` and daisyUI gives neither a size scale — that is a choice of size, not a bug. The rule is written down in `docs/architecture.md` §8 for future components
 - [x] **2.5** — `eslint-plugin-vuejs-accessibility` plus axe-core over a representative mount of every component (`tests/a11y.spec.ts`), both blocking in CI at `serious`/`critical`. Exemptions carry their reason inline; the four components that fail structurally carry an allowlist that expires on its own — the spec fails if a listed rule stops firing. It found five real bugs: DuInputField dropped consumer attributes entirely (fragment root, no `inheritAttrs`), DuSelect/DuSearch had no accessible name without a placeholder, DuAlert's dismiss button and DuProgress had none at all, and DuSwap's non-checkbox mode was a `<div @click>`
 - [x] **2.7** — Embedded-mode control build (`npm run check:css`, blocking in CI): compiles Tailwind + daisyUI over the library sources and fails on any runtime-built class that produces no CSS rule. The class-literal invariant proves a class is scannable; this proves it exists. It caught `tooltip-neutral`, which daisyUI does not define
@@ -117,9 +117,11 @@
 | 6 | API freeze, docs, audits, v1.0 | 🔲 Todo |
 
 > **`PLAN-REFACTO-GLOBAL.md` is executed end to end (G1–G10).** What remains is
-> Phase 6 below, plus two debts recorded in that plan: `tests/` is not
-> type-checked, and the manual accessibility audit (1.6) is still owed — the
-> automated gates are a floor, not a substitute for a screen reader.
+> Phase 6 below, plus one debt: the manual accessibility audit (1.6) is still
+> owed — the automated gates are a floor, not a substitute for a screen reader.
+> One known structural gap is recorded in `tests/a11y.spec.ts`: DuTabs cannot
+> satisfy `aria-required-children` without giving up daisyUI's panel styling,
+> which is a product decision.
 >
 > Phases 3 and 4 are parallelizable component by component once Phase 2 is done.
 > Within each phase, every checkbox maps to a self-contained PR that leaves the library shippable.

@@ -39,7 +39,7 @@
 | T8 | Le mécanisme Tailwind-scanner (constantes `*_SIZES`/`*_VARIANTS` exportées des `.types.ts`) est **déjà couvert** par `tests/class-literals-invariant.spec.ts`, qui exige, pour chaque appel `useSizeMapping`/`useVariantMapping`, que les littéraux correspondants soient atteignables dans le dossier du composant ou d'une dépendance | Reste à documenter la règle et à ajouter un build de contrôle « embedded » | §3.5 |
 | ~~T9~~ | ~~Classes de taille figées dans des composants eux-mêmes dimensionnés~~ — **audit fait, faux problème** : aucun composant exposant `size` ne code en dur une classe suffixée. `du-modal` et `du-alert` codent bien `btn-sm`, mais n'exposent pas `size` : il n'y a pas de taille parente à suivre | — | Résolu par la Phase 1. La règle reste écrite (§3.6, `docs/architecture.md` §8) |
 
-| T10 | `tests/` n'est pas type-checké : le `include` du tsconfig s'arrête aux sources. L'y ajouter révèle ~20 erreurs préexistantes (contexte `this` des hooks Rollup dans `plugin-vite.spec.ts`, casts `VueNode`, un composant générique non assignable à `Component`) | `tsconfig.json` | Chantier isolé, hors G2 |
+| ~~T10~~ | ~~`tests/` n'est pas type-checké~~ — **fait**. Le report était une erreur de jugement : un test est le **seul endroit où un composant est utilisé comme un consommateur l'utilise**, donc le seul endroit où un type de props est réellement éprouvé ; tout le reste, c'est la bibliothèque qui se parle à elle-même. L'activer a immédiatement révélé un vrai bug d'API (voir §6.1) | `tsconfig.json` | ✅ |
 | T11 | Un `<style scoped>` de composant est une source de vérité invisible aux outils : `avatar-*` y est défini, pas dans daisyUI. Toute vérification de classes doit en tenir compte | du-avatar, du-tooltip | Pris en compte dans `check:css` (§3.5) |
 
 ### 1.3 Acquis à préserver
@@ -154,7 +154,7 @@ La dette est bien plus faible qu'annoncé initialement, mais elle est mal mesur�
 - [x] Activer `@typescript-eslint/no-explicit-any` en `error` sur `components/` **une fois les deux points ci-dessus faits**, avec `// eslint-disable-next-line` justifiés pour les rares survivants. La règle est aujourd'hui `off` dans `eslint.config.js`, sous un commentaire (« DuSelect, DuSearch, DuTable accept arbitrary user data ») devenu **faux pour DuSelect et DuSearch**, désormais génériques : le réécrire en même temps.
 - [x] Exclure les `.stories.ts` de la règle : `render: (args: any)` fait partie de la signature Storybook — c'est la confusion qui avait gonflé T2 à « ~60 ».
 - [x] `strict: true` déjà hérité de `@vue/tsconfig` ; `type-check`, `lint`, `test`, `build` et `types-drift` sont déjà bloquants dans `.gitlab-ci.yml`. **Rien à faire.**
-- [ ] **Reste ouvert** : `tests/` n'est pas type-checké (le `include` du tsconfig s'arrête à `components/`, `composables/`, `index.ts`, `plugin-vite.ts`, `types/`). L'ajouter fait apparaître ~20 erreurs préexistantes (contexte `this` des hooks Rollup dans `plugin-vite.spec.ts`, casts `VueNode`, un composant générique non assignable à `Component`). Chantier propre et isolé, à faire à part.
+- [x] **`tests/` est type-checké** (fait à l'audit final). Les 21 erreurs restantes étaient mécaniques côté test ; celle qui comptait était côté composant, cf. §6.1.
 
 ### 3.4 Lint & CI a11y
 
@@ -322,7 +322,8 @@ Ce qui reste ci-dessous relève du confort, pas du défaut — conservé pour m�
 ## 6. Phase 5.a — Data display riches
 
 ### 6.1 DuTable — ✅ **fait**
-- [x] Générique `Row` (colonnes typées `keyof Row` quand items structurés), purge des 4 `any`, slots scopés typés.
+- [x] Générique `Row`, purge des `any`, slots scopés typés.
+  - ⚠️ **Correction apportée à l'audit final** : `DuTableColumn.key` était `Extract<keyof R, string>`, vendu dans le CHANGELOG comme « une faute de frappe dans une colonne ne rend plus une cellule vide ». Ça rendait surtout **l'usage ordinaire non compilable** — `const columns = [{ key: 'name' }]` élargit `'name'` en `string` bien avant que le type ne le voie, donc tout consommateur déclarant ses colonnes dans une variable échouait. C'est `Extract<keyof R, string> | (string & {})` : les clés de la ligne restent proposées par l'éditeur, elles ne sont plus imposées. **Aucun test ne l'avait vu parce qu'aucun test n'était type-checké** — c'est l'argument qui a fait fermer T10.
 - [x] `<caption>` (prop + slot, `hideCaption` pour l'exposer sans l'afficher) et `scope="col"` sur les `th` d'en-tête **et** de pied — il n'y en avait aucun des deux.
 - [x] Tri/sélection : **hors scope** — si demandé plus tard, créer `core/table` (ne pas bricoler dans la façade).
 
