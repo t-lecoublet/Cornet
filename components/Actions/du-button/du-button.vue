@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useSizeMapping } from '../../../composables/useSizeProps'
 import { useVariantMapping } from '../../../composables/useVariantProps'
-import { computed, inject } from 'vue'
+import { computed, inject, useSlots } from 'vue'
 import { type DuButtonProps, type DuButtonElementTag } from './du-button.types'
 
 const props = withDefaults(
@@ -26,9 +26,11 @@ const props = withDefaults(
     value: undefined,
     inputType: undefined,
     label: undefined,
+    ariaLabel: undefined,
   },
 )
 
+const slots = useSlots()
 const inJoin = inject("isInJoin", false)
 const filterName = inject('filterName', undefined)
 
@@ -43,6 +45,14 @@ const elementTag = computed((): DuButtonElementTag => {
 })
 
 const isInputElement = computed(() => elementTag.value === 'input')
+
+/**
+ * `label` names the button only when there is nothing visible to name it. With
+ * slot content, overriding that text with a different string is what WCAG 2.5.3
+ * forbids — a user saying "click Save" to a voice assistant needs the name to
+ * match what they can see.
+ */
+const accessibleName = computed(() => props.ariaLabel ?? (slots.default == null ? props.label : undefined))
 const isAnchorElement = computed(() => elementTag.value === 'a')
 
 // The element this renders as changes with the context (a radio inside a
@@ -88,7 +98,7 @@ const buttonAttributes = computed(() => {
       block && 'btn-block',
       inJoin && 'join-item',
     ]"
-    :aria-label="props.label"
+    :aria-label="accessibleName"
     :disabled="props.disabled"
   >
     <slot v-if="!isInputElement"></slot>

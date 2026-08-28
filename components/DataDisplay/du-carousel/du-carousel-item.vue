@@ -13,7 +13,7 @@ defineProps<DuCarouselItemProps>()
     class="carousel-item"
     role="group"
     aria-roledescription="slide"
-    :aria-label="label"
+    :aria-label="ariaLabel"
   >
     <slot></slot>
   </div>

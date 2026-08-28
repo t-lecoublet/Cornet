@@ -9,7 +9,7 @@ const props = withDefaults(
     checked: false,
     disabled: false,
     readonly: false,
-    label: undefined,
+    ariaLabel: undefined,
     shape: "star-2",
     halfMask: undefined,
     customClass: "",
@@ -69,7 +69,7 @@ const maskClass = computed(() => {
     :class="maskClass"
     :checked="checked"
     :disabled="disabled"
-    :aria-label="label"
+    :aria-label="ariaLabel"
     @click="handleChange"
   />
 </template>

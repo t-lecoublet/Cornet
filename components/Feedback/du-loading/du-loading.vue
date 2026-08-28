@@ -31,8 +31,8 @@ const { colorClass } = useVariantMapping(props, "text");
 <template>
   <span
     :class="['loading', sizeClass, animationClass, colorClass]"
-    :role="label ? 'status' : undefined"
-    :aria-label="label"
-    :aria-hidden="label ? undefined : 'true'"
+    :role="ariaLabel ? 'status' : undefined"
+    :aria-label="ariaLabel"
+    :aria-hidden="ariaLabel ? undefined : 'true'"
   ></span>
 </template> 

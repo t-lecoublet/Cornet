@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { nextTick } from 'vue'
 import DuDrawer from '../components/Layout/du-drawer/du-drawer.vue'
+import { mockMatchMedia } from './helpers/environment'
 
 const mounted: { unmount: () => void }[] = []
 
@@ -259,5 +260,72 @@ describe('DuDrawer as a dialog', () => {
     const checkbox = wrapper.find('input.drawer-toggle')
     expect(checkbox.attributes('aria-hidden')).toBe('true')
     expect(checkbox.attributes('tabindex')).toBe('-1')
+  })
+})
+
+describe('DuDrawer pinned beside the content', () => {
+  // Above its breakpoint the sidebar is part of the page, not a dialog. Nothing
+  // else exercises this: without `matchMedia` the component answers "floating",
+  // which is the safe default and what every test above runs in.
+  let media: ReturnType<typeof mockMatchMedia>
+
+  afterEach(() => media?.restore())
+
+  function pinned(props: Record<string, unknown> = {}) {
+    media = mockMatchMedia(true)
+    return mountDrawer({ responsive: 'lg', ...props }, { attachTo: document.body })
+  }
+
+  it('is not a dialog', async () => {
+    const wrapper = pinned()
+    await exposed(wrapper).toggleDrawer()
+
+    const panel = wrapper.find('.drawer-side > div')
+    expect(panel.attributes('role')).toBeUndefined()
+    expect(panel.attributes('aria-modal')).toBeUndefined()
+  })
+
+  it('leaves the content reachable', async () => {
+    const wrapper = pinned()
+    await exposed(wrapper).toggleDrawer()
+    await nextTick()
+
+    expect(wrapper.find('.drawer-content').attributes('inert')).toBeUndefined()
+  })
+
+  it('does not trap Tab, because there is nothing to trap it against', async () => {
+    const wrapper = pinned({ items: [{ label: 'Home', href: '/' }] })
+    const behind = document.createElement('button')
+    document.body.appendChild(behind)
+
+    await exposed(wrapper).toggleDrawer()
+    await nextTick()
+
+    behind.focus()
+    behind.dispatchEvent(new FocusEvent('focusin', { bubbles: true }))
+    expect(document.activeElement, 'focus stays where the user put it').toBe(behind)
+  })
+
+  it('ignores a press on the content, which is not "outside" anything', async () => {
+    const wrapper = pinned()
+    await exposed(wrapper).toggleDrawer()
+
+    wrapper.find('.drawer-content').element
+      .dispatchEvent(new MouseEvent('mousedown', { bubbles: true }))
+    await nextTick()
+
+    const checkbox = wrapper.find('input.drawer-toggle')
+    expect((checkbox.element as HTMLInputElement).checked).toBe(true)
+  })
+
+  it('becomes a dialog again when the viewport drops below the breakpoint', async () => {
+    const wrapper = pinned()
+    await exposed(wrapper).toggleDrawer()
+    expect(wrapper.find('.drawer-side > div').attributes('role')).toBeUndefined()
+
+    media.set(false)
+    await nextTick()
+
+    expect(wrapper.find('.drawer-side > div').attributes('role')).toBe('dialog')
   })
 })

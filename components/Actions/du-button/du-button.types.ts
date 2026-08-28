@@ -38,5 +38,14 @@ export interface DuButtonProps {
   href?: string
   value?: string
   inputType?: 'button' | 'submit' | 'reset' | 'radio' | 'checkbox'
+  /**
+   * Names the button when nothing else does — the `<input>` form, which has no
+   * slot, or a button used without content. It is **ignored** when the default
+   * slot is filled: replacing visible text with a different accessible name is
+   * the "label in name" failure (WCAG 2.5.3). Use `ariaLabel` to name a button
+   * whose content is an icon.
+   */
   label?: string
+  /** Accessible name, when the visible content is not one (an icon-only button). */
+  ariaLabel?: string
 }

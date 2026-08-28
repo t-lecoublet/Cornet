@@ -237,6 +237,15 @@ of its template, and implement that pattern rather than an approximation of it.
   application menu behaviour that is not there.
 - Icon-only controls take an accessible label through a prop with an English
   default.
+- **A control's accessible name must contain its visible text** (WCAG 2.5.3):
+  someone saying "click Save" to a voice assistant needs the two to match. So a
+  prop that sets `aria-label` on a *control* applies only when there is nothing
+  visible to name it — `DuButton`'s `label` is ignored once its slot is filled,
+  and `ariaLabel` is the explicit escape hatch for an icon-only button. On a
+  *container* — a dialog, a group, a slide — `aria-label` names the region and
+  does not compete with anything, so the rule does not apply. No test enforces
+  this: telling the two cases apart is a judgement about what the element *is*,
+  which static analysis gets wrong in both directions.
 - Anything that appears on hover must also appear on keyboard focus, and must
   be dismissible with `Escape` (WCAG 1.4.13).
 
@@ -345,11 +354,34 @@ lint. Its exemptions are per line with the reason written next to them; the
 one config-level exemption is `form-control-has-label` on the form primitives,
 which render the bare control and leave the label to the consumer.
 
-The green bar before any merge request:
+`tests/ssr.spec.ts` renders every exported component on a server, twice. It
+catches the one class of failure a browser-shaped test cannot see: a component
+that touches `document` during `setup()`, and markup that differs between two
+renders of the same input — which is a hydration mismatch and quietly breaks
+every `for`/`id` pair.
+
+`tests/api-consistency.spec.ts` checks the names rather than the behaviour: one
+spelling for an accessible-name prop, `update:x` paired with an `x` prop, props
+interfaces named after their component. It is the check an API freeze is for.
+
+Environment gaps (the Popover API, `matchMedia`) live in
+`tests/helpers/environment.ts` and are **opt-in**, not a global setup: several
+suites depend on a capability being *absent* — `useDrawerPinned` answers
+"floating" when `matchMedia` is missing, and the drawer's dialog tests rely on
+that. A global mock would retire them silently.
+
+`core/` carries a line-coverage threshold (80%, currently 96%) because it is the
+only code with no styling to look at and no story to click through: what is not
+covered by a test is not covered at all. The facades are held to the
+behavioural bar above instead, which line coverage measures badly.
+
+The green bar before any merge request — all of it blocking in CI:
 
 ```bash
-npm run lint
+npm run lint          # + eslint-plugin-vuejs-accessibility
 npm run type-check
-npm test
+npm run test:coverage
+npm run check:css     # embedded-mode control build
 npm run build
+npm run generate:types && git diff --exit-code types/index.ts
 ```

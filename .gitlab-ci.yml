@@ -27,10 +27,15 @@ type-check:
   script:
     - npm run type-check
 
+# `core/` has no styling to look at and no story to click through: what is not
+# covered by a test is not covered at all. The facades are held to a
+# behavioural bar instead (docs/architecture.md §10), which line coverage
+# measures badly — so the threshold is scoped to core/ rather than global.
 test:
   stage: check
   script:
-    - npm test
+    - npm run test:coverage
+  coverage: '/^Lines\s*:\s*([\d.]+)%/'
 
 # Embedded-mode control build: compiles Tailwind + daisyUI over the library
 # sources and checks that every class useSizeMapping/useVariantMapping builds at

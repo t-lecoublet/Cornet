@@ -27,6 +27,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 
 ### Changed (breaking)
 
+- `DuLoading`, `DuSkeleton`, `DuRatingItem`, `DuCarouselItem` (and `DuCarouselItemData`): the accessible-name prop is `ariaLabel`, not `label`. `label` means *visible text* everywhere else in the library — a button's, a menu item's, a tab's — and one name with two meanings is how an API stops being guessable.
+- `DuButton`: `label` no longer becomes `aria-label` when the default slot is filled. Replacing visible text with a different accessible name is the "label in name" failure (WCAG 2.5.3): someone saying "click Save" to a voice assistant needs the two to match. `label` still names the `<input>` form and a button used without content; the new `ariaLabel` names an icon-only button explicitly.
+
 - `DuStatus`: the automatic `aria-label` derived from the variant (`"success"`, `"warning"`) is gone. It named the colour rather than the meaning, and sat on a plain `<div>` where no assistive tech would read it. Pass `ariaLabel` to say what the dot means; without one it is hidden.
 - `DuDock`: the root element is a `<nav>` instead of a `<div>`. Selectors targeting `div.dock` need updating.
 
@@ -131,6 +134,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 - `DuSelect`: the per-option checkbox no longer double-toggles the selection.
 
 ### Internal
+
+- `tests/ssr.spec.ts`: every exported component is rendered on a server, twice — catching both `document` access during `setup()` and markup that differs between two renders of the same input, which is a hydration mismatch. All 61 pass.
+- `tests/api-consistency.spec.ts`: one spelling for accessible-name props, `update:x` paired with an `x` prop, props interfaces named after their component.
+- Line coverage on `components/core/` is a CI threshold (80%; currently 96%). `npm run test:coverage`.
+- `tests/helpers/environment.ts` holds the Popover API and `matchMedia` mocks, opt-in rather than a global setup — several suites depend on a capability being absent.
 
 - `tests/template-root-invariant.spec.ts`: no component template may open with a comment. A leading comment adds a vnode, and Vue only auto-inherits attributes onto a single root — so the component silently stops passing a consumer's `class` or `aria-*`, and only in development, since production strips comments. Nine components carried one; all are fixed, and the three lint exemptions that forced the position moved to `eslint.config.js`.
 

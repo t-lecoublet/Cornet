@@ -104,7 +104,7 @@ describe('DuCarousel', () => {
   })
 
   it('prefers a per-slide label', () => {
-    const c = carousel({ items: [{ src: '/a.png', label: 'The kitchen' }] })
+    const c = carousel({ items: [{ src: '/a.png', ariaLabel: 'The kitchen' }] })
     expect(c.items()[0]!.attributes('aria-label')).toBe('The kitchen')
   })
 

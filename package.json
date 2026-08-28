@@ -17,6 +17,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "check:css": "node scripts/check-embedded-css.mjs",
+    "test:coverage": "vitest run --coverage",
     "generate:types": "cd types && bash types.sh",
     "prepack": "node scripts/prepack.mjs",
     "postpack": "node scripts/postpack.mjs"
@@ -68,6 +69,7 @@
     "@tailwindcss/oxide": "^4.3.0",
     "@types/node": "^25.9.4",
     "@vitejs/plugin-vue": "^6.0.7",
+    "@vitest/coverage-v8": "^4.1.11",
     "@vue/eslint-config-typescript": "^14.9.0",
     "@vue/test-utils": "^2.4.11",
     "@vue/tsconfig": "^0.9.1",

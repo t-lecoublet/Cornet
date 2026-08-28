@@ -73,7 +73,7 @@ defineExpose({ next: () => scrollByOne(1), previous: () => scrollByOne(-1) })
           v-for="(item, index) in items"
           :key="item.id ?? index"
           :id="item.id"
-          :label="item.label ?? slideLabel(index + 1, items.length)"
+          :aria-label="item.ariaLabel ?? slideLabel(index + 1, items.length)"
           :class="item.customClass"
         >
           <img v-if="item.src" :src="item.src" :alt="item.alt ?? ''" />

@@ -10,9 +10,9 @@ const props = defineProps<DuSkeletonProps>();
 <template>
   <div
     :class="['skeleton', props.class]"
-    :role="label ? 'status' : undefined"
-    :aria-label="label"
-    :aria-hidden="label ? undefined : 'true'"
+    :role="ariaLabel ? 'status' : undefined"
+    :aria-label="ariaLabel"
+    :aria-hidden="ariaLabel ? undefined : 'true'"
   >
     <slot></slot>
   </div>

@@ -13,7 +13,7 @@ export interface DuCarouselItemData {
   content?: string
   customClass?: string
   /** Accessible name of the slide. Defaults to `"1 of 4"`. */
-  label?: string
+  ariaLabel?: string
 }
 
 /** Names each slide when the component has no better name to give it. */
@@ -42,5 +42,5 @@ export interface DuCarouselProps {
 export interface DuCarouselItemProps {
   id?: string
   /** Accessible name of this slide, e.g. `"2 of 5"`. */
-  label?: string
+  ariaLabel?: string
 }

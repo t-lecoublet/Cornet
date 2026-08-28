@@ -20,5 +20,5 @@ export interface DuLoadingProps {
    * assistive tech: a decoration nobody can read is better than an unnamed
    * live region that says nothing.
    */
-  label?: string;
+  ariaLabel?: string;
 } 

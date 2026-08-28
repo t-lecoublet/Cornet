@@ -8,6 +8,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { defineComponent, h, nextTick } from 'vue'
 import DuDropdown from '../components/Actions/du-dropdown/du-dropdown.vue'
+import { mockPopoverApi } from './helpers/environment'
 
 const TRIGGER = '<template #trigger="{ triggerProps }"><button v-bind="triggerProps" class="trigger">Open</button></template>'
 const PANEL = '<template #default="{ close }"><button class="item" @click="close">Item</button></template>'
@@ -325,6 +326,25 @@ describe('placement', () => {
 })
 
 describe('popover mode', () => {
+  it('actually drives the top layer, not just the attribute', async () => {
+    // happy-dom has no Popover API, so one is installed: rendering
+    // `popover="manual"` and never calling `showPopover` would leave the panel
+    // invisible in a real browser, and no attribute assertion would notice.
+    const popover = mockPopoverApi()
+    try {
+      const d = dropdown({ popover: true })
+
+      await d.trigger().trigger('click')
+      expect(popover.isOpen(d.wrapper.find('[popover]').element)).toBe(true)
+
+      await d.trigger().trigger('click')
+      expect(popover.openCount).toBe(0)
+    }
+    finally {
+      popover.restore()
+    }
+  })
+
   it('mounts the panel in the top layer only while open, with an anchor style', async () => {
     const d = dropdown({ popover: true })
     expect(d.wrapper.find('[popover]').exists()).toBe(false)

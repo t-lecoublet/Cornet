@@ -51,7 +51,7 @@ export interface DuRatingItemProps {
   /** Render a non-interactive element instead of a radio. */
   readonly?: boolean;
   /** Accessible name. Falls back to `"<value> out of <max>"`. */
-  label?: string;
+  ariaLabel?: string;
   shape?: DuRatingShape;
   color?: string;
   halfMask?: 1 | 2;
