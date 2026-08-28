@@ -11,28 +11,49 @@ paths:
 
 > **Complex component**: Submenu management and custom slots. Read `du-menu.vue` AND `du-menu-item.vue`.
 
+**Two components, chosen by `role`:**
+
+| `role` | What it is | Semantics | Keyboard |
+| --- | --- | --- | --- |
+| `nav` (default) | a list of links — a sidebar | plain `<ul>`, no ARIA role, `aria-current="page"` on the active item | native Tab between links |
+| `menu` | a set of actions | `role="menu"` / `menuitem` / `menuitemcheckbox`, `<li role="none">` | one tab stop, arrows, Home/End, typeahead, Enter/Space |
+
+**Never put `role="menu"` on navigation.** It tells a screen-reader user to
+expect application-menu behaviour a list of links does not have.
+
 **Props:**
+- `role?`: `'nav'` | `'menu'` (default `'nav'`)
 - `direction?`: `'default'` | `'vertical'` | `'horizontal'` | `'responsive'`
 - `size?`: Size
 - `rounded?`: boolean
 - `items?`: DuMenuItemData[]
-- `activeItem?`: string
-- `onItemClick?`: (item: DuMenuItemData) => void
-- `onSubItemClick?`: (item: DuMenuItemData) => void
+- `activeItem?`: string — the `value` (or `label`) of the current item
+- `ariaLabel?`: string — required by the APG in `menu` mode
+
+**Emits:** `itemClick`, `subItemClick`
+
+In `menu` mode, submenus collapse: the parent carries `aria-haspopup="menu"` +
+`aria-expanded`, ArrowRight opens it and focuses the first child, ArrowLeft
+closes it and steps back to the parent. In `nav` mode every level is visible.
+
+Pair it with `DuDropdown` for the APG menu-button pattern — see the
+`MenuButton` story.
 
 **Types :**
 ```typescript
 export interface DuMenuItemData {
   label: string
   href?: string
+  as?: string | Component
   disabled?: boolean
   isTitle?: boolean
-  subItems?: DuMenuItemData[]
+  subItems?: this[]
   value?: string | number
   onClick?: () => void
   checked?: boolean
-  multiple?: boolean
+  multiple?: boolean   // menu mode: renders a menuitemcheckbox
   active?: boolean
+  icon?: IconSource
 }
 ```
 

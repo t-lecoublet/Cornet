@@ -112,26 +112,21 @@ const cases: Case[] = [
     name: 'DuDrawer',
     component: DuDrawer,
     props: { items: [{ label: 'Home', href: '/' }] },
-    // The drawer rides on a hidden checkbox (§4.5) and renders a DuMenu, which
-    // carries the listbox-role bug below (§4.2).
-    knownIssues: {
-      rules: ['label', 'aria-input-field-name', 'aria-required-children', 'aria-required-parent', 'listitem'],
-      because: 'hidden checkbox toggle (§4.5) plus the nested menu (§4.2)',
-    },
+    // The drawer's open state still rides on a hidden checkbox nobody can
+    // label. PLAN-REFACTO-GLOBAL.md §4.5 replaces the pattern.
+    knownIssues: { rules: ['label'], because: 'hidden checkbox toggle (§4.5)' },
   },
 
   { name: 'DuBreadcrumbs', component: DuBreadcrumbs, props: { items: [{ label: 'Home', href: '/' }, { label: 'Docs' }] } },
   { name: 'DuDock', component: DuDock, props: { items: [{ label: 'Home' }, { label: 'Search' }] } },
+  { name: 'DuMenu (nav)', component: DuMenu, props: { items: [{ label: 'Home', href: '/' }, { label: 'Docs', href: '/docs' }] } },
   {
-    name: 'DuMenu',
+    name: 'DuMenu (menu)',
     component: DuMenu,
-    props: { items: [{ label: 'Home', href: '/' }, { label: 'Docs', href: '/docs' }] },
-    // A navigation menu wearing listbox/option semantics: the roles are wrong,
-    // and axe says so four different ways. PLAN-REFACTO-GLOBAL.md §4.2 splits
-    // it into an APG menu and a plain nav list.
-    knownIssues: {
-      rules: ['aria-input-field-name', 'aria-required-children', 'aria-required-parent', 'listitem'],
-      because: 'navigation list wearing listbox semantics (§4.2)',
+    props: {
+      role: 'menu',
+      ariaLabel: 'Actions',
+      items: [{ label: 'Open', value: 'open' }, { label: 'Save', value: 'save' }],
     },
   },
   { name: 'DuPagination', component: DuPagination, props: { modelValue: 2, total: 50, perPage: 10 } },

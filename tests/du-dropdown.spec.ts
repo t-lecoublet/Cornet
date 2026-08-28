@@ -229,7 +229,6 @@ describe('hover', () => {
     vi.useFakeTimers()
     try {
       const d = dropdown({ hover: true, openDelay: 100, closeDelay: 100 })
-      await nextTick()
 
       d.pointer('mouseenter')
       expect(d.isOpen(), 'a pointer crossing the trigger must not flash it').toBe(false)
@@ -253,7 +252,6 @@ describe('hover', () => {
     vi.useFakeTimers()
     try {
       const d = dropdown({ hover: true, openDelay: 0, closeDelay: 100 })
-      await nextTick()
       d.pointer('mouseenter')
       vi.advanceTimersByTime(0)
       await nextTick()
@@ -283,7 +281,6 @@ describe('hover', () => {
     vi.useFakeTimers()
     try {
       const d = dropdown()
-      await nextTick()
       d.pointer('mouseenter')
       vi.advanceTimersByTime(1000)
       await nextTick()

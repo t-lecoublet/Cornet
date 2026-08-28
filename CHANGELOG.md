@@ -9,6 +9,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 
 ### Removed (breaking)
 
+- `DuMenu`: the `onItemClick` / `onSubItemClick` **props** are removed — they duplicated the `itemClick` / `subItemClick` emits. Use `@item-click` / `@sub-item-click`.
+- `DuMenu`: `role="listbox"` and `role="option"` are gone. A list of navigation links is not a listbox, and axe reported the mismatch four different ways (`aria-required-children`, `aria-required-parent`, `aria-input-field-name`, `listitem`). See the `role` prop below.
+- `DuMenuItem`: the hidden `<input type="checkbox">` that carried multi-select state is replaced by `role="menuitemcheckbox"` + `aria-checked`.
+- The local `useMenuKeyboardNav` composable is deleted; `core/navigation/useRovingIndex` replaces it.
+
 - `DuDropdown`: the `isDropdownTrigger` provide is gone, and with it `DuButton`'s hidden `<div role="button" tabindex="0">` rendering inside a dropdown trigger. A `DuButton` in a trigger slot is now a real `<button>` — the open state is driven in JS, so the div-with-a-role was only ever there to satisfy daisyUI's CSS.
 
 - `DuCollapse`: the `collapseId` injection key is removed. It was provided but never injected — no component read it, and the value it carried was a fresh random string on every render.
@@ -17,6 +22,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 - `DuSearch`: `name` and `id` are no longer required props. `id` defaults to Vue's `useId()`.
 
 ### Changed (breaking)
+
+- `DuMenu` gains a **`role` prop** that decides what it is. `nav` (the default) is a list of links: plain `<ul>`, no ARIA role, native Tab, `aria-current="page"` on the active item. `menu` is the WAI-ARIA menu pattern: `role="menu"` / `menuitem` / `menuitemcheckbox` over presentational `<li>`s, one tab stop with arrow keys, `Home`/`End`, typeahead and `Enter`/`Space`, and submenus that collapse behind `aria-expanded` (ArrowRight opens and focuses the first child, ArrowLeft closes and steps back).
+  - Arrow-key navigation therefore no longer applies in the default mode. A sidebar of links is walked with Tab, which is what it always should have been.
+  - Submenus are always visible in `nav` mode, as before; they start collapsed in `menu` mode.
 
 - `DuDropdown` is rebuilt on `core/popover` + `core/positioning`. It had no state at all: an `open` prop that added a class, no dismissal, no keyboard, and a `triggerProps` slot scope its own template comment promised but never provided.
   - **The trigger must now spread `triggerProps`** (`<DuButton v-bind="triggerProps">`) — without it nothing opens. The scope is real now: `aria-expanded`, `aria-haspopup`, `aria-controls`, the click toggle and ArrowDown-to-open.
@@ -41,6 +50,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 - `DuAccordion`: the `name` prop no longer defaults to the literal `"accordion"`. Two accordions on a page shared that radio-group name, so opening a panel in one closed a panel in the other. Each instance now derives its own; pass `name` explicitly to keep a fixed one.
 
 ### Added
+
+- `DuMenu`: `ariaLabel`, and the `MenuButton` story pairing `DuDropdown` with `DuMenu role="menu"` — the APG menu-button pattern.
 
 - `DuDropdown`: `popover` (top layer via the Popover API + CSS anchor positioning, so an `overflow: hidden` ancestor cannot clip the panel), `closeOnClickOutside`, `closeOnEscape`, `disabled`, `contentClass`, `openDelay` / `closeDelay`, the `open` / `close` emits, and a `content` slot alongside the default one. Escape and outside presses dismiss; Escape hands focus back to the trigger; tabbing out closes.
 
@@ -73,6 +84,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 - `DuSelect`: the per-option checkbox no longer double-toggles the selection.
 
 ### Internal
+
+- `components/core/` gains `popover/usePopoverState`, `positioning/useAnchorPosition`, `navigation/useRovingIndex` and `shared/useControllableState`, extracted from the combobox engine as its second consumers arrived. The engine now leans on the first two, with its own tests unchanged.
 
 - `npm run check:css` (`scripts/check-embedded-css.mjs`), blocking in CI: compiles Tailwind + daisyUI over the library sources the way a consumer's embedded build does, and fails on any class `useSizeMapping`/`useVariantMapping` builds at runtime that produces no CSS rule. The existing invariant test proves the literals are scannable; this proves they are real.
 - `eslint-plugin-vuejs-accessibility` (recommended config) and an axe-core pass over a representative mount of every component (`tests/a11y.spec.ts`), both blocking in CI. Components with a structural bug scheduled for a later phase carry a documented allowlist, and the spec fails if an allowlisted rule stops firing — so the entry cannot outlive the bug.

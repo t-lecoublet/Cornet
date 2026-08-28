@@ -1,158 +1,184 @@
 <script setup lang="ts" generic="T extends DuMenuItemData = DuMenuItemData">
-import { computed } from 'vue';
-import { type DuMenuItemData, type DuMenuItemProps } from './du-menu.types';
-import { iconAsText, resolveIconKind } from '../../../composables/useIconSource';
+import { computed, inject } from 'vue'
+import { iconAsText, resolveIconKind } from '../../../composables/useIconSource'
+import {
+  DU_MENU_CONTEXT,
+  type DuMenuContext,
+  type DuMenuItemData,
+  type DuMenuItemProps,
+} from './du-menu.types'
 
-const props = defineProps<DuMenuItemProps<T>>();
+const props = defineProps<DuMenuItemProps<T>>()
 
 // Typed via defineSlots so the recursive slot forwarding below stays type-safe.
-const _slots = defineSlots();
+const _slots = defineSlots()
 
-const idx = computed(() => props.parentIndex ? `${props.parentIndex}-${props.index}` : `${props.index}`);
+const menu = inject<DuMenuContext>(DU_MENU_CONTEXT)
 
-const ROUTER_COMPONENTS = ['RouterLink', 'router-link', 'NuxtLink', 'nuxt-link'];
+/** Identifies this item across renders: `"1"`, `"1-0"`, … */
+const path = computed(() => (props.parentIndex ? `${props.parentIndex}-${props.index}` : `${props.index}`))
 
-const linkTag = computed(() => props.item.as || 'a');
+const isMenuRole = computed(() => menu?.role === 'menu')
+const hasSubmenu = computed(() => props.item.subItems != null && props.item.subItems.length > 0)
+const isExpanded = computed(() => menu?.isExpanded(path.value) ?? true)
+
+const ROUTER_COMPONENTS = ['RouterLink', 'router-link', 'NuxtLink', 'nuxt-link']
+
+const linkTag = computed(() => props.item.as || 'a')
 
 const isRouterComponent = computed(() => {
-  const tag = props.item.as;
-  if (!tag) return false;
-  if (typeof tag === 'string') return ROUTER_COMPONENTS.includes(tag);
-  return tag.name ? ROUTER_COMPONENTS.includes(tag.name) : false;
-});
+  const tag = props.item.as
+  if (!tag) return false
+  if (typeof tag === 'string') return ROUTER_COMPONENTS.includes(tag)
+  return tag.name ? ROUTER_COMPONENTS.includes(tag.name) : false
+})
 
 const linkProps = computed(() => {
-  if (isRouterComponent.value) {
-    return { to: props.item.href };
+  // A disabled item is not a destination: without an href it is not in the tab
+  // order either, which is what `aria-disabled` promises a keyboard user.
+  if (props.item.disabled) {
+    return {}
   }
-  return { href: props.item.href };
-});
+  return isRouterComponent.value ? { to: props.item.href } : { href: props.item.href }
+})
 
-// Détermine si l'item est actif (sélectionné)
-const isActive = computed(() => {
-  if (props.item.multiple) {
-    return props.item.checked
-  } else {
-    return props.item.checked || props.item.active
+const isActive = computed(() => (
+  props.item.multiple ? props.item.checked : (props.item.checked || props.item.active)
+))
+
+/** Marks the item the consumer named through `activeItem`. */
+const isCurrent = computed(() => {
+  const marker = menu?.activeItem
+  return marker != null && (props.item.value === marker || props.item.label === marker)
+})
+
+/**
+ * Everything ARIA and focus-related for the anchor, in one bag — the two
+ * branches below would otherwise drift apart.
+ */
+const itemProps = computed(() => {
+  if (!isMenuRole.value) {
+    return {
+      'aria-disabled': props.item.disabled ? true : undefined,
+      'aria-current': isCurrent.value ? ('page' as const) : undefined,
+      'data-menu-path': path.value,
+    }
   }
-});
+  return {
+    role: 'menuitem' as const,
+    'data-menu-path': path.value,
+    // One tab stop for the whole menu; the arrows move between items.
+    tabindex: menu?.isTabStop(path.value) ? 0 : -1,
+    'aria-disabled': props.item.disabled ? true : undefined,
+    'aria-haspopup': hasSubmenu.value ? ('menu' as const) : undefined,
+    'aria-expanded': hasSubmenu.value ? isExpanded.value : undefined,
+    // A checkable item is a menuitemcheckbox in APG terms; `aria-checked`
+    // carries the state that the hidden input used to fake.
+    ...(props.item.multiple && props.item.value !== undefined
+      ? { role: 'menuitemcheckbox' as const, 'aria-checked': props.item.checked === true }
+      : {}),
+  }
+})
 
-function handleClick() {
-  props.item.onClick?.();
-  const callback = props.parentIndex ? props.onSubItemClick : props.onItemClick;
-  callback?.(props.item);
+function handleClick(event: MouseEvent) {
+  if (props.item.disabled) {
+    event.preventDefault()
+    return
+  }
+  if (isMenuRole.value && hasSubmenu.value) {
+    event.preventDefault()
+    menu?.toggleSubmenu(path.value)
+    return
+  }
+  props.item.onClick?.()
+  menu?.select(props.item, props.parentIndex != null)
+}
+
+/** Enter and Space activate a menuitem, the way a button does. */
+function handleKeydown(event: KeyboardEvent) {
+  if (!isMenuRole.value || (event.key !== 'Enter' && event.key !== ' ')) {
+    return
+  }
+  event.preventDefault()
+  handleClick(new MouseEvent('click'))
 }
 </script>
 
 <template>
-  <!-- Titre simple (menu-title) -->
-  <template v-if="item.isTitle && !item.subItems">
-    <template v-if="$slots[`title-${idx}`]">
-      <slot :name="`title-${idx}`" :item="item" :index="index" />
-    </template>
-    <template v-else-if="$slots.title">
-      <slot name="title" :item="item" :index="index" />
-    </template>
-    <template v-else>
-      <li class="menu-title">{{ item.label }}</li>
-    </template>
+  <!-- Plain title -->
+  <template v-if="item.isTitle && !hasSubmenu">
+    <slot v-if="$slots[`title-${path}`]" :name="`title-${path}`" :item="item" :index="index" />
+    <slot v-else-if="$slots.title" name="title" :item="item" :index="index" />
+    <li v-else :role="isMenuRole ? 'none' : undefined" class="menu-title">{{ item.label }}</li>
   </template>
-  <!-- Titre parent (menu-title + sous-menu) -->
-  <template v-else-if="item.isTitle && item.subItems">
-    <template v-if="$slots[`title-${idx}`]">
-      <slot :name="`title-${idx}`" :item="item" :index="index" />
-      <ul role="listbox">
-        <du-menu-item v-for="(sub, subIndex) in item.subItems" :key="subIndex" :item="sub" :index="subIndex"
-          :parent-index="idx" :onItemClick="onItemClick" :onSubItemClick="onSubItemClick" v-bind="$attrs">
+
+  <!-- Title with a submenu -->
+  <template v-else-if="item.isTitle && hasSubmenu">
+    <li :role="isMenuRole ? 'none' : undefined">
+      <slot v-if="$slots[`title-${path}`]" :name="`title-${path}`" :item="item" :index="index" />
+      <slot v-else-if="$slots.title" name="title" :item="item" :index="index" />
+      <h2 v-else class="menu-title">{{ item.label }}</h2>
+      <ul v-show="isExpanded" :role="isMenuRole ? 'menu' : undefined">
+        <DuMenuItem
+          v-for="(sub, subIndex) in item.subItems"
+          :key="subIndex"
+          :item="sub"
+          :index="subIndex"
+          :parent-index="path"
+        >
           <template v-for="(_, name) in $slots" #[name]="slotProps">
-            <slot :name="name" v-bind="slotProps" />
+            <slot :name="name" v-bind="slotProps ?? {}" />
           </template>
-        </du-menu-item>
+        </DuMenuItem>
       </ul>
-    </template>
-    <template v-else-if="$slots.title">
-      <slot name="title" :item="item" :index="index" />
-      <ul role="listbox">
-        <du-menu-item v-for="(sub, subIndex) in item.subItems" :key="subIndex" :item="sub" :index="subIndex"
-          :parent-index="idx" :onItemClick="onItemClick" :onSubItemClick="onSubItemClick" v-bind="$attrs">
-          <template v-for="(_, name) in $slots" #[name]="slotProps">
-            <slot :name="name" v-bind="slotProps" />
-          </template>
-        </du-menu-item>
-      </ul>
-    </template>
-    <template v-else>
-      <li>
-        <h2 class="menu-title">{{ item.label }}</h2>
-        <ul role="listbox">
-          <du-menu-item v-for="(sub, subIndex) in item.subItems" :key="subIndex" :item="sub" :index="subIndex"
-            :parent-index="idx" :onItemClick="onItemClick" :onSubItemClick="onSubItemClick" v-bind="$attrs">
-            <template v-for="(_, name) in $slots" #[name]="slotProps">
-              <slot :name="name" v-bind="slotProps" />
-            </template>
-          </du-menu-item>
-        </ul>
-      </li>
-    </template>
+    </li>
   </template>
-  <!-- Item avec sous-menu -->
-  <template v-else-if="item.subItems">
-    <template v-if="$slots[`submenu-${idx}`]">
-      <slot :name="`submenu-${idx}`" :item="item" :index="index" />
-    </template>
-    <template v-else-if="$slots.submenu">
-      <slot name="submenu" :item="item" :index="index" />
-    </template>
-    <template v-else>
-      <li>
-        <component :is="linkTag" :role="item.disabled ? undefined : 'option'" :tabindex="item.disabled ? undefined : 0" v-bind="linkProps" :class="{
-          'menu-disabled': item.disabled,
-          'menu-active': isActive
-        }" @click.stop="handleClick">
-          <component :is="item.icon" v-if="resolveIconKind(item.icon) === 'component'" />
-          <img v-else-if="resolveIconKind(item.icon) === 'image'" :src="iconAsText(item.icon)"
-            :alt="item.label" class="w-5 h-5" />
-          <div v-else-if="resolveIconKind(item.icon) === 'html'" v-html="iconAsText(item.icon)"></div>
-          {{ item.label }}
-          <slot name="additional" :item="item" :index="index"></slot>
-        </component>
-        <ul role="listbox">
-          <du-menu-item v-for="(sub, subIndex) in item.subItems" :key="subIndex" :item="sub" :index="subIndex"
-            :parent-index="idx" :onItemClick="onItemClick" :onSubItemClick="onSubItemClick" v-bind="$attrs">
-            <template v-for="(_, name) in $slots" #[name]="slotProps">
-              <slot :name="name" v-bind="slotProps" />
-            </template>
-          </du-menu-item>
-        </ul>
-      </li>
-    </template>
-  </template>
-  <!-- Item simple -->
+
+  <!-- Item, with or without a submenu -->
   <template v-else>
-    <template v-if="$slots[`item-${idx}`]">
-      <slot :name="`item-${idx}`" :item="item" :index="index" />
-    </template>
-    <template v-else-if="$slots.item">
-      <slot name="item" :item="item" :index="index" />
-    </template>
-    <template v-else>
-      <li :class="{ 'menu-disabled': item.disabled }">
-        <component :is="linkTag" :role="item.disabled ? undefined : 'option'" :tabindex="item.disabled ? undefined : 0" v-bind="linkProps" :class="{ 'menu-active': isActive }"
-          @click.stop="handleClick">
-          <!-- Multi-select state marker: disabled and visually hidden, so it
-               carries nothing for assistive tech and is hidden from it. §4.2 of
-               PLAN-REFACTO-GLOBAL.md replaces it with aria-checked. -->
-          <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
-          <input v-if="item.multiple && item.value !== undefined" type="checkbox"
-            class="invisible w-0 h-0 overflow-clip" :checked="item.checked" disabled aria-hidden="true">
-          <component :is="item.icon" v-if="resolveIconKind(item.icon) === 'component'" />
-          <img v-else-if="resolveIconKind(item.icon) === 'image'" :src="iconAsText(item.icon)"
-            :alt="item.label" class="w-5 h-5" />
-          <div v-else-if="resolveIconKind(item.icon) === 'html'" v-html="iconAsText(item.icon)"></div>
-          {{ item.label }}
-          <slot name="additional" :item="item" :index="index"></slot>
-        </component>
-      </li>
-    </template>
+    <slot v-if="$slots[`item-${path}`]" :name="`item-${path}`" :item="item" :index="index" />
+    <slot v-else-if="hasSubmenu && $slots[`submenu-${path}`]" :name="`submenu-${path}`" :item="item" :index="index" />
+    <slot v-else-if="hasSubmenu && $slots.submenu" name="submenu" :item="item" :index="index" />
+    <slot v-else-if="!hasSubmenu && $slots.item" name="item" :item="item" :index="index" />
+    <!--
+      `role="none"` in menu mode: `role="menu"` owns `menuitem` children
+      directly, so the daisyUI `<li>` in between has to stop being a listitem
+      or the tree is malformed (and the `<ul role="menu">` is not a list any
+      more, which is the other half of the same rule).
+    -->
+    <li v-else :role="isMenuRole ? 'none' : undefined" :class="{ 'menu-disabled': item.disabled }">
+      <component
+        :is="linkTag"
+        v-bind="{ ...linkProps, ...itemProps }"
+        :class="{ 'menu-active': isActive, 'menu-disabled': item.disabled }"
+        @click.stop="handleClick"
+        @keydown="handleKeydown"
+      >
+        <component :is="item.icon" v-if="resolveIconKind(item.icon) === 'component'" />
+        <img
+          v-else-if="resolveIconKind(item.icon) === 'image'"
+          :src="iconAsText(item.icon)"
+          :alt="item.label"
+          class="w-5 h-5"
+        />
+        <div v-else-if="resolveIconKind(item.icon) === 'html'" v-html="iconAsText(item.icon)"></div>
+        {{ item.label }}
+        <slot name="additional" :item="item" :index="index" />
+      </component>
+
+      <ul v-if="hasSubmenu" v-show="isExpanded" :role="isMenuRole ? 'menu' : undefined">
+        <DuMenuItem
+          v-for="(sub, subIndex) in item.subItems"
+          :key="subIndex"
+          :item="sub"
+          :index="subIndex"
+          :parent-index="path"
+        >
+          <template v-for="(_, name) in $slots" #[name]="slotProps">
+            <slot :name="name" v-bind="slotProps ?? {}" />
+          </template>
+        </DuMenuItem>
+      </ul>
+    </li>
   </template>
 </template>

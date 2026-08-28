@@ -50,7 +50,7 @@ export type { DuJoinDirection,DuJoinProps } from '../components/Layout/du-join/d
 export type { DuBreadcrumbItem,DuBreadcrumbsProps } from '../components/Navigation/du-breadcrumbs/du-breadcrumbs.types'
 export type { DuDockSize,DuDockItem,DuDockProps } from '../components/Navigation/du-dock/du-dock.types'
 export type { DuLinkVariant,DuLinkProps } from '../components/Navigation/du-link/du-link.types'
-export type { DuMenuDirection,DuMenuSize,DuMenuItemData,DuMenuProps,DuMenuItemProps } from '../components/Navigation/du-menu/du-menu.types'
+export type { DuMenuDirection,DuMenuRole,DuMenuSize,DuMenuItemData,DuMenuProps,DuMenuContext,DuMenuItemProps } from '../components/Navigation/du-menu/du-menu.types'
 export type { DuNavbarProps } from '../components/Navigation/du-navbar/du-navbar.types'
 export type { DuPaginationButtonSize,DuPaginationButtonVariant,DuPaginationProps } from '../components/Navigation/du-pagination/du-pagination.types'
 export type { DuStepItemProps } from '../components/Navigation/du-step-item/du-step-item.types'

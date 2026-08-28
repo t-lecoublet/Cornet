@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/vue3";
 import DuMenu from "./du-menu.vue";
 import DuButton from "../../Actions/du-button/du-button.vue";
+import DuDropdown from "../../Actions/du-dropdown/du-dropdown.vue";
 import { useSizeStoriesControl } from "../../../composables/useSizeProps";
-import { DU_MENU_DIRECTIONS } from "./du-menu.types";
+import { DU_MENU_DIRECTIONS, DU_MENU_ROLES } from "./du-menu.types";
 
 const meta: Meta<typeof DuMenu> = {
   title: "Components/Navigation/Menu",
@@ -12,6 +13,11 @@ const meta: Meta<typeof DuMenu> = {
     items: {
       control: 'object',
       description: 'Array of menu items with label, href, disabled, isTitle, and subItems properties',
+    },
+    role: {
+      control: { type: "select" },
+      options: DU_MENU_ROLES,
+      description: '`nav` (default): a list of links. `menu`: the APG menu pattern — one tab stop, arrow keys, typeahead, collapsible submenus.',
     },
     direction: {
       control: { type: "select" },
@@ -481,4 +487,84 @@ export const CollapsibleSubMenu: Story = {
     },
     template: CollapsibleSubMenuTplStr,
   }),
+};
+
+/**
+ * `role="menu"` is for a set of **actions**, not for navigation. It is one tab
+ * stop: Tab moves past the whole menu, the arrows move inside it, letters jump
+ * to an item, and submenus collapse with `aria-expanded`.
+ *
+ * A sidebar of links is `role="nav"` (the default). Putting `role="menu"` on
+ * navigation tells a screen-reader user to expect behaviour that is not there.
+ */
+const actionMenuTpl = `
+<DuMenu
+  role="menu"
+  aria-label="Document actions"
+  class="w-56"
+  :items="items"
+  @item-click="onPick"
+  @sub-item-click="onPick"
+/>`;
+
+export const ActionMenu: Story = {
+  render: () => ({
+    components: { DuMenu },
+    setup() {
+      return {
+        items: [
+          { label: 'New', value: 'new' },
+          { label: 'Open recent', subItems: [{ label: 'report.pdf' }, { label: 'notes.md' }] },
+          { label: 'Word wrap', value: 'wrap', multiple: true, checked: true },
+          { label: 'Print', value: 'print', disabled: true },
+          { label: 'Close', value: 'close' },
+        ],
+        onPick: (item: { label: string }) => console.warn('picked', item.label),
+      };
+    },
+    template: actionMenuTpl,
+  }),
+  parameters: { docs: { source: { code: actionMenuTpl.trim(), language: 'html' } } },
+};
+
+/**
+ * The APG **menu button** pattern: a `DuDropdown` for the disclosure, a
+ * `DuMenu role="menu"` for the actions.
+ *
+ * `triggerProps` carries `aria-haspopup` and `aria-expanded`; ArrowDown on the
+ * trigger opens the panel, Escape closes it and hands focus back.
+ */
+const menuButtonTpl = `
+<div class="flex justify-center p-16">
+  <DuDropdown>
+    <template #trigger="{ triggerProps }">
+      <DuButton v-bind="triggerProps">Actions</DuButton>
+    </template>
+    <template #default="{ close }">
+      <DuMenu
+        role="menu"
+        aria-label="Document actions"
+        class="w-56"
+        :items="items"
+        @item-click="close"
+      />
+    </template>
+  </DuDropdown>
+</div>`;
+
+export const MenuButton: Story = {
+  render: () => ({
+    components: { DuMenu, DuDropdown, DuButton },
+    setup() {
+      return {
+        items: [
+          { label: 'Duplicate', value: 'duplicate' },
+          { label: 'Rename', value: 'rename' },
+          { label: 'Delete', value: 'delete' },
+        ],
+      };
+    },
+    template: menuButtonTpl,
+  }),
+  parameters: { docs: { source: { code: menuButtonTpl.trim(), language: 'html' } } },
 };

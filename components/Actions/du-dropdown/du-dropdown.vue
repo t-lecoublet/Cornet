@@ -112,7 +112,9 @@ watch([rootEl, () => props.hover], ([el, wanted], _old, onCleanup) => {
     el.removeEventListener('mouseenter', onPointerEnter)
     el.removeEventListener('mouseleave', onPointerLeave)
   })
-}, { immediate: true })
+  // Sync flush: the ref is filled during mount, and the listeners have to be
+  // in place by the time `mount()` returns, not a tick later.
+}, { immediate: true, flush: 'sync' })
 
 onUnmounted(cancelHoverTimer)
 
