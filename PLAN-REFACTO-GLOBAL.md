@@ -7,7 +7,7 @@
 >
 > `PLAN-REFONTE-COMBOBOX.md` décrit une approche par *vendoring* d'une lib tierce qui a été **abandonnée en cours de route** au profit d'une réimplémentation native : il est conservé comme archive et ne doit plus servir de référence.
 >
-> **Avancement au 2026-08-28** — **G1, G2 et G3 sont faits**, et `core/focus/` est écrit en avance. §2.0, les primitives §2.1–2.2, tout le socle §3, puis §4.1 DuDropdown et §4.2 DuMenu. La lib est à 35 specs / 556 tests + 24 skippés, zéro `any` en code livré, lint a11y + axe + build de contrôle CSS bloquants en CI. Prochain jalon : G4 (Tooltip + Modal) — DuModal ne consommera que `useFocusReturn`, le piège attend le mode overlay du drawer en G5.
+> **Avancement au 2026-08-28** — **G1, G2, G3 et G4 sont faits**, et `core/focus/` est écrit en avance. DuModal (§4.4) est écarté : son contrôle est natif et vérifié correct. §2.0, les primitives §2.1–2.2, tout le socle §3, puis §4.1 DuDropdown, §4.2 DuMenu et §4.3 DuTooltip. La lib est à 36 specs / 579 tests + 25 skippés, zéro `any` en code livré, lint a11y + axe + build de contrôle CSS bloquants en CI. Prochain jalon : G5 (Drawer + Toast) — le drawer consommera enfin `useFocusTrap` sur son mode overlay.
 >
 > Breaking changes assumés (beta). Chaque section « Composant » est conçue comme une PR autonome.
 
@@ -218,31 +218,32 @@ Ordre choisi pour maximiser la réutilisation : dropdown → menu (dépend du dr
 - [x] Emits : conserver `itemClick`/`subItemClick` ; supprimer les callbacks props `onItemClick`/`onSubItemClick` (doublon emit/prop — breaking assumé).
 - [x] Tests (~15) et mise à jour des specs existantes (`du-menu.spec.ts`).
 
-### 4.3 DuTooltip
+### 4.3 DuTooltip — ✅ **fait**
 
-**État actuel** : classes DaisyUI (`tooltip`, `data-tip`, `tooltip-open`, positions), contenu riche via slot, aucun ARIA, aucun déclencheur clavier.
+**État de départ** : classes DaisyUI (`tooltip`, `data-tip`, `tooltip-open`, positions), contenu riche via slot, aucun ARIA, aucun déclencheur clavier.
 
 **Cible** :
-- [ ] `aria-describedby` : id (`useId`) sur le contenu du tooltip, référencé par l'élément déclencheur (slot par défaut = déclencheur ; slot `content` = contenu riche, sinon `dataTip`).
-- [ ] Déclenchement : hover **et** focus-visible ; fermeture au blur/mouseleave et sur **Escape** (exigence WCAG 1.4.13 « dismissable ») ; props `openDelay`/`closeDelay` (défauts 300/100 ms). Le contenu reste survolable (« hoverable » WCAG) : ne pas fermer quand la souris passe du trigger au tooltip.
-- [ ] Prop `open` contrôlable via `useControllableState` (mode manuel conservé).
-- [ ] Option `popover` (top-layer + `useAnchorPosition`) pour sortir des `overflow: hidden` — cas fréquent des tooltips dans des cards/tables.
-- [ ] Le tooltip reste non focusable et purement descriptif : ne jamais y mettre de contenu interactif (documenter ; si besoin interactif → DuDropdown).
-- [ ] Typage : purger les 8 `any`.
-- [ ] Tests (~10) : describedby, hover, focus clavier, Escape, delays (fake timers), hoverable.
+- [x] `aria-describedby` : id (`useId`) sur le contenu du tooltip, référencé par l'élément déclencheur. **Le déclencheur arrive par un slot**, donc le composant ne peut pas lui poser l'attribut de façon déclarative : il le pose sur le premier focusable du slot, qui est aussi le seul élément capable d'ouvrir le tip au clavier — les deux coïncident par construction.
+  - **Découverte structurante** : l'attribut `data-tip` de daisyUI n'est plus posé. daisyUI révèle le tip sur `:hover` à partir de cet attribut seul, instantanément et sans dismiss possible. Les délais, Escape et l'état contrôlé ne sont réels que si **le tip est absent du DOM à la fermeture**, sans quoi le CSS décide avant le JS. La prop `dataTip` ne change pas ; le style qui visait `[data-tip]` vise `.tooltip-content`.
+- [x] Déclenchement : hover **et** focus-visible ; fermeture au blur/mouseleave et sur **Escape** (exigence WCAG 1.4.13 « dismissable ») ; props `openDelay`/`closeDelay` (défauts 300/100 ms). Le contenu reste survolable (« hoverable » WCAG) : ne pas fermer quand la souris passe du trigger au tooltip.
+- [x] Prop `open` contrôlable via `useControllableState` (mode manuel conservé).
+- [x] Option `popover` (top-layer + `useAnchorPosition`) pour sortir des `overflow: hidden` — cas fréquent des tooltips dans des cards/tables.
+- [x] Le tooltip reste non focusable et purement descriptif : ne jamais y mettre de contenu interactif (documenter ; si besoin interactif → DuDropdown).
+- [x] ~~Typage : purger les 8 `any`~~ — **il n'y en avait aucun** dans le composant ; les 8 étaient dans `du-tooltip.stories.ts` (`render: (args: any)`). Déjà réglé par §3.3.
+- [x] Tests (~10) : describedby, hover, focus clavier, Escape, delays (fake timers), hoverable.
 
-### 4.4 DuModal
+### 4.4 DuModal — ⛔ **hors périmètre, décision produit**
 
-**État actuel** : `<dialog>` natif + `showModal`/`close`, prop `open` + `update:open`, `closeOnEscape`/`closeBackdrop`, placements DaisyUI, `defineExpose({ showModal, closeModal })`. Base saine.
+**Vérifié le 2026-08-28, puis écarté** : le mécanisme est natif et il fonctionne. `showModal()` donne le top layer, l'inertie de l'arrière-plan, le piège de focus et le retour de focus, gratuitement et correctement. `@close` sur le `<dialog>` émet déjà `update:open` sur **tous** les chemins de fermeture (Escape natif, `form method="dialog"`, `.close()`), et le clic sur le fond passe par le `<form method="dialog" class="modal-backdrop">` de daisyUI. axe ne remonte rien, même sans `ariaLabel`.
 
-**Cible (consolidation, pas refonte)** :
-- [ ] Synchroniser l'état sur l'événement natif `close` du `<dialog>` (Escape natif, `form method="dialog"`) → emit `update:open` fiable dans tous les chemins de fermeture ; emits `open`/`close` ajoutés.
-- [ ] `useFocusReturn` : rendre le focus à l'élément déclencheur au close (le natif le fait pour showModal dans la plupart des cas — tester, ne câbler la primitive que si nécessaire, notamment quand l'ouverture vient d'un changement de prop).
-- [ ] Prop `initialFocus?: string | HTMLElement` (sélecteur CSS ou élément) appliquée à l'ouverture ; défaut : comportement natif (`autofocus` sinon premier focusable).
-- [ ] `aria-labelledby` automatique : si slot `title` présent, id généré et câblé ; sinon exiger `ariaLabel` (warning dev si aucun des deux).
-- [ ] `closeBackdrop` : vérifier l'implémentation clic-sur-backdrop (clic sur `::backdrop` = clic sur le dialog lui-même hors box — tester la géométrie plutôt que `target === dialog` si la box remplit le dialog).
-- [ ] Pas de focus trap maison : `showModal()` + top-layer + inert natif suffisent. Documenter que le mode non-modal (`show()`) n'est pas supporté.
-- [ ] Tests : étendre `du-modal.spec.ts` (fermetures natives synchronisées, labelledby, initialFocus, focus return).
+Ce qui reste ci-dessous relève du confort, pas du défaut — conservé pour mémoire, non planifié :
+- [~] Synchroniser l'état sur l'événement natif `close` du `<dialog>` (Escape natif, `form method="dialog"`) → emit `update:open` fiable dans tous les chemins de fermeture ; emits `open`/`close` ajoutés.
+- [~] `useFocusReturn` : rendre le focus à l'élément déclencheur au close (le natif le fait pour showModal dans la plupart des cas — tester, ne câbler la primitive que si nécessaire, notamment quand l'ouverture vient d'un changement de prop).
+- [~] Prop `initialFocus?: string | HTMLElement` (sélecteur CSS ou élément) appliquée à l'ouverture ; défaut : comportement natif (`autofocus` sinon premier focusable).
+- [~] `aria-labelledby` automatique : si slot `title` présent, id généré et câblé ; sinon exiger `ariaLabel` (warning dev si aucun des deux).
+- [~] `closeBackdrop` : vérifier l'implémentation clic-sur-backdrop (clic sur `::backdrop` = clic sur le dialog lui-même hors box — tester la géométrie plutôt que `target === dialog` si la box remplit le dialog).
+- [~] Pas de focus trap maison : `showModal()` + top-layer + inert natif suffisent. Documenter que le mode non-modal (`show()`) n'est pas supporté.
+- [~] Tests : étendre `du-modal.spec.ts` (fermetures natives synchronisées, labelledby, initialFocus, focus return).
 
 ### 4.5 DuDrawer
 
@@ -367,7 +368,7 @@ Mocks d'environnement à centraliser dans un setup vitest partagé : Popover API
 | G1 | §2.0 + §2 extraction à la demande + tests — ✅ **fait** (reste `focus/`, qui attend G4) | Phase 1 finie ✅ | — |
 | G2 | §3 Standards — ✅ **fait** (docs, useId, typage + génériques, lint a11y + axe, build de contrôle CSS ; T9 clos par audit) | — | — |
 | G3 | §4.1–4.2 Dropdown + Menu — ✅ **fait** | G1, G2 | — |
-| G4 | §4.3–4.4 Tooltip + Modal | G1 | 2-3 j |
+| G4 | §4.3 Tooltip — ✅ **fait**. §4.4 Modal — ⛔ écarté : le contrôle est natif et correct | G1 | — |
 | G5 | §4.5–4.6 Drawer + Toast | G1 | 2-3 j |
 | G6 | §5.1–5.2 Tabs + Accordion/Collapse | G1, G2 | 3 j |
 | G7 | §5.3–5.6 Filter, Rating, Range, Pagination | G2 | 2 j |
