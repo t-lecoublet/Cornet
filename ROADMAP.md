@@ -94,7 +94,7 @@
 - [x] **5.2** — **DuCarousel**: `role="region"` + `aria-roledescription="carousel"` + a name, a named `role="group"` per slide, `tabindex="0"` on the strip (a scrollable region nothing inside can focus cannot be scrolled by keyboard at all), and optional named prev/next buttons. Auto-play was never implemented, so its pause button is not owed yet — the day it lands, it is mandatory (WCAG 2.2.2)
 - [x] **5.3** — Hygiene pass: `role="timer"` on the countdown, the missing bounds on the radial progressbar, `aria-current="step"` on steps, DuDock as a named `<nav>` with `aria-current`, and a `label` on DuLoading / DuSkeleton / DuStatus which are `aria-hidden` without one. Plus the form plumbing: one error surface over native validation (`useNativeValidation`), and a DuFileInput that finally reports what was chosen
 - [x] **5.5** — `tests/template-root-invariant.spec.ts`: no template may open with a comment. It adds a vnode, Vue only inherits attributes onto a single root, and the component then silently drops a consumer's `class` — in development only, since production strips comments. Nine components had one
-- [ ] **5.4** — Test coverage: target ≥ 80% on `core/`, black-box tests on every interactive facade
+- [x] **5.4** — Coverage: `components/core/` is at 96% against an 80% CI threshold, scoped there rather than globally because it is the only code with no styling to look at and no story to click through. Every interactive facade has black-box tests; `tests/ssr.spec.ts` renders all 61 components on a server, twice, and `tests/api-consistency.spec.ts` checks the names rather than the behaviour
 
 ## Phase 6 — Road to v1.0
 
@@ -113,8 +113,13 @@
 | 2 | Foundation — docs, `core/` primitives, lint, `useId` | ✅ Done (`core/focus` waits for its first consumer) |
 | 3 | Popups — dropdown, menu, tooltip, modal, drawer, toast | ✅ Done (modal deliberately left native) |
 | 4 | Selection — tabs, accordion, filter, rating, range, pagination | ✅ Done (pagination was already there) |
-| 5 | Data display + hygiene + coverage | 🟡 Done bar the coverage target (5.4) |
+| 5 | Data display + hygiene + coverage | ✅ Done |
 | 6 | API freeze, docs, audits, v1.0 | 🔲 Todo |
 
+> **`PLAN-REFACTO-GLOBAL.md` is executed end to end (G1–G10).** What remains is
+> Phase 6 below, plus two debts recorded in that plan: `tests/` is not
+> type-checked, and the manual accessibility audit (1.6) is still owed — the
+> automated gates are a floor, not a substitute for a screen reader.
+>
 > Phases 3 and 4 are parallelizable component by component once Phase 2 is done.
 > Within each phase, every checkbox maps to a self-contained PR that leaves the library shippable.

@@ -7,7 +7,7 @@
 >
 > `PLAN-REFONTE-COMBOBOX.md` décrit une approche par *vendoring* d'une lib tierce qui a été **abandonnée en cours de route** au profit d'une réimplémentation native : il est conservé comme archive et ne doit plus servir de référence.
 >
-> **Avancement au 2026-08-28** — **G1 à G9 sont faits.** Il ne reste que G10 (verrouillage CI et revue de cohérence finale). Phase 3 close (dropdown, menu, tooltip, drawer, toast ; DuModal écarté, son contrôle est natif et vérifié correct) et §5.1–5.2 avec elle : tabs, accordion et collapse ont perdu leurs `<input>` cachés. **Il ne reste aucune entrée dans l'allowlist axe.** DuModal (§4.4) et DuPagination (§5.6) ont été vérifiés puis écartés : leur cible était déjà atteinte. §2.0, les primitives §2.1–2.2, tout le socle §3, puis §4 à §7 en entier. La lib est à 42 specs / 714 tests + 34 skippés, zéro `any` en code livré, lint a11y + axe + build de contrôle CSS bloquants en CI. Prochain jalon : G10 — §8, verrouillage CI et revue de cohérence des API.
+> **Avancement au 2026-08-28** — **le plan est exécuté de bout en bout : G1 à G10.** Phases 2 à 5 closes. Phase 3 close (dropdown, menu, tooltip, drawer, toast ; DuModal écarté, son contrôle est natif et vérifié correct) et §5.1–5.2 avec elle : tabs, accordion et collapse ont perdu leurs `<input>` cachés. **Il ne reste aucune entrée dans l'allowlist axe.** DuModal (§4.4) et DuPagination (§5.6) ont été vérifiés puis écartés : leur cible était déjà atteinte. §2.0, les primitives §2.1–2.2, tout le socle §3, puis §4 à §8 en entier. La lib est à 45 specs / 847 tests + 34 skippés, 96 % de couverture sur `core/`, zéro `any` en code livré, lint a11y + axe + build de contrôle CSS bloquants en CI. Reste hors de ce plan : la Phase 6 de `ROADMAP.md` (gel d'API, docs de migration, audit lecteur d'écran), plus deux dettes inscrites en §1.2 — T10 (`tests/` non type-checké) et l'audit a11y manuel encore dû (1.6).
 >
 > Breaking changes assumés (beta). Chaque section « Composant » est conçue comme une PR autonome.
 
@@ -356,7 +356,7 @@ Checklist par composant (une PR peut en grouper plusieurs) :
 
 ---
 
-## 8. Stratégie de tests & CI (récapitulatif des exigences)
+## 8. Stratégie de tests & CI — ✅ **verrouillée**
 
 | Niveau | Contenu | Seuil |
 |---|---|---|
@@ -365,7 +365,11 @@ Checklist par composant (une PR peut en grouper plusieurs) :
 | Transversal | `class-literals-invariant` étendu, axe sur stories, typecheck strict, `no-explicit-any` | bloquant CI |
 | SSR | Rendu déterministe (ids), pas d'accès `document` hors lifecycle client (audit : les primitives montent leurs listeners dans `onMounted`) | smoke test |
 
-Mocks d'environnement à centraliser dans un setup vitest partagé : Popover API (`showPopover`/`hidePopover`/`:popover-open`), `scrollIntoView`, `HTMLDialogElement.showModal/close` (jsdom incomplet), `matchMedia` (reduced motion), fake timers pour tooltip/toast.
+**Mocks d'environnement : helpers opt-in, pas un setup global** — `tests/helpers/environment.ts`. Le setup partagé qu'annonçait le plan aurait été un piège : plusieurs suites dépendent d'une capacité **absente**. `useDrawerPinned` répond « flottant » quand `matchMedia` manque, et tous les tests de dialogue du drawer roulent là-dessus ; un mock global les aurait mis à la retraite en silence. Le helper s'est rentabilisé deux fois immédiatement — le mode *épinglé* du drawer n'avait aucun test, et le mode popover de DuDropdown ne vérifiait que l'attribut, jamais l'appel à `showPopover`.
+
+**Couverture bornée à `components/core/`** (seuil 80 %, actuellement 96 %), pas globale : c'est le seul code sans style à regarder ni story à cliquer — ce qui n'y est pas couvert par un test n'est couvert par rien. Les façades sont tenues à la barre comportementale du tableau ci-dessus, que la couverture de lignes mesure mal et n'encourage qu'à rembourrer.
+
+**Test SSR** (`tests/ssr.spec.ts`) : les 61 composants exportés rendus côté serveur, **deux fois**. Il attrape ce qu'aucun test navigateur ne voit — un accès à `document` pendant `setup()`, et un markup qui diffère entre deux rendus de la même entrée (une désynchronisation d'hydratation, qui casse silencieusement toute paire `for`/`id`). C'est la première preuve réelle que le travail `useId` du §3.2 tient.
 
 ## 9. Ordonnancement et jalons
 
@@ -380,9 +384,18 @@ Mocks d'environnement à centraliser dans un setup vitest partagé : Popover API
 | G7 | §5.3–5.6 Filter, Rating, Range — ✅ **fait**. Pagination : rien à faire, vérifié | G2 | — |
 | G8 | §6 Data display — ✅ **fait** | G2 | — |
 | G9 | §7 Hygiène + form plumbing — ✅ **fait** | G2 (+ Phase 1 pour 7.3) | — |
-| G10 | §8 verrouillage CI, revue de cohérence finale | tout | 1-2 j |
+| G10 | §8 verrouillage CI, revue de cohérence finale — ✅ **fait** | tout | — |
 
 Total ≈ **24-29 jours**, largement parallélisable : G3–G9 sont indépendants entre eux ; chaque composant est une PR autonome laissant la lib shippable. Prioriser G3 (dropdown/menu) : c'est le gain a11y le plus visible et la première validation des primitives hors combobox.
+
+### 8.1 Ce que la revue de cohérence a trouvé
+
+Deux incohérences réelles, toutes deux introduites pendant cette exécution — ce qui est l'argument pour faire la revue **après** le chantier, pas avant :
+
+- **`label` voulait dire deux choses.** « Nom accessible » sur DuLoading, DuSkeleton, DuRatingItem et DuCarouselItem ; « texte visible » partout ailleurs (DuButton, un item de menu, un onglet). Un nom pour deux sens, c'est la fin de la devinabilité d'une API. Tous passés à `ariaLabel`, et `tests/api-consistency.spec.ts` l'y maintient.
+- **DuButton écrasait son propre texte visible.** `<DuButton label="Save">Enregistrer les modifications</DuButton>` annonçait « Save » — l'échec « label in name » (WCAG 2.5.3) : quelqu'un qui dit « clique Save » à un assistant vocal a besoin que les deux coïncident. `label` ne nomme plus que ce qui n'a rien de visible à nommer ; `ariaLabel` est l'échappatoire explicite pour un bouton-icône.
+
+**Une règle sans test, assumée** : distinguer un *contrôle* (dont le nom doit contenir le texte visible) d'un *conteneur* (dont l'`aria-label` nomme une région et ne concurrence rien) est un jugement sur ce qu'*est* l'élément. J'ai écrit le test, il se trompait dans les deux sens, je l'ai supprimé. La règle est documentée dans `docs/architecture.md` §7, ce qui est l'endroit honnête pour elle.
 
 ## 10. Points de vigilance globaux
 
