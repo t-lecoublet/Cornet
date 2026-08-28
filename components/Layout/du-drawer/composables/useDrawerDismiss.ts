@@ -1,4 +1,5 @@
 import { onBeforeUnmount, onMounted, watch, type Ref } from 'vue'
+import { useFocusReturn } from '../../../core/focus'
 
 /**
  * Closes the drawer on Escape while it's open, and moves focus into the
@@ -6,19 +7,22 @@ import { onBeforeUnmount, onMounted, watch, type Ref } from 'vue'
  * close. On breakpoints where a `*:drawer-open` class keeps the sidebar
  * visually pinned open regardless of `internalOpen`, Escape still flips the
  * underlying state (and its events) even though nothing changes visually.
+ *
+ * The focus return is `core/focus/useFocusReturn`: the element that opened the
+ * drawer is not part of the drawer, so it cannot be named up front — a hamburger
+ * in a navbar, a keyboard shortcut, a link in the content. It has to be
+ * remembered at opening time.
  */
 export function useDrawerDismiss(internalOpen: Ref<boolean>, sidebarRef: Ref<HTMLElement | null>) {
-  let lastFocused: HTMLElement | null = null
+  const focusReturn = useFocusReturn()
 
   watch(internalOpen, (isOpen) => {
     if (isOpen) {
-      lastFocused = document.activeElement as HTMLElement | null
+      focusReturn.capture()
       sidebarRef.value?.focus()
-    } else {
-      if (lastFocused && document.contains(lastFocused)) {
-        lastFocused.focus()
-      }
-      lastFocused = null
+    }
+    else {
+      focusReturn.restore()
     }
   })
 

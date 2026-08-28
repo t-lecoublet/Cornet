@@ -86,6 +86,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 ### Internal
 
 - `components/core/` gains `popover/usePopoverState`, `positioning/useAnchorPosition`, `navigation/useRovingIndex` and `shared/useControllableState`, extracted from the combobox engine as its second consumers arrived. The engine now leans on the first two, with its own tests unchanged.
+- `components/core/focus/` adds `useFocusReturn` (remember what had focus before opening, hand it back after) and `useFocusTrap` (keep Tab inside a container). `DuDrawer` now uses the first instead of its own copy; the trap lands with the drawer's overlay mode. `focusableWithin(root)` joins `focusableInDocument()` in `core/shared/dom`.
 
 - `npm run check:css` (`scripts/check-embedded-css.mjs`), blocking in CI: compiles Tailwind + daisyUI over the library sources the way a consumer's embedded build does, and fails on any class `useSizeMapping`/`useVariantMapping` builds at runtime that produces no CSS rule. The existing invariant test proves the literals are scannable; this proves they are real.
 - `eslint-plugin-vuejs-accessibility` (recommended config) and an axe-core pass over a representative mount of every component (`tests/a11y.spec.ts`), both blocking in CI. Components with a structural bug scheduled for a later phase carry a documented allowlist, and the spec fails if an allowlisted rule stops firing — so the entry cannot outlive the bug.

@@ -138,6 +138,29 @@ A hardcoded `btn-sm` inside a component that exposes `size` is always a bug.
 
 ---
 
+## core/ primitives (internal)
+
+Not composables in the `composables/` sense — they live in
+`components/core/` and are **not** exported from `index.ts`. See
+`docs/architecture.md` for the full table. The focus pair, because the choice
+between them is easy to get wrong:
+
+```typescript
+// components/core/focus/
+useFocusReturn(): { capture(), restore(): boolean, forget() }
+useFocusTrap({ container, active, initialFocus?, alsoInside? })
+```
+
+- `useFocusReturn` remembers what had focus **before** opening. Use it whenever
+  the opener is not part of the overlay (a navbar hamburger, a shortcut, a row
+  action). When the trigger *is* part of the widget, `usePopoverState`'s
+  `returnFocusTo` is enough.
+- `useFocusTrap` is for overlays built from ordinary elements. A native
+  `<dialog>` opened with `showModal()` already traps — do not add one.
+  Only one trap may be active at a time.
+
+---
+
 ## Creating a new composable
 
 1. Create `composables/use{Feature}.ts`

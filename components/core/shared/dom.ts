@@ -4,10 +4,22 @@
 const FOCUSABLE_SELECTOR
   = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]'
 
+/**
+ * Every element inside `root` a Tab press could land on right now.
+ *
+ * `tabIndex >= 0` is what "Tab reaches it" means — a `tabindex="-1"` element is
+ * focusable programmatically but not by keyboard. The client-rect check drops
+ * what is laid out nowhere: `display: none`, a collapsed panel, an ancestor
+ * that is `hidden`.
+ */
+export function focusableWithin(root: ParentNode): HTMLElement[] {
+  return [...root.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)]
+    .filter((el) => el.tabIndex >= 0 && el.getClientRects().length > 0)
+}
+
 /** Every element in the document a Tab press could land on right now. */
 export function focusableInDocument(): HTMLElement[] {
-  return [...document.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)]
-    .filter((el) => el.tabIndex >= 0 && el.getClientRects().length > 0)
+  return focusableWithin(document)
 }
 
 /**

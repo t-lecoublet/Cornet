@@ -43,15 +43,13 @@ Rules that hold without exception:
 | `popover/usePopoverState` | open flag, Popover API, outside/Escape dismissal, focus return | combobox, DuDropdown |
 | `positioning/useAnchorPosition` | CSS anchor positioning: `side` × `align` × `matchWidth` → inline style | combobox, DuDropdown |
 | `navigation/useRovingIndex` | roving tabindex: arrows, Home/End, typeahead, skip disabled | DuMenu |
+| `focus/useFocusReturn` | remembers what had focus before opening, hands it back after | DuDrawer |
+| `focus/useFocusTrap` | keeps Tab inside a container while it is open | — (DuDrawer overlay, G5) |
 | `shared/useControllableState` | the controlled/uncontrolled contract of §5 | DuDropdown |
 | `shared/useComponentId` | SSR-safe ids (§6) | combobox, five facades |
 | `shared/dom` | `focusableInDocument`, `isTextField`, `hasEditableText`, `revealInContainer` | combobox |
 
-`focus/useFocusTrap` and `focus/useFocusReturn` are **not written yet**: nothing
-needs them until DuModal and DuDrawer arrive. That is the rule, not an
-oversight.
-
-Three notes that are easy to lose:
+Four notes that are easy to lose:
 
 - **`usePopoverState` can follow a flag it does not own.** Pass `state` — a
   `useControllableState` ref — and the consumer's prop is the single truth: in
@@ -65,6 +63,17 @@ Three notes that are easy to lose:
 - **`useRovingIndex` returns whether it consumed the key**, and does not call
   `preventDefault` itself — only the caller knows what else the key means in
   its widget.
+- **The two focus primitives answer different questions.** `useFocusReturn`
+  remembers where focus *was*; `usePopoverState`'s `returnFocusTo` names one
+  element up front. The named version is right for a dropdown, whose trigger is
+  part of the widget. It is wrong the moment an overlay can be opened from
+  somewhere it cannot name — a keyboard shortcut, a row action, another dialog —
+  and then only the remembered element is correct.
+- **A native `<dialog>` opened with `showModal()` needs no trap.** The top
+  layer makes the rest of the document inert for free. `useFocusTrap` is for
+  overlays built out of ordinary elements, where nothing stops Tab from walking
+  out of the panel into the page behind it. Only one trap may be active at a
+  time; two would pull focus at each other.
 
 ### When to extract a primitive
 
