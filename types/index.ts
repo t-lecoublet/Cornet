@@ -27,7 +27,7 @@ export type { DuTableSize,DuTableSizeClass,DuTableRowBase,DuTableRow,DuTableColu
 export type { DuTimelineDirection,DuTimelineModifier,DuTimelineItemData,DuTimelineProps } from '../components/DataDisplay/du-timeline/du-timeline.types'
 export type { DuCheckboxVariant,DuCheckboxSize,DuCheckboxProps } from '../components/DataInput/du-checkbox/du-checkbox.types'
 export type { DuFieldsetProps } from '../components/DataInput/du-fieldset/du-fieldset.types'
-export type { DuFileInputProps } from '../components/DataInput/du-file-input/du-file-input.types'
+export type { DuFileInputEmit,DuFileInputProps } from '../components/DataInput/du-file-input/du-file-input.types'
 export type { DuFilterValue,DuFilterEmit,DuFilterButtonArgs,DuFilterItem,DuFilterProps } from '../components/DataInput/du-filter/du-filter.types'
 export type { DuInputFieldVariant,DuInputFieldSize,DuInputFieldType,DuInputFieldValidatorProps,DuInputFieldProps } from '../components/DataInput/du-input-field/du-input-field.types'
 export type { DuLabelInputValidatorProps } from '../components/DataInput/du-label-input-validator/du-label-input-validator.types'

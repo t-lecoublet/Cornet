@@ -180,6 +180,9 @@ useFocusTrap({ container, active, initialFocus?, alsoInside? })
   the opener is not part of the overlay (a navbar hamburger, a shortcut, a row
   action). When the trigger *is* part of the widget, `usePopoverState`'s
   `returnFocusTo` is enough.
+- `useNativeValidation` reads validity from the browser and dresses it in the
+  combobox's error surface (same codes, same `errorMessages`, same "not until
+  you have had a chance" timing). Do not reimplement constraint checking.
 - `useFocusTrap` is for overlays built from ordinary elements. A native
   `<dialog>` opened with `showModal()` already traps — do not add one.
   Only one trap may be active at a time.

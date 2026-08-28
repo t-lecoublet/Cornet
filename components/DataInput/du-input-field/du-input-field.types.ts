@@ -1,3 +1,4 @@
+import { type NativeErrorCode } from "../../core/shared"
 import { type Size } from "../../../composables/useSizeProps"
 import { type Variant } from "../../../composables/useVariantProps"
 
@@ -30,6 +31,12 @@ export type DuInputFieldValidatorProps = {
 
 export type DuInputFieldProps = {
   type?: DuInputFieldType
+  /**
+   * Override the browser's wording for a failed constraint, by code — the same
+   * shape `DuSelect` and `DuSearch` take, so a form of mixed fields reads as
+   * one thing.
+   */
+  errorMessages?: Partial<Record<NativeErrorCode, string>>
   placeholder?: string
   size?: Size
   ghost?: boolean

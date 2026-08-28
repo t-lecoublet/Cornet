@@ -47,6 +47,7 @@ Rules that hold without exception:
 | `focus/useFocusTrap` | keeps Tab inside a container while it is open | — (DuDrawer overlay, G5) |
 | `shared/useControllableState` | the controlled/uncontrolled contract of §5 | DuDropdown |
 | `shared/useComponentId` | SSR-safe ids (§6) | combobox, five facades |
+| `shared/useNativeValidation` | native constraint validation, wearing the combobox's error surface | DuInputField |
 | `shared/dom` | `focusableInDocument`, `isTextField`, `hasEditableText`, `revealInContainer` | combobox |
 
 Four notes that are easy to lose:

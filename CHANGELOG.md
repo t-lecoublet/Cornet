@@ -76,6 +76,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 
 ### Added
 
+- `DuInputField`: `errorMessages` (per-code overrides), an `error` slot, and `valid` / `errors` / `validationMessage` / `markTouched()` / `reset()` on the instance — the same surface `DuSelect` and `DuSearch` expose, so a form of mixed fields reports errors one way. The **checking** stays native: already localized, already what the form decides on submit, and already covering the cases a hand-rolled version forgets. Nothing is shown until the field has been visited, which is what `:user-invalid` means, mirrored into JS.
+- `DuFileInput`: `modelValue` / `update:modelValue` / `change` carrying `File[]`, plus `multiple`, `accept` and `ariaLabel`. It emitted nothing at all before, so there was no way to read what the user had chosen. A file input's value cannot be set from script — the browser forbids it — so the model reports, and clearing it clears the field, which is what a form reset needs.
+
 - `DuLoading`, `DuSkeleton`, `DuStatus`: a `label` / `ariaLabel` prop announcing what is happening. Without one they are now `aria-hidden` — a spinner or a coloured dot means nothing to someone who cannot see it, and hiding it beats announcing a blank.
 - `DuCountdown`: `role="timer"`. `DuRadialProgress`: `aria-valuemin` / `aria-valuemax` (it had `aria-valuenow` alone, which a progressbar cannot be read from) and an `ariaLabel`.
 - `DuSteps`: `aria-current="step"` on the furthest active step, plus an `ariaLabel` for the sequence.
