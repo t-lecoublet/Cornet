@@ -34,7 +34,9 @@ const cases: Case[] = [
     name: 'DuAccordion',
     component: DuAccordion,
     props: { items: [{ title: 'One' }, { title: 'Two' }] },
-    read: (w) => w.find('input[type="radio"]').attributes('name'),
+    // The radio group is gone; what has to stay unique is the header id each
+    // panel is labelled by.
+    read: (w) => w.find('.collapse-title').attributes('id'),
   },
   {
     name: 'DuFilter',

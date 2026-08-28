@@ -7,23 +7,35 @@ paths:
 
 ## DuAccordion
 
-**Files:** `components/DataDisplay/du-accordion/du-accordion.vue` | `.types.ts` | `.stories.ts`
+**Files:** `components/DataDisplay/du-accordion/du-accordion.vue` | `du-accordion-item.vue` | `.types.ts` | `.stories.ts`
+
+WAI-ARIA accordion pattern: each header is a `<button aria-expanded>` naming a
+`role="region"`. **One open at a time** unless `multiple`.
 
 **Props:**
-- `customClass?`: string
 - `items?`: DuAccordionItemData[]
-- `modifier?`: `'collapse-arrow'` | `'collapse-plus'` | `'collapse-open'` | `'collapse-close'`
-- `name?`: string - Group name for exclusive behavior
+- `modelValue?`: value | value[] | null — which panels are open. Omit it and the accordion owns its state
+- `multiple?`: boolean — several open at once
+- `collapsible?`: boolean (default `true`) — single mode may close the open panel, leaving none
+- `modifier?`: `'collapse-arrow'` | `'collapse-plus'`
+- `customClass?`: string
+
+**Emits:** `update:modelValue`
+
+`name` is gone with the radio group it named. `collapse-open` / `collapse-close`
+are no longer accepted as `modifier` values — the open state drives them, and
+passing them would be a second, silent source of truth.
 
 **Types :**
 ```typescript
 export interface DuAccordionItemData {
   title?: string
   content?: string
-  checked?: boolean
+  value?: string | number   // identity for v-model; falls back to the index
+  checked?: boolean         // open initially, when uncontrolled
+  disabled?: boolean
   customClass?: string
 }
-export type DuAccordionModifier = (typeof ACCORDION_MODIFIERS)[number]
 ```
 
 ---
@@ -116,19 +128,26 @@ export interface DuChatItemData {
 
 **Files:** `components/DataDisplay/du-collapse/du-collapse.vue` | `.types.ts` | `.stories.ts`
 
-Similar to DuAccordion but for individual items.
+A list of **independent** disclosures — that is the whole difference from
+DuAccordion, where opening one closes the others. Same markup: a
+`<button aria-expanded>` per header, naming a `role="region"`.
 
 **Props:**
-- `customClass?`: string
 - `items?`: DuCollapseItem[]
-- `modifier?`: `'collapse-arrow'` | `'collapse-plus'` | `'collapse-open'` | `'collapse-close'`
+- `modelValue?`: (string | number)[] — the open panels. Omit it and the component owns its state
+- `modifier?`: `'collapse-arrow'` | `'collapse-plus'`
+- `customClass?`: string
+
+**Emits:** `update:modelValue`
 
 **Types :**
 ```typescript
 export interface DuCollapseItem {
   title?: string
   content?: string
-  open?: boolean
+  value?: string | number   // identity for v-model; falls back to the index
+  open?: boolean            // open initially, when uncontrolled
+  disabled?: boolean
   customClass?: string
 }
 ```

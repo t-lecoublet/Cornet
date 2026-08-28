@@ -93,14 +93,26 @@ export interface DuMenuItemData {
 
 **Files:** `components/Navigation/du-tabs/du-tabs.vue` | `.types.ts` | `.stories.ts`
 
-> **Complex component**: Dynamic content management. Available slots: `#tab-{index}`, `#content-{index}`.
+WAI-ARIA tabs pattern: `role="tablist"` / `tab` / `tabpanel`, one tab stop,
+arrow keys through `core/navigation`. daisyUI 5 already styles
+`.tab[aria-selected=true]` and reveals the `.tab-content` beside it, so the
+selected state lives in the attribute a screen reader reads.
+
+**The `.tab-content` must stay the adjacent sibling of its `.tab`** — that
+adjacency is how daisyUI shows the right panel.
 
 **Props:**
 - `size?`: Size
 - `items?`: DuTabItem[]
 - `type?`: `'lift'` | `'border'` | `'box'`
-- `bottom?`: boolean
-- `name?`: string
+- `bottom?`: boolean — panels above the tabs (`tabs-bottom`)
+- `modelValue?`: string | number — the **value** of the selected tab (its index when the item has no `value`)
+- `activation?`: `'automatic'` (default, arrows select as they move) | `'manual'` (Enter or Space commits)
+- `ariaLabel?`: string — required by the APG
+
+**Emits:** `update:modelValue`
+
+The `name` prop is gone with the radios it grouped.
 
 **Types :**
 ```typescript

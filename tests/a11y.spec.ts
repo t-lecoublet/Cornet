@@ -81,20 +81,8 @@ const cases: Case[] = [
   { name: 'DuFab', component: DuFab, props: { mainAction: { label: 'Compose' }, items: [{ label: 'Photo' }] } },
   { name: 'DuModal', component: DuModal, props: { open: true, ariaLabel: 'Confirm' }, slots: { default: '<p>Sure?</p>' } },
 
-  {
-    name: 'DuAccordion',
-    component: DuAccordion,
-    props: { items: [{ title: 'One', content: 'a' }, { title: 'Two', content: 'b' }] },
-    // The open/close state rides on hidden radio inputs nobody can label.
-    // PLAN-REFACTO-GLOBAL.md §5.2 replaces them with a button + aria-expanded.
-    knownIssues: { rules: ['label'], because: 'hidden radios drive the open state (§5.2)' },
-  },
-  {
-    name: 'DuCollapse',
-    component: DuCollapse,
-    props: { items: [{ title: 'One', content: 'a' }] },
-    knownIssues: { rules: ['label'], because: 'a hidden checkbox drives the open state (§5.2)' },
-  },
+  { name: 'DuAccordion', component: DuAccordion, props: { items: [{ title: 'One', content: 'a' }, { title: 'Two', content: 'b' }] } },
+  { name: 'DuCollapse', component: DuCollapse, props: { items: [{ title: 'One', content: 'a' }] } },
   { name: 'DuChat', component: DuChat, props: { items: [{ message: 'Hi', header: 'Ada' }] } },
   { name: 'DuTable', component: DuTable, props: { columns: [{ key: 'name', label: 'Name' }], rows: [{ id: 1, name: 'Ada' }] } },
   { name: 'DuTimeline', component: DuTimeline, props: { items: [{ start: '2024', middle: '•', end: 'Shipped' }] } },

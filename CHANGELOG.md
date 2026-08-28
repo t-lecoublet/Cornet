@@ -9,6 +9,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 
 ### Removed (breaking)
 
+- `DuTabs`: the `name` prop is removed with the radio inputs it grouped. Its default was the literal `"my_tabs"`, so two tab groups on a page shared one radio group and picking a tab in one cleared the other.
+- `DuAccordion`: the `name` prop and the `accordionName` provide are removed for the same reason. `DuAccordionItem` reads the accordion through a context now.
+- `DuAccordion` / `DuCollapse`: `'collapse-open'` and `'collapse-close'` are no longer accepted as `modifier` values. The open state drives those classes; passing them would be a second, silent source of truth.
+
 - `DuMenu`: the `onItemClick` / `onSubItemClick` **props** are removed — they duplicated the `itemClick` / `subItemClick` emits. Use `@item-click` / `@sub-item-click`.
 - `DuMenu`: `role="listbox"` and `role="option"` are gone. A list of navigation links is not a listbox, and axe reported the mismatch four different ways (`aria-required-children`, `aria-required-parent`, `aria-input-field-name`, `listitem`). See the `role` prop below.
 - `DuMenuItem`: the hidden `<input type="checkbox">` that carried multi-select state is replaced by `role="menuitemcheckbox"` + `aria-checked`.
@@ -22,6 +26,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 - `DuSearch`: `name` and `id` are no longer required props. `id` defaults to Vue's `useId()`.
 
 ### Changed (breaking)
+
+- `DuTabs` follows the WAI-ARIA tabs pattern: `role="tablist"` / `tab` / `tabpanel`, one tab stop with arrow keys, `Home`/`End`, and `activation: 'automatic' | 'manual'`. **`modelValue` is now the selected tab's `value`, not its index** (it falls back to the index when an item has no `value`). daisyUI 5 already styles `.tab[aria-selected=true]`, so the selected state is carried by the attribute a screen reader reads. New per-item `value` and `disabled`; the `bottom` prop, previously declared and never used, now applies `tabs-bottom`.
+- `DuAccordion` and `DuCollapse` follow the accordion / disclosure patterns: each header is a `<button aria-expanded>` naming a `role="region"`, with no hidden input anywhere. Both take a `v-model` — `modelValue` is the open panel's value (or an array) for the accordion, always an array for the collapse, whose panels are independent. New `multiple` and `collapsible` on the accordion, per-item `value` and `disabled` on both.
+- `DuTabs`, `DuAccordion`, `DuCollapse`: an indexed slot (`content-0`, `title-0`) now beats the global one (`content`, `title`). It was the other way round, which made the indexed override unusable as soon as a global slot was given.
 
 - `DuDrawer`: `open` and `modelValue` no longer default to `false`, so the controlled/uncontrolled contract can tell the two apart. **Omit both and the drawer owns its state; pass either one and yours decides** — `<DuDrawer :open="x">` without an `@update:open` listener (or a `v-model`) will now emit and stay put instead of closing itself. `v-model` users are unaffected.
 - `DuDrawer`: below the pinned breakpoint the sidebar is a dialog — `role="dialog"`, `aria-modal="true"`, an accessible name from `ariaLabel`, focus trapped inside it, and the content behind it `inert`. Above the breakpoint it stays a plain part of the page, with none of that. `useDrawerDismiss` is gone, replaced by `core/popover` + `core/focus`.
