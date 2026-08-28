@@ -20,7 +20,9 @@ import DuAccordion from '../components/DataDisplay/du-accordion/du-accordion.vue
 import DuAlert from '../components/Feedback/du-alert/du-alert.vue'
 import DuBreadcrumbs from '../components/Navigation/du-breadcrumbs/du-breadcrumbs.vue'
 import DuButton from '../components/Actions/du-button/du-button.vue'
+import DuCarousel from '../components/DataDisplay/du-carousel/du-carousel.vue'
 import DuChat from '../components/DataDisplay/du-chat/du-chat.vue'
+import DuDiff from '../components/DataDisplay/du-diff/du-diff.vue'
 import DuCheckbox from '../components/DataInput/du-checkbox/du-checkbox.vue'
 import DuCollapse from '../components/DataDisplay/du-collapse/du-collapse.vue'
 import DuDock from '../components/Navigation/du-dock/du-dock.vue'
@@ -85,7 +87,17 @@ const cases: Case[] = [
   { name: 'DuAccordion', component: DuAccordion, props: { items: [{ title: 'One', content: 'a' }, { title: 'Two', content: 'b' }] } },
   { name: 'DuCollapse', component: DuCollapse, props: { items: [{ title: 'One', content: 'a' }] } },
   { name: 'DuChat', component: DuChat, props: { items: [{ message: 'Hi', header: 'Ada' }] } },
-  { name: 'DuTable', component: DuTable, props: { columns: [{ key: 'name', label: 'Name' }], rows: [{ id: 1, name: 'Ada' }] } },
+  {
+    name: 'DuTable',
+    component: DuTable,
+    props: { caption: 'Owners', columns: [{ key: 'name', label: 'Name' }], rows: [{ id: 1, name: 'Ada' }] },
+  },
+  {
+    name: 'DuCarousel',
+    component: DuCarousel,
+    props: { ariaLabel: 'Photos', items: [{ src: '/a.png', alt: 'A' }, { src: '/b.png', alt: 'B' }], controls: true },
+  },
+  { name: 'DuDiff', component: DuDiff, props: { ariaLabel: 'Before and after', item1: '/a.png', item2: '/b.png' } },
   { name: 'DuTimeline', component: DuTimeline, props: { items: [{ start: '2024', middle: '•', end: 'Shipped' }] } },
 
   { name: 'DuCheckbox', component: DuCheckbox, props: { 'aria-label': 'Subscribe' } },

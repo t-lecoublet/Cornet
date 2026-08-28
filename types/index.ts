@@ -12,7 +12,7 @@ export type { DuAccordionValue,DuAccordionModifier,DuAccordionEmit,DuAccordionIt
 export type { DuAvatarRounded,DuAvatarMask,DuAvatarSize,DuAvatarRoundedClass,DuAvatarRingColor,DuAvatarColor,DuAvatarMaskClass,DuAvatarProps } from '../components/DataDisplay/du-avatar/du-avatar.types'
 export type { DuBadgeSize,DuBadgeVariant,DuBadgeProps } from '../components/DataDisplay/du-badge/du-badge.types'
 export type { DuCardSize,DuCardProperty,DuCardProps } from '../components/DataDisplay/du-card/du-card.types'
-export type { DuCarouselPosition,DuCarouselItemData,DuCarouselProps,DuCarouselItemProps } from '../components/DataDisplay/du-carousel/du-carousel.types'
+export type { DuCarouselPosition,DuCarouselSlideLabel,DuCarouselItemData,DuCarouselProps,DuCarouselItemProps } from '../components/DataDisplay/du-carousel/du-carousel.types'
 export type { DuChatPlacement,DuChatBubbleVariant,DuChatItemData,DuChatProps } from '../components/DataDisplay/du-chat/du-chat.types'
 export type { DuCollapseValue,DuCollapseModifier,DuCollapseEmit,DuCollapseItem,DuCollapseProps } from '../components/DataDisplay/du-collapse/du-collapse.types'
 export type { DuCountdownFormat,DuCountdownEmit,DuCountdownLabels,DuCountdownProps,DuCountdownGroupProps } from '../components/DataDisplay/du-countdown/du-countdown.types'

@@ -27,6 +27,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 
 ### Changed (breaking)
 
+- `DuCarousel`: an item with `src` and no `alt` renders `alt=""` instead of `alt="Slide 2"`. The position of a picture is not a description of it, and an empty alt at least tells a screen reader to skip it.
+
 - `DuFilter` is a `<fieldset>` with a `<legend>` (visually hidden unless `showLegend`) and takes a `v-model`: `modelValue` is the selected filter's value, alongside the `change` emit it already had. A radio group without a name for the whole set leaves a screen reader unable to say what the buttons have in common. It is also generic over its item type, and each item can carry a stable `value`.
 - `DuFilter`: the reset button is no longer rendered when nothing is selected. daisyUI already hid it with `visibility: hidden` on that same condition, so this only makes the markup agree with what was already visually true.
 
@@ -70,6 +72,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 - `DuAccordion`: the `name` prop no longer defaults to the literal `"accordion"`. Two accordions on a page shared that radio-group name, so opening a panel in one closed a panel in the other. Each instance now derives its own; pass `name` explicitly to keep a fixed one.
 
 ### Added
+
+- `DuTable`: `caption` (and `hideCaption`, or a `caption` slot). Every `<th>` in the header and footer now carries `scope="col"` — without it a screen reader has to guess whether a header cell heads a column or a row.
+- `DuCarousel`: `role="region"` + `aria-roledescription="carousel"` + `ariaLabel`, each slide a named `role="group"` + `aria-roledescription="slide"` (`slideLabel`, default `"2 of 5"`), and `tabindex="0"` on the strip — a scrollable region nothing inside can focus cannot be scrolled by keyboard at all. New `controls` renders named previous/next buttons that scroll one slide, measured from the slide rather than assumed; `next()` / `previous()` are exposed.
+- `DuDiff`: `ariaLabel`, `revealLabel`, `item1Alt` / `item2Alt`, and a `tabindex` on both elements daisyUI's comparison reacts to. The keyboard mechanism was in the stylesheet and nowhere else: nothing could take the focus it needed.
 
 - `DuRating`: `itemLabel` names each star (`"3 out of 5"` by default, and replaceable for another language or scale), `ariaLabel` names the group, and `readonly` renders plain elements exposing the group as `role="img"` with the value as its name — a disabled radio announces "you may not touch this", which is not what a displayed rating means.
 - `DuRange`: `valueText` sets `aria-valuetext` (`"12"` alone means nothing to someone who cannot see what it is 12 *of*), `ariaLabel` / `ariaLabelledby`, and `ticks` rendering a `<datalist>` the input points at.

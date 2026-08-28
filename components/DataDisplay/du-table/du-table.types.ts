@@ -33,6 +33,14 @@ export interface DuTableColumn<R extends DuTableRowBase = DuTableRow> {
 export interface DuTableProps<R extends DuTableRowBase = DuTableRow> {
   columns?: DuTableColumn<R>[]
   rows?: R[]
+  /**
+   * What the table is about, rendered as a `<caption>`. A data table with no
+   * caption leaves someone arriving at it by keyboard with a grid of numbers
+   * and no idea what they count.
+   */
+  caption?: string
+  /** Expose the caption without showing it. */
+  hideCaption?: boolean
   zebra?: boolean
   pinRows?: boolean
   pinCols?: boolean

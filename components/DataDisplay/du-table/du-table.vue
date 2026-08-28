@@ -8,6 +8,8 @@ const props = withDefaults(
   {
     columns: undefined,
     rows: undefined,
+    caption: undefined,
+    hideCaption: false,
     zebra: false,
     pinRows: false,
     pinCols: false,
@@ -52,6 +54,10 @@ const customClassValue = computed(() => {
         customClassValue,
       ]"
     >
+      <caption v-if="caption || $slots.caption" :class="hideCaption ? 'sr-only' : undefined">
+        <slot name="caption">{{ caption }}</slot>
+      </caption>
+
       <thead v-if="$slots.header || header">
         <template v-if="$slots.header">
           <slot name="header"></slot>
@@ -60,6 +66,7 @@ const customClassValue = computed(() => {
           <th
             v-for="(column, index) in columns"
             :key="index"
+            scope="col"
             :class="column.customClass"
           >
             <slot :name="`header-${column.key}`" :column="column">
@@ -97,6 +104,7 @@ const customClassValue = computed(() => {
           <th
             v-for="(column, index) in columns"
             :key="index"
+            scope="col"
             :class="column.customClass"
           >
             <slot :name="`footer-${column.key}`" :column="column">

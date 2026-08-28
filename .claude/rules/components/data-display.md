@@ -92,11 +92,26 @@ export interface DuAccordionItemData {
 
 **Files:** `components/DataDisplay/du-carousel/du-carousel.vue` | `.types.ts` | `.stories.ts`
 
+A scrollable strip with scroll snapping. Two things follow from that which the
+CSS cannot do: the region has to be **focusable** to be scrollable by keyboard
+at all, and it has to say what it is.
+
 **Props DuCarousel:**
-- `start?`: boolean
-- `center?`: boolean
-- `end?`: boolean
+- `items?`: DuCarouselItemData[]
+- `start?` / `center?` / `end?`: boolean
 - `vertical?`: boolean
+- `ariaLabel?`: string — required in practice: a `region` landmark with no name is one nobody can navigate to
+- `slideLabel?`: `(index, total) => string` — names each slide, default `"2 of 5"`
+- `controls?`: boolean — previous/next buttons that scroll one slide
+- `previousLabel?` / `nextLabel?`: string — the buttons are arrows, so they need names
+
+**Props DuCarouselItem:** `id?`, `label?` (its accessible name)
+
+**Exposes:** `next()`, `previous()`
+
+An item with `src` and no `alt` gets `alt=""`. `"Slide 2"` describes the
+position, not the picture; an empty alt at least tells a screen reader to skip
+it rather than read a lie.
 
 ---
 
@@ -174,10 +189,23 @@ export interface DuCollapseItem {
 
 Before/after visual comparison.
 
+**The comparison is driven by focus, not by a slider.** daisyUI moves
+`.diff-resizer` when `.diff` has focus and again when `.diff-item-1` does —
+two positions, both real, both previously unreachable because neither element
+had a `tabindex`. They do now.
+
+A continuous, arrow-driven divider is a different widget (a slider with its own
+value semantics) and would belong in `core/`, not in a prop here.
+
 **Props:**
-- `item1?`: string
-- `item2?`: string
+- `item1?` / `item2?`: string
+- `item1Alt?` / `item2Alt?`: string
 - `aspectRatio?`: `'aspect-16/9'` | `'aspect-4/3'` | `'aspect-1/1'` | `'aspect-video'` | `'aspect-square'` | string | null
+- `ariaLabel?`: string — names the comparison
+- `revealLabel?`: string — names the second focus stop by what focusing it does (default `'Reveal the second image'`)
+
+`.diff-item-1` carries no `role="button"`: it is focused, never activated, and
+announcing a button would promise an Enter key that does nothing.
 
 ---
 
@@ -265,7 +293,9 @@ Status indicator (colored dot).
 
 **Props:**
 - `columns?`: DuTableColumn[]
-- `rows?`: DuTableRow[]
+- `rows?`: R[] — generic over the row type
+- `caption?`: string — what the table is about, rendered as a `<caption>`
+- `hideCaption?`: boolean — expose it without showing it
 - `zebra?`: boolean
 - `pinRows?`: boolean
 - `pinCols?`: boolean
