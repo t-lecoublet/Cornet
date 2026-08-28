@@ -28,4 +28,9 @@ export interface DuStatusProps {
   variant?: Variant
   bounce?: boolean
   ping?: boolean
+  /**
+   * What the dot means — "Online", "3 unread". A coloured dot is meaningless
+   * without it, so unnamed it is hidden rather than announced as a blank.
+   */
+  ariaLabel?: string
 }

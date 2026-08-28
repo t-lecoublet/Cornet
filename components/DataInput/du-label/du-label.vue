@@ -11,6 +11,9 @@ if (props.type == "input") {
 if(props.type == "select") {
   provide("isInLabel", true)
 }
+// The control this labels is nested by the consumer through the slot
+// (`<DuLabel>Email <DuInputField/></DuLabel>`), which no lint rule can see.
+// The exemption is in eslint.config.js: see the note in du-modal.vue.
 const typeClass = computed(() => {
   switch (props.type) {
     case "select":
@@ -22,9 +25,6 @@ const typeClass = computed(() => {
 </script>
 
 <template>
-  <!-- The control this labels is nested by the consumer through the slot
-       (`<DuLabel>Email <DuInputField/></DuLabel>`), which the rule cannot see. -->
-  <!-- eslint-disable-next-line vuejs-accessibility/label-has-for -->
   <label :class="[typeClass]">
     <slot />
   </label>

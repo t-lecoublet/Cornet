@@ -27,6 +27,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 
 ### Changed (breaking)
 
+- `DuStatus`: the automatic `aria-label` derived from the variant (`"success"`, `"warning"`) is gone. It named the colour rather than the meaning, and sat on a plain `<div>` where no assistive tech would read it. Pass `ariaLabel` to say what the dot means; without one it is hidden.
+- `DuDock`: the root element is a `<nav>` instead of a `<div>`. Selectors targeting `div.dock` need updating.
+
 - `DuCarousel`: an item with `src` and no `alt` renders `alt=""` instead of `alt="Slide 2"`. The position of a picture is not a description of it, and an empty alt at least tells a screen reader to skip it.
 
 - `DuFilter` is a `<fieldset>` with a `<legend>` (visually hidden unless `showLegend`) and takes a `v-model`: `modelValue` is the selected filter's value, alongside the `change` emit it already had. A radio group without a name for the whole set leaves a screen reader unable to say what the buttons have in common. It is also generic over its item type, and each item can carry a stable `value`.
@@ -72,6 +75,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 - `DuAccordion`: the `name` prop no longer defaults to the literal `"accordion"`. Two accordions on a page shared that radio-group name, so opening a panel in one closed a panel in the other. Each instance now derives its own; pass `name` explicitly to keep a fixed one.
 
 ### Added
+
+- `DuLoading`, `DuSkeleton`, `DuStatus`: a `label` / `ariaLabel` prop announcing what is happening. Without one they are now `aria-hidden` — a spinner or a coloured dot means nothing to someone who cannot see it, and hiding it beats announcing a blank.
+- `DuCountdown`: `role="timer"`. `DuRadialProgress`: `aria-valuemin` / `aria-valuemax` (it had `aria-valuenow` alone, which a progressbar cannot be read from) and an `ariaLabel`.
+- `DuSteps`: `aria-current="step"` on the furthest active step, plus an `ariaLabel` for the sequence.
+- `DuDock`: it is a `<nav>` now, with an `ariaLabel`, and the active item carries `aria-current="page"`.
 
 - `DuTable`: `caption` (and `hideCaption`, or a `caption` slot). Every `<th>` in the header and footer now carries `scope="col"` — without it a screen reader has to guess whether a header cell heads a column or a row.
 - `DuCarousel`: `role="region"` + `aria-roledescription="carousel"` + `ariaLabel`, each slide a named `role="group"` + `aria-roledescription="slide"` (`slideLabel`, default `"2 of 5"`), and `tabindex="0"` on the strip — a scrollable region nothing inside can focus cannot be scrolled by keyboard at all. New `controls` renders named previous/next buttons that scroll one slide, measured from the slide rather than assumed; `next()` / `previous()` are exposed.
@@ -120,6 +128,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 - `DuSelect`: the per-option checkbox no longer double-toggles the selection.
 
 ### Internal
+
+- `tests/template-root-invariant.spec.ts`: no component template may open with a comment. A leading comment adds a vnode, and Vue only auto-inherits attributes onto a single root — so the component silently stops passing a consumer's `class` or `aria-*`, and only in development, since production strips comments. Nine components carried one; all are fixed, and the three lint exemptions that forced the position moved to `eslint.config.js`.
 
 - `components/core/` gains `popover/usePopoverState`, `positioning/useAnchorPosition`, `navigation/useRovingIndex` and `shared/useControllableState`, extracted from the combobox engine as its second consumers arrived. The engine now leans on the first two, with its own tests unchanged.
 - `components/core/focus/` adds `useFocusReturn` (remember what had focus before opening, hand it back after) and `useFocusTrap` (keep Tab inside a container). `DuDrawer` now uses the first instead of its own copy; the trap lands with the drawer's overlay mode. `focusableWithin(root)` joins `focusableInDocument()` in `core/shared/dom`.

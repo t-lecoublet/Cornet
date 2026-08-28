@@ -4,12 +4,15 @@ import { type DuDockItem, type DuDockProps } from './du-dock.types';
 import { useSizeMapping } from "../../../composables/useSizeProps";
 import { iconAsText, resolveIconKind } from "../../../composables/useIconSource";
 
+// A bar of destinations is navigation, and a landmark is only useful once it
+// has a name to jump to.
 const props = withDefaults(
   defineProps<DuDockProps>(),
   {
     size: "default",
     items: undefined,
     reverseTheme: false,
+    ariaLabel: undefined,
   },
 );
 
@@ -40,16 +43,20 @@ defineExpose({
 </script>
 
 <template>
-  <div :class="[
-    'dock',
-    sizeClass,
-    reverseTheme && 'bg-neutral text-neutral-content',
-  ]">
+  <nav
+    :aria-label="ariaLabel"
+    :class="[
+      'dock',
+      sizeClass,
+      reverseTheme && 'bg-neutral text-neutral-content',
+    ]"
+  >
     <template v-if="$slots.default">
       <slot></slot>
     </template>
     <template v-else-if="items">
-      <button v-for="(item, index) in items" :key="index" @click="setActiveItem(index)"
+      <button v-for="(item, index) in items" :key="index" type="button" @click="setActiveItem(index)"
+        :aria-current="isActive(index) ? 'page' : undefined"
         :class="[item.class, isActive(index) && 'dock-active']">
         <slot name="icon" :item="item" :index="index">
           <slot :name="`icon-${index}`" :item="item" :index="index">
@@ -72,5 +79,5 @@ defineExpose({
         </span>
       </button>
     </template>
-  </div>
+  </nav>
 </template>

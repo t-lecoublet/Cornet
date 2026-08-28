@@ -37,6 +37,10 @@ provide("ratingName", ratingName);
 
 const { sizeClass } = useSizeMapping(props, "rating");
 
+// The template is one root through a `v-if` chain — items mode, generated
+// mode, manual mode — so no comment may precede it: a leading comment makes it
+// two nodes and the component stops inheriting a consumer's attributes.
+
 /** The top of the scale, for the "n out of max" each star announces. */
 const maxValue = computed(() => {
   if (props.items != null) {
@@ -79,7 +83,6 @@ defineExpose({
 </script>
 
 <template>
-  <!-- Dynamic items mode -->
   <div v-if="items && !$slots.default" v-bind="groupProps" :class="ratingClass">
     <template v-for="(item, index) in items" :key="index">
       <DuRatingItem

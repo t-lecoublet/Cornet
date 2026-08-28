@@ -11,6 +11,7 @@ const props = withDefaults(
     value: 0,
     size: undefined,
     thickness: undefined,
+    ariaLabel: undefined,
   },
 );
 const { colorClass } = useVariantMapping(props, "text");
@@ -41,8 +42,11 @@ const styleVar = computed(() => {
   <div
     :class="['radial-progress', colorClass, size]"
     :style="styleVar"
-    :aria-valuenow="value"
     role="progressbar"
+    :aria-valuenow="value"
+    aria-valuemin="0"
+    aria-valuemax="100"
+    :aria-label="ariaLabel"
   >
     <slot> {{ value }}% </slot>
   </div>

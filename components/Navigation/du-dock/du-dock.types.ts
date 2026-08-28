@@ -18,4 +18,6 @@ export interface DuDockProps {
   size?: Size;
   items?: DuDockItem[];
   reverseTheme?: boolean;
+  /** Accessible name of the navigation landmark. */
+  ariaLabel?: string;
 } 

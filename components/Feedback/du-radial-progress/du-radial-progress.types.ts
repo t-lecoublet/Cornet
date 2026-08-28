@@ -11,4 +11,6 @@ export interface DuRadialProgressProps {
   variant?: Variant;
   size?: Size | string;
   thickness?: string;
+  /** Accessible name of the progress indicator. */
+  ariaLabel?: string;
 } 

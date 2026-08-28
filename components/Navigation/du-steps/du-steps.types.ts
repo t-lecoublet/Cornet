@@ -12,6 +12,8 @@ export interface DuStepsItem {
 
 export interface DuStepsProps {
   items?: DuStepsItem[];
+  /** Accessible name of the sequence. */
+  ariaLabel?: string;
   direction?: DuStepsDirection;
   customClass?: string;
   responsive?: boolean;

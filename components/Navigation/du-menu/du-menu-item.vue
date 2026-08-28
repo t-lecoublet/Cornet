@@ -105,7 +105,6 @@ function handleKeydown(event: KeyboardEvent) {
 </script>
 
 <template>
-  <!-- Plain title -->
   <template v-if="item.isTitle && !hasSubmenu">
     <slot v-if="$slots[`title-${path}`]" :name="`title-${path}`" :item="item" :index="index" />
     <slot v-else-if="$slots.title" name="title" :item="item" :index="index" />

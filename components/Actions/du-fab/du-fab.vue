@@ -31,7 +31,6 @@ const { resolveIconKind, getTooltipPosition } = useFabIcon()
 </script>
 
 <template>
-  <!-- Dynamic items mode -->
   <template v-if="items || mainAction">
     <div :class="fabClasses">
       <!-- Main trigger button -->

@@ -15,4 +15,10 @@ export interface DuLoadingProps {
   animation?: DuLoadingAnimation;
   size?: Size;
   variant?: Variant;
+  /**
+   * What is loading, announced politely. Without it the spinner is hidden from
+   * assistive tech: a decoration nobody can read is better than an unnamed
+   * live region that says nothing.
+   */
+  label?: string;
 } 

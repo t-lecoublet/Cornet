@@ -27,6 +27,25 @@ export default defineConfigWithVueTs(
     },
   },
   {
+    // Three exemptions that cannot be written inline: the directive would have
+    // to sit above the root element, and a leading template comment turns the
+    // component into a fragment — which silently stops it inheriting the
+    // attributes a consumer passes. The reasoning lives in each component's
+    // script block.
+    files: [
+      'components/Actions/du-modal/du-modal.vue',
+      'components/DataInput/du-label/du-label.vue',
+      'components/Feedback/du-progress/du-progress.vue',
+    ],
+    rules: {
+      // The dialog's click handler is backdrop dismissal; Escape covers the keyboard.
+      'vuejs-accessibility/no-static-element-interactions': 'off',
+      // DuLabel's control arrives through its slot; DuProgress is a readout, not a control.
+      'vuejs-accessibility/label-has-for': 'off',
+      'vuejs-accessibility/form-control-has-label': 'off',
+    },
+  },
+  {
     // Cornet's form primitives render the bare control and leave the label to
     // the consumer — `<DuLabel>Email <DuInputField/></DuLabel>`, or a `for`/`id`
     // pair. `form-control-has-label` cannot see across that boundary, so here

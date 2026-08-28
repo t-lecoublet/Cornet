@@ -16,6 +16,12 @@ const props = withDefaults(
   },
 );
 
+// Read-only renders a plain element, not a disabled radio. A disabled
+// control reads as "you may not touch this", which is not what a displayed
+// rating means; the group carries the value, and the stars are decoration.
+//
+// The note is here rather than above the root: a `v-if`/`v-else` pair is one
+// root for attribute inheritance, and a leading comment would make it two.
 const emit = defineEmits<DuRatingItemEmits>();
 
 const ratingName = inject("ratingName", "");
@@ -55,11 +61,6 @@ const maskClass = computed(() => {
 </script>
 
 <template>
-  <!--
-    Read-only renders a plain element, not a disabled radio. A disabled control
-    reads as "you may not touch this", which is not what a displayed rating
-    means; the group carries the value, and the stars are then decoration.
-  -->
   <div v-if="readonly" :class="maskClass" aria-hidden="true"></div>
   <input
     v-else

@@ -11,8 +11,22 @@ const props = withDefaults(
     responsive: false,
     activeSteps: undefined,
     variant: "primary",
+    ariaLabel: undefined,
   },
 );
+
+/**
+ * The step you are on: the furthest one marked active. Everything before it is
+ * done, everything after is to come — `aria-current="step"` is what says which
+ * of the three a step is, and only one may carry it.
+ */
+const currentStep = computed(() => {
+  const marked = (props.items ?? [])
+    .map((item, index) => (item.active === true ? index : -1))
+    .filter((index) => index >= 0)
+  const active = [...(props.activeSteps ?? []), ...marked]
+  return active.length > 0 ? Math.max(...active) : -1
+})
 
 const stepsClasses = computed(() => {
   const classes = ["steps", props.direction];
@@ -51,7 +65,7 @@ const getStepClass = (index: number): string[] => {
 </script>
 
 <template>
-  <ul :class="stepsClasses">
+  <ul :class="stepsClasses" :aria-label="ariaLabel">
     <!-- Dynamic items mode -->
     <template v-if="items">
       <li
@@ -59,6 +73,7 @@ const getStepClass = (index: number): string[] => {
         :key="index"
         :class="getStepClass(index)"
         :data-content="item.dataContent"
+        :aria-current="index === currentStep ? 'step' : undefined"
       >
         <slot :name="`step-${index}`" :item="item" :index="index">
           <slot name="step" :item="item" :index="index">

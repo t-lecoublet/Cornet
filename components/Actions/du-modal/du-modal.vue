@@ -18,6 +18,11 @@ const props = withDefaults(
   },
 )
 
+// The dialog carries a click handler for backdrop dismissal, which has no
+// keyboard equivalent to miss: Escape closes it, natively and explicitly.
+// (The lint exemption is in eslint.config.js — an inline one would have to
+// sit above the root element, and a leading template comment makes the
+// component a fragment that cannot inherit a consumer's attributes.)
 const dialogRef = ref<HTMLDialogElement | null>(null)
 
 const placementClass = computed(() => {
@@ -85,11 +90,6 @@ function handleEscapeKey(_event: KeyboardEvent) {
 </script>
 
 <template>
-  <!--
-    The click handler implements backdrop dismissal, which has no keyboard
-    equivalent to miss: Escape closes the dialog, natively and explicitly.
-  -->
-  <!-- eslint-disable-next-line vuejs-accessibility/no-static-element-interactions -->
   <dialog
     ref="dialogRef"
     :id="id"

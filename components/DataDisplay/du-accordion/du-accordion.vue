@@ -102,7 +102,6 @@ defineExpose({ isOpen, toggle })
 </script>
 
 <template>
-  <!-- Dynamic items mode -->
   <template v-if="items">
     <div
       v-for="(item, index) in items"

@@ -4,6 +4,12 @@ import { useCountdownValue } from './composables/useCountdownValue'
 import { useCountdownDisplay } from './composables/useCountdownDisplay'
 import { useCountdownTimer } from './composables/useCountdownTimer'
 
+// `role="timer"` is a live region by definition; the explicit `aria-live`
+// on the element keeps older assistive tech in step.
+//
+// The comment lives here rather than above the root: a leading template
+// comment makes the component a fragment, and a fragment cannot inherit
+// the attributes a consumer passes.
 const props = withDefaults(
   defineProps<DuCountdownProps>(),
   {
@@ -38,6 +44,7 @@ defineExpose({
 
 <template>
   <span
+    role="timer"
     :class="['countdown', customClass]"
     aria-live="polite"
     :aria-label="ariaLabel"

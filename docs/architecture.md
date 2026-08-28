@@ -110,6 +110,26 @@ composables predate this rule and are scheduled for migration
 
 Export from `index.ts`, then `npm run generate:types` — CI fails on drift.
 
+### Never open a template with a comment
+
+```vue
+<template>
+  <!-- why this element is like this -->   <!-- ✗ -->
+  <div class="thing">
+```
+
+A `<template>` whose first node is a comment renders one vnode more than its
+author counted, and Vue only auto-inherits attributes onto a **single** root.
+The component then silently stops passing a consumer's `class`, `aria-label` or
+`data-*` to anything — and only in development, because production builds strip
+comments and the root becomes single again. A dev-only difference in attribute
+inheritance is about the worst shape a bug can take.
+
+Put the explanation in the `<script>`, where it costs nothing. A lint directive
+that would have to sit above the root goes in `eslint.config.js` instead, with
+its reason. `tests/template-root-invariant.spec.ts` enforces this; it exists
+because the mistake has been made three separate times here.
+
 ---
 
 ## 3. Typing

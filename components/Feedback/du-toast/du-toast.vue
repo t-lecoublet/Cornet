@@ -9,6 +9,9 @@ import { computed, ref, watch } from 'vue'
 import { useToasts, type Toast } from '../../../composables/useToasts'
 import { TOAST_ALERT_VARIANTS, type DuToastProps } from './du-toast.types'
 
+// One Teleport, disabled when there is nowhere to send it: `<component :is>`
+// cannot stand in for a `<template>`, and duplicating the container would
+// duplicate the live regions with it.
 const props = withDefaults(
   defineProps<DuToastProps>(),
   {
@@ -76,9 +79,6 @@ defineSlots<{
 </script>
 
 <template>
-  <!-- One Teleport, disabled when there is nowhere to send it: `<component :is>`
-       cannot stand in for a `<template>`, and duplicating the container would
-       duplicate the live regions with it. -->
   <Teleport :to="to ?? 'body'" :disabled="!to" defer>
     <div
       ref="container"
