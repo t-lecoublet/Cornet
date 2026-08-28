@@ -76,8 +76,8 @@
 - [x] **3.2** — **DuMenu**: split by a `role` prop into a nav list (default: plain `<ul>`, native Tab, `aria-current`) and an APG menu (`menuitem` / `menuitemcheckbox`, one tab stop, arrows, typeahead, collapsible submenus). It used to wear `role="listbox"` over navigation links. `useMenuKeyboardNav` is replaced by `core/navigation/useRovingIndex`; the `onItemClick` / `onSubItemClick` props are gone (they duplicated the emits); a `MenuButton` story documents the DuDropdown pairing
 - [x] **3.3** — **DuTooltip**: `role="tooltip"` on a real element, `aria-describedby` wired onto the first focusable in the slot, hover **and** keyboard-focus triggers, Escape dismiss, `openDelay` / `closeDelay`, hoverable tip, optional top layer. The `data-tip` attribute had to go: daisyUI reveals a tip from it on `:hover` alone, instantly and undismissably, so no amount of JS could own the timing while it was set
 - [x] **3.4** — **DuModal**: checked and deliberately left alone. `showModal()` already gives the top layer, an inert background, the focus trap and the focus return; `@close` already emits `update:open` on every close path; axe reports nothing. `initialFocus` and an automatic `aria-labelledby` would be conveniences, not fixes
-- [ ] **3.5** — **DuDrawer**: migrate `useDrawerDismiss` / `useDrawerOpenState` onto `core/popover` + `core/focus` (overlay focus trap, Escape, inert background)
-- [ ] **3.6** — **DuToast**: proper `aria-live` region, queue management, durations, pause on hover/focus
+- [x] **3.5** — **DuDrawer**: `useDrawerDismiss` deleted, `useDrawerOpenState` on `useControllableState`, dismissal on `core/popover`, and the floating sidebar is now a real dialog — `role="dialog"`, `aria-modal`, focus trapped, background `inert`, focus handed back. Pinned and floating are told apart by matching the same breakpoint in JS, because the difference is behavioural and CSS cannot express it. `open` / `modelValue` lose their `false` defaults so the controlled contract can tell them apart
+- [x] **3.6** — **DuToast**: two live regions rendered before there is anything to say (a region only announces what arrives after it exists), a module-scope `useToasts()` queue, durations with `0` meaning persistent, countdowns held on hover and focus-within and resumed where they stopped, named close buttons, and motion that honours `prefers-reduced-motion`
 
 ## Phase 4 — Selection & value widgets
 
@@ -110,7 +110,7 @@
 | --- | --- | --- |
 | 1 | Combobox engine + DuSelect/DuSearch | ✅ Done (a11y audit 1.6 still owed) |
 | 2 | Foundation — docs, `core/` primitives, lint, `useId` | ✅ Done (`core/focus` waits for its first consumer) |
-| 3 | Popups — dropdown, menu, tooltip, modal, drawer, toast | 🟡 Dropdown, menu, tooltip done; modal left native; drawer + toast to go |
+| 3 | Popups — dropdown, menu, tooltip, modal, drawer, toast | ✅ Done (modal deliberately left native) |
 | 4 | Selection — tabs, accordion, filter, rating, range, pagination | 🔲 Todo |
 | 5 | Data display + hygiene + coverage | 🔲 Todo |
 | 6 | API freeze, docs, audits, v1.0 | 🔲 Todo |

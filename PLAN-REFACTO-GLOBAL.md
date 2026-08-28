@@ -7,7 +7,7 @@
 >
 > `PLAN-REFONTE-COMBOBOX.md` décrit une approche par *vendoring* d'une lib tierce qui a été **abandonnée en cours de route** au profit d'une réimplémentation native : il est conservé comme archive et ne doit plus servir de référence.
 >
-> **Avancement au 2026-08-28** — **G1, G2, G3 et G4 sont faits**, et `core/focus/` est écrit en avance. DuModal (§4.4) est écarté : son contrôle est natif et vérifié correct. §2.0, les primitives §2.1–2.2, tout le socle §3, puis §4.1 DuDropdown, §4.2 DuMenu et §4.3 DuTooltip. La lib est à 36 specs / 579 tests + 25 skippés, zéro `any` en code livré, lint a11y + axe + build de contrôle CSS bloquants en CI. Prochain jalon : G5 (Drawer + Toast) — le drawer consommera enfin `useFocusTrap` sur son mode overlay.
+> **Avancement au 2026-08-28** — **G1 à G5 sont faits.** La Phase 3 est close : dropdown, menu, tooltip, drawer et toast sont refondus sur `core/`. DuModal (§4.4) est écarté : son contrôle est natif et vérifié correct. §2.0, les primitives §2.1–2.2, tout le socle §3, puis §4.1 à §4.6. La lib est à 37 specs / 610 tests + 28 skippés, zéro `any` en code livré, lint a11y + axe + build de contrôle CSS bloquants en CI. Prochain jalon : G6 (Tabs + Accordion/Collapse), le premier de la Phase 4.
 >
 > Breaking changes assumés (beta). Chaque section « Composant » est conçue comme une PR autonome.
 
@@ -245,26 +245,26 @@ Ce qui reste ci-dessous relève du confort, pas du défaut — conservé pour m�
 - [~] Pas de focus trap maison : `showModal()` + top-layer + inert natif suffisent. Documenter que le mode non-modal (`show()`) n'est pas supporté.
 - [~] Tests : étendre `du-modal.spec.ts` (fermetures natives synchronisées, labelledby, initialFocus, focus return).
 
-### 4.5 DuDrawer
+### 4.5 DuDrawer — ✅ **fait**
 
-**État actuel** : composables locaux `useDrawerClasses` (contient un `Math.random`), `useDrawerDismiss`, `useDrawerOpenState` ; pattern DaisyUI checkbox/overlay.
-
-**Cible** :
-- [ ] `useDrawerOpenState` → `useControllableState` ; `useDrawerDismiss` → `core/popover` (outside + Escape) ; `Math.random` → `useId` (§3.2). API publique inchangée autant que possible (`open`/`update:open` s'ils existent, sinon les introduire).
-- [ ] Mode overlay (mobile) : `useFocusTrap` sur le panneau + `useFocusReturn` au close + `aria-modal="true"` `role="dialog"` sur le panneau + fond `inert` (attribut sur le contenu principal pendant l'ouverture — prop `inertTarget?: string` sélecteur, défaut : sibling contenu du drawer).
-- [ ] Mode latéral persistant (desktop) : aucun trap, `role` néant — la prop existante qui distingue les modes pilote tout ça.
-- [ ] Tests : étendre `du-drawer.spec.ts` (trap actif seulement en overlay, Escape, focus return, ids déterministes).
-
-### 4.6 DuToast
-
-**État actuel** : conteneur de positionnement CSS pur (`toast-*`), prop `to` (téléport ?), aucun `aria-live`, pas de gestion de file/durée.
+**État de départ** : composables locaux `useDrawerClasses` (contient un `Math.random`), `useDrawerDismiss`, `useDrawerOpenState` ; pattern DaisyUI checkbox/overlay.
 
 **Cible** :
-- [ ] Conteneur : `role="status"` + `aria-live="polite"` par défaut ; variante `assertive` pour les erreurs (prop `politeness` par toast, le conteneur agrège — pattern : deux régions live, une polite une assertive).
-- [ ] Introduire une gestion d'affichage : composable public `useToasts()` (état module-scope : `push({ title, message, variant, duration, politeness })`, `dismiss(id)`) + `<DuToast>` qui rend la file. Durée par défaut 5000 ms, `duration: 0` = persistant, **pause des timers au hover et au focus-within** (WCAG 2.2.1).
-- [ ] Chaque toast : bouton de fermeture accessible (`aria-label` paramétrable), animations d'entrée/sortie respectant `prefers-reduced-motion`.
-- [ ] Rétrocompat markup : le mode « slot manuel » actuel (toasts posés en enfants) reste supporté ; `useToasts` est additif.
-- [ ] Tests (~12) : live regions, file, durées (fake timers), pause hover/focus, dismiss.
+- [x] `useDrawerOpenState` → `useControllableState` ; `useDrawerDismiss` → `core/popover` (outside + Escape) ; `Math.random` → `useId` (§3.2). API publique inchangée autant que possible (`open`/`update:open` s'ils existent, sinon les introduire).
+- [x] Mode overlay (mobile) : `useFocusTrap` sur le panneau + `useFocusReturn` au close + `aria-modal="true"` `role="dialog"` sur le panneau + fond `inert` (attribut sur le contenu principal pendant l'ouverture — prop `inertTarget?: string` sélecteur, défaut : sibling contenu du drawer).
+- [x] Mode latéral persistant (desktop) : aucun trap, `role` néant. **La prop ne suffisait pas** : `responsive`/`alwaysOpenOnLarge` ne disent que la classe CSS (`lg:drawer-open`), pas si le point de rupture est *actuellement* franchi. Il a fallu évaluer la même media query en JS (`useDrawerPinned`, breakpoints Tailwind en `rem`). Sans `matchMedia` (SSR, tests) la réponse est « flottant » — le sens sûr : du comportement overlay sur une sidebar épinglée est redondant, l'inverse enferme un utilisateur clavier.
+- [x] Tests : étendre `du-drawer.spec.ts` (trap actif seulement en overlay, Escape, focus return, ids déterministes).
+
+### 4.6 DuToast — ✅ **fait**
+
+**État de départ** : conteneur de positionnement CSS pur (`toast-*`), prop `to` (téléport ?), aucun `aria-live`, pas de gestion de file/durée.
+
+**Cible** :
+- [x] Conteneur : `role="status"` + `aria-live="polite"` par défaut ; variante `assertive` pour les erreurs (prop `politeness` par toast, le conteneur agrège — pattern : deux régions live, une polite une assertive).
+- [x] Introduire une gestion d'affichage : composable public `useToasts()` (état module-scope : `push({ title, message, variant, duration, politeness })`, `dismiss(id)`) + `<DuToast>` qui rend la file. Durée par défaut 5000 ms, `duration: 0` = persistant, **pause des timers au hover et au focus-within** (WCAG 2.2.1).
+- [x] Chaque toast : bouton de fermeture accessible (`aria-label` paramétrable), animations d'entrée/sortie respectant `prefers-reduced-motion`.
+- [x] Rétrocompat markup : le mode « slot manuel » actuel (toasts posés en enfants) reste supporté ; `useToasts` est additif.
+- [x] Tests (~12) : live regions, file, durées (fake timers), pause hover/focus, dismiss.
 
 ## 5. Phase 4 — Widgets sélection & valeur
 
@@ -369,7 +369,7 @@ Mocks d'environnement à centraliser dans un setup vitest partagé : Popover API
 | G2 | §3 Standards — ✅ **fait** (docs, useId, typage + génériques, lint a11y + axe, build de contrôle CSS ; T9 clos par audit) | — | — |
 | G3 | §4.1–4.2 Dropdown + Menu — ✅ **fait** | G1, G2 | — |
 | G4 | §4.3 Tooltip — ✅ **fait**. §4.4 Modal — ⛔ écarté : le contrôle est natif et correct | G1 | — |
-| G5 | §4.5–4.6 Drawer + Toast | G1 | 2-3 j |
+| G5 | §4.5–4.6 Drawer + Toast — ✅ **fait** | G1 | — |
 | G6 | §5.1–5.2 Tabs + Accordion/Collapse | G1, G2 | 3 j |
 | G7 | §5.3–5.6 Filter, Rating, Range, Pagination | G2 | 2 j |
 | G8 | §6 Data display | G2 | 2 j |
@@ -388,6 +388,8 @@ Total ≈ **24-29 jours**, largement parallélisable : G3–G9 sont indépendant
 6. **Vérifier le plugin Vite maison** avant tout renommage d'exports/chemins (il a ses propres tests — `plugin-vite.spec.ts` — qui peuvent dépendre de la structure des dossiers).
 7. **Un outil qu'on configure jusqu'au silence ne sert à rien.** Le lint a11y et axe ont été pointés sur la lib puis triés finding par finding : chaque dérogation porte sa raison à côté, et les échecs structurels portent une entrée qui **expire toute seule** (le test échoue si la règle allowlistée cesse d'échouer). Reproduire ce schéma pour tout nouvel outil de vérification.
 8. **Un compte d'`any` ne mesure pas la dette de typage.** Les 16 `any` réels étaient quelques heures ; ce qui manquait vraiment, c'étaient les génériques — que rien ne signale. Chercher plutôt : quelles données du consommateur traversent un slot ou un emit en étant aplaties ?
-9. **Un allowlist de dette doit expirer tout seul.** Le spec axe vérifie que chaque règle tolérée **échoue toujours** : quand DuMenu a cessé de violer les quatre règles listées, le test est passé au rouge jusqu'à ce que l'entrée soit supprimée. Sans ça, un allowlist survit au bug qu'il documente et devient une couverture permanente.
+9. **Un allowlist de dette doit expirer tout seul.** Les quatre entrées écrites en G2 sont toutes mortes en G3 et G5, chacune en faisant rougir le test au moment où le bug était réparé.
+9bis. **Une réécriture de fichier emporte ce qui n'était pas dans sa tête.** La refonte de DuTooltip a supprimé son `<style scoped>` — et avec lui la règle `.tooltip-neutral` ajoutée en G2. `npm run check:css` l'a rattrapé. C'est l'argument pour que ce genre de vérification existe : elle ne sert pas à trouver le bug une fois, elle sert à le retrouver.
+10bis. **Un allowlist de dette doit expirer tout seul (suite).** Le spec axe vérifie que chaque règle tolérée **échoue toujours** : quand DuMenu a cessé de violer les quatre règles listées, le test est passé au rouge jusqu'à ce que l'entrée soit supprimée. Sans ça, un allowlist survit au bug qu'il documente et devient une couverture permanente.
 10. **Une classe safelistée n'est pas une classe qui existe.** L'invariant unitaire prouve la scannabilité, pas la réalité (`tooltip-neutral`). `npm run check:css` compile le vrai pipeline ; le lancer après toute modification d'un `useSizeMapping`/`useVariantMapping` ou d'une constante `*_SIZES`/`*_VARIANTS`.
 7. Les estimations supposent un développeur connaissant la codebase ; les jalons G3–G9 peuvent être livrés dans n'importe quel ordre après G1/G2 si les priorités produit changent.
