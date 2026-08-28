@@ -8,6 +8,8 @@ const props = withDefaults(
     value: 0,
     checked: false,
     disabled: false,
+    readonly: false,
+    label: undefined,
     shape: "star-2",
     halfMask: undefined,
     customClass: "",
@@ -39,27 +41,34 @@ const shapeClass = computed(() => {
 
 const maskClass = computed(() => {
   const classes = ["mask", shapeClass.value, props.color];
-  
+
   if (props.halfMask) {
-    classes.push((props.halfMask == 1)?`mask-half-1`:`mask-half-2`);
+    classes.push((props.halfMask == 1) ? `mask-half-1` : `mask-half-2`);
   }
-  
+
   if (props.customClass) {
     classes.push(props.customClass);
   }
-  
+
   return classes;
 });
 </script>
 
 <template>
+  <!--
+    Read-only renders a plain element, not a disabled radio. A disabled control
+    reads as "you may not touch this", which is not what a displayed rating
+    means; the group carries the value, and the stars are then decoration.
+  -->
+  <div v-if="readonly" :class="maskClass" aria-hidden="true"></div>
   <input
+    v-else
     type="radio"
     :name="ratingName"
     :class="maskClass"
     :checked="checked"
-    @click="handleChange"
     :disabled="disabled"
-    :aria-label="`${value} star`"
+    :aria-label="label"
+    @click="handleChange"
   />
-</template> 
+</template>

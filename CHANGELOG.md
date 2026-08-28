@@ -27,6 +27,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 
 ### Changed (breaking)
 
+- `DuFilter` is a `<fieldset>` with a `<legend>` (visually hidden unless `showLegend`) and takes a `v-model`: `modelValue` is the selected filter's value, alongside the `change` emit it already had. A radio group without a name for the whole set leaves a screen reader unable to say what the buttons have in common. It is also generic over its item type, and each item can carry a stable `value`.
+- `DuFilter`: the reset button is no longer rendered when nothing is selected. daisyUI already hid it with `visibility: hidden` on that same condition, so this only makes the markup agree with what was already visually true.
+
 - `DuTabs` follows the WAI-ARIA tabs pattern: `role="tablist"` / `tab` / `tabpanel`, one tab stop with arrow keys, `Home`/`End`, and `activation: 'automatic' | 'manual'`. **`modelValue` is now the selected tab's `value`, not its index** (it falls back to the index when an item has no `value`). daisyUI 5 already styles `.tab[aria-selected=true]`, so the selected state is carried by the attribute a screen reader reads. New per-item `value` and `disabled`; the `bottom` prop, previously declared and never used, now applies `tabs-bottom`.
 - `DuAccordion` and `DuCollapse` follow the accordion / disclosure patterns: each header is a `<button aria-expanded>` naming a `role="region"`, with no hidden input anywhere. Both take a `v-model` — `modelValue` is the open panel's value (or an array) for the accordion, always an array for the collapse, whose panels are independent. New `multiple` and `collapsible` on the accordion, per-item `value` and `disabled` on both.
 - `DuTabs`, `DuAccordion`, `DuCollapse`: an indexed slot (`content-0`, `title-0`) now beats the global one (`content`, `title`). It was the other way round, which made the indexed override unusable as soon as a global slot was given.
@@ -67,6 +70,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 - `DuAccordion`: the `name` prop no longer defaults to the literal `"accordion"`. Two accordions on a page shared that radio-group name, so opening a panel in one closed a panel in the other. Each instance now derives its own; pass `name` explicitly to keep a fixed one.
 
 ### Added
+
+- `DuRating`: `itemLabel` names each star (`"3 out of 5"` by default, and replaceable for another language or scale), `ariaLabel` names the group, and `readonly` renders plain elements exposing the group as `role="img"` with the value as its name — a disabled radio announces "you may not touch this", which is not what a displayed rating means.
+- `DuRange`: `valueText` sets `aria-valuetext` (`"12"` alone means nothing to someone who cannot see what it is 12 *of*), `ariaLabel` / `ariaLabelledby`, and `ticks` rendering a `<datalist>` the input points at.
 
 - `useToasts()`, exported from the package root: a module-scope toast queue (`push`, `dismiss`, `clear`, plus `pause` / `resume`), rendered by a single `<DuToast />` anywhere in the layout. `duration` defaults to 5000 ms, `0` means until dismissed.
 - `DuToast` now renders that queue, inside **two live regions** — `role="status"` / `aria-live="polite"` and `role="alert"` / `aria-live="assertive"` — that exist whether or not they hold anything, because a live region only announces what arrives after it exists. An `error` toast goes to the assertive one unless `politeness` says otherwise. Each toast gets a named close button (`dismissLabel`), and hovering the container or tabbing into it holds every countdown (WCAG 2.2.1), resuming from where it stopped. New `toast` slot for rendering a queued toast yourself; the handwritten-toasts slot still works unchanged.

@@ -69,4 +69,52 @@ describe('DuRating', () => {
     const wrapper = mount(DuRating, { props: { count: 5, modelValue: 4 } })
     expect((wrapper.vm as unknown as { value: number }).value).toBe(4)
   })
+
+  it('names each star, because "3" alone says nothing about what it is 3 of', () => {
+    const wrapper = mount(DuRating, { props: { count: 5 } })
+    const labels = wrapper.findAll('input[type="radio"]').map((i) => i.attributes('aria-label'))
+    expect(labels).toEqual([
+      '1 out of 5', '2 out of 5', '3 out of 5', '4 out of 5', '5 out of 5',
+    ])
+  })
+
+  it('lets the caller write those names, for another language or another scale', () => {
+    const wrapper = mount(DuRating, {
+      props: { count: 3, itemLabel: (value: number, max: number) => `${value} sur ${max}` },
+    })
+    expect(wrapper.find('input[type="radio"]').attributes('aria-label')).toBe('1 sur 3')
+  })
+
+  it('counts halves into the scale it announces', () => {
+    const wrapper = mount(DuRating, { props: { count: 2, halfStar: true } })
+    const labels = wrapper.findAll('input[type="radio"]').map((i) => i.attributes('aria-label'))
+    expect(labels).toEqual(['0.5 out of 2', '1 out of 2', '1.5 out of 2', '2 out of 2'])
+  })
+
+  it('is a radio group, and takes a name for it', () => {
+    const wrapper = mount(DuRating, { props: { count: 5, ariaLabel: 'Overall rating' } })
+    expect(wrapper.find('.rating').attributes('role')).toBe('radiogroup')
+    expect(wrapper.find('.rating').attributes('aria-label')).toBe('Overall rating')
+  })
+
+  it('reads out as one value when readonly, with no controls at all', () => {
+    // A disabled radio says "you may not touch this". A displayed rating is not
+    // a control someone is being kept away from — it is a value.
+    const wrapper = mount(DuRating, { props: { count: 5, modelValue: 3, readonly: true } })
+
+    expect(wrapper.findAll('input')).toHaveLength(0)
+    expect(wrapper.find('.rating').attributes('role')).toBe('img')
+    expect(wrapper.find('.rating').attributes('aria-label')).toBe('3 out of 5')
+  })
+
+  it('ignores clicks while readonly', async () => {
+    const wrapper = mount(DuRating, { props: { count: 5, modelValue: 3, readonly: true } })
+    await wrapper.findAll('.mask')[0]!.trigger('click')
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+  })
+
+  it('hides the readonly stars from assistive tech — the group already said it', () => {
+    const wrapper = mount(DuRating, { props: { count: 5, modelValue: 3, readonly: true } })
+    expect(wrapper.findAll('.mask').every((w) => w.attributes('aria-hidden') === 'true')).toBe(true)
+  })
 })

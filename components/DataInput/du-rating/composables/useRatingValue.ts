@@ -5,6 +5,7 @@ interface RatingValueProps {
   modelValue: number
   clearable?: boolean
   disabled?: boolean
+  readonly?: boolean
 }
 
 /** Owns the selected rating value, kept in sync with `modelValue`, and the click-to-select/clear business rule. */
@@ -19,7 +20,7 @@ export function useRatingValue(props: RatingValueProps, emit: DuRatingEmits) {
   )
 
   const handleChange = (value: number) => {
-    if (props.disabled) {
+    if (props.disabled || props.readonly) {
       return
     }
     if (value === internalValue.value && props.clearable) {

@@ -120,20 +120,28 @@ whole options).
 
 **Fichiers :** `components/DataInput/du-range/du-range.vue` | `.types.ts` | `.stories.ts`
 
+A native `<input type="range">`, deliberately: the browser already provides the
+keyboard, the drag, the step arithmetic and the `slider` role. What it cannot
+provide is what the number *means*.
+
 **Props :**
 - `modelValue?`: number (v-model)
-- `min?`: number
-- `max?`: number
-- `step?`: number
+- `min?` / `max?` / `step?`: number
 - `disabled?`: boolean
 - `variant?`: Variant
 - `size?`: Size
+- `ariaLabel?` / `ariaLabelledby?`: string — a slider with no visible label needs one
+- `valueText?`: `(value: number) => string` — sets `aria-valuetext`. `"12"` alone is meaningless to someone who cannot see what it is 12 *of*
+- `ticks?`: `(number | { value, label? })[]` — rendered as a `<datalist>` the input points at, which is what makes browser tick marks appear
 
 ---
 
 ## DuRating
 
 **Fichiers :** `components/DataInput/du-rating/du-rating.vue` | `.types.ts` | `.stories.ts`
+
+daisyUI's radio-group pattern is kept — it is the right one for a rating — with
+the group named and every star named.
 
 **Props :**
 - `modelValue?`: number (v-model)
@@ -143,6 +151,9 @@ whole options).
 - `halfStar?`: boolean
 - `clearable?`: boolean
 - `disabled?`: boolean
+- `readonly?`: boolean — renders plain elements and exposes the group as `role="img"` with the value as its name. A disabled radio says "you may not touch this"; a displayed rating is a value, not a control someone is kept away from
+- `ariaLabel?`: string — names the group
+- `itemLabel?`: `(value, max) => string` — names each star, default `"3 out of 5"`
 - `size?`: Size
 - `shape?`: `'star'` | `'star-2'` | `'heart'` | `'circle'`
 - `color?`: string
@@ -176,20 +187,36 @@ export interface DuRatingItemData {
 
 **Files:** `components/DataInput/du-filter/du-filter.vue` | `.types.ts` | `.stories.ts`
 
-Filter button group.
+A radio group of mutually exclusive filters, in a `<fieldset>` — daisyUI's
+radio pattern is right here; what it lacked was a name for the group as a whole
+and a way for the parent to *hold* the selection rather than merely hear about
+it. Generic over the item type.
 
 **Props:**
 - `items?`: DuFilterItem[]
+- `modelValue?`: string | number | null — the selected filter. Omit it and the component owns its state
+- `legend?`: string (default `'Filter'`) — the group's name, rendered as a `<legend>`
+- `showLegend?`: boolean — show it rather than only expose it (`sr-only` otherwise)
+- `resetLabel?`: string — accessible name of the `×` button
 - `name?`: string
 - `buttonsArgs?`: DuFilterButtonArgs
+
+**Emits:** `update:modelValue`, `change`
+
+There is no "always show the reset" prop: daisyUI hides `.filter-reset` with
+`visibility: hidden` whenever nothing is checked, so such a prop could not
+deliver. The component removes it from the DOM on the same condition, which
+only makes the markup agree with what was already true.
 
 **Types :**
 ```typescript
 export interface DuFilterItem {
   title?: string
+  value?: string | number   // identity for v-model; falls back to title, then index
   checked?: boolean
   customClass?: string
   buttonsArgs?: DuFilterButtonArgs
+  [key: string]: unknown
 }
 
 export interface DuFilterButtonArgs {

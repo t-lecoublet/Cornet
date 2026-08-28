@@ -33,6 +33,7 @@ import DuMenu from '../components/Navigation/du-menu/du-menu.vue'
 import DuModal from '../components/Actions/du-modal/du-modal.vue'
 import DuPagination from '../components/Navigation/du-pagination/du-pagination.vue'
 import DuProgress from '../components/Feedback/du-progress/du-progress.vue'
+import DuRange from '../components/DataInput/du-range/du-range.vue'
 import DuRating from '../components/DataInput/du-rating/du-rating.vue'
 import DuSearch from '../components/DataInput/du-search/du-search.vue'
 import DuSelect from '../components/DataInput/du-select/du-select.vue'
@@ -90,8 +91,10 @@ const cases: Case[] = [
   { name: 'DuCheckbox', component: DuCheckbox, props: { 'aria-label': 'Subscribe' } },
   { name: 'DuInputField', component: DuInputField, props: { type: 'text', 'aria-label': 'Email' } },
   { name: 'DuTextArea', component: DuTextArea, props: { 'aria-label': 'Notes' } },
-  { name: 'DuFilter', component: DuFilter, props: { items: [{ title: 'All' }, { title: 'Active' }] } },
-  { name: 'DuRating', component: DuRating, props: { count: 5, modelValue: 3 } },
+  { name: 'DuFilter', component: DuFilter, props: { items: [{ title: 'All' }, { title: 'Active' }], legend: 'Status' } },
+  { name: 'DuRating', component: DuRating, props: { count: 5, modelValue: 3, ariaLabel: 'Rating' } },
+  { name: 'DuRating (readonly)', component: DuRating, props: { count: 5, modelValue: 3, readonly: true } },
+  { name: 'DuRange', component: DuRange, props: { modelValue: 3, 'aria-label': 'Budget' } },
   { name: 'DuSelect', component: DuSelect, props: { options: OPTIONS, labelBy: 'name', trackBy: 'id', ariaLabel: 'Owner' } },
   { name: 'DuSearch', component: DuSearch, props: { options: OPTIONS, labelBy: 'name', trackBy: 'id', ariaLabel: 'Owner' } },
 

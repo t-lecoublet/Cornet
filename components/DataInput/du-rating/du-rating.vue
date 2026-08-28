@@ -3,7 +3,7 @@ import { computed, provide } from "vue";
 import { useComponentId } from "../../core/shared";
 import { useSizeMapping } from "../../../composables/useSizeProps";
 import DuRatingItem from "./du-rating-item.vue";
-import { type DuRatingProps, type DuRatingEmits } from "./du-rating.types";
+import { defaultRatingItemLabel, type DuRatingProps, type DuRatingEmits } from "./du-rating.types";
 import { useRatingValue } from "./composables/useRatingValue";
 
 const props = withDefaults(
@@ -16,6 +16,9 @@ const props = withDefaults(
     halfStar: false,
     clearable: false,
     disabled: false,
+    readonly: false,
+    ariaLabel: undefined,
+    itemLabel: defaultRatingItemLabel,
     shape: "star-2",
     color: "bg-secondary",
     customClass: "",
@@ -33,6 +36,24 @@ const ratingName = useComponentId(props.name, "rating");
 provide("ratingName", ratingName);
 
 const { sizeClass } = useSizeMapping(props, "rating");
+
+/** The top of the scale, for the "n out of max" each star announces. */
+const maxValue = computed(() => {
+  if (props.items != null) {
+    return Math.max(...props.items.map((item) => item.value), 0);
+  }
+  return props.count;
+});
+
+const labelFor = (value: number) => props.itemLabel(value, maxValue.value);
+
+/**
+ * Read-only renders no radios at all, so the value has to be announced by the
+ * group: `role="img"` with a name is how a rating readout is normally exposed.
+ */
+const groupProps = computed(() => (props.readonly
+  ? { role: "img", "aria-label": props.ariaLabel ?? labelFor(internalValue.value) }
+  : { role: "radiogroup", "aria-label": props.ariaLabel }));
 
 const ratingClass = computed(() => {
   const classes = ["rating"];
@@ -59,13 +80,15 @@ defineExpose({
 
 <template>
   <!-- Dynamic items mode -->
-  <div v-if="items && !$slots.default" :class="ratingClass">
+  <div v-if="items && !$slots.default" v-bind="groupProps" :class="ratingClass">
     <template v-for="(item, index) in items" :key="index">
       <DuRatingItem
         :value="item.value"
         :checked="internalValue === item.value"
         :shape="shape"
         :color="color"
+        :readonly="readonly"
+        :label="labelFor(item.value)"
         :half-mask="(halfStar && index % 2 === 0) ? 1 : (halfStar && index % 2 === 1) ? 2 : undefined"
         :disabled="disabled"
         @change="handleChange"
@@ -74,7 +97,7 @@ defineExpose({
   </div>
 
   <!-- Auto-generated mode -->
-  <div v-else-if="count > 0 && !$slots.default" :class="ratingClass">
+  <div v-else-if="count > 0 && !$slots.default" v-bind="groupProps" :class="ratingClass">
     <template v-for="i in count" :key="i">
       <DuRatingItem
         v-if="halfStar"
@@ -82,6 +105,8 @@ defineExpose({
         :checked="internalValue === i - 0.5"
         :shape="shape"
         :color="color"
+        :readonly="readonly"
+        :label="labelFor(i - 0.5)"
         :half-mask="1"
         :disabled="disabled"
         @change="handleChange"
@@ -92,6 +117,8 @@ defineExpose({
         :checked="internalValue === i"
         :shape="shape"
         :color="color"
+        :readonly="readonly"
+        :label="labelFor(i)"
         :half-mask="halfStar ? 2 : undefined"
         :disabled="disabled"
         @change="handleChange"
@@ -100,7 +127,7 @@ defineExpose({
   </div>
 
   <!-- Manual mode -->
-  <div v-else :class="ratingClass">
+  <div v-else v-bind="groupProps" :class="ratingClass">
     <slot></slot>
   </div>
 </template> 
