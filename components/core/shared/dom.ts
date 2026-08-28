@@ -1,5 +1,5 @@
-// Pure DOM helpers for the combobox engine. No state, no Vue — everything
-// here is unit-testable with plain objects.
+// Pure DOM helpers shared by the core primitives. No state, no Vue —
+// everything here is unit-testable with plain objects.
 
 const FOCUSABLE_SELECTOR
   = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]'

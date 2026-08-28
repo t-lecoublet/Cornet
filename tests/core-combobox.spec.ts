@@ -4,7 +4,7 @@
 // entry that creates what is being typed, resolving leftover text on close).
 //
 // Driven from a tag picker, the shape that exercises all of it at once. The
-// pure DOM helpers live in core-combobox-dom.spec.ts; du-select.spec.ts and
+// pure DOM helpers live in core-dom.spec.ts; du-select.spec.ts and
 // du-search.spec.ts cover the styled facades.
 import { describe, expect, it, vi } from 'vitest'
 import { mount } from '@vue/test-utils'

@@ -4,6 +4,8 @@
 // The file is deliberately named `types.ts`, not `*.types.ts`: `types/types.sh`
 // sweeps `components/**/*.types.ts` into the public type barrel, and the engine
 // is internal — it must not leak into `cornet-ui/types`.
+import type { AnchorPopupStyle } from '../positioning'
+
 import type { ComputedRef, Ref } from 'vue'
 
 export type ComboboxErrorCode = 'required' | 'minlength' | 'maxlength'
@@ -69,13 +71,12 @@ export interface ComboboxOptionProps {
   onKeydown: (event: KeyboardEvent) => void
 }
 
-export interface ComboboxPopupStyle {
-  positionAnchor: string
-  left: string
-  width: string
-  top: string
-  [key: `--${string}`]: string | undefined
-}
+/**
+ * The dropdown's inline style, from `core/positioning`. Open-ended: which
+ * edges are pinned depends on the placement, so a consumer spreads it whole
+ * rather than reading fields off it.
+ */
+export type ComboboxPopupStyle = AnchorPopupStyle
 
 export interface ComboboxProps<O, V = O, Q = string> {
   modelValue: V | V[] | null

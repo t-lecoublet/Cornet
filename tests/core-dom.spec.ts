@@ -1,13 +1,13 @@
-// The pure DOM helpers the combobox engine leans on. They hold no state, so
-// they are exercised directly on plain elements — the engine itself is covered
-// in core-combobox.spec.ts.
+// The pure DOM helpers the core primitives lean on. They hold no state, so
+// they are exercised directly on plain elements — the primitives that use them
+// are covered in core-combobox.spec.ts and core-popover.spec.ts.
 import { describe, expect, it } from 'vitest'
 import {
   focusableInDocument,
   hasEditableText,
   isTextField,
   revealInContainer,
-} from '../components/core/combobox/dom'
+} from '../components/core/shared/dom'
 
 describe('hasEditableText', () => {
   it('counts the value of an input or a textarea', () => {

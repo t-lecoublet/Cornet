@@ -9,22 +9,22 @@
 // (selecting closes the popup, closing commits the pending query, typing
 // re-highlights, Tab must know the widget boundary…), and a shared scope keeps
 // that wiring direct instead of threading callbacks between modules.
-import { computed, nextTick, onUnmounted, reactive, ref, toRaw, watch } from 'vue'
-import { useComponentId } from '../shared'
+import { computed, nextTick, reactive, ref, toRaw, watch } from 'vue'
+import { usePopoverState } from '../popover'
+import { useAnchorPosition } from '../positioning'
+import { focusableInDocument, hasEditableText, isTextField, revealInContainer, useComponentId } from '../shared'
 import type { Ref } from 'vue'
 import type {
   ComboboxErrorCode,
   ComboboxInputProps,
   ComboboxListboxProps,
   ComboboxOptionProps,
-  ComboboxPopupStyle,
   ComboboxProps,
   ComboboxPropsSource,
   ComboboxScope,
   ComboboxTriggerProps,
   ComboboxTypeaheadInputProps,
 } from './types'
-import { focusableInDocument, hasEditableText, isTextField, revealInContainer } from './dom'
 
 // Registry key for the created option. `createOption` builds a fresh object on
 // every keystroke, so the option itself cannot key the element registry — each
@@ -58,7 +58,8 @@ export function useCombobox<O, V = O, Q = string>(
   const props = reactive(propsSource) as unknown as ComboboxProps<O, V, Q>
 
   // --- state ---------------------------------------------------------------
-  const isOpen = ref(false)
+  // `isOpen` and the whole popup lifecycle live in `usePopoverState`, wired at
+  // the bottom of this file once everything it calls back into exists.
   const query = ref() as Ref<Q | undefined>
   const highlightedIndex = ref(-1)
   // Whether the user edited the query since the popup opened. Commit-on-close
@@ -504,82 +505,61 @@ export function useCombobox<O, V = O, Q = string>(
   }
 
   // --- popup lifecycle -----------------------------------------------------
-  // When the consumer put a `popover` attribute on the dropdown, drive it
-  // through the Popover API (top-layer rendering) on top of its v-if.
-  function popoverApi(): HTMLElement | null {
-    const el = els.dropdown
-    return el != null && el.hasAttribute('popover') && typeof el.showPopover === 'function' ? el : null
-  }
+  // The open flag, the Popover API call, outside/Escape dismissal and the
+  // focus handed back on the way out are `usePopoverState`. What is specific to
+  // a combobox lives in its four hooks.
+  const popover = usePopoverState({
+    // Escape and outside clicks are judged against every wired part: a click on
+    // a chip or on the field's own padding is inside, a click on the page is not.
+    boundary: () => [els.container, els.trigger, els.dropdown],
+    popoverElement: () => els.dropdown,
+    returnFocusTo: () => els.trigger,
+    closeOnClickOutside: () => props.closeOnClickOutside !== false,
+    disabled: () => locked.value,
 
-  async function open(selectText = true) {
-    if (isOpen.value || locked.value) {
-      return
-    }
-    isOpen.value = true
-    queryDirty = false
-    // The query resets, so the typeahead input falls back to showing the
-    // current value.
-    query.value = undefined
+    onOpening() {
+      queryDirty = false
+      // The query resets, so the typeahead input falls back to showing the
+      // current value.
+      query.value = undefined
 
-    // Start on the selected option when it is in view, else on the first
-    // pickable row.
-    const first = selectedList.value[0]
-    const selectedAt = first == null
-      ? -1
-      : visibleOptions.value.findIndex((option) => toRaw(valueOf(option)) === toRaw(first))
-    highlightedIndex.value = selectedAt >= 0 ? selectedAt : firstActionable()
+      // Start on the selected option when it is in view, else on the first
+      // pickable row.
+      const first = selectedList.value[0]
+      const selectedAt = first == null
+        ? -1
+        : visibleOptions.value.findIndex((option) => toRaw(valueOf(option)) === toRaw(first))
+      highlightedIndex.value = selectedAt >= 0 ? selectedAt : firstActionable()
+    },
+    onOpened() {
+      scrollHighlightIntoView()
+      els.input?.focus({ preventScroll: true })
+      // Select the shown text so typing replaces it — except when the popup
+      // reopened *because* of typing, which `open(false)` signals.
+      if (selectShownTextOnOpen) {
+        els.input?.select()
+      }
+    },
+    // The pending text must be resolved while the query still holds it.
+    onClosing: () => commitPendingQuery(),
+    onClosed() {
+      highlightedIndex.value = -1
+      query.value = undefined
+      queryDirty = false
+    },
+  })
 
-    await nextTick()
-    const popover = popoverApi()
-    if (popover != null && !popover.matches(':popover-open')) {
-      popover.showPopover()
-    }
-    scrollHighlightIntoView()
-    els.input?.focus({ preventScroll: true })
-    // Select the shown text so typing replaces it — except when the popup
-    // reopened *because* of typing.
-    if (selectText) {
-      els.input?.select()
-    }
-  }
+  const isOpen = popover.isOpen
+  const close = popover.close
+  const toggle = popover.toggle
 
-  // Resolving the pending query can select, and selecting closes — guard the
-  // re-entry so the close only runs once.
-  let closing = false
+  // Whether `onOpened` should select the text it shows. Not a parameter of the
+  // primitive's `open()`: it is one combobox detail, carried across the tick.
+  let selectShownTextOnOpen = true
 
-  function close(returnFocus = true) {
-    if (!isOpen.value || closing) {
-      return
-    }
-    closing = true
-    try {
-      // The pending text must be resolved before the query is dropped.
-      commitPendingQuery()
-    } finally {
-      closing = false
-    }
-    const popover = popoverApi()
-    if (popover != null && popover.matches(':popover-open')) {
-      popover.hidePopover()
-    }
-    isOpen.value = false
-    highlightedIndex.value = -1
-    query.value = undefined
-    queryDirty = false
-    if (returnFocus) {
-      els.trigger?.focus()
-    }
-  }
-
-  function toggle() {
-    if (locked.value) {
-      return
-    }
-    if (isOpen.value) {
-      close()
-    } else {
-      open()
-    }
+  function open(selectText = true) {
+    selectShownTextOnOpen = selectText
+    return popover.open()
   }
 
   // What happens to text still sitting in the field when the popup closes.
@@ -622,12 +602,7 @@ export function useCombobox<O, V = O, Q = string>(
 
   // --- focus ---------------------------------------------------------------
   /** The widget boundary: any wired part (container, trigger, popup). */
-  function isInsideWidget(target: Node | null): boolean {
-    if (target == null) {
-      return false
-    }
-    return [els.container, els.trigger, els.dropdown].some((el) => el != null && el.contains(target))
-  }
+  const isInsideWidget = (target: Node | null) => popover.isInside(target)
 
   // After an interaction that keeps the popup open, put focus back on the
   // filter input — but never steal it from a text field, nor from anything the
@@ -649,66 +624,8 @@ export function useCombobox<O, V = O, Q = string>(
     input.focus({ preventScroll: true })
   }
 
-  // --- document-level dismissal --------------------------------------------
-  function onDocumentMousedown(event: MouseEvent) {
-    if (!isOpen.value || props.closeOnClickOutside === false) {
-      return
-    }
-    if (!isInsideWidget(event.target as Node)) {
-      close(false)
-    }
-  }
-
-  // Escape closes from anywhere inside the widget, wired or not — the
-  // WAI-ARIA combobox pattern.
-  function onDocumentKeydown(event: KeyboardEvent) {
-    if (event.key === 'Escape' && isOpen.value) {
-      event.preventDefault()
-      close(true)
-    }
-  }
-
-  // Document listeners exist only while the popup is open: a page holding fifty
-  // closed comboboxes must not hold a hundred idle listeners. Attaching runs on
-  // the default pre-flush tick, so the very event that opened the popup has
-  // finished propagating before the dismissal listeners are watching.
-  let documentListening = false
-
-  function stopDocumentListening() {
-    if (!documentListening) {
-      return
-    }
-    documentListening = false
-    document.removeEventListener('mousedown', onDocumentMousedown)
-    document.removeEventListener('keydown', onDocumentKeydown)
-  }
-
-  watch(isOpen, (open) => {
-    if (!open) {
-      stopDocumentListening()
-      return
-    }
-    if (documentListening) {
-      return
-    }
-    documentListening = true
-    document.addEventListener('mousedown', onDocumentMousedown)
-    document.addEventListener('keydown', onDocumentKeydown)
-  })
-
-  // Safety net: unmounting while open would otherwise leak both listeners.
-  onUnmounted(stopDocumentListening)
-
   // --- positioning ---------------------------------------------------------
-  // CSS anchor positioning — merged onto the dropdown's style by the consumer.
-  // No `position` is set: a popover gets `position: fixed` from the UA
-  // stylesheet, a regular element keeps whatever the consumer gave it.
-  const popupStyle = computed<ComboboxPopupStyle>(() => ({
-    positionAnchor: cssAnchorName,
-    left: 'anchor(left)',
-    width: 'anchor-size(width)',
-    top: 'anchor(bottom)',
-  }))
+  const { popupStyle } = useAnchorPosition(cssAnchorName)
 
   // --- validation ----------------------------------------------------------
   const errors = computed<ComboboxErrorCode[]>(() => {
