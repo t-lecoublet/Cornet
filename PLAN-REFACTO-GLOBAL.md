@@ -7,7 +7,7 @@
 >
 > `PLAN-REFONTE-COMBOBOX.md` décrit une approche par *vendoring* d'une lib tierce qui a été **abandonnée en cours de route** au profit d'une réimplémentation native : il est conservé comme archive et ne doit plus servir de référence.
 >
-> **Avancement au 2026-08-28** — **G1 à G7 sont faits.** Phase 3 close (dropdown, menu, tooltip, drawer, toast ; DuModal écarté, son contrôle est natif et vérifié correct) et §5.1–5.2 avec elle : tabs, accordion et collapse ont perdu leurs `<input>` cachés. **Il ne reste aucune entrée dans l'allowlist axe.** DuModal (§4.4) et DuPagination (§5.6) ont été vérifiés puis écartés : leur cible était déjà atteinte. §2.0, les primitives §2.1–2.2, tout le socle §3, puis §4.1 à §4.6 et §5.1–5.6. La lib est à 39 specs / 673 tests + 32 skippés, zéro `any` en code livré, lint a11y + axe + build de contrôle CSS bloquants en CI. Prochain jalon : G8 (§6 Data display) puis G9 (§7 Hygiène).
+> **Avancement au 2026-08-28** — **G1 à G9 sont faits.** Il ne reste que G10 (verrouillage CI et revue de cohérence finale). Phase 3 close (dropdown, menu, tooltip, drawer, toast ; DuModal écarté, son contrôle est natif et vérifié correct) et §5.1–5.2 avec elle : tabs, accordion et collapse ont perdu leurs `<input>` cachés. **Il ne reste aucune entrée dans l'allowlist axe.** DuModal (§4.4) et DuPagination (§5.6) ont été vérifiés puis écartés : leur cible était déjà atteinte. §2.0, les primitives §2.1–2.2, tout le socle §3, puis §4 à §7 en entier. La lib est à 42 specs / 714 tests + 34 skippés, zéro `any` en code livré, lint a11y + axe + build de contrôle CSS bloquants en CI. Prochain jalon : G10 — §8, verrouillage CI et revue de cohérence des API.
 >
 > Breaking changes assumés (beta). Chaque section « Composant » est conçue comme une PR autonome.
 
@@ -321,35 +321,38 @@ Ce qui reste ci-dessous relève du confort, pas du défaut — conservé pour m�
 
 ## 6. Phase 5.a — Data display riches
 
-### 6.1 DuTable
-- [ ] Générique `Row` (colonnes typées `keyof Row` quand items structurés), purge des 4 `any`, slots scopés typés.
-- [ ] Vérifier `<caption>`/`scope="col"` sur les th.
-- [ ] Tri/sélection : **hors scope** — si demandé plus tard, créer `core/table` (ne pas bricoler dans la façade).
+### 6.1 DuTable — ✅ **fait**
+- [x] Générique `Row` (colonnes typées `keyof Row` quand items structurés), purge des 4 `any`, slots scopés typés.
+- [x] `<caption>` (prop + slot, `hideCaption` pour l'exposer sans l'afficher) et `scope="col"` sur les `th` d'en-tête **et** de pied — il n'y en avait aucun des deux.
+- [x] Tri/sélection : **hors scope** — si demandé plus tard, créer `core/table` (ne pas bricoler dans la façade).
 
-### 6.2 DuCarousel
-- [ ] `role="region"` + `aria-roledescription="carousel"` + `aria-label` ; chaque slide `role="group"` + `aria-roledescription="slide"` + `aria-label` « i / n ».
-- [ ] Boutons prev/next optionnels intégrés (aujourd'hui navigation par ancres/scroll ?) accessibles au clavier ; si autoplay ajouté un jour : bouton pause obligatoire (WCAG 2.2.2) — noter, hors scope.
-- [ ] Tests de rôles.
+### 6.2 DuCarousel — ✅ **fait**
+- [x] `role="region"` + `aria-roledescription="carousel"` + `aria-label` ; chaque slide `role="group"` + `aria-roledescription="slide"` + `aria-label` « i / n ».
+- [x] Boutons prev/next optionnels intégrés (aujourd'hui navigation par ancres/scroll ?) accessibles au clavier ; si autoplay ajouté un jour : bouton pause obligatoire (WCAG 2.2.2) — noter, hors scope.
+- [x] Tests de rôles.
 
-### 6.3 DuChat / DuTimeline / DuList / DuDiff
-- [ ] Typage générique des items (purge des `any` restants), slots scopés typés, stories complètes. DuDiff : vérifier que le slider de comparaison est atteignable clavier (`tabindex`, flèches) — sinon le câbler sur l'input range sous-jacent DaisyUI. Pas d'autre changement structurel.
+### 6.3 DuChat / DuTimeline / DuList / DuDiff — ✅ **fait**
+- [x] Typage générique : DuChat et DuTimeline l'étaient depuis G2. **DuList n'a pas de prop `items`** — rien à rendre générique (déjà noté en §3.3).
+- [x] DuDiff : le mécanisme clavier **existait déjà** dans le CSS de daisyUI — `.diff:focus-visible` et `.diff-item-1:focus-visible` déplacent le resizer — mais aucun des deux éléments ne pouvait prendre le focus. Deux `tabindex` suffisaient ; le second arrêt est nommé par ce que le focus y produit. Pas de `role="button"` : il est focusé, jamais activé, et annoncer un bouton promettrait une touche Entrée qui ne fait rien. Un diviseur continu piloté aux flèches serait un autre widget (un slider avec sa sémantique de valeur) et relèverait de `core/`.
 
 ## 7. Phase 5.b — Hygiène des présentationnels & form plumbing
 
-### 7.1 Passe standard (tous les composants de la catégorie « présentationnels »)
+### 7.1 Passe standard — ✅ **faite** (tous les composants de la catégorie « présentationnels »)
 Checklist par composant (une PR peut en grouper plusieurs) :
-- [ ] Zéro `any` ; props/emits/slots conformes aux conventions de `docs/architecture.md` ; `defineSlots` typé si slots scopés.
-- [ ] Attributs ARIA élémentaires quand pertinent : du-progress/du-radial-progress (`role="progressbar"` + `aria-valuenow/min/max` — vérifier), du-countdown (`role="timer"`), du-status (`role="status"` optionnel + texte sr-only), du-swap (si interactif : bouton + `aria-pressed`), du-steps (`aria-current="step"`), du-breadcrumbs (`<nav aria-label>` + `aria-current="page"` — vérifier l'existant), du-loading/du-skeleton (`aria-hidden` par défaut + prop `label` sr-only).
-- [ ] Stories couvrant toutes les variantes ; constantes scanner à jour (T8).
+- [x] Zéro `any` ; props/emits/slots conformes aux conventions de `docs/architecture.md` ; `defineSlots` typé si slots scopés.
+- [x] Attributs ARIA élémentaires quand pertinent : du-progress/du-radial-progress (`role="progressbar"` + `aria-valuenow/min/max` — vérifier), du-countdown (`role="timer"`), du-status (`role="status"` optionnel + texte sr-only), du-swap (si interactif : bouton + `aria-pressed`), du-steps (`aria-current="step"`), du-breadcrumbs (`<nav aria-label>` + `aria-current="page"` — vérifier l'existant), du-loading/du-skeleton (`aria-hidden` par défaut + prop `label` sr-only).
+- [x] Stories couvrant toutes les variantes ; constantes scanner à jour (T8).
 
-### 7.2 du-dock (9 `any`, le plus chargé)
-- [ ] Typage des items, `aria-label` sur la nav, `aria-current` sur l'item actif, tests (spec existante à étendre).
+### 7.2 du-dock — ✅ **fait** (les « 9 `any` » étaient dans son `.stories.ts`, cf. T2)
+- [x] Typage des items, `aria-label` sur la nav, `aria-current` sur l'item actif, tests (spec existante à étendre).
 
-### 7.3 Form plumbing — cohérence de validation
-- [ ] Inventorier le contrat actuel de `du-label-input-validator` et `du-input-field` (7 `any`).
-- [ ] Aligner sur le modèle de validation introduit par le combobox (Phase 1) : mêmes codes d'erreur/props (`required`, `errorMessages`), même slot `error`, même timing « touched au premier blur/close ». Objectif : un formulaire mixant DuInputField/DuSelect/DuSearch/DuTextArea a un rendu et une API d'erreurs uniformes.
-- [ ] du-checkbox/du-radio : vérifier label câblé (for/id via `useId`), état `indeterminate` pour checkbox (prop), groupes radio dans fieldset/legend (doc).
-- [ ] du-file-input : typage (5 `any`), emits typés `File[]`.
+### 7.3 Form plumbing — ✅ **fait**
+- [x] Inventorier le contrat actuel de `du-label-input-validator` et `du-input-field` (7 `any`).
+- [x] Aligner sur le modèle du combobox — **la surface, pas le mécanisme**. Pris au pied de la lettre, l'item demandait de réimplémenter la validation en JS et de jeter ce que le navigateur fait déjà : messages localisés, verdict identique à celui du formulaire à la soumission, et tous les cas limites qu'un `required` maison oublie. C'est exactement le piège du §10.1.
+  - `core/shared/useNativeValidation` lit `ValidityState` et l'habille aux couleurs du combobox : mêmes codes, même `errorMessages`, mêmes `valid`/`errors`/`validationMessage` exposés, et la même règle qu'un champ non visité est *sans réponse*, pas *en faute* — ce que `:user-invalid` signifie déjà en CSS.
+  - **Deux pièges Vue coûteux, inscrits dans le code** : un élément DOM dans un `ref` profond devient un proxy réactif (d'où `shallowRef`) ; et l'élément renvoie **le même** objet `ValidityState` à chaque lecture, donc un computed `validity` produirait une valeur `Object.is`-égale et Vue cesserait de propager — le champ signalerait éternellement l'erreur qu'il avait à la liaison.
+- [x] du-checkbox : **`indeterminate` existait déjà**, prop comprise, et resynchronisé sur changement ultérieur. Rien à faire. Les groupes radio en `fieldset`/`legend` sont couverts par DuFilter (§5.3), qui est le composant de groupe.
+- [x] du-file-input : **il n'émettait rien du tout** — aucun moyen de savoir ce que l'utilisateur avait choisi. Modèle `File[]` + `change`, plus `multiple`, `accept`, `ariaLabel`. La valeur d'un input file ne peut pas être *écrite* depuis un script (le navigateur l'interdit, pour que personne ne glisse un fichier dans un formulaire) : le modèle rapporte, et le vider vide le champ — ce dont un reset de formulaire a besoin.
 
 ---
 
@@ -375,8 +378,8 @@ Mocks d'environnement à centraliser dans un setup vitest partagé : Popover API
 | G5 | §4.5–4.6 Drawer + Toast — ✅ **fait** | G1 | — |
 | G6 | §5.1–5.2 Tabs + Accordion/Collapse — ✅ **fait** | G1, G2 | — |
 | G7 | §5.3–5.6 Filter, Rating, Range — ✅ **fait**. Pagination : rien à faire, vérifié | G2 | — |
-| G8 | §6 Data display | G2 | 2 j |
-| G9 | §7 Hygiène + form plumbing | G2 (+ Phase 1 pour 7.3) | 3 j |
+| G8 | §6 Data display — ✅ **fait** | G2 | — |
+| G9 | §7 Hygiène + form plumbing — ✅ **fait** | G2 (+ Phase 1 pour 7.3) | — |
 | G10 | §8 verrouillage CI, revue de cohérence finale | tout | 1-2 j |
 
 Total ≈ **24-29 jours**, largement parallélisable : G3–G9 sont indépendants entre eux ; chaque composant est une PR autonome laissant la lib shippable. Prioriser G3 (dropdown/menu) : c'est le gain a11y le plus visible et la première validation des primitives hors combobox.
@@ -392,6 +395,7 @@ Total ≈ **24-29 jours**, largement parallélisable : G3–G9 sont indépendant
 7. **Un outil qu'on configure jusqu'au silence ne sert à rien.** Le lint a11y et axe ont été pointés sur la lib puis triés finding par finding : chaque dérogation porte sa raison à côté, et les échecs structurels portent une entrée qui **expire toute seule** (le test échoue si la règle allowlistée cesse d'échouer). Reproduire ce schéma pour tout nouvel outil de vérification.
 8. **Un compte d'`any` ne mesure pas la dette de typage.** Les 16 `any` réels étaient quelques heures ; ce qui manquait vraiment, c'étaient les génériques — que rien ne signale. Chercher plutôt : quelles données du consommateur traversent un slot ou un emit en étant aplaties ?
 9. **Un allowlist de dette doit expirer tout seul.** Les quatre entrées écrites en G2 sont toutes mortes en G3 et G5, chacune en faisant rougir le test au moment où le bug était réparé.
+9ter. **Un commentaire en tête de `<template>` casse l'héritage d'attributs.** Il ajoute un vnode, et Vue n'hérite les attributs que sur une racine *unique* : le composant cesse silencieusement de transmettre le `class` ou l'`aria-*` du consommateur — et seulement en développement, la production supprimant les commentaires. Introduit **trois fois** ici. `tests/template-root-invariant.spec.ts` l'interdit désormais ; l'explication va dans le `<script>`, et une directive eslint qui devrait précéder la racine va dans `eslint.config.js`.
 9bis. **Une réécriture de fichier emporte ce qui n'était pas dans sa tête.** La refonte de DuTooltip a supprimé son `<style scoped>` — et avec lui la règle `.tooltip-neutral` ajoutée en G2. `npm run check:css` l'a rattrapé. C'est l'argument pour que ce genre de vérification existe : elle ne sert pas à trouver le bug une fois, elle sert à le retrouver.
 10bis. **Un allowlist de dette doit expirer tout seul (suite).** Le spec axe vérifie que chaque règle tolérée **échoue toujours** : quand DuMenu a cessé de violer les quatre règles listées, le test est passé au rouge jusqu'à ce que l'entrée soit supprimée. Sans ça, un allowlist survit au bug qu'il documente et devient une couverture permanente.
 10. **Une classe safelistée n'est pas une classe qui existe.** L'invariant unitaire prouve la scannabilité, pas la réalité (`tooltip-neutral`). `npm run check:css` compile le vrai pipeline ; le lancer après toute modification d'un `useSizeMapping`/`useVariantMapping` ou d'une constante `*_SIZES`/`*_VARIANTS`.

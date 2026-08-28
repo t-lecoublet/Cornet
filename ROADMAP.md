@@ -90,9 +90,10 @@
 
 ## Phase 5 — Data display & polish
 
-- [ ] **5.1** — **DuTable**: generic rows/columns — if sorting/selection lands, create `core/table` (out of scope otherwise)
-- [ ] **5.2** — **DuCarousel**: keyboard support, `aria-roledescription="carousel"`, accessible prev/next buttons, auto-play pause
-- [ ] **5.3** — Hygiene pass on presentational components (badge, card, avatar, stat, kbd, loading, skeleton, ...): typing, naming conventions, complete stories — no architectural change
+- [x] **5.1** — **DuTable**: generic over the row type (done in Phase 2), plus a `<caption>` and `scope="col"` on every header cell — it had neither. Sorting and selection remain out of scope; if they land they get a `core/table`, not a bigger facade
+- [x] **5.2** — **DuCarousel**: `role="region"` + `aria-roledescription="carousel"` + a name, a named `role="group"` per slide, `tabindex="0"` on the strip (a scrollable region nothing inside can focus cannot be scrolled by keyboard at all), and optional named prev/next buttons. Auto-play was never implemented, so its pause button is not owed yet — the day it lands, it is mandatory (WCAG 2.2.2)
+- [x] **5.3** — Hygiene pass: `role="timer"` on the countdown, the missing bounds on the radial progressbar, `aria-current="step"` on steps, DuDock as a named `<nav>` with `aria-current`, and a `label` on DuLoading / DuSkeleton / DuStatus which are `aria-hidden` without one. Plus the form plumbing: one error surface over native validation (`useNativeValidation`), and a DuFileInput that finally reports what was chosen
+- [x] **5.5** — `tests/template-root-invariant.spec.ts`: no template may open with a comment. It adds a vnode, Vue only inherits attributes onto a single root, and the component then silently drops a consumer's `class` — in development only, since production strips comments. Nine components had one
 - [ ] **5.4** — Test coverage: target ≥ 80% on `core/`, black-box tests on every interactive facade
 
 ## Phase 6 — Road to v1.0
@@ -112,7 +113,7 @@
 | 2 | Foundation — docs, `core/` primitives, lint, `useId` | ✅ Done (`core/focus` waits for its first consumer) |
 | 3 | Popups — dropdown, menu, tooltip, modal, drawer, toast | ✅ Done (modal deliberately left native) |
 | 4 | Selection — tabs, accordion, filter, rating, range, pagination | ✅ Done (pagination was already there) |
-| 5 | Data display + hygiene + coverage | 🔲 Todo |
+| 5 | Data display + hygiene + coverage | 🟡 Done bar the coverage target (5.4) |
 | 6 | API freeze, docs, audits, v1.0 | 🔲 Todo |
 
 > Phases 3 and 4 are parallelizable component by component once Phase 2 is done.
