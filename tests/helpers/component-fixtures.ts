@@ -98,8 +98,14 @@ export const FIXTURES: Record<string, Fixture> = {
   DuTooltip: { props: { open: true, dataTip: 'Saves the document' }, slots: { default: '<button type="button">Save</button>' } },
 }
 
-/** Everything `index.ts` exports as a component, in export order. */
-export const EXPORTED: [string, Component][] = Object.entries(cornet)
+/**
+ * Everything `index.ts` exports as a component, in export order.
+ *
+ * The barrel also exports composables and constants, so the entries are widened
+ * to `unknown` before being narrowed — a predicate cannot narrow a union that
+ * broad to `Component` directly.
+ */
+export const EXPORTED: [string, Component][] = (Object.entries(cornet) as [string, unknown][])
   .filter((entry): entry is [string, Component] =>
     entry[0].startsWith('Du') && typeof entry[1] === 'object' && entry[1] !== null)
 

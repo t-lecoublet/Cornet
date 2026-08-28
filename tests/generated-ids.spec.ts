@@ -12,7 +12,6 @@
 import { describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { h } from 'vue'
-import type { Component } from 'vue'
 import DuAccordion from '../components/DataDisplay/du-accordion/du-accordion.vue'
 import DuDrawer from '../components/Layout/du-drawer/du-drawer.vue'
 import DuFilter from '../components/DataInput/du-filter/du-filter.vue'
@@ -24,7 +23,12 @@ type Probe = (wrapper: ReturnType<typeof mount>) => string | undefined
 
 interface Case {
   name: string
-  component: Component
+  /**
+   * `unknown` rather than `Component`: a `<script setup generic>` SFC is typed
+   * as a generic function that `Component` does not accept, and narrowing it
+   * here would say more about Vue's type gymnastics than about the test.
+   */
+  component: unknown
   props: Record<string, unknown>
   read: Probe
 }
@@ -67,9 +71,9 @@ const cases: Case[] = [
 describe.each(cases)('$name generated ids', ({ component, props, read }) => {
   it('gives each instance on the page its own', () => {
     const page = mount({
-      render: () => [h(component, props), h(component, props)],
+      render: () => [h(component as never, props), h(component as never, props)],
     })
-    const values = page.findAllComponents(component).map((instance) => read(instance as never))
+    const values = page.findAllComponents(component as never).map((instance) => read(instance as never))
 
     expect(values[0]).toBeTruthy()
     expect(values[0]).not.toBe(values[1])

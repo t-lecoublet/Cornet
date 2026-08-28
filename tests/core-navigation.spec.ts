@@ -38,7 +38,7 @@ function list(labels: string[], options: Partial<RovingIndexOptions> = {}) {
 
   const wrapper = mount(Host, { attachTo: document.body })
   mounted.push(wrapper)
-  const items = () => [...wrapper.element.querySelectorAll<HTMLElement>('.item')]
+  const items = () => [...(wrapper.element as HTMLElement).querySelectorAll<HTMLElement>('.item')]
 
   return {
     wrapper,

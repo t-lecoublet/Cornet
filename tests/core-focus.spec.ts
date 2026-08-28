@@ -122,7 +122,7 @@ function trap(options: Partial<FocusTrapOptions> = {}, panelChildren = ['first',
     behind,
     active,
     panel: () => panel.value!,
-    at: (label: string) => wrapper.element.querySelector<HTMLElement>(`.${label}`)!,
+    at: (label: string) => (wrapper.element as HTMLElement).querySelector<HTMLElement>(`.${label}`)!,
     focused: () => (document.activeElement as HTMLElement | null)?.textContent,
     async open() {
       active.value = true

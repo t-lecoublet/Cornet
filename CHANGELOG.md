@@ -120,6 +120,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 
 ### Fixed
 
+- `DuTableColumn.key` was `Extract<keyof Row, string>`, which rejected the ordinary way of writing columns: `const columns = [{ key: 'name', label: 'Name' }]` widens `'name'` to `string` before the type sees it, so every consumer declaring their columns in a variable would have failed to compile. It is `Extract<keyof Row, string> | (string & {})` now — the row's keys are still suggested in an editor, but they are not enforced. The changelog entry claiming a typo in a column would be caught was wrong, and is corrected.
+
 - `DuButton` rendered as an `<input>` (inside a `DuFilter`) declared a child node the server correctly omitted, because an `<input>` is a void element and may hold none. Every such button reported a hydration mismatch. The template branches on the element instead of hiding a slot behind a `v-if` inside it.
 
 - `DuTooltip`: `variant="neutral"` produced a `tooltip-neutral` class daisyUI does not define. The rule now lives in the component. It happened to look right because neutral is daisyUI's tooltip default, so nothing would have caught it before `npm run check:css`.
@@ -136,6 +138,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 - `DuSelect`: the per-option checkbox no longer double-toggles the selection.
 
 ### Internal
+
+- `tests/` is type-checked. It was excluded from `tsconfig.json` during the typing pass and the exclusion outlived its reason: a test is the only place a component is used the way a consumer uses it, so it is the only place a props type is exercised at all. Turning it on immediately surfaced the `DuTableColumn` bug above.
 
 - The axe sweep and the SSR suite are driven from `index.ts` through one fixture table (`tests/helpers/component-fixtures.ts`) and **fail if a component is exported without an entry**. The axe sweep covered 31 of 61 components before; it covers all of them now.
 - `tests/ssr.spec.ts` also hydrates every component and fails on a mismatch warning, mounts each one on the client, and asserts that no server render reaches `addEventListener` — a guard on the guard, since happy-dom would otherwise hide a `document` access at a module's top level.

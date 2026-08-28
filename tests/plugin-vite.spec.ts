@@ -177,9 +177,17 @@ export { default as DuUnused } from './components/Actions/du-unused/du-unused.vu
   })
 
   type Hook<T> = T | { handler: T }
-  function callable<T extends (...args: never[]) => unknown>(hook: Hook<T> | undefined): T {
+
+  /**
+   * Unwraps a Vite hook, in either the bare or the `{ handler }` form, and
+   * drops the Rollup plugin context from its signature — the tests call these
+   * directly, with no plugin container to be `this`.
+   */
+  function callable<T extends (...args: never[]) => unknown>(
+    hook: Hook<T> | undefined,
+  ): (...args: never[]) => unknown {
     if (!hook) throw new Error('hook missing')
-    return typeof hook === 'function' ? hook : hook.handler
+    return (typeof hook === 'function' ? hook : hook.handler) as (...args: never[]) => unknown
   }
 
   it('writes exclusions during build and restores index.css afterwards', async () => {
@@ -288,15 +296,17 @@ describe('cornetPlugin npm mode (tree-shaking via index.css)', () => {
   })
 
   type Hook<T> = T | { handler: T }
-  function callable<T extends (...args: never[]) => unknown>(hook: Hook<T> | undefined): T {
+  function callable<T extends (...args: never[]) => unknown>(
+    hook: Hook<T> | undefined,
+  ): (...args: never[]) => unknown {
     if (!hook) throw new Error('hook missing')
-    return typeof hook === 'function' ? hook : hook.handler
+    return (typeof hook === 'function' ? hook : hook.handler) as (...args: never[]) => unknown
   }
 
   it('rewrites index.css to inline the used components (+ deps), then restores', async () => {
     const plugin = cornetPlugin({ libPath: libRoot, showOutput: false })
     await callable(plugin.configResolved)({ root: fixtureRoot } as never)
-    await callable(plugin.buildStart).call({} as never, {} as never)
+    await callable(plugin.buildStart)({} as never)
 
     const during = readFileSync(cssPath, 'utf-8')
     expect(during).toContain('@source inline(')

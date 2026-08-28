@@ -166,8 +166,17 @@ exemptions:
 — reading an unlisted key should require a narrowing step.
 
 `strict` is on (inherited from `@vue/tsconfig`), and `npm run type-check`
-blocks CI. It covers `components/`, `composables/`, `index.ts`,
-`plugin-vite.ts` and `types/`; `tests/` is not yet type-checked.
+blocks CI over `components/`, `composables/`, `index.ts`, `plugin-vite.ts`,
+`types/` **and `tests/`**.
+
+Type-checking the tests is not tidiness: a test is the only place a component
+is used the way a consumer uses it, so it is the only place a props type is
+exercised at all. Leaving `tests/` out hid a real one — `DuTableColumn.key`
+was `Extract<keyof Row, string>`, which reads well and rejects
+`const columns = [{ key: 'name' }]`, because TypeScript widens that `'name'` to
+`string` before the type ever sees it. Every ordinary consumer would have hit
+it. `.vue` files are checked by `vue-tsc`, so a spec that mounts a component
+checks its props.
 
 ---
 

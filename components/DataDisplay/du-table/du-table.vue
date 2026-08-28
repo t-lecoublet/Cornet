@@ -35,6 +35,13 @@ const pinColsClass = computed(() => {
   return props.pinCols ? "table-pin-cols" : ""
 })
 
+/**
+ * A column's `key` accepts any string (see `DuTableColumn`), so reading the
+ * cell has to go through a lookup rather than an index type. `unknown` is what
+ * a row's extra fields are anyway.
+ */
+const cellValue = (row: R, key: string): unknown => (row as Record<string, unknown>)[key]
+
 const customClassValue = computed(() => {
   return props.customClass || ""
 })
@@ -89,9 +96,9 @@ const customClassValue = computed(() => {
               :name="`cell-${column.key}`"
               :row="row"
               :column="column"
-              :value="row[column.key]"
+              :value="cellValue(row, column.key)"
             >
-              {{ row[column.key] }}
+              {{ cellValue(row, column.key) }}
             </slot>
           </td>
         </tr>

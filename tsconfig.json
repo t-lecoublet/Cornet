@@ -6,7 +6,9 @@
     "types/index.ts",
     "composables/**/*.ts",
     "components/**/*.ts",
-    "components/**/*.vue"
+    "components/**/*.vue",
+    "tests/**/*.ts",
+    "tests/**/*.vue"
   ],
   "exclude": ["**/*.stories.ts", "node_modules", "dist"],
   "compilerOptions": {

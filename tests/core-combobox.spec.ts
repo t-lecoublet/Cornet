@@ -45,7 +45,9 @@ function mountHarness(setup: Setup, render: (scope: Scope) => VNode) {
       options: TAGS,
       optionLabel: (option: unknown) => (option as Tag).label,
       ...setup,
-    },
+      // `setup` is typed against `Tag`, the harness props against `unknown`:
+      // the same callbacks, described from the two ends of the generic.
+    } as never,
     slots: {
       default: (slotProps: unknown) => {
         live = (slotProps as { scope: Scope }).scope
@@ -319,7 +321,7 @@ describe('query and filtering', () => {
   it('selects the shown text on open, but not when reopened by typing', async () => {
     const tags = widget({ shape: 'typeahead' })
     const selectText = vi.fn()
-    tags.field().element.select = selectText
+    ;(tags.field().element as HTMLInputElement).select = selectText
 
     await tags.scope().open()
     await nextTick()
@@ -603,7 +605,7 @@ describe('keys pressed while closed', () => {
 
   it('Backspace edits text instead when the field holds some', async () => {
     const tags = widget({ shape: 'typeahead', modelValue: TAGS[0] })
-    tags.field().element.value = 'acce'
+    ;(tags.field().element as HTMLInputElement).value = 'acce'
     await tags.field().trigger('keydown', { key: 'Backspace' })
     expect(tags.writes()).toBe(0)
   })
@@ -646,7 +648,7 @@ describe('Tab', () => {
     expect(tags.scope().isOpen).toBe(true)
 
     // Tab from the chip still skips the list and exits.
-    tags.chip().element.focus()
+    ;(tags.chip().element as HTMLElement).focus()
     tags.chip().element.dispatchEvent(keypress('Tab'))
     await nextTick()
     expect(tags.scope().isOpen).toBe(false)
@@ -938,7 +940,7 @@ describe('Popover API', () => {
     const show = vi.fn(() => { shown = true })
     const hide = vi.fn(() => { shown = false })
     Object.assign(popup, { showPopover: show, hidePopover: hide })
-    popup.matches = () => shown
+    popup.matches = (() => shown) as unknown as typeof popup.matches
 
     await tags.scope().open()
     expect(show).toHaveBeenCalledTimes(1)

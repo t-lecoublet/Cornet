@@ -177,7 +177,7 @@ describe('dismissal', () => {
   it('closes on Escape and hands focus back to the trigger', async () => {
     const d = dropdown()
     await d.trigger().trigger('click')
-    d.item().element.focus()
+    ;(d.item().element as HTMLElement).focus()
 
     escape()
     await nextTick()

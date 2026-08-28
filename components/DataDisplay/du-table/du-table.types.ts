@@ -23,9 +23,17 @@ export interface DuTableRow extends DuTableRowBase {
   [key: string]: unknown
 }
 
-/** `key` is checked against the row type — a typo in a column no longer renders blank. */
 export interface DuTableColumn<R extends DuTableRowBase = DuTableRow> {
-  key: Extract<keyof R, string>
+  /**
+   * Which field of the row this column shows.
+   *
+   * The union suggests the row's own keys in an editor, and the trailing
+   * `string` accepts anything else — because `const columns = [{ key: 'name' }]`
+   * widens `'name'` to `string` before it ever reaches this type, and a
+   * consumer declaring their columns in a variable (which is most of them)
+   * would otherwise not compile. Autocomplete, not enforcement.
+   */
+  key: Extract<keyof R, string> | (string & {})
   label: string
   customClass?: string
 }
