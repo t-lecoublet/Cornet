@@ -7,7 +7,7 @@
 >
 > `PLAN-REFONTE-COMBOBOX.md` décrit une approche par *vendoring* d'une lib tierce qui a été **abandonnée en cours de route** au profit d'une réimplémentation native : il est conservé comme archive et ne doit plus servir de référence.
 >
-> **Avancement au 2026-08-28** — **G1 à G5 sont faits.** La Phase 3 est close : dropdown, menu, tooltip, drawer et toast sont refondus sur `core/`. DuModal (§4.4) est écarté : son contrôle est natif et vérifié correct. §2.0, les primitives §2.1–2.2, tout le socle §3, puis §4.1 à §4.6. La lib est à 37 specs / 610 tests + 28 skippés, zéro `any` en code livré, lint a11y + axe + build de contrôle CSS bloquants en CI. Prochain jalon : G6 (Tabs + Accordion/Collapse), le premier de la Phase 4.
+> **Avancement au 2026-08-28** — **G1 à G6 sont faits.** Phase 3 close (dropdown, menu, tooltip, drawer, toast ; DuModal écarté, son contrôle est natif et vérifié correct) et §5.1–5.2 avec elle : tabs, accordion et collapse ont perdu leurs `<input>` cachés. **Il ne reste aucune entrée dans l'allowlist axe.** §2.0, les primitives §2.1–2.2, tout le socle §3, puis §4.1 à §4.6 et §5.1–5.2. La lib est à 38 specs / 643 tests + 30 skippés, zéro `any` en code livré, lint a11y + axe + build de contrôle CSS bloquants en CI. Prochain jalon : G7 (§5.3–5.6 Filter, Rating, Range, Pagination).
 >
 > Breaking changes assumés (beta). Chaque section « Composant » est conçue comme une PR autonome.
 
@@ -268,31 +268,33 @@ Ce qui reste ci-dessous relève du confort, pas du défaut — conservé pour m�
 
 ## 5. Phase 4 — Widgets sélection & valeur
 
-### 5.1 DuTabs
+### 5.1 DuTabs — ✅ **fait**
 
-**État actuel** : pattern radio-group DaisyUI (`<label><input type="radio"></label>`), flèches natives entre radios, `modelValue` = index, `name` défaut `"my_tabs"` (collision si deux instances !), items ou slot.
+**État de départ** : pattern radio-group DaisyUI (`<label><input type="radio"></label>`), flèches natives entre radios, `modelValue` = index, `name` défaut `"my_tabs"` (collision si deux instances !), items ou slot.
 
 **Cible** — passage au pattern APG tabs :
-- [ ] Markup : `role="tablist"` (avec `aria-label`), boutons `role="tab"` `aria-selected` `aria-controls`, panneaux `role="tabpanel"` `aria-labelledby` `tabindex="0"`. Ids via `useId` (règle également le défaut `name` collisif, qui disparaît).
-- [ ] Clavier : `useRovingIndex` (flèches selon orientation, Home/End) ; prop `activation: 'automatic' | 'manual'` (défaut `automatic` : le focus sélectionne, comme les radios actuels — pas de régression UX).
-- [ ] `modelValue` : passer de l'index à une **valeur stable** `item.value` (fallback : index si non fournie). Breaking assumé, documenté.
-- [ ] Panneaux : slot `panel` scopé par item + rendu associé (aujourd'hui les tabs n'affichent pas de contenu ? vérifier le mode `type="lift"` avec contenu — si les panneaux n'existaient pas, les ajouter en option sans les rendre obligatoires).
-- [ ] Prop `disabled` par item (skip clavier via la primitive).
-- [ ] Styles : conserver `tabs-lift/border/box` et sizes ; l'état sélectionné passe de `:checked` CSS à `aria-selected` (`.aria-selected:tab-active` ou classe conditionnelle) — vérifier le rendu DaisyUI qui cible `input:checked` : ajouter la classe `tab-active` conditionnelle.
-- [ ] Tests : réécrire `du-tabs.spec.ts` (rôles, roving, activation manuel/auto, v-model par valeur, disabled).
+- [x] Markup : `role="tablist"` (avec `aria-label`), boutons `role="tab"` `aria-selected` `aria-controls`, panneaux `role="tabpanel"` `aria-labelledby` `tabindex="0"`. Ids via `useId` (règle également le défaut `name` collisif, qui disparaît).
+- [x] Clavier : `useRovingIndex` (flèches selon orientation, Home/End) ; prop `activation: 'automatic' | 'manual'` (défaut `automatic` : le focus sélectionne, comme les radios actuels — pas de régression UX).
+- [x] `modelValue` : passer de l'index à une **valeur stable** `item.value` (fallback : index si non fournie). Breaking assumé, documenté.
+- [x] Panneaux : les slots `content` / `content-${index}` existants font déjà office de slot `panel` — conservés plutôt que renommés. `role="tabpanel"` + `aria-labelledby` + `tabindex="0"` ajoutés.
+  - **Trouvé au passage** : `aria-controls` pointait vers un panneau non rendu pour un onglet sans contenu — une référence cassée, qu'axe signale. Il n'est posé que si le panneau existe.
+  - **Trouvé aussi** : la prop `bottom` était déclarée et jamais utilisée ; elle applique `tabs-bottom` maintenant. Et un slot indexé perdait contre le slot global, ce qui rendait `content-0` inutilisable dès qu'on fournissait `content`.
+- [x] Prop `disabled` par item (skip clavier via la primitive).
+- [x] Styles : `tabs-lift/border/box` et sizes conservés. **Aucune classe `tab-active` n'a été nécessaire** : daisyUI 5 stylise déjà `.tab[aria-selected=true]` et révèle le `.tab-content` adjacent. L'état sélectionné est donc porté par l'attribut que lit le lecteur d'écran, sans miroir de classe à faire diverger. Contrainte à retenir : **le `.tab-content` doit rester le frère adjacent de son `.tab`**.
+- [x] Tests : réécrire `du-tabs.spec.ts` (rôles, roving, activation manuel/auto, v-model par valeur, disabled).
 
-### 5.2 DuAccordion / DuCollapse
+### 5.2 DuAccordion / DuCollapse — ✅ **fait**
 
-**État actuel** : accordion = `<input type="radio">` cachés + `Math.random` name, titre non focusable (`div.collapse-title`), pas d'ARIA ; collapse = idem en checkbox.
+**État de départ** : accordion = `<input type="radio">` cachés + `Math.random` name, titre non focusable (`div.collapse-title`), pas d'ARIA ; collapse = idem en checkbox.
 
 **Cible** :
-- [ ] Markup : le titre devient un `<button>` avec `aria-expanded` + `aria-controls`, région de contenu avec `id` + `role="region"` + `aria-labelledby`. Clavier natif (bouton) suffisant — pas de roving requis par l'APG (Tab entre les en-têtes).
-- [ ] État : `v-model` — DuCollapse : `open: boolean` (`update:open`) ; DuAccordion : `modelValue: string | string[] | null` (valeurs d'items ouverts), prop `multiple` (défaut `false` = comportement radio actuel), prop `collapsible` (autoriser tout-fermé en single ; défaut `true`).
-- [ ] `useControllableState` pour les deux ; suppression totale des inputs radio/checkbox et du `name`.
-- [ ] Styles : DaisyUI `collapse-open`/`collapse-close` pilotés par l'état JS (classes conditionnelles), `collapse-arrow`/`collapse-plus` conservés.
-- [ ] Slots conservés (`title`, `title-${index}`, contenu) ; scope enrichi `{ open, toggle }`.
-- [ ] Animation : DaisyUI anime via grid-rows — vérifier que ça survit au passage classes-pilotées ; sinon transition height maison avec `prefers-reduced-motion`.
-- [ ] Tests (~12 par composant) : v-model single/multiple/collapsible, aria, clavier bouton, deux instances sans collision d'ids.
+- [x] Markup : le titre devient un `<button>` avec `aria-expanded` + `aria-controls`, région de contenu avec `id` + `role="region"` + `aria-labelledby`. Clavier natif (bouton) suffisant — pas de roving requis par l'APG (Tab entre les en-têtes).
+- [x] État : `v-model`. **Correction au plan** : DuCollapse n'est pas un panneau unique mais une *liste de disclosures indépendantes*, donc `open: boolean` ne convenait pas — c'est `modelValue: (string|number)[]`, toujours un tableau. DuAccordion : `modelValue: value | value[] | null`, avec `multiple` et `collapsible`. C'est précisément cette différence (l'un ferme les autres, l'autre non) qui n'apparaissait nulle part dans les deux APIs.
+- [x] `useControllableState` pour les deux ; suppression totale des inputs radio/checkbox et du `name`.
+- [x] Styles : DaisyUI `collapse-open`/`collapse-close` pilotés par l'état JS (classes conditionnelles), `collapse-arrow`/`collapse-plus` conservés.
+- [x] Slots conservés (`title`, `title-${index}`, contenu) ; scope enrichi `{ open, toggle }`.
+- [x] Animation : elle survit. `.collapse-open` pose `grid-template-rows: max-content 1fr` et la transition est déjà sur `.collapse` sous `@media (prefers-reduced-motion: no-preference)` — rien à réécrire.
+- [x] Tests (~12 par composant) : v-model single/multiple/collapsible, aria, clavier bouton, deux instances sans collision d'ids.
 
 ### 5.3 DuFilter
 
@@ -370,7 +372,7 @@ Mocks d'environnement à centraliser dans un setup vitest partagé : Popover API
 | G3 | §4.1–4.2 Dropdown + Menu — ✅ **fait** | G1, G2 | — |
 | G4 | §4.3 Tooltip — ✅ **fait**. §4.4 Modal — ⛔ écarté : le contrôle est natif et correct | G1 | — |
 | G5 | §4.5–4.6 Drawer + Toast — ✅ **fait** | G1 | — |
-| G6 | §5.1–5.2 Tabs + Accordion/Collapse | G1, G2 | 3 j |
+| G6 | §5.1–5.2 Tabs + Accordion/Collapse — ✅ **fait** | G1, G2 | — |
 | G7 | §5.3–5.6 Filter, Rating, Range, Pagination | G2 | 2 j |
 | G8 | §6 Data display | G2 | 2 j |
 | G9 | §7 Hygiène + form plumbing | G2 (+ Phase 1 pour 7.3) | 3 j |
@@ -380,7 +382,7 @@ Total ≈ **24-29 jours**, largement parallélisable : G3–G9 sont indépendant
 
 ## 10. Points de vigilance globaux
 
-1. **Ne jamais casser un pattern DaisyUI qui rend un service natif sans le remplacer par mieux** : les radios de du-tabs donnaient les flèches gratuites — la refonte APG doit les réimplémenter via `useRovingIndex` avant de supprimer les radios (§5.1). Idem l'animation grid de collapse (§5.2).
+1. **Ne jamais casser un pattern DaisyUI qui rend un service natif sans le remplacer par mieux.** Vérifié aux deux endroits : les flèches des radios de du-tabs sont remplacées par `useRovingIndex` (et vont plus loin — elles enjambent les onglets désactivés), et l'animation grid de collapse survit intacte, `.collapse-open` posant le `grid-template-rows` que les radios posaient. **Corollaire trouvé en chemin** : daisyUI stylise souvent déjà l'attribut ARIA (`.tab[aria-selected=true]`, `.collapse-open`) — regarder son CSS *avant* d'inventer une classe miroir.
 2. **`useControllableState` est le contrat unique** pour toute prop `open`/`modelValue` : pas de variantes locales, sinon la lib redevient incohérente en six mois.
 3. **Les listeners document** (click-outside, Escape) ne sont montés que quand l'overlay est ouvert. Le moteur combobox s'y conforme depuis §2.0 (`watch(isOpen)`, `onUnmounted` en filet, test dédié) : `usePopoverState` hérite de la bonne règle, pas du défaut.
 4. **`role="menu"` est réservé aux vrais menus d'actions** (§4.2) — l'anti-pattern « role menu sur une sidebar de navigation » est explicitement interdit par `docs/architecture.md`.
