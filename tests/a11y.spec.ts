@@ -1,5 +1,4 @@
-// axe-core over a representative mount of every component that renders
-// something a screen reader has to make sense of.
+// axe-core over every exported component, in a configuration worth looking at.
 //
 // This is a floor, not a ceiling. Automated rules catch a minority of real
 // accessibility problems — they see a missing accessible name, not a menu
@@ -8,6 +7,10 @@
 // see. Keyboard behaviour and announced semantics are asserted in each
 // component's own spec, and a screen-reader pass is still owed.
 //
+// The list comes from `index.ts` and the suite fails if a component is exported
+// without a fixture: a sweep that quietly skips half the library is worse than
+// no sweep, because it reads like coverage.
+//
 // The bar is `serious` and `critical`. `moderate`/`minor` findings are mostly
 // contrast and landmark advice that depend on the page a consumer builds, not
 // on the component.
@@ -15,38 +18,7 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
 import axe from 'axe-core'
 import type { Component } from 'vue'
-
-import DuAccordion from '../components/DataDisplay/du-accordion/du-accordion.vue'
-import DuAlert from '../components/Feedback/du-alert/du-alert.vue'
-import DuBreadcrumbs from '../components/Navigation/du-breadcrumbs/du-breadcrumbs.vue'
-import DuButton from '../components/Actions/du-button/du-button.vue'
-import DuCarousel from '../components/DataDisplay/du-carousel/du-carousel.vue'
-import DuChat from '../components/DataDisplay/du-chat/du-chat.vue'
-import DuDiff from '../components/DataDisplay/du-diff/du-diff.vue'
-import DuCheckbox from '../components/DataInput/du-checkbox/du-checkbox.vue'
-import DuCollapse from '../components/DataDisplay/du-collapse/du-collapse.vue'
-import DuDock from '../components/Navigation/du-dock/du-dock.vue'
-import DuDrawer from '../components/Layout/du-drawer/du-drawer.vue'
-import DuDropdown from '../components/Actions/du-dropdown/du-dropdown.vue'
-import DuFab from '../components/Actions/du-fab/du-fab.vue'
-import DuFilter from '../components/DataInput/du-filter/du-filter.vue'
-import DuInputField from '../components/DataInput/du-input-field/du-input-field.vue'
-import DuMenu from '../components/Navigation/du-menu/du-menu.vue'
-import DuModal from '../components/Actions/du-modal/du-modal.vue'
-import DuPagination from '../components/Navigation/du-pagination/du-pagination.vue'
-import DuProgress from '../components/Feedback/du-progress/du-progress.vue'
-import DuRange from '../components/DataInput/du-range/du-range.vue'
-import DuRating from '../components/DataInput/du-rating/du-rating.vue'
-import DuSearch from '../components/DataInput/du-search/du-search.vue'
-import DuSelect from '../components/DataInput/du-select/du-select.vue'
-import DuSteps from '../components/Navigation/du-steps/du-steps.vue'
-import DuSwap from '../components/Actions/du-swap/du-swap.vue'
-import DuTable from '../components/DataDisplay/du-table/du-table.vue'
-import DuTabs from '../components/Navigation/du-tabs/du-tabs.vue'
-import DuToast from '../components/Feedback/du-toast/du-toast.vue'
-import DuTooltip from '../components/Feedback/du-tooltip/du-tooltip.vue'
-import DuTextArea from '../components/DataInput/du-text-area/du-text-area.vue'
-import DuTimeline from '../components/DataDisplay/du-timeline/du-timeline.vue'
+import { EXPORTED, FIXTURES, RENDERED_BY_PARENT, STANDALONE } from './helpers/component-fixtures'
 
 const BLOCKING: axe.ImpactValue[] = ['serious', 'critical']
 
@@ -64,84 +36,61 @@ interface Case {
   knownIssues?: { rules: string[], because: string }
 }
 
-const OPTIONS = [
-  { id: 1, name: 'Ada' },
-  { id: 2, name: 'Grace' },
-]
+interface Case {
+  name: string
+  component: Component
+  props?: Record<string, unknown>
+  slots?: Record<string, string>
+  /**
+   * axe rule ids this component is known to fail, each one a structural bug
+   * with a scheduled fix rather than something to paper over. The test also
+   * asserts that every id listed still fires, so an entry cannot outlive the
+   * bug it documents.
+   */
+  knownIssues?: { rules: string[], because: string }
+}
 
-const cases: Case[] = [
-  { name: 'DuButton', component: DuButton, props: { label: 'Save' } },
-  { name: 'DuSwap', component: DuSwap, props: { useCheckbox: false, ariaLabel: 'Toggle theme' }, slots: { on: 'on', off: 'off' } },
-  {
-    name: 'DuDropdown',
-    component: DuDropdown,
-    props: { open: true },
-    slots: {
-      trigger: '<template #trigger="{ triggerProps }"><button type="button" v-bind="triggerProps">Open</button></template>',
-      default: '<p>Panel</p>',
-    },
-  },
-  { name: 'DuFab', component: DuFab, props: { mainAction: { label: 'Compose' }, items: [{ label: 'Photo' }] } },
-  { name: 'DuModal', component: DuModal, props: { open: true, ariaLabel: 'Confirm' }, slots: { default: '<p>Sure?</p>' } },
+/**
+ * A `tablist` may own only `tab`s, but daisyUI reveals a panel through
+ * `.tabs > .tab + .tab-content` — so the panel has to be a child of the
+ * tablist. `aria-owns` does not satisfy the rule. Getting rid of it means
+ * rendering the panels outside `.tabs` and losing daisyUI's panel box styling,
+ * which is a product decision, so it is recorded rather than papered over.
+ */
+const TABS_STRUCTURE: Case['knownIssues'] = {
+  rules: ['aria-required-children'],
+  because: 'daisyUI requires the panel to be a child of the tablist',
+}
 
-  { name: 'DuAccordion', component: DuAccordion, props: { items: [{ title: 'One', content: 'a' }, { title: 'Two', content: 'b' }] } },
-  { name: 'DuCollapse', component: DuCollapse, props: { items: [{ title: 'One', content: 'a' }] } },
-  { name: 'DuChat', component: DuChat, props: { items: [{ message: 'Hi', header: 'Ada' }] } },
-  {
-    name: 'DuTable',
-    component: DuTable,
-    props: { caption: 'Owners', columns: [{ key: 'name', label: 'Name' }], rows: [{ id: 1, name: 'Ada' }] },
-  },
-  {
-    name: 'DuCarousel',
-    component: DuCarousel,
-    props: { ariaLabel: 'Photos', items: [{ src: '/a.png', alt: 'A' }, { src: '/b.png', alt: 'B' }], controls: true },
-  },
-  { name: 'DuDiff', component: DuDiff, props: { ariaLabel: 'Before and after', item1: '/a.png', item2: '/b.png' } },
-  { name: 'DuTimeline', component: DuTimeline, props: { items: [{ start: '2024', middle: '•', end: 'Shipped' }] } },
+const cases: Case[] = STANDALONE.map(([name, component, fixture]) => ({
+  name,
+  component,
+  props: fixture.props,
+  slots: fixture.slots,
+  knownIssues: name === 'DuTabs' ? TABS_STRUCTURE : undefined,
+}))
 
-  { name: 'DuCheckbox', component: DuCheckbox, props: { 'aria-label': 'Subscribe' } },
-  { name: 'DuInputField', component: DuInputField, props: { type: 'text', 'aria-label': 'Email' } },
-  { name: 'DuTextArea', component: DuTextArea, props: { 'aria-label': 'Notes' } },
-  { name: 'DuFilter', component: DuFilter, props: { items: [{ title: 'All' }, { title: 'Active' }], legend: 'Status' } },
-  { name: 'DuRating', component: DuRating, props: { count: 5, modelValue: 3, ariaLabel: 'Rating' } },
-  { name: 'DuRating (readonly)', component: DuRating, props: { count: 5, modelValue: 3, readonly: true } },
-  { name: 'DuRange', component: DuRange, props: { modelValue: 3, 'aria-label': 'Budget' } },
-  { name: 'DuSelect', component: DuSelect, props: { options: OPTIONS, labelBy: 'name', trackBy: 'id', ariaLabel: 'Owner' } },
-  { name: 'DuSearch', component: DuSearch, props: { options: OPTIONS, labelBy: 'name', trackBy: 'id', ariaLabel: 'Owner' } },
-
-  { name: 'DuAlert', component: DuAlert, props: { variant: 'info', dismissible: true }, slots: { default: 'Saved.' } },
-  { name: 'DuProgress', component: DuProgress, props: { value: 40, ariaLabel: 'Upload' } },
-  { name: 'DuToast', component: DuToast },
+/** States worth sweeping that the default fixture does not reach. */
+const extraCases: Case[] = [
   {
-    name: 'DuTooltip',
-    component: DuTooltip,
-    props: { open: true, dataTip: 'Saves the document' },
-    slots: { default: '<button type="button">Save</button>' },
-  },
-
-  { name: 'DuDrawer', component: DuDrawer, props: { items: [{ label: 'Home', href: '/' }] } },
-  {
-    name: 'DuDrawer (open)',
-    component: DuDrawer,
-    props: { open: true, ariaLabel: 'Main navigation', items: [{ label: 'Home', href: '/' }] },
-  },
-
-  { name: 'DuBreadcrumbs', component: DuBreadcrumbs, props: { items: [{ label: 'Home', href: '/' }, { label: 'Docs' }] } },
-  { name: 'DuDock', component: DuDock, props: { items: [{ label: 'Home' }, { label: 'Search' }] } },
-  { name: 'DuMenu (nav)', component: DuMenu, props: { items: [{ label: 'Home', href: '/' }, { label: 'Docs', href: '/docs' }] } },
-  {
-    name: 'DuMenu (menu)',
-    component: DuMenu,
+    name: 'DuMenu (role=menu)',
+    component: FIXTURES.DuMenu != null ? STANDALONE.find(([n]) => n === 'DuMenu')![1] : (null as never),
     props: {
       role: 'menu',
       ariaLabel: 'Actions',
       items: [{ label: 'Open', value: 'open' }, { label: 'Save', value: 'save' }],
     },
   },
-  { name: 'DuPagination', component: DuPagination, props: { modelValue: 2, total: 50, perPage: 10 } },
-  { name: 'DuSteps', component: DuSteps, props: { items: [{ label: 'Cart' }, { label: 'Pay' }] } },
-  { name: 'DuTabs', component: DuTabs, props: { items: [{ label: 'One' }, { label: 'Two' }], ariaLabel: 'Sections' } },
+  {
+    name: 'DuRating (readonly)',
+    component: STANDALONE.find(([n]) => n === 'DuRating')![1],
+    props: { count: 5, modelValue: 3, readonly: true },
+  },
+  {
+    name: 'DuDrawer (open)',
+    component: STANDALONE.find(([n]) => n === 'DuDrawer')![1],
+    props: { open: true, ariaLabel: 'Main navigation', items: [{ label: 'Home', href: '/' }] },
+  },
 ]
 
 let mounted: ReturnType<typeof mount> | null = null
@@ -163,7 +112,28 @@ async function violationsOf({ component, props, slots }: Case) {
   )
 }
 
-describe.each(cases)('$name', (testCase) => {
+describe('the sweep itself', () => {
+  it('covers every exported component', () => {
+    const swept = new Set(cases.map((testCase) => testCase.name))
+    const uncovered = EXPORTED
+      .map(([name]) => name)
+      .filter((name) => !swept.has(name) && RENDERED_BY_PARENT[name] == null)
+
+    expect(uncovered).toEqual([])
+  })
+
+  it('sweeps a sub-component through the parent that renders it', () => {
+    // A `menuitem` with no menu around it, a row with no list: rendering those
+    // alone would invent failures no consumer can hit.
+    const orphans = Object.entries(RENDERED_BY_PARENT)
+      .filter(([, parent]) => !cases.some((testCase) => testCase.name === parent))
+      .map(([child, parent]) => `${child} -> ${parent}`)
+
+    expect(orphans).toEqual([])
+  })
+})
+
+describe.each([...cases, ...extraCases])('$name', (testCase) => {
   const known = testCase.knownIssues?.rules ?? []
 
   it('has no serious or critical axe violation', async () => {

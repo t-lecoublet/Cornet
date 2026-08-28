@@ -120,6 +120,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 
 ### Fixed
 
+- `DuButton` rendered as an `<input>` (inside a `DuFilter`) declared a child node the server correctly omitted, because an `<input>` is a void element and may hold none. Every such button reported a hydration mismatch. The template branches on the element instead of hiding a slot behind a `v-if` inside it.
+
 - `DuTooltip`: `variant="neutral"` produced a `tooltip-neutral` class daisyUI does not define. The rule now lives in the component. It happened to look right because neutral is daisyUI's tooltip default, so nothing would have caught it before `npm run check:css`.
 - `DuInputField`: attributes passed by the consumer (`aria-label`, `aria-describedby`, `autocomplete`, …) now reach the `<input>`. The template's root is a fragment, so Vue could not auto-inherit them and they landed nowhere — the field could not be given an accessible name outside a wrapping `<label>`.
 - `DuAccordion`, `DuCollapse`, `DuFilter`, `DuRating`, `DuDrawer`: element ids and radio-group names come from `useId()` instead of `Math.random()`. A random id differs between the server render and the client render, which Vue reports as a hydration mismatch and which breaks every `for`/`id` and `aria-controls` pair spanning the boundary.
@@ -134,6 +136,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and the p
 - `DuSelect`: the per-option checkbox no longer double-toggles the selection.
 
 ### Internal
+
+- The axe sweep and the SSR suite are driven from `index.ts` through one fixture table (`tests/helpers/component-fixtures.ts`) and **fail if a component is exported without an entry**. The axe sweep covered 31 of 61 components before; it covers all of them now.
+- `tests/ssr.spec.ts` also hydrates every component and fails on a mismatch warning, mounts each one on the client, and asserts that no server render reaches `addEventListener` — a guard on the guard, since happy-dom would otherwise hide a `document` access at a module's top level.
+- **Known gap, recorded rather than papered over**: `DuTabs` fails axe's `aria-required-children`. A `tablist` may own only `tab`s, but daisyUI reveals a panel through `.tabs > .tab + .tab-content`, so the panel has to be a child of the tablist; `aria-owns` does not satisfy the rule. Fixing it means rendering the panels outside `.tabs` and giving up daisyUI's panel box styling — a product decision, not an implementation one.
 
 - `tests/ssr.spec.ts`: every exported component is rendered on a server, twice — catching both `document` access during `setup()` and markup that differs between two renders of the same input, which is a hydration mismatch. All 61 pass.
 - `tests/api-consistency.spec.ts`: one spelling for accessible-name props, `update:x` paired with an `x` prop, props interfaces named after their component.

@@ -52,6 +52,11 @@ const isInputElement = computed(() => elementTag.value === 'input')
  * forbids — a user saying "click Save" to a voice assistant needs the name to
  * match what they can see.
  */
+// The template has two branches rather than one `<component :is>` with a `v-if`
+// inside: an `<input>` is a void element and may hold no children at all, but a
+// `v-if` still renders a comment placeholder on the client. The server, knowing
+// the element is void, emits nothing — and hydration then reports a mismatch on
+// every button in a filter.
 const accessibleName = computed(() => props.ariaLabel ?? (slots.default == null ? props.label : undefined))
 const isAnchorElement = computed(() => elementTag.value === 'a')
 
@@ -78,7 +83,31 @@ const buttonAttributes = computed(() => {
 })
 </script>
 <template>
+  <input
+    v-if="isInputElement"
+    v-bind="buttonAttributes"
+    :class="[
+      'btn',
+      customClass,
+      sizeClass,
+      colorClass,
+      soft && 'btn-soft',
+      outline && 'btn-outline',
+      dash && 'btn-dash',
+      active && 'btn-active',
+      ghost && 'btn-ghost',
+      link && 'btn-link',
+      wide && 'btn-wide',
+      square && 'btn-square',
+      circle && 'btn-circle',
+      block && 'btn-block',
+      inJoin && 'join-item',
+    ]"
+    :aria-label="accessibleName"
+    :disabled="props.disabled"
+  />
   <component
+    v-else
     :is="elementTag"
     v-bind="buttonAttributes"
     :class="[
@@ -101,6 +130,6 @@ const buttonAttributes = computed(() => {
     :aria-label="accessibleName"
     :disabled="props.disabled"
   >
-    <slot v-if="!isInputElement"></slot>
+    <slot></slot>
   </component>
 </template>

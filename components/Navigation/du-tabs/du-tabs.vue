@@ -4,6 +4,13 @@
 // daisyUI 5 already styles `.tab[aria-selected=true]` and reveals the
 // `.tab-content` next to it, so the selected state is carried by the very
 // attribute a screen reader reads — no second source of truth to drift.
+//
+// KNOWN GAP: that reveal is `.tabs > .tab + .tab-content`, so a panel has to be
+// a child of the tablist — and a `tablist` may own only `tab`s. axe reports it
+// (`aria-required-children`), and `aria-owns` does not satisfy the rule. Fixing
+// it means rendering the panels outside `.tabs` and giving up daisyUI's panel
+// box styling (borders, radius, the lift join), which is a product decision
+// rather than an implementation one. Recorded in tests/a11y.spec.ts.
 import { computed, ref, useSlots, watch } from 'vue'
 import { useRovingIndex } from '../../core/navigation'
 import { useComponentId, useControllableState } from '../../core/shared'
@@ -147,6 +154,7 @@ const TYPE_CLASSES: Record<string, string> = {
 const typeClass = computed(() => TYPE_CLASSES[props.type ?? ''] ?? '')
 
 const placementClass = computed(() => (props.bottom ? 'tabs-bottom' : ''))
+
 
 defineSlots<{
   default?: () => unknown
