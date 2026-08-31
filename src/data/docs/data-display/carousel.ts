@@ -2,14 +2,42 @@ import type { DocPageData } from '@/types/docs'
 
 export default {
   title: 'Carousel',
-  description: 'Carousel shows several items along a scrollable axis with optional snap alignment.',
+  description: 'Carousel shows several items along a scrollable axis with optional snap alignment. It is a named `role="region"` whose strip is focusable — a scrollable region nothing inside can focus cannot be scrolled by keyboard at all.',
   category: 'Data Display',
   source: 'https://daisyui.com/components/carousel/',
   props: [
     {
       title: 'items',
-      description: 'Array of carousel items with id, src, alt, content and customClass',
+      description: 'Carousel items: `id`, `src`, `alt`, `content`, `customClass`, `ariaLabel`. An item with `src` and no `alt` now renders `alt=""` rather than "Slide 2" — the position of a picture is not a description of it, and an empty alt at least tells a screen reader to skip it.',
       type: 'DuCarouselItemData[]',
+    },
+    {
+      title: 'ariaLabel',
+      description: 'Accessible name of the carousel as a whole. Required in practice: a `region` landmark with no name is a landmark nobody can navigate to.',
+      type: 'string',
+    },
+    {
+      title: 'slideLabel',
+      description: 'Names each slide when it has no `ariaLabel` of its own: `(index, total) => string`, defaulting to `"2 of 5"`. Replace it for another language.',
+      type: 'DuCarouselSlideLabel',
+    },
+    {
+      title: 'controls',
+      description: 'Render previous/next buttons that scroll the strip one slide at a time — measured from the slide, not assumed.',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'previousLabel',
+      description: 'Accessible name of the previous button.',
+      type: 'string',
+      default: "'Previous slide'",
+    },
+    {
+      title: 'nextLabel',
+      description: 'Accessible name of the next button.',
+      type: 'string',
+      default: "'Next slide'",
     },
     {
       title: 'start',
@@ -159,8 +187,49 @@ export default {
 />`,
     },
     {
-      title: 'With navigation buttons',
-      description: 'Add prev/next anchors inside each DuCarouselItem using `id` attributes for scroll targeting.',
+      title: 'Built-in controls',
+      description: '`controls` renders a named previous/next pair that scrolls one slide, measuring the slide rather than assuming a width. `next()` and `previous()` are exposed on the instance too. Prefer this over the hand-rolled anchors below: the anchors move the scroll position without telling anyone what happened.',
+      preview: `<DuCarousel
+  controls
+  ariaLabel="Product photos"
+  class="w-72 rounded-xl"
+  :items="[
+    { id: 'c1', content: 'Slide 1', customClass: 'w-full h-32 bg-primary/20 items-center justify-center rounded-xl font-bold text-lg' },
+    { id: 'c2', content: 'Slide 2', customClass: 'w-full h-32 bg-secondary/20 items-center justify-center rounded-xl font-bold text-lg' },
+    { id: 'c3', content: 'Slide 3', customClass: 'w-full h-32 bg-accent/20 items-center justify-center rounded-xl font-bold text-lg' },
+  ]"
+/>`,
+      code: `<DuCarousel
+  controls
+  ariaLabel="Product photos"
+  previousLabel="Previous photo"
+  nextLabel="Next photo"
+  :items="photos"
+/>
+
+<!-- or drive it from a ref -->
+<script setup>
+const carousel = ref()
+</script>
+<DuCarousel ref="carousel" ariaLabel="Product photos" :items="photos" />
+<DuButton @click="carousel.next()">Next</DuButton>`,
+    },
+    {
+      title: 'Naming the slides',
+      description: 'Each slide is a `role="group"` with `aria-roledescription="slide"`, named `"2 of 5"` by default. Give a slide its own `ariaLabel` when it has a better name than its position, or replace `slideLabel` wholesale for another language.',
+      lang: 'vue',
+      code: `<DuCarousel
+  ariaLabel="Galerie produit"
+  :slideLabel="(index, total) => \`\${index} sur \${total}\`"
+  :items="[
+    { id: 'p1', src: '/red.jpg', alt: 'Sac à dos rouge, de face', ariaLabel: 'Vue de face' },
+    { id: 'p2', src: '/red-back.jpg', alt: 'Le même sac, de dos' },
+  ]"
+/>`,
+    },
+    {
+      title: 'With navigation buttons (manual)',
+      description: 'Anchors inside each DuCarouselItem, using `id` attributes as scroll targets. This is the daisyUI pattern; `controls` above does the same job with real buttons and accessible names.',
       links: [
         { label: 'CSS scroll snap docs', href: 'https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_scroll_snap' },
       ],

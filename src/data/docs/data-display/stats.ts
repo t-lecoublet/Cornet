@@ -8,7 +8,7 @@ export default {
   props: [
     {
       title: 'items',
-      description: 'Array of stat items with title, value, description, figure and actions',
+      description: 'Stat items: `title`, `value`, `description`, `figure`, `actions`. `figure` and `actions` are `IconSource` — a Vue component, an image URL, or an HTML string — and no longer `any`.',
       type: 'DuStatsItem[]',
     },
     {
@@ -28,6 +28,66 @@ export default {
       description: 'Dashed border style',
       type: 'boolean',
       default: 'false',
+    },
+  ],
+  slots: [
+    {
+      title: 'Scoped slots in items mode (#figure, #title, #value, #desc, #actions)',
+      description: 'When you pass `items`, these five slots override how **every** item renders that part, and each receives the item as `{ item }`. They fall back to the item field of the same name, so overriding one leaves the others alone.',
+      preview: `<DuStats
+  shadow
+  :items="[
+    { title: 'Downloads', value: '31K', description: '12%', up: true },
+    { title: 'Churn', value: '1.2%', description: '3%', up: false },
+  ]"
+>
+  <template #value="{ item }">
+    <span class="font-mono tabular-nums">{{ item.value }}</span>
+  </template>
+  <template #desc="{ item }">
+    <span :class="item.up ? 'text-success' : 'text-error'">
+      {{ item.up ? '↗' : '↘' }} {{ item.description }}
+    </span>
+  </template>
+</DuStats>`,
+      code: `<DuStats
+  shadow
+  :items="[
+    { title: 'Downloads', value: '31K', description: '12%', up: true },
+    { title: 'Churn', value: '1.2%', description: '3%', up: false },
+  ]"
+>
+  <template #value="{ item }">
+    <span class="font-mono tabular-nums">{{ item.value }}</span>
+  </template>
+  <template #desc="{ item }">
+    <span :class="item.up ? 'text-success' : 'text-error'">
+      {{ item.up ? '↗' : '↘' }} {{ item.description }}
+    </span>
+  </template>
+</DuStats>`,
+    },
+    {
+      title: 'Slot #actions',
+      description: 'A control at the foot of every stat — the one part of a stat that is interactive, so give it a real button rather than a styled div.',
+      code: `<DuStats shadow :items="items">
+  <template #actions="{ item }">
+    <DuButton size="xs" variant="primary" @click="drillInto(item)">
+      Details
+    </DuButton>
+  </template>
+</DuStats>`,
+    },
+    {
+      title: 'Default slot (manual mode)',
+      description: 'Without `items`, DuStats is a plain container: write `DuStat` children yourself and the scoped slots above do not apply.',
+      code: `<DuStats shadow>
+  <DuStat>
+    <template #title>Downloads</template>
+    <template #value>31K</template>
+    <template #desc>Jan 1st – Feb 1st</template>
+  </DuStat>
+</DuStats>`,
     },
   ],
   classnames: {

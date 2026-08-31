@@ -7,8 +7,9 @@ export default {
   sections: [
     {
       title: 'Your first component',
-      description: 'Import a component directly.',
+      description: 'Import a component directly. This assumes Cornet is already in your project — if not, the Installation guide takes about a minute.',
       links: [
+        { label: 'Installation', href: '/docs/guides/installation' },
         { label: 'Cornet button', href: '/docs/actions/button' },
         { label: 'Vue basic usage docs', href: 'https://vuejs.org/api/composition-api-setup.html#basic-usage' },
       ],
@@ -62,7 +63,7 @@ import { DuButton } from 'cornet-ui'
     },
     {
       title: 'Reactive state with v-model',
-      description: 'Components that hold state (inputs, selects, modals) support `v-model`.',
+      description: 'Components that hold state support `v-model` — and they follow one contract throughout the library: **omit the model and the component owns its state; pass it and yours decides**. A `:open="true"` with no listener pins a dropdown open rather than being silently overruled.',
       links: [
         { label: 'Vue reactivity docs', href: 'https://vuejs.org/guide/essentials/reactivity-fundamentals' },
         { label: 'Vue v-model docs', href: 'https://vuejs.org/guide/components/v-model.html' },
@@ -85,9 +86,9 @@ const agreed = ref(false)
       title: 'Composing a form',
       description: 'Combine DuButton, DuInputField, and DuLabel to build a simple form.',
       links: [
-        { label: 'DuInputField docs', href: 'http://localhost:5173/docs/form/input-field' },
-        { label: 'DuLabel docs', href: 'http://localhost:5173/docs/form/label' },
-        { label: 'DuCheckbox docs', href: 'http://localhost:5173/docs/form/checkbox' },
+        { label: 'DuInputField docs', href: '/docs/data-input/input-field' },
+        { label: 'DuLabel docs', href: '/docs/data-input/label' },
+        { label: 'DuCheckbox docs', href: '/docs/data-input/checkbox' },
       ],
       script: `
       const email = ref('')
@@ -132,6 +133,47 @@ async function submit() {
     <DuButton type="submit" variant="primary">Log in</DuButton>
   </form>
 </template>`,
+    },
+    {
+      title: 'Notifications from anywhere',
+      description: 'Put one `<DuToast />` in your layout, then raise messages with `useToasts()` from any component. The queue lives at module scope, so no caller has to find the container first.',
+      links: [
+        { label: 'DuToast docs', href: '/docs/feedback/toast' },
+      ],
+      code: `<!-- App.vue, once -->
+<template>
+  <RouterView />
+  <DuToast horizontalPosition="end" verticalPosition="top" />
+</template>
+
+<!-- anywhere else -->
+<script setup lang="ts">
+import { useToasts } from 'cornet-ui'
+
+const { push } = useToasts()
+
+async function save() {
+  await api.save()
+  push({ message: 'Saved', variant: 'success' })
+}
+</script>`,
+    },
+    {
+      title: 'What you get for free',
+      description: 'Cornet\'s stateful components implement the WAI-ARIA patterns rather than approximating them with CSS. A dropdown carries `aria-expanded` and returns focus to its trigger; tabs are one tab stop walked with the arrow keys; a tooltip opens on **focus** as well as hover and closes on Escape; a floating drawer traps focus and marks the page behind it `inert`. You do not wire any of that — but two things are worth knowing.',
+      lang: 'vue',
+      code: `<!-- 1. A dropdown trigger must spread triggerProps -->
+<DuDropdown>
+  <template #trigger="{ triggerProps }">
+    <DuButton v-bind="triggerProps">Menu</DuButton>
+  </template>
+  <DuMenu role="menu" ariaLabel="Actions" :items="actions" />
+</DuDropdown>
+
+<!-- 2. Anything whose visible content is an icon needs a name -->
+<DuButton circle ariaLabel="Close">✕</DuButton>
+<DuLoading ariaLabel="Loading results" />
+<DuStatus variant="success" ariaLabel="Online" />`,
     },
   ],
 } satisfies DocPageData

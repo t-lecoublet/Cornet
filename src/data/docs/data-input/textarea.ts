@@ -149,12 +149,14 @@ const message = ref('')
         { label: 'DuLabel docs', href: '/docs/data-input/label' },
       ],
       preview: `<DuFieldset legend="Contact">
-  <DuLabel label="Message">
+  <DuLabel type="label">
+    Message
     <DuTextArea placeholder="Your message..." :rows="4" variant="primary" />
   </DuLabel>
 </DuFieldset>`,
       code: `<DuFieldset legend="Contact">
-  <DuLabel label="Message">
+  <DuLabel type="label">
+    Message
     <DuTextArea
       v-model="msg"
       placeholder="Your message..."

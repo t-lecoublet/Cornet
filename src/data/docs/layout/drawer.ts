@@ -2,15 +2,15 @@ import type { DocPageData } from '@/types/docs'
 
 export default {
   title: 'Drawer',
-  description: 'Drawer is a side panel that slides in from the edge of the screen. Supports manual sidebar content or dynamic menu items.',
+  description: 'Drawer is a side panel at the edge of the screen. Below the pinned breakpoint it floats over the page as a **dialog** — focus trapped, the content behind it `inert`, Escape and outside presses closing it. Above the breakpoint it is a plain part of the page, with none of that.',
   category: 'Layout',
   source: 'https://daisyui.com/components/drawer/',
   props: [
     {
       title: 'modelValue / open',
-      description: 'Whether the drawer is open (use with v-model)',
-      type: 'boolean',
-      default: 'false',
+      description: 'Whether the drawer is open. **Omit both and the drawer owns its state; pass either one and yours decides** — `:open="x"` without an `@update:open` listener (or a `v-model`) now emits and stays put instead of closing itself. `open` wins when both are given.',
+      type: 'boolean | undefined',
+      default: 'undefined',
     },
     {
       title: 'position',
@@ -34,7 +34,7 @@ export default {
     },
     {
       title: 'items',
-      description: 'Menu items to display in sidebar (uses DuMenu)',
+      description: 'Menu items rendered as a DuMenu inside the sidebar. `icon` is an `IconSource` — a Vue component, an image URL, or an HTML string.',
       type: 'DuDrawerItem[]',
     },
     {
@@ -64,8 +64,31 @@ export default {
       type: 'string',
     },
     {
+      title: 'ariaLabel',
+      description: 'Accessible name of the sidebar while it floats over the page as a dialog.',
+      type: 'string',
+      default: "'Sidebar'",
+    },
+    {
+      title: 'inertTarget',
+      description: 'CSS selector for what to make `inert` while the sidebar floats over it. Defaults to the drawer\'s own content pane — point it elsewhere when the page has chrome outside the drawer.',
+      type: 'string',
+    },
+    {
+      title: 'closeOnEscape',
+      description: 'Close on Escape.',
+      type: 'boolean',
+      default: 'true',
+    },
+    {
+      title: 'closeOnClickOutside',
+      description: 'Close when a press lands outside the sidebar. Only applies while it floats — a pinned sidebar is part of the page, not something you dismiss.',
+      type: 'boolean',
+      default: 'true',
+    },
+    {
       title: 'id',
-      description: 'Unique identifier for the drawer',
+      description: 'Unique identifier for the drawer. Auto-generated from `useId()` when omitted, so a server render and a client render agree.',
       type: 'string',
     },
   ],
@@ -320,7 +343,7 @@ const drawerOpen = ref(false)
     },
     {
       title: 'Keyboard & focus',
-      description: 'Pressing <kbd>Escape</kbd> closes an open drawer. Opening it moves focus into the sidebar, and closing restores focus to whatever was focused before — no extra wiring needed.',
+      description: 'While the sidebar floats it is a real dialog: `role="dialog"`, `aria-modal="true"`, an accessible name from `ariaLabel`, **focus trapped inside it**, and the content behind it `inert` — so Tab cannot walk into a page nobody can see. <kbd>Escape</kbd> closes it and focus returns to whatever opened it. Above the pinned breakpoint none of that applies: the sidebar is simply part of the page.',
       script: `
         const drawerOpen = ref(false)
         return { drawerOpen }

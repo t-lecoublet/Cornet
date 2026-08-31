@@ -31,6 +31,11 @@ export default {
       default: '"default"',
       options: ['default', 'neutral', 'primary', 'secondary', 'accent', 'info', 'success', 'warning', 'error'],
     },
+    {
+      title: 'ariaLabel',
+      description: 'Accessible name of the progress bar — what it is measuring.',
+      type: 'string',
+    },
   ],
   classnames: {
     component: [

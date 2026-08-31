@@ -1,26 +1,14 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { useRepoPreference } from '@/composables/useRepoPreference'
-
-const { transformUrl } = useRepoPreference()
-import { DuButton, DuBadge, DuCard, DuTabs, DuLink } from 'cornet-ui'
-import CodeBlock from '@/components/CodeBlock.vue'
+import { DuButton, DuBadge, DuCard, DuLink } from 'cornet-ui'
 import Logo from '@/components/logos/logo.vue'
-import { docsCounts, docsCountByCategory } from '@/data/docs/registry'
+import { docsCounts, docsCountByCategory } from '@/data/docs/nav'
 
 // ─── SVG icon paths (Heroicons 24 outline) ───────────────
 const icons = {
-  sparkles:   'M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z',
-  folder:     'M3.75 9.776c.112-.017.227-.026.344-.026h15.812c.117 0 .232.009.344.026m-16.5 0a2.25 2.25 0 0 0-1.883 2.542l.857 6a2.25 2.25 0 0 0 2.227 1.932H19.05a2.25 2.25 0 0 0 2.227-1.932l.857-6a2.25 2.25 0 0 0-1.883-2.542m-16.5 0V6A2.25 2.25 0 0 1 6 3.75h3.879a1.5 1.5 0 0 1 1.06.44l2.122 2.12a1.5 1.5 0 0 0 1.06.44H18A2.25 2.25 0 0 1 20.25 9v.776',
-  cube:       'M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9',
   book:       'M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25',
   arrowRight: 'M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3',
   git:        'M6 3v12m0 0a3 3 0 1 0 3 3m-3-3a3 3 0 0 0 3 3m0 0V9m0 0a3 3 0 1 0 3-3m-3 3a3 3 0 0 1 3-3m0 0V3',
   puzzle:     'M14.25 6.087c0-.355.186-.676.401-.959.221-.29.349-.634.349-1.003 0-1.036-1.007-1.875-2.25-1.875s-2.25.84-2.25 1.875c0 .369.128.713.349 1.003.215.283.401.604.401.959v0a.64.64 0 0 1-.657.643 48.39 48.39 0 0 1-4.163-.3c.186 1.613.293 3.25.315 4.907a.656.656 0 0 1-.658.663v0c-.355 0-.676-.186-.959-.401a1.647 1.647 0 0 0-1.003-.349c-1.036 0-1.875 1.007-1.875 2.25s.84 2.25 1.875 2.25c.369 0 .713-.128 1.003-.349.283-.215.604-.401.959-.401v0c.31 0 .555.26.532.57a48.039 48.039 0 0 1-.642 5.056c1.518.19 3.058.309 4.616.354a.64.64 0 0 0 .657-.643v0c0-.355-.186-.676-.401-.959a1.647 1.647 0 0 1-.349-1.003c0-1.035 1.008-1.875 2.25-1.875 1.243 0 2.25.84 2.25 1.875 0 .369-.128.713-.349 1.003-.215.283-.401.604-.401.959v0c0 .333.277.599.61.58a48.1 48.1 0 0 0 5.427-.63 48.05 48.05 0 0 0 .582-4.717.532.532 0 0 0-.533-.57v0c-.355 0-.676.186-.959.401-.29.221-.634.349-1.003.349-1.035 0-1.875-1.007-1.875-2.25s.84-2.25 1.875-2.25c.37 0 .713.128 1.003.349.283.215.604.401.959.401v0a.656.656 0 0 0 .658-.663 48.422 48.422 0 0 0-.37-5.36c-1.886.342-3.81.574-5.766.689a.578.578 0 0 1-.61-.58v0Z',
-}
-
-function svgIcon(path: string, cls = 'w-4 h-4') {
-  return `<svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" class="${cls}"><path stroke-linecap="round" stroke-linejoin="round" d="${path}"/></svg>`
 }
 
 // ─── Flavor categories ────────────────────────────────────
@@ -99,70 +87,6 @@ const whys = [
   },
 ]
 
-// ─── Install methods → DuTabs ────────────────────────────
-const installMethods = computed(() => [
-  {
-    label: 'New project',
-    iconPath: icons.sparkles,
-    description: 'Clone the full repo — Vite + Vue already wired up.',
-    code: transformUrl('git clone --recurse-submodules \\\n  git@gitlab.limos.fr:hub-isima/daisyui-vue-kit.git'),
-  },
-  {
-    label: 'Existing project',
-    iconPath: icons.folder,
-    description: 'Add only the lib as a Git submodule — no npm publish needed.',
-    code: transformUrl(`git submodule add -b lib \\
-  git@gitlab.limos.fr:hub-isima/daisyui-vue-kit.git lib
-git submodule update --init --recursive
-npm install ./lib`),
-  },
-  {
-    label: 'Nuxt',
-    iconPath: icons.cube,
-    description: 'Grab our ready-made Nuxt starter instead.',
-    code: 'git clone git@gitlab.limos.fr:hub-isima/daisyui-vue-kit-nuxt-starter.git',
-  },
-])
-
-const selectedTab = ref(1)
-
-const installTabs = computed(() =>
-  installMethods.value.map((m, i) => ({
-    label: m.label,
-    icon: svgIcon(m.iconPath),
-    class: 'gap-2',
-    active: i === 1,
-  }))
-)
-
-// ─── Post-install steps ───────────────────────────────────
-const postSteps = [
-  {
-    n: '02',
-    label: 'Add the Vite plugin',
-    code: `// vite.config.ts
-import cornetPlugin from 'cornet-ui/plugin-vite'
-
-export default defineConfig({
-  plugins: [cornetPlugin({ showOutput: true }), vue(), tailwindcss()]
-})`,
-  },
-  {
-    n: '03',
-    label: 'Import the CSS',
-    code: `/* your main CSS file */
-@import "tailwindcss";
-@import "cornet-ui/css";
-@plugin "daisyui";`,
-  },
-  {
-    n: '04',
-    label: 'Use a component',
-    code: `import { DuButton } from 'cornet-ui'
-
-<DuButton variant="primary">Hello!</DuButton>`,
-  },
-]
 </script>
 
 <template>
@@ -202,7 +126,7 @@ export default defineConfig({
         </div>
 
         <div class="flex flex-wrap gap-3 justify-center">
-          <DuButton variant="primary" size="lg" customClass="shadow-md" as="a" href="#quickstart">
+          <DuButton variant="primary" size="lg" customClass="shadow-md" as="RouterLink" to="/docs/guides/quick-start">
             Get started
             <svg class="w-4 h-4 ml-1.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" :d="icons.arrowRight" />
@@ -284,6 +208,15 @@ export default defineConfig({
           </div>
         </DuCard>
       </div>
+
+      <div class="text-center mt-10">
+        <DuButton variant="neutral" outline as="RouterLink" to="/docs/components">
+          See all {{ docsCounts.components }} components
+          <svg class="w-4 h-4 ml-1.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" :d="icons.arrowRight" />
+          </svg>
+        </DuButton>
+      </div>
     </section>
 
     <!-- ─── Why Cornet ────────────────────────────────────── -->
@@ -311,84 +244,6 @@ export default defineConfig({
             <p class="text-sm text-base-content/70">{{ why.body }}</p>
           </DuCard>
         </div>
-      </div>
-    </section>
-
-    <!-- ─── Quick Start ───────────────────────────────────── -->
-    <section id="quickstart" class="container mx-auto px-6 py-24">
-      <div class="text-center mb-14">
-        <h2 class="text-4xl font-black mb-3">First scoop in 4 steps</h2>
-        <p class="text-base-content/70 max-w-sm mx-auto">
-          No npm publish, no registry — just Git. Pick your setup and go.
-        </p>
-      </div>
-
-      <div class="max-w-2xl mx-auto space-y-8">
-
-        <!-- Step 01: install method tabs -->
-        <div class="flex flex-col sm:flex-row gap-5 items-start overflow-clip max-w-screen">
-          <div class="shrink-0 w-10 h-10 rounded-xl bg-primary text-primary-content flex items-center justify-center font-mono font-bold text-sm">01</div>
-          <div class="flex-1">
-            <p class="font-semibold mb-3">Add the library — choose your setup</p>
-            <DuTabs class="max-w-[85dvw]" v-model="selectedTab" :items="installTabs" type="box" name="install_tabs">
-              <template #content-0>
-                <div class="pt-3">
-                  <p class="text-sm text-base-content/70 mb-2">{{ installMethods[0].description }}</p>
-                  <CodeBlock :code="installMethods[0].code" />
-                </div>
-              </template>
-              <template #content-1>
-                <div class="pt-3">
-                  <p class="text-sm text-base-content/70 mb-2">{{ installMethods[1].description }}</p>
-                  <CodeBlock :code="installMethods[1].code" />
-                </div>
-              </template>
-              <template #content-2>
-                <div class="pt-3">
-                  <p class="text-sm text-base-content/70 mb-2">{{ installMethods[2].description }}</p>
-                  <CodeBlock class="max-w-[85dvw]" :code="installMethods[2].code" />
-                </div>
-              </template>
-            </DuTabs>
-          </div>
-        </div>
-
-        <!-- Steps 02–04: only needed for existing project setup -->
-        <div
-          v-if="selectedTab === 1"
-          v-for="step in postSteps"
-          :key="step.n"
-          class="flex flex-col sm:flex-row gap-5 items-start max-w-screen overflow-clip"
-        >
-          <div class="shrink-0 w-10 h-10 rounded-xl bg-primary text-primary-content flex items-center justify-center font-mono font-bold text-sm">
-            {{ step.n }}
-          </div>
-          <div class="flex-1 w-full">
-            <p class="font-semibold mb-2">{{ step.label }}</p>
-            <CodeBlock :code="step.code" />
-          </div>
-        </div>
-
-        <!-- Storybook callout -->
-        <div class="flex flex-col sm:flex-row gap-5 items-start max-w-screen overflow-clip">
-          <div class="shrink-0 w-10 h-10 rounded-xl bg-secondary/15 border border-secondary/25 flex items-center justify-center">
-            <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" :d="icons.book" />
-            </svg>
-          </div>
-          <DuCard bordered customClass="flex-1 bg-secondary/5 border-secondary/20">
-            <template #title>Explore with Storybook</template>
-            <p class="text-sm text-base-content/60 mb-3">
-              Every component ships with Storybook stories. Run them locally to browse all variants, sizes and props interactively.
-            </p>
-            <CodeBlock code="npx storybook dev" />
-            <DuLink class="absolute top-3 right-3 flex items-center gap-1" variant="secondary" size="sm" href="https://storybook.js.org/docs/get-started/frameworks/vue3-vite" target="_blank">
-              Storybook docs
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"></path></svg>
-            </DuLink>
-          </DuCard>
-        </div>
-
       </div>
     </section>
 

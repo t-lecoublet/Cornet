@@ -2,7 +2,7 @@ import type { DocPageData } from '@/types/docs'
 
 export default {
   title: 'Status',
-  description: 'Status is a small colored indicator dot used to show the status of an item.',
+  description: 'Status is a small coloured indicator dot. Pass `ariaLabel` to say what it **means** — without one the dot is hidden from assistive tech rather than announced as a blank.',
   category: 'Data Display',
   source: 'https://daisyui.com/components/status/',
   props: [
@@ -31,6 +31,11 @@ export default {
       description: 'Animate the indicator with a bounce effect',
       type: 'boolean',
       default: 'false',
+    },
+    {
+      title: 'ariaLabel',
+      description: 'What the dot means — "Online", "3 unread". The automatic label derived from the variant is gone: it named the colour rather than the meaning, and sat on a plain `<div>` where no assistive tech would read it. Without an `ariaLabel` the dot is now hidden.',
+      type: 'string',
     },
   ],
   classnames: {
@@ -110,6 +115,7 @@ export default {
     },
     {
       title: 'Inline with text',
+      description: 'When the meaning is already written next to the dot, leave `ariaLabel` off — the dot is decoration, and hiding it stops a screen reader saying the same thing twice.',
       preview: `<div class="flex items-center gap-2">
   <DuStatus variant="success" />
   <span class="text-sm">Server online</span>
@@ -118,6 +124,27 @@ export default {
   <DuStatus variant="success" />
   <span>Server online</span>
 </div>`,
+    },
+    {
+      title: 'A dot on its own needs a name',
+      description: 'When the dot is the *only* thing carrying the information — a row of servers, a badge on an avatar — `ariaLabel` is what makes it readable. Name the meaning, not the colour: "Online", not "success".',
+      preview: `<div class="flex items-center gap-4">
+  <div class="flex items-center gap-2">
+    <span class="text-sm">api-01</span>
+    <DuStatus variant="success" ariaLabel="Online" />
+  </div>
+  <div class="flex items-center gap-2">
+    <span class="text-sm">api-02</span>
+    <DuStatus variant="warning" ariaLabel="Degraded" />
+  </div>
+  <div class="flex items-center gap-2">
+    <span class="text-sm">api-03</span>
+    <DuStatus variant="error" ariaLabel="Down" />
+  </div>
+</div>`,
+      code: `<DuStatus variant="success" ariaLabel="Online" />
+<DuStatus variant="warning" ariaLabel="Degraded" />
+<DuStatus variant="error" ariaLabel="Down" />`,
     },
   ],
 } satisfies DocPageData

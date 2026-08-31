@@ -2,7 +2,7 @@ import type { DocPageData } from '@/types/docs'
 
 export default {
   title: 'Menu',
-  description: 'Menu is used for navigation and list-style layouts with optional sub-menus.',
+  description: 'Menu renders a list of links or a set of actions, with optional sub-menus. The `role` prop decides which of the two it is — and they are not interchangeable.',
   category: 'Navigation',
   source: 'https://daisyui.com/components/menu/',
   props: [
@@ -28,23 +28,25 @@ export default {
     },
     {
       title: 'items',
-      description: 'Array of menu items with label, href, disabled, isTitle, and subItems properties',
+      description: 'Menu items: `label`, `href`, `as`, `value`, `disabled`, `isTitle`, `icon`, `active`, `onClick`, `subItems`, and `checked` / `multiple` in `menu` mode. `subItems` is typed `this[]`, so your own fields survive one level down.',
       type: 'DuMenuItemData[]',
     },
     {
+      title: 'role',
+      description: 'What the menu **is**. `nav` (the default) is a list of links: a plain `<ul>`, no ARIA role, walked with Tab. `menu` is the APG menu pattern: `role="menu"` over presentational list items, one tab stop, arrow keys, typeahead, collapsible submenus. Picking the wrong one is the classic ARIA mistake — `role="menu"` on navigation tells a screen-reader user to expect application-menu behaviour a list of links does not have.',
+      type: 'DuMenuRole',
+      default: '"nav"',
+      options: ['nav', 'menu'],
+    },
+    {
       title: 'activeItem',
-      description: 'Currently active item value to highlight',
+      description: 'The `value` (or `label`) of the item to mark as current. In `nav` mode it renders `aria-current="page"`.',
       type: 'string',
     },
     {
-      title: 'onItemClick',
-      description: 'Callback when a top-level item is clicked',
-      type: '(item: DuMenuItemData) => void',
-    },
-    {
-      title: 'onSubItemClick',
-      description: 'Callback when a sub-item is clicked',
-      type: '(item: DuMenuItemData) => void',
+      title: 'ariaLabel',
+      description: 'Accessible name of the menu. Required by the APG in `menu` mode.',
+      type: 'string',
     },
   ],
   slots: [
@@ -417,30 +419,128 @@ import Cog6ToothIcon from '@heroicons/vue/24/outline/Cog6ToothIcon'
 </template>`,
     },
     {
-      title: 'Keyboard navigation',
-      description: 'Arrow keys move focus between sibling items, and <kbd>Home</kbd> / <kbd>End</kbd> jump to the first and last. The axis is scoped per nesting level, so a horizontal root menu uses ←/→ while its vertical submenus use ↑/↓. Items driven purely by `onClick` (no `href`) are focusable too.',
+      title: 'nav mode: a list of links',
+      description: 'The default. The menu is a plain `<ul>` with no ARIA role, and every link is its own tab stop — you walk it with **Tab**, which is what a sidebar has always been. Submenus are always visible. The current item carries `aria-current="page"`.',
       preview: `<div class="flex flex-col gap-3 items-center">
-  <p class="text-xs text-base-content/60">Click an item, then use the arrow keys.</p>
+  <p class="text-xs text-base-content/60">Tab through the links.</p>
   <DuMenu
+    ariaLabel="Main navigation"
+    activeItem="Projects"
     :items="[
-      { label: 'Dashboard' },
-      { label: 'Projects' },
-      { label: 'Team' },
-      { label: 'Settings' },
+      { label: 'Dashboard', href: '#' },
+      { label: 'Projects', href: '#' },
+      { label: 'Team', href: '#' },
+      { label: 'Settings', href: '#' },
     ]"
     direction="vertical"
     class="w-48 bg-base-200"
   />
 </div>`,
-      code: `<!-- ↑/↓ in a vertical menu, ←/→ in a horizontal one -->
-<DuMenu
+      code: `<DuMenu
+  ariaLabel="Main navigation"
+  :activeItem="route.name"
   :items="[
-    { label: 'Dashboard' },
-    { label: 'Projects' },
-    { label: 'Team' },
-    { label: 'Settings' },
+    { label: 'Dashboard', href: '/' },
+    { label: 'Projects', href: '/projects' },
+    { label: 'Team', href: '/team' },
+    { label: 'Settings', href: '/settings' },
   ]"
   direction="vertical"
+/>`,
+    },
+    {
+      title: 'menu mode: a set of actions',
+      description: 'Set `role="menu"` and the menu becomes the APG menu pattern: `role="menu"` / `menuitem` over presentational list items, **one** tab stop for the whole menu, arrow keys and `Home` / `End` between items, typeahead by first letter, and `Enter` / `Space` to activate. Submenus start collapsed behind `aria-expanded` — ArrowRight opens one and focuses its first child, ArrowLeft closes it and steps back. Use it for actions, never for navigation.',
+      links: [
+        { label: 'APG menu pattern', href: 'https://www.w3.org/WAI/ARIA/apg/patterns/menubar/' },
+        { label: 'DuDropdown docs', href: '/docs/actions/dropdown' },
+      ],
+      preview: `<div class="flex flex-col gap-3 items-center">
+  <p class="text-xs text-base-content/60">Tab in once, then use ↑ ↓ → and type a letter.</p>
+  <DuMenu
+    role="menu"
+    ariaLabel="Document actions"
+    :items="[
+      { label: 'New' },
+      { label: 'Open' },
+      { label: 'Export', subItems: [{ label: 'PDF' }, { label: 'CSV' }] },
+      { label: 'Delete', disabled: true },
+    ]"
+    direction="vertical"
+    class="w-48 bg-base-200"
+  />
+</div>`,
+      code: `<DuMenu
+  role="menu"
+  ariaLabel="Document actions"
+  :items="[
+    { label: 'New', onClick: create },
+    { label: 'Open', onClick: open },
+    { label: 'Export', subItems: [
+      { label: 'PDF', onClick: exportPdf },
+      { label: 'CSV', onClick: exportCsv },
+    ] },
+    { label: 'Delete', disabled: true },
+  ]"
+  direction="vertical"
+/>`,
+    },
+    {
+      title: 'Menu button (dropdown + menu)',
+      description: 'A menu that appears from a button is the APG menu-button pattern: pair `DuDropdown` with `<DuMenu role="menu">`. The trigger gets `aria-haspopup` and `aria-expanded` from `triggerProps`; Escape closes the panel and hands focus back.',
+      links: [
+        { label: 'APG menu button pattern', href: 'https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/' },
+      ],
+      preview: `<DuDropdown>
+  <template #trigger="{ triggerProps }">
+    <DuButton soft v-bind="triggerProps">Actions</DuButton>
+  </template>
+  <DuMenu
+    role="menu"
+    ariaLabel="Actions"
+    :items="[{ label: 'Edit' }, { label: 'Duplicate' }, { label: 'Archive' }]"
+    class="w-40"
+  />
+</DuDropdown>`,
+      code: `<DuDropdown>
+  <template #trigger="{ triggerProps }">
+    <DuButton v-bind="triggerProps">Actions</DuButton>
+  </template>
+  <DuMenu
+    role="menu"
+    ariaLabel="Actions"
+    :items="[
+      { label: 'Edit', onClick: edit },
+      { label: 'Duplicate', onClick: duplicate },
+      { label: 'Archive', onClick: archive },
+    ]"
+    class="w-40"
+  />
+</DuDropdown>`,
+    },
+    {
+      title: 'Checkable items',
+      description: 'In `menu` mode, an item with `multiple: true` **and a `value`** renders as `role="menuitemcheckbox"` carrying `aria-checked` — a real announced state, where the hidden `<input type="checkbox">` it replaces announced nothing.',
+      preview: `<DuMenu
+  role="menu"
+  ariaLabel="View options"
+  :items="[
+    { label: 'Show grid', value: 'grid', multiple: true, checked: true },
+    { label: 'Show rulers', value: 'rulers', multiple: true },
+    { label: 'Snap to grid', value: 'snap', multiple: true },
+  ]"
+  direction="vertical"
+  class="w-48 bg-base-200"
+/>`,
+      code: `<DuMenu
+  role="menu"
+  ariaLabel="View options"
+  :items="[
+    { label: 'Show grid', value: 'grid', multiple: true, checked: showGrid },
+    { label: 'Show rulers', value: 'rulers', multiple: true, checked: showRulers },
+  ]"
+  direction="vertical"
+  @item-click="toggleOption"
 />`,
     },
     {

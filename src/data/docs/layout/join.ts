@@ -46,7 +46,7 @@ export default {
     {
       title: 'Input + button (search bar)',
       preview: `<DuJoin direction="horizontal" class="w-72">
-  <DuInputField placeholder="Search..." customClass="join-item flex-1" />
+  <DuInputField placeholder="Search..." class="join-item flex-1" />
   <DuButton variant="primary" customClass="join-item">Go</DuButton>
 </DuJoin>`,
       code: `<DuJoin direction="horizontal">

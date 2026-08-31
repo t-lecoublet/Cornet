@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { inject, ref, type Ref } from 'vue'
+import { computed, inject, ref, type Ref } from 'vue'
 import { useRoute, RouterLink, RouterView } from 'vue-router'
-import { docsNav, docsCounts } from '@/data/docs/registry'
+import { docsNav, docsCounts } from '@/data/docs/nav'
 import {
   levelByPath,
   LEVEL_GUIDANCE,
@@ -17,6 +17,8 @@ const sidebarOpen = inject<Ref<boolean>>('sidebarOpen', ref(false))
 function isActive(path: string) {
   return route.path === path
 }
+
+const isGallery = computed(() => route.path === '/docs/components')
 
 function levelTitle(level: ComponentLevel) {
   return `${level} — ${LEVEL_GUIDANCE[level]}`
@@ -56,6 +58,22 @@ const nav = docsNav.map((cat) => ({
     >
       <!-- Nav -->
       <nav class="flex-1 overflow-y-auto py-3 px-2 space-y-4">
+        <!-- Above the categories: the one page that shows all of them at once. -->
+        <RouterLink
+          to="/docs/components"
+          class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-colors"
+          :class="isActive('/docs/components')
+            ? 'bg-primary/10 text-primary font-semibold'
+            : 'text-base-content/60 hover:text-base-content hover:bg-base-200/70'"
+          @click="sidebarOpen = false"
+        >
+          <svg class="w-4 h-4 shrink-0 opacity-70" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 15.75V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
+          </svg>
+          <span class="truncate">All Components</span>
+          <span class="ml-auto shrink-0 text-[10px] font-mono text-base-content/30">{{ docsCounts.components }}</span>
+        </RouterLink>
+
         <div
           v-for="cat in nav"
           :key="cat.category"
@@ -130,7 +148,8 @@ const nav = docsNav.map((cat) => ({
 
     <!-- ─── Content ────────────────────────────────────── -->
     <main class="flex-1 overflow-y-scroll h-full">
-      <div class="max-w-3xl mx-auto px-6 py-10">
+      <!-- A prose column for a doc page; a wider one for the component grid. -->
+      <div class="mx-auto px-6 py-10" :class="isGallery ? 'max-w-6xl' : 'max-w-3xl'">
         <RouterView />
       </div>
     </main>

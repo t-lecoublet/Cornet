@@ -2,7 +2,7 @@ import type { DocPageData } from '@/types/docs'
 
 export default {
   title: 'Loading',
-  description: 'Loading spinner or dots to indicate that content is loading.',
+  description: 'Loading spinner or dots to indicate that content is loading. Give it an `ariaLabel` saying what is loading — without one it is hidden from assistive tech, because a spinner nobody can see means nothing.',
   category: 'Feedback',
   source: 'https://daisyui.com/components/loading/',
   props: [
@@ -26,6 +26,11 @@ export default {
       type: 'Variant',
       default: '"default"',
       options: ['default', 'neutral', 'primary', 'secondary', 'accent', 'info', 'success', 'warning', 'error'],
+    },
+    {
+      title: 'ariaLabel',
+      description: 'What is loading, announced politely. Without it the spinner is `aria-hidden`: a decoration nobody can read beats an unnamed live region that says nothing. **Renamed from `label`**, which everywhere else in the library means visible text.',
+      type: 'string',
     },
   ],
   classnames: {

@@ -2,7 +2,7 @@ import type { DocPageData } from '@/types/docs'
 
 export default {
   title: 'InputField',
-  description: 'InputField is a styled text input element with support for variants, sizes, and validation.',
+  description: 'InputField is a styled text input. Validation is **native** — already localized, already what the form decides on submit — and the component only dresses the result: an error surface identical to DuSelect\'s and DuSearch\'s, so a form of mixed fields reports errors one way.',
   category: 'Data Input',
   source: 'https://daisyui.com/components/input/',
   props: [
@@ -93,9 +93,25 @@ export default {
       type: 'string[]',
     },
     {
+      title: 'errorMessages',
+      description: "Override the browser's wording for a failed constraint, by code: `required`, `pattern`, `minlength`, `maxlength`, `min`, `max`, `step`, `type` — the same shape DuSelect and DuSearch take.",
+      type: 'Partial<Record<NativeErrorCode, string>>',
+    },
+    {
       title: 'class',
       description: 'Additional CSS classes for the input element',
       type: 'string',
+    },
+  ],
+  slots: [
+    {
+      title: 'Slot #error',
+      description: 'Replaces the validation message under the field. Scope: `{ errors, message }`. Nothing renders until the field has been visited — which is what `:user-invalid` means, mirrored into JS.',
+      code: `<DuInputField v-model="email" type="email" required>
+  <template #error="{ message }">
+    <p class="text-error text-xs mt-1">⚠ {{ message }}</p>
+  </template>
+</DuInputField>`,
     },
   ],
   classnames: {
@@ -222,6 +238,72 @@ export default {
   placeholder="Username"
   :minlength="3"
   :maxlength="20"
+/>`,
+    },
+    {
+      title: 'Reporting the error',
+      description: 'The **checking** stays native: the browser already knows what "not an email" means, in the user\'s language, and already covers the cases a hand-rolled version forgets. What the component adds is the reporting — a message under the field, shown only once the field has been visited. Override the wording per code with `errorMessages`, or replace the whole thing with the `#error` slot.',
+      links: [
+        { label: 'HTML constraint validation', href: 'https://developer.mozilla.org/en-US/docs/Web/HTML/Constraint_validation' },
+        { label: ':user-invalid', href: 'https://developer.mozilla.org/en-US/docs/Web/CSS/:user-invalid' },
+      ],
+      preview: `<div class="flex flex-col gap-3 w-72">
+  <DuInputField
+    type="email"
+    placeholder="your@email.com"
+    required
+    :errorMessages="{ required: 'We need an email to reach you.', type: 'That does not look like an email.' }"
+  />
+  <p class="text-xs text-base-content/60">Type something, then click away.</p>
+</div>`,
+      code: `<DuInputField
+  v-model="email"
+  type="email"
+  required
+  :errorMessages="{
+    required: 'We need an email to reach you.',
+    type: 'That does not look like an email.',
+  }"
+/>`,
+    },
+    {
+      title: 'Reading validity from a parent',
+      description: 'The instance exposes `valid`, `errors`, `validationMessage`, plus `markTouched()` and `reset()` — the same surface DuSelect and DuSearch expose. Call `markTouched()` on submit to reveal messages on fields the user never visited.',
+      lang: 'vue',
+      code: `<script setup lang="ts">
+import { ref } from 'vue'
+
+const emailField = ref()
+const email = ref('')
+
+function submit() {
+  emailField.value.markTouched()
+  if (!emailField.value.valid) return
+  // …
+}
+</script>
+
+<template>
+  <DuInputField ref="emailField" v-model="email" type="email" required />
+  <DuButton @click="submit">Submit</DuButton>
+</template>`,
+    },
+    {
+      title: 'Passing attributes through',
+      description: 'Attributes you put on `DuInputField` — `aria-label`, `aria-describedby`, `autocomplete`, `inputmode`, anything — now reach the `<input>`. They used to land nowhere: the template\'s root is a fragment (input plus an optional `<datalist>`), so Vue could not auto-inherit them, and the field could not be given an accessible name outside a wrapping label.',
+      preview: `<DuInputField
+  class="w-72"
+  type="text"
+  placeholder="Search the docs"
+  aria-label="Search the docs"
+  autocomplete="off"
+/>`,
+      code: `<DuInputField
+  v-model="query"
+  type="search"
+  aria-label="Search the docs"
+  autocomplete="off"
+  inputmode="search"
 />`,
     },
     {

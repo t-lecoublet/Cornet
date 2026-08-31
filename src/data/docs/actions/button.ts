@@ -15,7 +15,12 @@ export default {
     },
     {
       title: 'label',
-      description: 'Text label. Required when `as="input"`, which has no slot content.',
+      description: 'Text label. Required when `as="input"`, which has no slot content. It is **ignored when the default slot is filled** — replacing visible text with a different accessible name is the "label in name" failure (WCAG 2.5.3): someone saying "click Save" to a voice assistant needs the two to match. Use `ariaLabel` for an icon-only button.',
+      type: 'string',
+    },
+    {
+      title: 'ariaLabel',
+      description: 'Accessible name, for a button whose visible content is not one — an icon, a glyph, a spinner.',
       type: 'string',
     },
     {
@@ -255,12 +260,52 @@ export default {
     },
     {
       title: 'Circle & Square',
+      description: 'A round button whose content is a glyph has no accessible name. Give it `ariaLabel`.',
       preview: `<div class="flex flex-wrap items-center gap-2 justify-center">
-  <DuButton circle variant="primary">✕</DuButton>
-  <DuButton square variant="neutral">★</DuButton>
+  <DuButton circle variant="primary" ariaLabel="Close">✕</DuButton>
+  <DuButton square variant="neutral" ariaLabel="Favourite">★</DuButton>
 </div>`,
-      code: `<DuButton circle variant="primary">✕</DuButton>
-<DuButton square variant="neutral">★</DuButton>`,
+      code: `<DuButton circle variant="primary" ariaLabel="Close">✕</DuButton>
+<DuButton square variant="neutral" ariaLabel="Favourite">★</DuButton>`,
+    },
+    {
+      title: 'label vs ariaLabel',
+      description: 'They are not two spellings of the same thing. **`label`** is visible text, used where there is no slot to put it in — an `<input>` button, or a button called without content. **`ariaLabel`** is the name assistive tech reads, for a button whose visible content is not a name. `label` no longer becomes `aria-label` when the slot is filled: replacing "Save" with a different spoken name breaks voice control, which is what WCAG 2.5.3 is about.',
+      links: [
+        { label: 'WCAG 2.5.3 Label in Name', href: 'https://www.w3.org/WAI/WCAG22/Understanding/label-in-name.html' },
+      ],
+      preview: `<div class="flex flex-wrap items-center gap-2 justify-center">
+  <DuButton variant="primary" label="Submit" as="input" inputType="submit" />
+  <DuButton variant="neutral">Save</DuButton>
+  <DuButton ghost square ariaLabel="Delete item">🗑</DuButton>
+</div>`,
+      code: `<!-- no slot: label is the visible text -->
+<DuButton as="input" inputType="submit" label="Submit" />
+
+<!-- slot filled: the visible text is the name -->
+<DuButton>Save</DuButton>
+
+<!-- icon only: ariaLabel is the name -->
+<DuButton ghost square ariaLabel="Delete item">🗑</DuButton>`,
+    },
+    {
+      title: 'As a dropdown trigger',
+      description: 'A DuButton inside a `#trigger` slot is now a real `<button>`. It used to render a hidden `<div role="button" tabindex="0">` — a workaround for daisyUI\'s CSS, from when the dropdown had no JS state at all. Spread `triggerProps` on it and it carries the ARIA and the handlers.',
+      links: [
+        { label: 'DuDropdown docs', href: '/docs/actions/dropdown' },
+      ],
+      preview: `<DuDropdown>
+  <template #trigger="{ triggerProps }">
+    <DuButton soft v-bind="triggerProps">Open</DuButton>
+  </template>
+  <div class="p-4 w-44 text-sm">A real button opened this.</div>
+</DuDropdown>`,
+      code: `<DuDropdown>
+  <template #trigger="{ triggerProps }">
+    <DuButton v-bind="triggerProps">Open</DuButton>
+  </template>
+  <div class="p-4">Panel</div>
+</DuDropdown>`,
     },
     {
       title: 'Block (full width)',

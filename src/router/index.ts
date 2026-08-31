@@ -21,6 +21,11 @@ const router = createRouter({
           redirect: '/docs/guides/installation',
         },
         {
+          path: 'components',
+          name: 'components',
+          component: () => import('@/views/docs/ComponentsView.vue'),
+        },
+        {
           path: ':category/:component',
           name: 'doc',
           component: () => import('@/views/docs/DocView.vue'),

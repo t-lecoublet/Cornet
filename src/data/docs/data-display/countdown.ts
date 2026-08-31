@@ -2,7 +2,7 @@ import type { DocPageData } from '@/types/docs'
 
 export default {
   title: 'Countdown',
-  description: 'Countdown gives a live animated countdown. Use DuCountdown for a single unit (seconds, minutes, hours, or days), or DuCountdownGroup for a full days/hours/minutes/seconds display tied to a target date.',
+  description: 'Countdown gives a live animated countdown. Use DuCountdown for a single unit (seconds, minutes, hours, or days), or DuCountdownGroup for a full days/hours/minutes/seconds display tied to a target date. Each unit carries `role="timer"`, so assistive tech knows the number is changing on its own.',
   category: 'Data Display',
   source: 'https://daisyui.com/components/countdown/',
   props: [

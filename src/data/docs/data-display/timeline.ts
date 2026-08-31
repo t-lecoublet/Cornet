@@ -2,7 +2,7 @@ import type { DocPageData } from '@/types/docs'
 
 export default {
   title: 'Timeline',
-  description: 'Timeline displays events in chronological order. Each DuTimelineItem has `start`, `middle`, and `end` string props (or corresponding named slots). The `valid` boolean prop colors the connector line and icon: `true` = success, `false` = error, `undefined` = neutral.',
+  description: 'Timeline displays events in chronological order. Each DuTimelineItem has `start`, `middle`, and `end` string props (or corresponding named slots). The `valid` boolean prop colors the connector line and icon: `true` = success, `false` = error, `undefined` = neutral. The component is generic over its item type, so your own fields survive into the scoped slots.',
   category: 'Data Display',
   source: 'https://daisyui.com/components/timeline/',
   props: [

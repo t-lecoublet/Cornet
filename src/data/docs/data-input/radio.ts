@@ -7,13 +7,8 @@ export default {
   source: 'https://daisyui.com/components/radio/',
   props: [
     {
-      title: 'modelValue',
-      description: 'Selected value (use with `v-model`)',
-      type: 'any',
-    },
-    {
       title: 'checked',
-      description: 'Initial checked state for uncontrolled usage',
+      description: 'Whether this radio is selected. DuRadio has **no `v-model`** — a radio is only meaningful as part of a group, so the selected value lives on the group, not on one input. Bind `:checked` from it and listen to `@change`.',
       type: 'boolean',
       default: 'false',
     },

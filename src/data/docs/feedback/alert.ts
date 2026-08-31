@@ -45,6 +45,12 @@ export default {
       default: 'false',
     },
     {
+      title: 'dismissLabel',
+      description: "Accessible name of the dismiss button. Its only content is an icon, so without one the button had no name at all.",
+      type: 'string',
+      default: "'Dismiss'",
+    },
+    {
       title: 'autoDismissible',
       description: 'Automatically dismiss after 5 seconds',
       type: 'boolean',

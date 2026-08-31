@@ -7,7 +7,7 @@ const userIcon = `<svg xmlns=\\'http://www.w3.org/2000/svg\\' fill=\\'none\\' vi
 
 export default {
   title: 'Dock',
-  description: 'Fixed bottom navigation bar (macOS dock style). Supports icons, labels, sizes, events, scoped slots, and full manual mode.',
+  description: 'Fixed bottom navigation bar (macOS dock style). The root is a `<nav>` landmark — give it an `ariaLabel` so it can be jumped to — and the active item carries `aria-current="page"`.',
   category: 'Navigation',
   source: 'https://daisyui.com/components/dock/',
   props: [
@@ -27,6 +27,11 @@ export default {
       description: 'Apply a dark (neutral) background to the dock',
       type: 'boolean',
       default: 'false',
+    },
+    {
+      title: 'ariaLabel',
+      description: 'Accessible name of the navigation landmark. A page with more than one `<nav>` needs each named, or they are indistinguishable in a landmark list.',
+      type: 'string',
     },
   ],
   slots: [

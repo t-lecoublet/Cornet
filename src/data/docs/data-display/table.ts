@@ -2,19 +2,30 @@ import type { DocPageData } from '@/types/docs'
 
 export default {
   title: 'Table',
-  description: 'Table is used to display tabular data with headers, rows, and optional actions. Supports both dynamic mode with columns/rows and manual mode for full control.',
+  description: 'Table displays tabular data. It is generic over your row type, so your own fields survive into the scoped slots, and every header cell carries `scope="col"` — without it a screen reader has to guess whether a header heads a column or a row.',
   category: 'Data Display',
   source: 'https://daisyui.com/components/table/',
   props: [
     {
       title: 'columns',
-      description: 'Array of column definitions with key, label, and customClass',
-      type: 'DuTableColumn[]',
+      description: 'Column definitions: `key`, `label`, `customClass`. `key` suggests your row type\'s own keys in an editor but does not enforce them — `const columns = [{ key: \'name\' }]` widens `\'name\'` to `string` before the type ever sees it, so enforcing would reject the ordinary way of writing columns.',
+      type: 'DuTableColumn<R>[]',
     },
     {
       title: 'rows',
-      description: 'Array of row data objects with id and values for each column key',
-      type: 'DuTableRow[]',
+      description: 'Row objects. Each needs an `id` (the `v-for` key) and may carry a `customClass`. The component is generic over `R`, so a row of your own interface keeps its type in the slots.',
+      type: 'R[]',
+    },
+    {
+      title: 'caption',
+      description: 'What the table is about, rendered as a `<caption>`. A data table with no caption leaves someone arriving at it by keyboard with a grid of numbers and no idea what they count.',
+      type: 'string',
+    },
+    {
+      title: 'hideCaption',
+      description: 'Expose the caption to assistive tech without showing it.',
+      type: 'boolean',
+      default: 'false',
     },
     {
       title: 'zebra',
@@ -272,6 +283,67 @@ export default {
     ],
   },
   sections: [
+    {
+      title: 'Caption',
+      description: 'Give every data table a caption. `hideCaption` keeps it out of the layout while leaving it readable — use that when the surrounding heading already says what the table is, and a visible caption would repeat it.',
+      preview: `<DuTable
+  caption="Open invoices, Q3 2026"
+  :columns="[
+    { key: 'ref', label: 'Reference' },
+    { key: 'client', label: 'Client' },
+    { key: 'total', label: 'Total' },
+  ]"
+  :rows="[
+    { id: 1, ref: 'INV-104', client: 'Northwind', total: '€1,240' },
+    { id: 2, ref: 'INV-105', client: 'Contoso', total: '€860' },
+  ]"
+  class="w-full"
+/>`,
+      code: `<!-- visible -->
+<DuTable caption="Open invoices, Q3 2026" :columns="columns" :rows="rows" />
+
+<!-- exposed but not shown -->
+<DuTable caption="Open invoices, Q3 2026" hideCaption :columns="columns" :rows="rows" />
+
+<!-- or as a slot, for markup -->
+<DuTable :columns="columns" :rows="rows">
+  <template #caption>
+    Open invoices, <strong>Q3 2026</strong>
+  </template>
+</DuTable>`,
+    },
+    {
+      title: 'Typed rows',
+      description: 'DuTable is generic over the row type. Declare your own interface and the scoped slots are typed against it — `row.total` is a number in the template, not `any`. The row only has to carry an `id`.',
+      lang: 'vue',
+      code: `<script setup lang="ts">
+interface Invoice {
+  id: number
+  reference: string
+  client: string
+  total: number
+}
+
+const rows: Invoice[] = [
+  { id: 1, reference: 'INV-104', client: 'Northwind', total: 1240 },
+]
+
+const columns = [
+  { key: 'reference', label: 'Reference' },
+  { key: 'client', label: 'Client' },
+  { key: 'total', label: 'Total' },
+]
+</script>
+
+<template>
+  <DuTable :columns="columns" :rows="rows" caption="Open invoices">
+    <!-- row is an Invoice here -->
+    <template #cell-total="{ row }">
+      {{ row.total.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' }) }}
+    </template>
+  </DuTable>
+</template>`,
+    },
     {
       title: 'Basic',
       preview: `<DuTable

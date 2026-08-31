@@ -2,7 +2,7 @@ import type { DocPageData } from '@/types/docs'
 
 export default {
   title: 'Pagination',
-  description: 'Pagination component to navigate through pages of content.',
+  description: 'Pagination navigates through pages of content. The root is a `<nav>` landmark and the current page carries `aria-current="page"`, so a screen reader can say where you are rather than reading a row of bare numbers.',
   category: 'Navigation',
   source: 'https://daisyui.com/components/pagination/',
   props: [
@@ -109,6 +109,36 @@ export default {
       description: 'Show ellipsis for omitted pages',
       type: 'boolean',
       default: 'true',
+    },
+    {
+      title: 'ariaLabel',
+      description: 'Accessible name of the navigation landmark. A page with more than one `<nav>` needs each named, or they are indistinguishable in a landmark list.',
+      type: 'string',
+      default: "'Pagination'",
+    },
+    {
+      title: 'previousAriaLabel',
+      description: 'Accessible name of the previous button — its visible content is a symbol, which is not a name.',
+      type: 'string',
+      default: "'Previous page'",
+    },
+    {
+      title: 'nextAriaLabel',
+      description: 'Accessible name of the next button.',
+      type: 'string',
+      default: "'Next page'",
+    },
+    {
+      title: 'firstAriaLabel',
+      description: 'Accessible name of the first-page button.',
+      type: 'string',
+      default: "'First page'",
+    },
+    {
+      title: 'lastAriaLabel',
+      description: 'Accessible name of the last-page button.',
+      type: 'string',
+      default: "'Last page'",
     },
     {
       title: 'maxPages',
@@ -248,6 +278,32 @@ const page = ref(1)
   showEllipsis
   :maxPages="5"
   variant="primary"
+/>`,
+    },
+    {
+      title: 'Naming the buttons and the landmark',
+      description: '`nextLabel` and friends are the **visible** symbols; `nextAriaLabel` and friends are what a screen reader reads. Keep them in step — if you change « » to "Older" / "Newer", change the aria labels too, or voice control and the visible text stop matching. `ariaLabel` names the `<nav>` itself, which matters on a page with several.',
+      preview: `<DuPagination
+  :modelValue="2"
+  :total="50"
+  :perPage="10"
+  showFirst
+  showLast
+  ariaLabel="Search results pages"
+  previousAriaLabel="Previous results"
+  nextAriaLabel="Next results"
+/>`,
+      code: `<DuPagination
+  v-model="page"
+  :total="250"
+  :perPage="10"
+  showFirst
+  showLast
+  ariaLabel="Search results pages"
+  previousLabel="Older"
+  nextLabel="Newer"
+  previousAriaLabel="Older results"
+  nextAriaLabel="Newer results"
 />`,
     },
     {

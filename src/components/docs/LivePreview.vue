@@ -1,6 +1,7 @@
 <script lang="ts">
 import { defineComponent, compile, h, ref, reactive, computed, watch, type Component, type Ref } from 'vue'
 import * as CornetComponents from 'cornet-ui'
+import { useToasts } from 'cornet-ui'
 
 const duComponents = Object.fromEntries(
   Object.entries(CornetComponents).filter(
@@ -46,12 +47,12 @@ export default defineComponent({
   setup(props) {
     if (props.script) {
       // eslint-disable-next-line no-new-func
-      const setupFn = new Function('ref', 'reactive', 'computed', 'watch', 'useResize', props.script)
+      const setupFn = new Function('ref', 'reactive', 'computed', 'watch', 'useResize', 'useToasts', props.script)
 
       const DynamicComp = defineComponent({
         components: duComponents,
         setup() {
-          return setupFn(ref, reactive, computed, watch, useResize)
+          return setupFn(ref, reactive, computed, watch, useResize, useToasts)
         },
         template: `${WRAPPER}${props.code}</div>`,
       })

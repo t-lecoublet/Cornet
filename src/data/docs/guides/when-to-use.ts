@@ -109,10 +109,27 @@ export default {
     {
       title: 'Where this comes from',
       description:
-        'A point-in-time audit from 2026-07-02, kept alongside the library source as WHEN_TO_USE_CORNET.md. Treat it as a snapshot, not a guarantee — a component that grows real behavior moves up a level without this page noticing. Rich components are split into a local composables/ folder next to their .vue file, so you can also reuse their behavior without the markup.',
+        'An audit kept alongside the library source as WHEN_TO_USE_CORNET.md, rewritten after the accessibility refactor. Treat it as a snapshot, not a guarantee — a component that grows real behavior moves up a level without this page noticing. A Rich component\'s logic lives in components/core/ when another component could want it (popup lifecycle, focus, keyboard navigation, controllable state), and in a local composables/ folder next to the .vue only when it is genuinely that component\'s own.',
       links: [
         { label: 'WHEN_TO_USE_CORNET.md', href: 'https://gitlab.limos.fr/hub-isima/daisyui-vue-kit/-/tree/lib/WHEN_TO_USE_CORNET.md' },
       ],
+    },
+    {
+      title: 'Nine components moved up',
+      description:
+        'The refactor that gave Cornet its WAI-ARIA behaviour changed this audit. DuDropdown, DuTooltip, DuTabs, DuAccordion, DuCollapse, DuMenu, DuToast, DuInputField and DuDrawer are no longer thin class wrappers: they gained the state they had been faking with CSS — a dropdown that only toggled a class, tabs driven by hidden radio inputs, a tooltip that answered to the mouse alone. If you inlined one of them as plain markup on the strength of an earlier reading of this page, that markup is now missing keyboard support, focus handling and ARIA the component does for you.',
+      lang: 'vue',
+      code: `<!-- Was: a class toggle you could reasonably inline -->
+<div class="dropdown dropdown-open">…</div>
+
+<!-- Now: aria-expanded, Escape, outside-press dismissal,
+     focus return, hover delays, optional top layer -->
+<DuDropdown>
+  <template #trigger="{ triggerProps }">
+    <DuButton v-bind="triggerProps">Menu</DuButton>
+  </template>
+  <DuMenu role="menu" ariaLabel="Actions" :items="actions" />
+</DuDropdown>`,
     },
     {
       title: 'Why this page exists',

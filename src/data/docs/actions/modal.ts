@@ -2,7 +2,7 @@ import type { DocPageData } from '@/types/docs'
 
 export default {
   title: 'Modal',
-  description: 'Modal is used to show a dialog or a box when you click a button.',
+  description: 'Modal shows a dialog on top of the page. It is a native `<dialog>`, so the browser handles the top layer, the backdrop and the focus trap — Cornet only drives `showModal()` / `close()` and names the thing.',
   category: 'Actions',
   source: 'https://daisyui.com/components/modal/',
   props: [
@@ -41,6 +41,22 @@ export default {
       title: 'classBox',
       description: 'Additional CSS classes for the modal box',
       type: 'string',
+    },
+    {
+      title: 'ariaLabel',
+      description: 'Accessible name of the dialog. Use it when the modal has no visible title — a dialog with no name is announced as just "dialog".',
+      type: 'string',
+    },
+    {
+      title: 'ariaLabelledby',
+      description: 'id of the element naming the dialog — point it at your own title element. Prefer this over `ariaLabel` whenever a title is already on screen: the two then say the same thing.',
+      type: 'string',
+    },
+    {
+      title: 'closeLabel',
+      description: 'Accessible label of the close button and of the backdrop. Their only content is a ✕ and empty space respectively.',
+      type: 'string',
+      default: "'Close'",
     },
     {
       title: 'id',
@@ -131,6 +147,34 @@ const isOpen = ref(false)
 <DuModal id="my-modal" closeButton>
   <h3 class="font-bold text-lg mb-2">Hello!</h3>
   <p>This is the modal content.</p>
+</DuModal>`,
+    },
+    {
+      title: 'Naming the dialog',
+      description: 'A `<dialog>` with no accessible name is announced as "dialog" and nothing else. Point `ariaLabelledby` at the title you already show, or pass `ariaLabel` when there is no visible title. `closeLabel` names the ✕ button and the backdrop, whose only content is a glyph and empty space.',
+      links: [
+        { label: 'APG dialog pattern', href: 'https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/' },
+      ],
+      script: `
+      const open = ref(false)
+      return { open }
+      `,
+      preview: `<div class="flex flex-col items-center gap-3">
+  <DuButton variant="primary" @click="open = true">Open a named dialog</DuButton>
+  <DuModal v-model:open="open" ariaLabelledby="settings-title" closeButton closeLabel="Close settings">
+    <h3 id="settings-title" class="font-bold text-lg">Settings</h3>
+    <p class="py-2 text-sm">The heading above is what names this dialog.</p>
+  </DuModal>
+</div>`,
+      code: `<!-- there is a visible title: name the dialog by it -->
+<DuModal v-model:open="open" ariaLabelledby="settings-title" closeButton closeLabel="Close settings">
+  <h3 id="settings-title" class="font-bold text-lg">Settings</h3>
+  <p>…</p>
+</DuModal>
+
+<!-- no visible title -->
+<DuModal v-model:open="open" ariaLabel="Image preview">
+  <img src="/photo.jpg" alt="" />
 </DuModal>`,
     },
     {

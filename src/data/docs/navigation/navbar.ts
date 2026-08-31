@@ -244,35 +244,48 @@ export default {
         { label: 'DuDropdown docs', href: '/docs/actions/dropdown' },
         { label: 'DuAvatar docs', href: '/docs/data-display/avatar' },
       ],
+      description: 'Spread `triggerProps` on whatever opens the dropdown — that is what carries `aria-expanded`, `aria-controls` and the click/keyboard handlers.',
       preview: `<DuNavbar class="border border-base-300 rounded-lg w-full">
   <template #end>
     <DuDropdown placement="end">
-      <template #trigger>
-        <DuAvatar size="sm" rounded="full" class="cursor-pointer">
-          <img src="https://i.pravatar.cc/32?img=5" alt="User" />
-        </DuAvatar>
+      <template #trigger="{ triggerProps }">
+        <DuButton ghost circle v-bind="triggerProps" ariaLabel="Account menu">
+          <DuAvatar size="sm" rounded="full">
+            <img src="https://i.pravatar.cc/32?img=5" alt="" />
+          </DuAvatar>
+        </DuButton>
       </template>
-      <ul class="menu menu-sm w-40">
-        <li><a>Profile</a></li>
-        <li><a>Settings</a></li>
-        <li><a>Logout</a></li>
-      </ul>
+      <DuMenu
+        role="menu"
+        ariaLabel="Account"
+        size="sm"
+        class="w-40"
+        :items="[{ label: 'Profile' }, { label: 'Settings' }, { label: 'Logout' }]"
+      />
     </DuDropdown>
   </template>
 </DuNavbar>`,
       code: `<DuNavbar>
   <template #end>
     <DuDropdown placement="end">
-      <template #trigger>
-        <DuAvatar size="sm" rounded="full" class="cursor-pointer">
-          <img src="/user.jpg" alt="User" />
-        </DuAvatar>
+      <template #trigger="{ triggerProps }">
+        <DuButton ghost circle v-bind="triggerProps" ariaLabel="Account menu">
+          <DuAvatar size="sm" rounded="full">
+            <img src="/user.jpg" alt="" />
+          </DuAvatar>
+        </DuButton>
       </template>
-      <ul class="menu menu-sm w-40">
-        <li><a>Profile</a></li>
-        <li><a>Settings</a></li>
-        <li><a>Logout</a></li>
-      </ul>
+      <DuMenu
+        role="menu"
+        ariaLabel="Account"
+        size="sm"
+        class="w-40"
+        :items="[
+          { label: 'Profile', onClick: goToProfile },
+          { label: 'Settings', onClick: goToSettings },
+          { label: 'Logout', onClick: logout },
+        ]"
+      />
     </DuDropdown>
   </template>
 </DuNavbar>`,

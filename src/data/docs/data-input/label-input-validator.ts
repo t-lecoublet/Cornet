@@ -81,6 +81,11 @@ export default {
       default: 'false',
     },
     {
+      title: 'errorMessages',
+      description: "Override the browser's wording for a failed constraint, by code: `required`, `pattern`, `minlength`, `maxlength`, `min`, `max`, `step`, `type`. Passed straight through to the inner DuInputField.",
+      type: 'Partial<Record<NativeErrorCode, string>>',
+    },
+    {
       title: 'suggestionName',
       description: 'HTML datalist id to enable native autocomplete suggestions',
       type: 'string',

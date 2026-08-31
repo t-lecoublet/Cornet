@@ -87,6 +87,15 @@ export default defineConfig({
 @plugin "daisyui";`,
     },
     {
+      title: 'Explore with Storybook',
+      description: 'Every component ships with Storybook stories. Run them locally to browse variants, sizes and props interactively — including the keyboard behaviour, which a static page cannot show you.',
+      lang: 'bash',
+      links: [
+        { label: 'Storybook for Vue 3 + Vite', href: 'https://storybook.js.org/docs/get-started/frameworks/vue3-vite' },
+      ],
+      code: `npx storybook dev`,
+    },
+    {
       title: 'Use a component',
       lang: 'vue',
       links: [

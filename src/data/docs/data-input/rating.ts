@@ -2,7 +2,7 @@ import type { DocPageData } from '@/types/docs'
 
 export default {
   title: 'Rating',
-  description: 'Rating shows a star-based (or custom shape) rating input. Use `count` to set the number of stars, `color` to set the fill color (any Tailwind bg-* class), `halfStar` for half-star increments, and `clearable` to allow deselection.',
+  description: 'Rating is a star-based (or custom shape) rating input. Every star is named — `"3 out of 5"` by default — because that name is the whole content of the control for anyone not looking at it. Use `readonly` to *display* a rating rather than `disabled`, which announces something quite different.',
   category: 'Data Input',
   source: 'https://daisyui.com/components/rating/',
   props: [
@@ -64,6 +64,28 @@ export default {
       title: 'items',
       description: 'Custom items array for dynamic rendering',
       type: 'DuRatingItemData[]',
+    },
+    {
+      title: 'customClass',
+      description: 'Additional CSS classes on the rating group.',
+      type: 'string',
+    },
+    {
+      title: 'readonly',
+      description: 'Show the rating without letting anyone change it. Renders plain elements exposing the group as a `role="img"` named by the value — a read-only value is not a broken control.',
+      type: 'boolean',
+      default: 'false',
+    },
+    {
+      title: 'ariaLabel',
+      description: 'Accessible name of the whole group — what is being rated.',
+      type: 'string',
+    },
+    {
+      title: 'itemLabel',
+      description: 'Names each star: `(value, max) => string`. Replace it for another language or scale.',
+      type: 'DuRatingItemLabel',
+      default: '(value, max) => `${value} out of ${max}`',
     },
   ],
   classnames: {
@@ -173,9 +195,36 @@ const rating = ref(3)
 <DuRating v-model="rating" size="lg" />`,
     },
     {
-      title: 'Read only (disabled)',
-      preview: `<DuRating :modelValue="4" disabled />`,
-      code: `<DuRating :modelValue="4" disabled />`,
+      title: 'Displaying a rating (readonly)',
+      description: 'Use `readonly` to show a rating you are not asking anyone to change — a product\'s average score, a review. It renders plain elements and exposes the group as a `role="img"` named by the value. `disabled` is a different statement: it renders radios that announce "you may not touch this", which is not what a displayed rating means.',
+      preview: `<div class="flex flex-col gap-3 items-center">
+  <DuRating :modelValue="4" readonly ariaLabel="Average customer rating" />
+  <p class="text-xs text-base-content/60">readonly — announced as "4 out of 5"</p>
+  <DuRating :modelValue="4" disabled ariaLabel="Rating (locked)" />
+  <p class="text-xs text-base-content/60">disabled — a control you are not allowed to use</p>
+</div>`,
+      code: `<!-- showing a value -->
+<DuRating :modelValue="4" readonly ariaLabel="Average customer rating" />
+
+<!-- a control the user may not change right now -->
+<DuRating v-model="rating" disabled />`,
+    },
+    {
+      title: 'Naming the stars',
+      description: '`ariaLabel` names the group, `itemLabel` names each star. The default is English, like every other default text in the library, and it exists to be replaced.',
+      preview: `<div class="flex flex-col gap-2 items-center">
+  <DuRating
+    :modelValue="3"
+    ariaLabel="Votre note"
+    :itemLabel="(value, max) => value + ' sur ' + max"
+  />
+  <p class="text-xs text-base-content/60">Each star announces "3 sur 5"</p>
+</div>`,
+      code: `<DuRating
+  v-model="note"
+  ariaLabel="Votre note"
+  :itemLabel="(value, max) => \`\${value} sur \${max}\`"
+/>`,
     },
     {
       title: 'Manual mode (DuRatingItem)',

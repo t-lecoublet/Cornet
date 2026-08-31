@@ -2,7 +2,7 @@ import type { DocPageData } from '@/types/docs'
 
 export default {
   title: 'Diff',
-  description: 'Diff component shows a comparison between two elements side by side.',
+  description: 'Diff shows a before/after comparison. daisyUI drives the reveal from **focus**, so both halves are now real tab stops — the mechanism used to live in the stylesheet alone, with nothing on the page able to take the focus it needed.',
   category: 'Data Display',
   source: 'https://daisyui.com/components/diff/',
   props: [
@@ -21,6 +21,29 @@ export default {
       description: 'Aspect ratio class for the diff container',
       type: 'DuDiffAspectRatio | string | null',
       default: "''",
+    },
+    {
+      title: 'ariaLabel',
+      description: 'Accessible name of the comparison as a whole — and of the first tab stop.',
+      type: 'string',
+    },
+    {
+      title: 'revealLabel',
+      description: 'Accessible name of the second tab stop, the one that reveals the second item. Only that one needs naming: the first is the figure itself, which `ariaLabel` already names. Without it, that stop is silent.',
+      type: 'string',
+      default: "'Reveal the second image'",
+    },
+    {
+      title: 'item1Alt',
+      description: 'Alternative text for the first image, when rendered from `item1`. Replace it — a generic placeholder is not a description.',
+      type: 'string',
+      default: "'First image'",
+    },
+    {
+      title: 'item2Alt',
+      description: 'Alternative text for the second image, when rendered from `item2`.',
+      type: 'string',
+      default: "'Second image'",
     },
   ],
   sections: [
@@ -69,6 +92,27 @@ export default {
     </div>
   </template>
 </DuDiff>`,
+    },
+    {
+      title: 'Naming the two halves',
+      description: 'Tab into the figure and you land on the first stop, named by `ariaLabel`; Tab again and you reach the reveal, named by `revealLabel`. When you pass images through `item1` / `item2` rather than the slots, `item1Alt` and `item2Alt` are their alternative text.',
+      preview: `<DuDiff
+  class="rounded-xl w-72 aspect-video"
+  ariaLabel="Photo before and after retouching"
+  revealLabel="Show the retouched version"
+  item1="https://img.daisyui.com/images/stock/photo-1560717789-0ac7c58ac90a.webp"
+  item2="https://img.daisyui.com/images/stock/photo-1560717789-0ac7c58ac90a-blur.webp"
+  item1Alt="Original photo, sharp"
+  item2Alt="The same photo, blurred"
+/>`,
+      code: `<DuDiff
+  ariaLabel="Photo before and after retouching"
+  revealLabel="Show the retouched version"
+  item1="/before.jpg"
+  item2="/after.jpg"
+  item1Alt="Original photo, sharp"
+  item2Alt="The same photo, blurred"
+/>`,
     },
     {
       title: 'Prop shorthand (item1 / item2)',

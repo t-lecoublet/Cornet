@@ -2,7 +2,7 @@ import type { DocPageData } from '@/types/docs'
 
 export default {
   title: 'Steps',
-  description: 'Steps component shows a wizard-style progression through a sequence of steps.',
+  description: 'Steps shows a wizard-style progression through a sequence. The furthest active step carries `aria-current="step"`, so assistive tech can say where you are — not just how many boxes are coloured in.',
   category: 'Navigation',
   source: 'https://daisyui.com/components/steps/',
   props: [
@@ -10,6 +10,11 @@ export default {
       title: 'items',
       description: 'Array of step items with label, active, customClass, and dataContent properties',
       type: 'DuStepsItem[]',
+    },
+    {
+      title: 'ariaLabel',
+      description: 'Accessible name of the sequence — "Checkout", "Onboarding".',
+      type: 'string',
     },
     {
       title: 'direction',

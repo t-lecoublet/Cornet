@@ -8,7 +8,7 @@ export default {
   props: [
     {
       title: 'items',
-      description: 'Action items revealed when the FAB is opened',
+      description: 'Action items revealed when the FAB is opened. `icon` is an `IconSource` — a Vue component, an image URL, or an HTML string.',
       type: 'DuFabItem[]',
     },
     {

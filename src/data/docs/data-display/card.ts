@@ -50,6 +50,110 @@ export default {
       default: 'false',
     },
   ],
+  slots: [
+    {
+      title: 'Slot #figure',
+      description: 'The image or media at the top of the card — rendered outside `.card-body`, which is what lets it bleed to the edges.',
+      preview: `<DuCard bordered class="w-64">
+  <template #figure>
+    <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="" />
+  </template>
+  <template #title>Sunset</template>
+  <p class="text-sm">Taken on the coast road.</p>
+</DuCard>`,
+      code: `<DuCard bordered>
+  <template #figure>
+    <img src="/photo.jpg" alt="" />
+  </template>
+  <template #title>Sunset</template>
+  <p>Taken on the coast road.</p>
+</DuCard>`,
+    },
+    {
+      title: 'Slot #title',
+      description: 'Content of the `<h2 class="card-title">`. Use it instead of the `title` prop when the heading needs markup — a badge, an icon. Given both, the prop renders first and the slot after it, inside the same heading.',
+      preview: `<DuCard bordered class="w-64">
+  <template #title>
+    Release
+    <DuBadge variant="primary" size="sm">new</DuBadge>
+  </template>
+  <p class="text-sm">Shipped this morning.</p>
+</DuCard>`,
+      code: `<DuCard bordered>
+  <template #title>
+    Release
+    <DuBadge variant="primary" size="sm">new</DuBadge>
+  </template>
+  <p>Shipped this morning.</p>
+</DuCard>`,
+    },
+    {
+      title: 'Slot #actions',
+      description: 'Buttons at the foot of the card. It is wrapped in `.card-actions` for you — do not add that class yourself.',
+      preview: `<DuCard bordered class="w-64">
+  <template #title>Delete project?</template>
+  <p class="text-sm">This cannot be undone.</p>
+  <template #actions>
+    <DuButton size="sm" ghost>Cancel</DuButton>
+    <DuButton size="sm" variant="error">Delete</DuButton>
+  </template>
+</DuCard>`,
+      code: `<DuCard bordered>
+  <template #title>Delete project?</template>
+  <p>This cannot be undone.</p>
+  <template #actions>
+    <DuButton ghost>Cancel</DuButton>
+    <DuButton variant="error">Delete</DuButton>
+  </template>
+</DuCard>`,
+    },
+    {
+      title: 'Slot #body',
+      description: '**Replaces the whole `.card-body`**, heading and actions included — the escape hatch for a layout the default structure cannot express. Fill it and `#title` / `#actions` / the `title` prop stop rendering; the default slot then sits beside your body rather than inside a generated one. Reach for it last.',
+      preview: `<DuCard bordered class="w-64">
+  <template #body>
+    <div class="p-4 grid grid-cols-2 gap-3 text-sm">
+      <div>
+        <p class="text-base-content/50 text-xs">Uptime</p>
+        <p class="font-bold text-lg">99.9%</p>
+      </div>
+      <div>
+        <p class="text-base-content/50 text-xs">Latency</p>
+        <p class="font-bold text-lg">42 ms</p>
+      </div>
+    </div>
+  </template>
+</DuCard>`,
+      code: `<!-- you own the padding and the layout here -->
+<DuCard bordered>
+  <template #body>
+    <div class="p-4 grid grid-cols-2 gap-3">
+      <div>…</div>
+      <div>…</div>
+    </div>
+  </template>
+</DuCard>`,
+    },
+    {
+      title: 'Slot #content',
+      description: 'Rendered **after** the card body, as a direct child of `.card` — outside the body padding. For a full-bleed footer: a progress bar across the bottom edge, a strip of thumbnails.',
+      preview: `<DuCard bordered class="w-64 overflow-hidden">
+  <template #title>Uploading</template>
+  <p class="text-sm">3 of 4 files</p>
+  <template #content>
+    <DuProgress :value="75" :max="100" variant="primary" ariaLabel="Upload progress" class="w-full rounded-none" />
+  </template>
+</DuCard>`,
+      code: `<DuCard bordered class="overflow-hidden">
+  <template #title>Uploading</template>
+  <p>3 of 4 files</p>
+  <!-- outside .card-body: touches the card edges -->
+  <template #content>
+    <DuProgress :value="75" ariaLabel="Upload progress" class="w-full rounded-none" />
+  </template>
+</DuCard>`,
+    },
+  ],
   classnames: {
     component: [
       { class: 'card', desc: 'Base class, always applied. size="default" and variant="default" add no extra class.' },
@@ -195,10 +299,14 @@ export default {
     },
     {
       title: 'Custom class',
-      preview: `<DuCard bordered customClass="bg-primary/10 border-primary/30" title="Styled card" class="w-72">
+      description: 'DuCard has **no `customClass` prop** — unlike DuButton. Put your classes in `class` and Vue\'s attribute fallthrough puts them on the `.card` root.',
+      links: [
+        { label: 'Vue attribute fallthrough', href: 'https://vuejs.org/guide/components/attrs.html' },
+      ],
+      preview: `<DuCard bordered class="w-72 bg-primary/10 border-primary/30" title="Styled card">
   Custom styled card content.
 </DuCard>`,
-      code: `<DuCard bordered customClass="bg-primary/10 border-primary/30" title="Styled card">
+      code: `<DuCard bordered class="bg-primary/10 border-primary/30" title="Styled card">
   Custom styled card content.
 </DuCard>`,
     },

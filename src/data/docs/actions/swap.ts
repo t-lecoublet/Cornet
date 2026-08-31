@@ -2,7 +2,7 @@ import type { DocPageData } from '@/types/docs'
 
 export default {
   title: 'Swap',
-  description: 'Swap allows you to toggle the visibility of two elements by clicking.',
+  description: 'Swap toggles between two elements. Give it an `ariaLabel` whenever the two faces are icons: what a screen reader announces is that name, not the picture.',
   category: 'Actions',
   source: 'https://daisyui.com/components/swap/',
   props: [
@@ -26,9 +26,14 @@ export default {
     },
     {
       title: 'useCheckbox',
-      description: 'Drive the swap with a hidden checkbox. Set to `false` to toggle on click instead.',
+      description: 'Drive the swap with a hidden checkbox. Set to `false` and it renders a real `<button type="button" aria-pressed>` instead — it used to be a `<div @click>`, unreachable by keyboard and announcing nothing. CSS targeting `div.swap` should target `button.swap`.',
       type: 'boolean',
       default: 'true',
+    },
+    {
+      title: 'ariaLabel',
+      description: 'Accessible name of the toggle. Required in practice when both faces are icons — "🌙 / ☀️" is not a name.',
+      type: 'string',
     },
   ],
   classnames: {
@@ -125,29 +130,30 @@ const active = ref(false)
     },
     {
       title: 'Without checkbox (useCheckbox)',
-      description: 'Use `useCheckbox={false}` to render as a div instead of a label with checkbox.',
-      preview: `<DuSwap :useCheckbox="false" class="text-2xl">
+      description: '`:useCheckbox="false"` renders a real `<button type="button" aria-pressed>` instead of the label-and-checkbox pair. It used to be a `<div @click>`: unreachable by keyboard, and silent to a screen reader. Selectors written against `div.swap` need to target `button.swap` now.',
+      preview: `<DuSwap :useCheckbox="false" ariaLabel="Toggle theme" class="text-2xl">
   <template #on>☀️</template>
   <template #off>🌙</template>
 </DuSwap>`,
-      code: `<DuSwap :useCheckbox="false">
+      code: `<DuSwap :useCheckbox="false" ariaLabel="Toggle theme">
   <template #on>☀️</template>
   <template #off>🌙</template>
 </DuSwap>`,
     },
     {
       title: 'With images or icons',
+      description: 'Two icons and no text: nothing here names the control. `ariaLabel` is what a screen reader reads out, so it is not optional in this shape.',
       preview: `<div class="flex flex-wrap gap-4 justify-center">
-  <DuSwap rotate class="text-4xl">
+  <DuSwap rotate ariaLabel="Toggle dark mode" class="text-4xl">
     <template #on>🌙</template>
     <template #off>☀️</template>
   </DuSwap>
-  <DuSwap flip class="text-4xl">
+  <DuSwap flip ariaLabel="Toggle reading mode" class="text-4xl">
     <template #on>📖</template>
     <template #off>🎮</template>
   </DuSwap>
 </div>`,
-      code: `<DuSwap v-model="state" rotate>
+      code: `<DuSwap v-model="state" rotate ariaLabel="Toggle dark mode">
   <template #on>🌙</template>
   <template #off>☀️</template>
 </DuSwap>`,

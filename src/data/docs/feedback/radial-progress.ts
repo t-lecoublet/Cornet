@@ -2,7 +2,7 @@ import type { DocPageData } from '@/types/docs'
 
 export default {
   title: 'RadialProgress',
-  description: 'Radial progress shows a circular progress indicator.',
+  description: 'Radial progress shows a circular progress indicator. It exposes `aria-valuenow`, `aria-valuemin` and `aria-valuemax` — a progressbar with only the first cannot be read at all.',
   category: 'Feedback',
   source: 'https://daisyui.com/components/radial-progress/',
   props: [
@@ -29,6 +29,11 @@ export default {
       type: 'Variant',
       default: '"default"',
       options: ['default', 'neutral', 'primary', 'secondary', 'accent', 'info', 'success', 'warning', 'error'],
+    },
+    {
+      title: 'ariaLabel',
+      description: 'Accessible name of the indicator — what it is measuring.',
+      type: 'string',
     },
   ],
   sections: [

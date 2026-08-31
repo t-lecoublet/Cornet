@@ -2,7 +2,7 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, watch } from 'vue'
 import { useRoute, useRouter, RouterLink, RouterView } from 'vue-router'
 import { DuButton, DuModal, DuNavbar, DuSearch } from 'cornet-ui'
-import { docsNav } from '@/data/docs/registry'
+import { docsNav } from '@/data/docs/nav'
 import Logo from '@/components/logos/logo.vue'
 import RepoChoiceModal from '@/components/RepoChoiceModal.vue'
 import { useRepoPreference } from '@/composables/useRepoPreference'
@@ -164,7 +164,7 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKeydown))
     </div>
 
     <!-- ─── Search modal ──────────────────────────────── -->
-    <DuModal v-model:open="searchOpen" placement="top" closeOnEscape classBox="overflow-visible" customClass="w-full max-w-lg">
+    <DuModal v-model:open="searchOpen" placement="top" closeOnEscape classBox="overflow-visible w-full max-w-lg">
       <!-- Détourne l'auto-focus du dialog loin du DuSearch -->
       <span tabindex="0" autofocus class="sr-only" />
       <div class="flex items-center gap-3">
@@ -176,8 +176,9 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKeydown))
           name="modal-search"
           id="modal-search"
           placeholder="Search components & guides..."
-          :listValues="searchItems"
-          :limit="10"
+          :options="searchItems"
+          :resultsLimit="10"
+          ariaLabel="Search components and guides"
           ghost
           class="w-full"
           customClass="border-none shadow-none focus:outline-none text-sm"
@@ -186,10 +187,10 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKeydown))
             <div class="flex flex-col gap-0.5 w-full py-0.5">
               <div class="flex items-center justify-between gap-2">
                 <span class="font-medium text-sm">{{ option.name }}</span>
-                <span class="text-xs text-base-content/35 shrink-0 font-mono">{{ (option as any).category }}</span>
+                <span class="text-xs text-base-content/35 shrink-0 font-mono">{{ option.category }}</span>
               </div>
-              <p v-if="(option as any).description" class="text-xs text-base-content/45 truncate">
-                {{ (option as any).description }}
+              <p v-if="option.description" class="text-xs text-base-content/45 truncate">
+                {{ option.description }}
               </p>
             </div>
           </template>

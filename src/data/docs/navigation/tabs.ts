@@ -2,7 +2,7 @@ import type { DocPageData } from '@/types/docs'
 
 export default {
   title: 'Tabs',
-  description: 'Tabs organize content into separate panels, showing one at a time. Supports icons, custom content, and multiple styles.',
+  description: 'Tabs organize content into separate panels, showing one at a time. They follow the WAI-ARIA tabs pattern: one tab stop for the whole group, arrow keys to move between tabs, `Home` / `End` to jump to the ends.',
   category: 'Navigation',
   source: 'https://daisyui.com/components/tabs/',
   props: [
@@ -15,7 +15,7 @@ export default {
     },
     {
       title: 'items',
-      description: 'Array of tab items with label, icon, active, disabled, onClick, and content properties',
+      description: 'Tab items: `label`, `icon`, `value` (stable identity for v-model), `active` (initial selection when uncontrolled), `disabled`, `onClick`, `content`, `class`. Extra keys ride along untouched for your own slot bindings.',
       type: 'DuTabItem[]',
     },
     {
@@ -26,20 +26,27 @@ export default {
     },
     {
       title: 'bottom',
-      description: 'Place tabs at the bottom instead of top',
+      description: 'Render the panels above the tabs (`tabs-bottom`). Previously declared and never applied — it works now.',
       type: 'boolean',
       default: 'false',
     },
     {
-      title: 'name',
-      description: 'Name attribute for radio inputs (must be unique per tab group)',
-      type: 'string',
-      default: '"my_tabs"',
+      title: 'modelValue',
+      description: 'The **`value`** of the selected tab — not its index. An item without a `value` falls back to its index, so a fixed list still works with numbers. Omit it and the tab group owns its state; pass it (`v-model`) and yours decides.',
+      type: 'string | number | undefined',
+      default: 'undefined',
     },
     {
-      title: 'modelValue',
-      description: 'Currently active tab index (use with v-model)',
-      type: 'number',
+      title: 'activation',
+      description: 'Whether arrowing onto a tab selects it. `automatic` selects as you move — right when the panels are cheap. `manual` waits for Enter or Space, which is what the APG asks for when showing a panel is expensive.',
+      type: 'string',
+      default: '"automatic"',
+      options: ['automatic', 'manual'],
+    },
+    {
+      title: 'ariaLabel',
+      description: 'Accessible name of the tab group. Required by the APG — a tablist with no name is a set of buttons whose common purpose is never stated.',
+      type: 'string',
     },
   ],
   slots: [
@@ -115,13 +122,14 @@ export default {
     },
     {
       title: 'Manual mode (default slot)',
-      description: 'Use default slot for manual HTML tab structure',
+      description: 'Fill the default slot and DuTabs steps out of the way entirely — no `role="tablist"`, no keyboard handling, no selection. You write the markup **and the ARIA**. Use the `items` API unless you have a reason not to.',
       preview: `<DuTabs class="w-full">
   <a class="tab tab-active">Tab 1</a>
   <a class="tab">Tab 2</a>
   <a class="tab">Tab 3</a>
 </DuTabs>`,
-      code: `<DuTabs>
+      code: `<!-- You own the roles and the keyboard here -->
+<DuTabs>
   <a class="tab tab-active">Tab 1</a>
   <a class="tab">Tab 2</a>
   <a class="tab">Tab 3</a>
@@ -131,8 +139,12 @@ export default {
   classnames: {
     component: [
       { class: 'tabs', desc: 'Base class on the wrapper, always applied.' },
-      { class: 'tab', desc: 'Each tab label.' },
-      { class: 'tab-content', desc: 'The panel below the active tab.' },
+      { class: 'tab', desc: 'Each tab label. It is a real <button role="tab">.' },
+      { class: 'tab-content', desc: 'The panel next to the selected tab.' },
+      { class: 'tab-disabled', desc: 'item.disabled — skipped by the arrow keys and not selectable.' },
+    ],
+    modifier: [
+      { class: 'tabs-bottom', desc: 'bottom — panels above the tabs' },
     ],
     style: [
       { class: 'tabs-lift', desc: 'type="lift"' },
@@ -148,6 +160,98 @@ export default {
     ],
   },
   sections: [
+    {
+      title: 'Keyboard and ARIA',
+      description: 'The whole group is **one** tab stop. Tab moves into the selected tab and out again; the arrow keys move between tabs, `Home` and `End` jump to the ends, and disabled tabs are stepped over. Each tab is a real `<button role="tab">` carrying `aria-selected`, and daisyUI 5 styles `.tab[aria-selected=true]` directly — so the attribute a screen reader reads *is* what colours the tab. There is no second source of truth to drift.',
+      links: [
+        { label: 'APG tabs pattern', href: 'https://www.w3.org/WAI/ARIA/apg/patterns/tabs/' },
+      ],
+      preview: `<DuTabs
+  ariaLabel="Project sections"
+  :items="[{ label: 'Overview' }, { label: 'Members' }, { label: 'Archived', disabled: true }, { label: 'Settings' }]"
+  type="border"
+  class="w-full"
+>
+  <template #content-0><p class="p-4 text-sm">Tab, then use ← → to move.</p></template>
+  <template #content-1><p class="p-4 text-sm">Members</p></template>
+  <template #content-2><p class="p-4 text-sm">Archived</p></template>
+  <template #content-3><p class="p-4 text-sm">Settings</p></template>
+</DuTabs>`,
+      code: `<DuTabs
+  ariaLabel="Project sections"
+  :items="[
+    { label: 'Overview' },
+    { label: 'Members' },
+    { label: 'Archived', disabled: true },
+    { label: 'Settings' },
+  ]"
+  type="border"
+>
+  <template #content-0>…</template>
+</DuTabs>`,
+    },
+    {
+      title: 'v-model holds a value, not an index',
+      description: 'Give each item a `value` and `v-model` carries that. An item with no `value` falls back to its index, so `v-model="0"` still works for a fixed list — but the moment tabs are added, removed or reordered, an index points at the wrong thing. Omit `modelValue` entirely and the tab group owns its state, starting at the item marked `active`.',
+      preview: `<div class="flex flex-col gap-3 w-full">
+  <DuTabs
+    v-model="tab"
+    ariaLabel="Account"
+    :items="[
+      { label: 'Profile', value: 'profile' },
+      { label: 'Billing', value: 'billing' },
+      { label: 'Security', value: 'security' }
+    ]"
+    type="box"
+  />
+  <p class="text-sm text-base-content/70">Selected: <code>{{ tab }}</code></p>
+  <DuButton size="sm" variant="primary" @click="tab = 'security'">Jump to Security</DuButton>
+</div>`,
+      script: `
+      const tab = ref('profile')
+      return { tab }
+      `,
+      code: `<script setup lang="ts">
+import { ref } from 'vue'
+const tab = ref('profile')
+</script>
+
+<template>
+  <DuTabs
+    v-model="tab"
+    ariaLabel="Account"
+    :items="[
+      { label: 'Profile', value: 'profile' },
+      { label: 'Billing', value: 'billing' },
+      { label: 'Security', value: 'security' },
+    ]"
+    type="box"
+  />
+</template>`,
+    },
+    {
+      title: 'Manual activation',
+      description: 'By default, arrowing onto a tab selects it — right when the panels are cheap. Set `activation="manual"` and the arrow keys only move focus; Enter or Space selects. Use it when showing a panel costs a request.',
+      preview: `<DuTabs
+  activation="manual"
+  ariaLabel="Reports"
+  :items="[{ label: 'Daily' }, { label: 'Weekly' }, { label: 'Monthly' }]"
+  type="border"
+  class="w-full"
+>
+  <template #content-0><p class="p-4 text-sm">Arrow across, then press Enter.</p></template>
+  <template #content-1><p class="p-4 text-sm">Weekly report</p></template>
+  <template #content-2><p class="p-4 text-sm">Monthly report</p></template>
+</DuTabs>`,
+      code: `<DuTabs
+  activation="manual"
+  ariaLabel="Reports"
+  :items="[{ label: 'Daily' }, { label: 'Weekly' }, { label: 'Monthly' }]"
+  type="border"
+>
+  <template #content-0>…</template>
+</DuTabs>`,
+    },
     {
       title: 'Basic tabs',
       preview: `<DuTabs
@@ -187,7 +291,6 @@ export default {
       preview: `<DuTabs
   :items="[{ label: 'Overview' }, { label: 'Settings' }, { label: 'Analytics' }]"
   type="border"
-  name="preview_border"
 >
   <template #content-0><p class="p-4 text-sm">Overview content</p></template>
   <template #content-1><p class="p-4 text-sm">Settings content</p></template>
@@ -200,7 +303,7 @@ const tabs = [{ label: 'Overview' }, { label: 'Settings' }, { label: 'Analytics'
 </script>
 
 <template>
-  <DuTabs v-model="activeTab" :items="tabs" type="border" name="main_tabs">
+  <DuTabs v-model="activeTab" :items="tabs" type="border">
     <template #content-0><div class="p-4">Overview content</div></template>
     <template #content-1><div class="p-4">Settings content</div></template>
     <template #content-2><div class="p-4">Analytics content</div></template>
@@ -212,7 +315,6 @@ const tabs = [{ label: 'Overview' }, { label: 'Settings' }, { label: 'Analytics'
       preview: `<DuTabs
   :items="[{ label: 'Tab 1' }, { label: 'Tab 2' }, { label: 'Tab 3' }]"
   type="box"
-  name="preview_box"
 >
   <template #content-0><p class="p-4 text-sm">Content 1</p></template>
   <template #content-1><p class="p-4 text-sm">Content 2</p></template>
@@ -224,7 +326,7 @@ const activeTab = ref(0)
 </script>
 
 <template>
-  <DuTabs v-model="activeTab" :items="[{ label: 'Tab 1' }, { label: 'Tab 2' }, { label: 'Tab 3' }]" type="box" name="box_tabs">
+  <DuTabs v-model="activeTab" :items="[{ label: 'Tab 1' }, { label: 'Tab 2' }, { label: 'Tab 3' }]" type="box">
     <template #content-0><div class="p-4">Content 1</div></template>
     <template #content-1><div class="p-4">Content 2</div></template>
     <template #content-2><div class="p-4">Content 3</div></template>
@@ -301,12 +403,11 @@ const activeTab = ref(0)
   :items="[{ label: 'Tab 1' }, { label: 'Tab 2' }]"
   type="border"
   :bottom="true"
-  name="preview_bottom"
 >
   <template #content-0><p class="p-4 text-sm">Content 1</p></template>
   <template #content-1><p class="p-4 text-sm">Content 2</p></template>
 </DuTabs>`,
-      code: `<DuTabs :items="[{ label: 'Tab 1' }, { label: 'Tab 2' }]" type="border" :bottom="true" name="bottom_tabs">
+      code: `<DuTabs :items="[{ label: 'Tab 1' }, { label: 'Tab 2' }]" type="border" :bottom="true">
   <template #content-0><div class="p-4">Content 1</div></template>
   <template #content-1><div class="p-4">Content 2</div></template>
 </DuTabs>`,

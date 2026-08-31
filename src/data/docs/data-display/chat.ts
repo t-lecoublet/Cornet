@@ -2,7 +2,7 @@ import type { DocPageData } from '@/types/docs'
 
 export default {
   title: 'Chat',
-  description: 'Chat bubbles are used to show messages in a conversation. DuChat wraps DuChatItem elements (manual mode) or accepts an `items` array (dynamic mode). DuChatItem uses named slots: `#image`, `#header`, `#message`, `#footer`.',
+  description: 'Chat bubbles show messages in a conversation. DuChat wraps DuChatItem elements (manual mode) or accepts an `items` array (dynamic mode). It is generic over the item type, so your own fields — an author id, a timestamp — survive into the scoped slots and the emit payloads. DuChatItem uses named slots: `#image`, `#header`, `#message`, `#footer`.',
   category: 'Data Display',
   source: 'https://daisyui.com/components/chat/',
   props: [
