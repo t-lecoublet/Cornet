@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, inject, ref, type Ref } from 'vue'
+import { computed, inject, ref, watch, type Ref } from 'vue'
 import { useRoute, RouterLink, RouterView } from 'vue-router'
 import { docsNav, docsCounts } from '@/data/docs/nav'
 import {
@@ -17,6 +17,21 @@ const sidebarOpen = inject<Ref<boolean>>('sidebarOpen', ref(false))
 function isActive(path: string) {
   return route.path === path
 }
+
+// The window never scrolls in the docs layout — <main> does — so the router's
+// `scrollBehavior: { top: 0 }` has nothing to reset, and this layout is reused
+// across doc pages rather than remounted, which is why the scroll position used
+// to carry over. Reset the scrollport ourselves on every page change, unless the
+// URL carries a hash: that navigation is targeting a specific section.
+const scrollPort = ref<HTMLElement | null>(null)
+
+watch(
+  () => route.path,
+  () => {
+    if (route.hash) return
+    scrollPort.value?.scrollTo({ top: 0 })
+  },
+)
 
 const isGallery = computed(() => route.path === '/docs/components')
 
@@ -147,7 +162,7 @@ const nav = docsNav.map((cat) => ({
     </aside>
 
     <!-- ─── Content ────────────────────────────────────── -->
-    <main class="flex-1 overflow-y-scroll h-full">
+    <main ref="scrollPort" class="flex-1 overflow-y-scroll h-full">
       <!-- A prose column for a doc page; a wider one for the component grid. -->
       <div class="mx-auto px-6 py-10" :class="isGallery ? 'max-w-6xl' : 'max-w-3xl'">
         <RouterView />

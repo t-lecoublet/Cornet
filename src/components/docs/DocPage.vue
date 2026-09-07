@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick } from 'vue'
+import { useRoute, RouterLink } from 'vue-router'
 import type { DocPageData } from '@/types/docs'
 import PropsTable from './PropsTable.vue'
 import PropsDocs from './PropsDocs.vue'
@@ -7,10 +8,39 @@ import SlotsDocs from './SlotsDocs.vue'
 import LivePreview from './LivePreview.vue'
 import CodeBlock from './CodeBlock.vue'
 import { useRepoPreference } from '@/composables/useRepoPreference'
+import { docsNav, type NavItem } from '@/data/docs/nav'
+import { relatedPathsFor } from '@/data/docs/related'
 
 const props = defineProps<{ data: DocPageData }>()
 
+const route = useRoute()
 const { transformUrl, preference } = useRepoPreference()
+
+// ─── Page-to-page navigation ──────────────────────────────
+// Flattened sidebar order, so prev/next reads the docs the way the nav lists them.
+const flatNav = computed(() =>
+  docsNav.flatMap((cat) => cat.items.map((item) => ({ ...item, category: cat.category }))),
+)
+
+const currentIdx = computed(() => flatNav.value.findIndex((i) => i.path === route.path))
+const prevPage = computed(() => (currentIdx.value > 0 ? flatNav.value[currentIdx.value - 1] : null))
+const nextPage = computed(() =>
+  currentIdx.value >= 0 && currentIdx.value < flatNav.value.length - 1
+    ? flatNav.value[currentIdx.value + 1]
+    : null,
+)
+
+/** Hand-curated in `@/data/docs/related` — never inferred from category or links. */
+const relatedPages = computed(() => {
+  const byPath = new Map(flatNav.value.map((i) => [i.path, i]))
+  return relatedPathsFor(route.path)
+    .map((path) => byPath.get(path))
+    .filter((item): item is NavItem & { category: string } => Boolean(item))
+})
+
+const relatedTitle = computed(() =>
+  props.data.category === 'Guides' ? 'Related guides' : 'Related components',
+)
 
 const filteredSections = computed(() =>
   props.data.sections.filter(s => !s.showFor || s.showFor.includes(preference.value ?? 'gitlab'))
@@ -194,6 +224,65 @@ onMounted(async () => {
         </div>
       </div>
     </section>
+
+    <!-- ─── Related pages ────────────────────────────────── -->
+    <section v-if="relatedPages.length" class="mt-16 pt-8 border-t border-base-300">
+      <h2 class="text-base font-bold text-base-content mb-3">{{ relatedTitle }}</h2>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <RouterLink
+          v-for="page in relatedPages"
+          :key="page.path"
+          :to="page.path"
+          class="block rounded-xl border border-base-300 p-4 hover:border-primary/40 hover:bg-base-200/40 transition-colors"
+        >
+          <div class="flex items-baseline justify-between gap-2 mb-1">
+            <span class="font-semibold text-sm text-base-content">{{ page.label }}</span>
+            <span class="text-[10px] font-mono uppercase tracking-widest text-base-content/35 shrink-0">
+              {{ page.category }}
+            </span>
+          </div>
+          <p v-if="page.description" class="text-xs text-base-content/50 line-clamp-2">
+            {{ page.description }}
+          </p>
+        </RouterLink>
+      </div>
+    </section>
+
+    <!-- ─── Previous / next ──────────────────────────────── -->
+    <nav v-if="prevPage || nextPage" class="mt-10 pt-6 border-t border-base-300 flex gap-3">
+      <RouterLink
+        v-if="prevPage"
+        :to="prevPage.path"
+        class="flex-1 min-w-0 rounded-xl border border-base-300 p-4 hover:border-primary/40 hover:bg-base-200/40 transition-colors"
+      >
+        <span class="flex items-center gap-1 text-xs text-base-content/40 mb-1">
+          <svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+          </svg>
+          Previous
+        </span>
+        <span class="block font-semibold text-sm text-base-content truncate">{{ prevPage.label }}</span>
+      </RouterLink>
+      <span v-else class="flex-1" aria-hidden="true"></span>
+
+      <RouterLink
+        v-if="nextPage"
+        :to="nextPage.path"
+        class="flex-1 min-w-0 text-right rounded-xl border border-base-300 p-4 hover:border-primary/40 hover:bg-base-200/40 transition-colors"
+      >
+        <span class="flex items-center justify-end gap-1 text-xs text-base-content/40 mb-1">
+          Next
+          <svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+          </svg>
+        </span>
+        <span class="block font-semibold text-sm text-base-content truncate">{{ nextPage.label }}</span>
+      </RouterLink>
+      <span v-else class="flex-1" aria-hidden="true"></span>
+    </nav>
+
+    <!-- Scroll runway: gives anchor links room to bring any section to the top. -->
+    <div class="min-h-[50vh]" aria-hidden="true"></div>
 
   </div>
 </template>
