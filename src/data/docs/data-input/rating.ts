@@ -8,8 +8,9 @@ export default {
   props: [
     {
       title: 'modelValue',
-      description: 'Current rating value',
-      type: 'number',
+      description: 'Current rating. `null` means **not rated** — a scale that starts at 1 has no number for an absence, so clearing binds `null` rather than `0`. The default is still `0`, which renders the same empty row of stars.',
+      type: 'number | null',
+      default: '0',
     },
     {
       title: 'count',
@@ -38,7 +39,7 @@ export default {
     },
     {
       title: 'clearable',
-      description: 'Allow clicking active star to clear rating',
+      description: 'Clicking the selected star again clears the rating, binding `null`. Without it, a rating once given can only be changed, never withdrawn.',
       type: 'boolean',
       default: 'false',
     },
@@ -170,11 +171,20 @@ const rating = ref(3.5)
     },
     {
       title: 'Clearable',
-      description: 'Clicking the active star again resets the rating to 0.',
-      preview: `<DuRating :modelValue="3" clearable />`,
+      description: 'Clicking the active star again withdraws the rating, binding **`null`** — not `0`. A scale that starts at 1 has no number for "not rated", so `0` could only ever be an absence in disguise, and it left "nobody rated this" and "somebody rated it zero" impossible to tell apart once the value reached a server.',
+      preview: `<div class="flex flex-col gap-2 items-center">
+  <DuRating v-model="rating" clearable />
+  <p class="text-sm text-base-content/60">
+    <code>{{ rating === null ? 'null' : rating }}</code> — typeof <code>{{ typeof rating }}</code>
+  </p>
+</div>`,
+      script: `
+      const rating = ref(3)
+      return { rating }
+      `,
       code: `<script setup lang="ts">
 import { ref } from 'vue'
-const rating = ref(3)
+const rating = ref<number | null>(3)
 </script>
 
 <template>

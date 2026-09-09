@@ -8,8 +8,8 @@ export default {
   props: [
     {
       title: 'modelValue',
-      description: 'Input value (use with `v-model`)',
-      type: 'string',
+      description: 'Input value (use with `v-model`). A `number` for a numeric field, and **`null`** whenever a number, date or time field is emptied — see "An emptied field binds null" below.',
+      type: 'string | number | null',
     },
     {
       title: 'type',
@@ -239,6 +239,47 @@ export default {
   :minlength="3"
   :maxlength="20"
 />`,
+    },
+    {
+      title: 'An emptied field binds null',
+      description: 'Clear a `number`, `date`, `datetime-local`, `time`, `week` or `month` field and the model becomes **`null`**. For these the browser hands back `""` to mean *nothing*, and `""` is never a valid one of them — so it was an absence wearing a value\'s clothes, and it is what makes a server reject an optional field the user simply left alone (`Input should be a valid integer, unable to parse string as an integer`). A **text** field keeps binding `""`, which for it is a real answer.',
+      script: `
+      const quantity = ref(5)
+      const dueDate = ref('2026-09-09')
+      const nickname = ref('Ada')
+      return { quantity, dueDate, nickname }
+      `,
+      preview: `<div class="flex flex-col gap-3 w-72 text-sm">
+  <div>
+    <DuInputField type="number" v-model="quantity" size="sm" placeholder="Quantity" />
+    <p class="mt-1"><code>{{ quantity === null ? 'null' : JSON.stringify(quantity) }}</code> — <code>{{ typeof quantity }}</code></p>
+  </div>
+  <div>
+    <DuInputField type="date" v-model="dueDate" size="sm" />
+    <p class="mt-1"><code>{{ dueDate === null ? 'null' : JSON.stringify(dueDate) }}</code> — <code>{{ typeof dueDate }}</code></p>
+  </div>
+  <div>
+    <DuInputField type="text" v-model="nickname" size="sm" placeholder="Nickname" />
+    <p class="mt-1"><code>{{ JSON.stringify(nickname) }}</code> — <code>{{ typeof nickname }}</code></p>
+  </div>
+</div>`,
+      code: `<script setup lang="ts">
+const quantity = ref<number | null>(5)
+const dueDate = ref<string | null>('2026-09-09')
+const nickname = ref('')          // text keeps ""
+</script>
+
+<template>
+  <DuInputField type="number" v-model="quantity" />
+  <DuInputField type="date" v-model="dueDate" />
+  <DuInputField type="text" v-model="nickname" />
+</template>`,
+    },
+    {
+      title: 'v-model.number on any field',
+      description: 'The `.number` modifier is implemented, so it casts on a `type="text"` field too — it used to be handed to the component and silently ignored, which is worse than not supporting it. The cast follows Vue\'s own rules (`"abc"` stays `"abc"`, `"12ab"` becomes `12`); only the empty case departs from them, going to `null` like everything else here.',
+      code: `<!-- casts even though the input is text -->
+<DuInputField type="text" v-model.number="amount" inputmode="decimal" />`,
     },
     {
       title: 'Reporting the error',
