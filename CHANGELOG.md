@@ -3,6 +3,25 @@
 All notable changes to Cornet are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/) and the project follows [Semantic Versioning](https://semver.org/).
 
+## [0.1.0-beta.23]
+
+An empty field now says so with `null`, everywhere it can. `''` and `0` were
+standing in for "no value" in places where neither is one, and both travelled
+into API payloads as if they were real answers.
+
+### Changed (breaking)
+
+- `DuRating`: clearing a `clearable` rating emits **`null`**, not `0`. A scale that starts at 1 has no number for "not rated", so `0` could only ever be an absence in disguise — and it left "nobody rated this" and "somebody rated it zero" impossible to tell apart, or rejected outright by a `ge=1` constraint. `modelValue` is `number | null`; **the default stays `0`**, which renders the same empty row of stars, so a rating that is not `clearable` is unaffected.
+
+### Fixed
+
+- `DuInputField`: an emptied `number`, `date`, `datetime-local`, `time`, `week` or `month` field emits `null` instead of `''`. The browser hands back `''` to mean *nothing* for all of these, and `''` is never a valid one of them, so it was an absence wearing a value's clothes — a server asked for an optional integer or date received `""` and refused to parse it. Text types (`text`, `email`, `url`, `tel`, `search`, `password`) still emit `''`, which for them is a real answer.
+- `DuInputField`: `v-model.number` is implemented rather than silently dropped. The component declared no modifiers, so Vue handed it `modelModifiers` and it ignored them — the modifier looked like it worked. It now casts on any `type`, following Vue's own `looseToNumber` semantics (`'abc'` stays `'abc'`), with the empty case going to `null` like the rest.
+
+### Internal
+
+- `DuRating`'s read-only group names itself from the value; an unrated one announces "0 out of 5" rather than "null out of 5".
+
 ## [0.1.0-beta.22]
 
 `DuSelect` and `DuSearch` are rebuilt on a shared headless combobox engine (`components/core/combobox/`) implementing the WAI-ARIA combobox pattern once — popup lifecycle, filtering, keyboard navigation, focus management and the ARIA prop bags — with the two components as styled facades over it. The engine is internal: the components stay the public API. The twelve `useSelect*` / `useSearch*` composables are gone.

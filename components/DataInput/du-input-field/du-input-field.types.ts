@@ -29,6 +29,33 @@ export type DuInputFieldValidatorProps = {
   title?: string
 }
 
+/**
+ * The `v-model` modifiers the field actually implements.
+ *
+ * Declared rather than left implicit because an unimplemented modifier is a
+ * silent trap: Vue hands `modelModifiers` to the child whether or not it reads
+ * them, so a `v-model.number` the component ignores looks like it works.
+ */
+export type DuInputFieldModelModifier = 'number'
+
+/**
+ * The types whose value is a structure rather than text.
+ *
+ * For these the browser hands back `''` to mean *nothing*, and `''` is never a
+ * valid one of them — so it is an absence wearing a value's clothes, and it is
+ * what makes a server reject an optional field the user simply left alone. An
+ * empty text field, by contrast, really did receive an empty string; saying so
+ * is not the same mistake.
+ */
+export const NULL_WHEN_EMPTY_TYPES = [
+  'number',
+  'date',
+  'datetime-local',
+  'time',
+  'week',
+  'month',
+] as const satisfies readonly DuInputFieldType[]
+
 export type DuInputFieldProps = {
   type?: DuInputFieldType
   /**

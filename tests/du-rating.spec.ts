@@ -22,11 +22,30 @@ describe('DuRating', () => {
     expect(wrapper.emitted('change')?.at(-1)).toEqual([4])
   })
 
-  it('clears to 0 when clicking the currently selected star with clearable', async () => {
+  it('clears to null when clicking the currently selected star with clearable', async () => {
+    // Not `0`: the scale starts at 1, so `0` was never a rating anyone could
+    // give — only an absence dressed as one, which made "nobody rated this"
+    // and "somebody rated it zero" the same value downstream.
     const wrapper = mount(DuRating, { props: { count: 5, modelValue: 3, clearable: true } })
     const inputs = wrapper.findAll('input[type="radio"]')
     await inputs[2].trigger('click')
-    expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([0])
+    expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([null])
+    expect(wrapper.emitted('change')?.at(-1)).toEqual([null])
+  })
+
+  it('leaves no star checked once cleared', async () => {
+    const wrapper = mount(DuRating, { props: { count: 5, modelValue: null, clearable: true } })
+    const checked = wrapper.findAll('input[type="radio"]').filter((input) => (
+      (input.element as HTMLInputElement).checked
+    ))
+    expect(checked).toHaveLength(0)
+  })
+
+  it('announces an unrated readonly group without saying “null”', async () => {
+    // The group names itself from the value; `null` must not reach that string.
+    const wrapper = mount(DuRating, { props: { count: 5, modelValue: null, readonly: true } })
+    const label = wrapper.find('[role="img"]').attributes('aria-label')
+    expect(label).toBe('0 out of 5')
   })
 
   it('does not clear when clicking selected star without clearable', async () => {

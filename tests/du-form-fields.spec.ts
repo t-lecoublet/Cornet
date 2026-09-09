@@ -126,6 +126,99 @@ describe('what a form needs', () => {
   })
 })
 
+/** The value the parent would be holding right now. */
+function model(f: ReturnType<typeof field>) {
+  const emissions = f.wrapper.emitted('update:modelValue')
+  return emissions?.[emissions.length - 1]?.[0]
+}
+
+// An optional number or date nobody filled in has no value — it does not have a
+// blank one. The browser hands back `''` for both, and `''` is never a valid one
+// of either, so it is an absence wearing a value's clothes: it travelled into
+// API payloads that a server then refused to parse.
+describe('what an emptied field emits', () => {
+  it('emits a number, not the text that was typed', async () => {
+    const f = field({ type: 'number' })
+    await f.type('12')
+    expect(model(f)).toBe(12)
+  })
+
+  it('emits null once a number field is cleared', async () => {
+    const f = field({ type: 'number' })
+    await f.type('12')
+    await f.type('')
+    expect(model(f)).toBeNull()
+  })
+
+  it('emits null once a date field is cleared', async () => {
+    const f = field({ type: 'date' })
+    await f.type('2026-09-09')
+    await f.type('')
+    expect(model(f)).toBeNull()
+  })
+
+  it('emits null once a time field is cleared', async () => {
+    const f = field({ type: 'time' })
+    await f.type('09:30')
+    await f.type('')
+    expect(model(f)).toBeNull()
+  })
+
+  it('still hands back a real date when there is one', async () => {
+    // Only the empty case changes: a filled date is a string, as it always was.
+    const f = field({ type: 'date' })
+    await f.type('2026-09-09')
+    expect(model(f)).toBe('2026-09-09')
+  })
+
+  it('leaves a text field emitting the empty string', async () => {
+    // An empty text field really did receive an empty string, and saying so is
+    // not the same mistake.
+    const f = field({ type: 'text' })
+    await f.type('hello')
+    await f.type('')
+    expect(model(f)).toBe('')
+  })
+
+  it('leaves an email field emitting the empty string too', async () => {
+    const f = field({ type: 'email' })
+    await f.type('ada@example.com')
+    await f.type('')
+    expect(model(f)).toBe('')
+  })
+})
+
+describe('the .number modifier', () => {
+  // Vue hands `modelModifiers` to the child whether or not it reads them, so a
+  // modifier the component ignores looks like it works. This one is read.
+  it('casts on a field whose type is not number', async () => {
+    const f = field({ type: 'text', modelModifiers: { number: true } })
+    await f.type('12')
+    expect(model(f)).toBe(12)
+  })
+
+  it('empties to null there too', async () => {
+    const f = field({ type: 'text', modelModifiers: { number: true } })
+    await f.type('12')
+    await f.type('')
+    expect(model(f)).toBeNull()
+  })
+
+  it('keeps what cannot be parsed, as Vue’s own .number does', async () => {
+    // Deviating only on the empty case keeps the modifier predictable: nothing
+    // the user typed is discarded behind their back.
+    const f = field({ type: 'text', modelModifiers: { number: true } })
+    await f.type('abc')
+    expect(model(f)).toBe('abc')
+  })
+
+  it('is ignored when it was never asked for', async () => {
+    const f = field({ type: 'text' })
+    await f.type('12')
+    expect(model(f)).toBe('12')
+  })
+})
+
 describe('DuFileInput', () => {
   it('hands back the chosen files, which it could not do at all before', async () => {
     const wrapper = mount(DuFileInput)

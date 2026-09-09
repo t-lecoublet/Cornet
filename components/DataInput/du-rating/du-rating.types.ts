@@ -23,7 +23,12 @@ export type DuRatingItemLabel = (value: number, max: number) => string;
 export const defaultRatingItemLabel: DuRatingItemLabel = (value, max) => `${value} out of ${max}`;
 
 export interface DuRatingProps {
-  modelValue?: number;
+  /**
+   * The rating. `null` is *not rated* — a scale that starts at 1 has no way to
+   * spell an absence with a number, and `0` pretending to be one made "nobody
+   * rated this" and "somebody rated it zero" the same value.
+   */
+  modelValue?: number | null;
   items?: DuRatingItemData[];
   count?: number;
   name?: string;
@@ -59,8 +64,8 @@ export interface DuRatingItemProps {
 }
 
 export interface DuRatingEmits {
-  (e: "update:modelValue", value: number): void;
-  (e: "change", value: number): void;
+  (e: "update:modelValue", value: number | null): void;
+  (e: "change", value: number | null): void;
 }
 
 export interface DuRatingItemEmits {

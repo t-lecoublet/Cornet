@@ -9,7 +9,21 @@ paths:
 
 **Files:** `components/DataInput/du-input-field/du-input-field.vue` | `.types.ts` | `.stories.ts`
 
+An emptied field emits **`null`** for every type in `NULL_WHEN_EMPTY_TYPES`
+(`number`, `date`, `datetime-local`, `time`, `week`, `month`): the browser hands
+back `''` to mean *nothing* for these, and `''` is never a valid one of them, so
+it is an absence wearing a value's clothes — and it is what makes a server
+reject an optional field the user simply left alone. Text types keep `''`, which
+for them is a real answer.
+
+`v-model.number` is implemented (`DuInputFieldModelModifier`), so it casts on any
+`type`, not just `number`. The cast follows Vue's own `looseToNumber` semantics —
+`'abc'` stays `'abc'` — with the empty case going to `null` like the rest. Never
+leave a modifier undeclared: Vue hands `modelModifiers` to the child whether or
+not it reads them, so an ignored one looks like it works.
+
 **Props:**
+- `modelValue?`: unknown (v-model) — see the null rule above
 - `type?`: DuInputFieldType (`'text'` | `'password'` | `'email'` | `'number'` | `'date'` | `'datetime-local'` | `'week'` | `'month'` | `'tel'` | `'url'` | `'search'` | `'time'`)
 - `placeholder?`: string
 - `size?`: Size
@@ -144,7 +158,7 @@ daisyUI's radio-group pattern is kept — it is the right one for a rating — w
 the group named and every star named.
 
 **Props :**
-- `modelValue?`: number (v-model)
+- `modelValue?`: number | null (v-model) — `null` is *not rated*. Clearing a `clearable` rating emits `null`, never `0`: the scale starts at 1, so `0` was only ever an absence in disguise. The default stays `0`, which renders the same empty row of stars
 - `items?`: DuRatingItemData[]
 - `count?`: number - Nombre d'étoiles (si pas d'items)
 - `name?`: string

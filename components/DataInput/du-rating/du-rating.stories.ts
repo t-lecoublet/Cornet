@@ -134,12 +134,18 @@ const halfStarValue = ref(3.5);
 const clearableRatingTplStr = `
 <div class="flex flex-col gap-4 w-80">
   <DuRating clearable v-model="clearableValue" />
-  <div class="text-center">Value: {{ clearableValue }} (click on the same star to clear)</div>
+  <div class="text-center text-sm">
+    Value:
+    <code class="font-mono">{{ clearableValue === null ? 'null' : clearableValue }}</code>
+    — typeof <code class="font-mono">{{ typeof clearableValue }}</code>
+    <br />
+    <span class="opacity-60">click the same star again to clear</span>
+  </div>
 </div>
 `;
 const clearableRatingScriptStr = `<script setup lang=\"ts\">
 import { ref } from 'vue';
-const clearableValue = ref(3);
+const clearableValue = ref<number | null>(3);
 <\/script>`;
 
 const disabledRatingTplStr = `
@@ -270,13 +276,22 @@ export const ClearableRating: Story = {
   render: () => ({
     components: { DuRating },
     setup() {
-      const clearableValue = ref(3);
+      const clearableValue = ref<number | null>(3);
       return { clearableValue };
     },
     template: clearableRatingTplStr,
   }),
   parameters: {
     docs: {
+      description: {
+        story:
+          'Clicking the selected star again clears the rating, and clearing binds '
+          + '`null` — not `0`. A scale that starts at 1 has no number for "not rated", '
+          + 'so `0` could only ever be an absence in disguise, and it left "nobody '
+          + 'rated this" and "somebody rated it zero" impossible to tell apart.\n\n'
+          + 'The default is still `0`, which renders the same empty row of stars, so '
+          + 'nothing changes for a rating that is not `clearable`.',
+      },
       source: {
         code: `${clearableRatingScriptStr}\n${clearableRatingTplStr}`,
         language: 'html',

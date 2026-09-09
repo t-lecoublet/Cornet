@@ -56,7 +56,9 @@ const labelFor = (value: number) => props.itemLabel(value, maxValue.value);
  * group: `role="img"` with a name is how a rating readout is normally exposed.
  */
 const groupProps = computed(() => (props.readonly
-  ? { role: "img", "aria-label": props.ariaLabel ?? labelFor(internalValue.value) }
+  // `?? 0` so an unrated value reads "0 out of 5" rather than "null out of 5" —
+  // which is what the stars show anyway, none of them filled.
+  ? { role: "img", "aria-label": props.ariaLabel ?? labelFor(internalValue.value ?? 0) }
   : { role: "radiogroup", "aria-label": props.ariaLabel }));
 
 const ratingClass = computed(() => {

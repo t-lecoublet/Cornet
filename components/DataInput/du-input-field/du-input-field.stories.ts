@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/vue3"
+import { ref } from "vue"
 import DuInputField from "./du-input-field.vue"
 import DuLabel from "../du-label/du-label.vue"
 import DuKbd from "../../DataDisplay/du-kbd/du-kbd.vue"
@@ -77,6 +78,42 @@ const SizesInputTplStr = `
 
 const DisabledInputTplStr = `
 <DuInputField placeholder="You can't touch this" disabled v-bind="args" />`
+
+const EmptyMeansNoValueTplStr = `
+<div class="flex flex-col gap-4 w-80">
+  <div class="flex flex-col gap-1">
+    <DuLabel type="label">
+      Quantity (optional)
+      <DuInputField type="number" v-model="quantity" placeholder="Leave it empty" class="grow" v-bind="args" />
+    </DuLabel>
+    <p class="text-sm">
+      <code class="font-mono">{{ quantity === null ? 'null' : JSON.stringify(quantity) }}</code>
+      — typeof <code class="font-mono">{{ typeof quantity }}</code>
+    </p>
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <DuLabel type="label">
+      Due date (optional)
+      <DuInputField type="date" v-model="dueDate" class="grow" v-bind="args" />
+    </DuLabel>
+    <p class="text-sm">
+      <code class="font-mono">{{ dueDate === null ? 'null' : JSON.stringify(dueDate) }}</code>
+      — typeof <code class="font-mono">{{ typeof dueDate }}</code>
+    </p>
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <DuLabel type="label">
+      Nickname (optional)
+      <DuInputField type="text" v-model="nickname" placeholder="Leave it empty" class="grow" v-bind="args" />
+    </DuLabel>
+    <p class="text-sm">
+      <code class="font-mono">{{ JSON.stringify(nickname) }}</code>
+      — typeof <code class="font-mono">{{ typeof nickname }}</code>
+    </p>
+  </div>
+</div>`
 
 const TextInputWithDataListSuggestionTplStr = `
 <DuInputField 
@@ -216,6 +253,43 @@ const DisabledInputTemplate: Story = {
 }
 export const DisabledInput = { ...DisabledInputTemplate }
 DisabledInput.args = {}
+
+// EMPTY MEANS NO VALUE
+
+const EmptyMeansNoValueTemplate: Story = {
+  render: (args: any) => ({
+    components: { DuInputField, DuLabel },
+    setup() {
+      const quantity = ref<number | null>(5)
+      const dueDate = ref<string | null>('2026-09-09')
+      const nickname = ref<string>('Ada')
+      return { args, quantity, dueDate, nickname }
+    },
+    template: EmptyMeansNoValueTplStr,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Clear each field and watch the bound value. A **number** and a **date** '
+          + 'bind `null`; a **text** field binds `""`.\n\n'
+          + 'The difference is not arbitrary. For a number or a date the browser '
+          + 'hands back `""` to mean *nothing at all*, and `""` is never a valid one '
+          + 'of them — so it is an absence wearing a value\'s clothes, and it is what '
+          + 'makes a server reject an optional field the user simply left alone. An '
+          + 'empty text field really did receive an empty string, so that is what it '
+          + 'reports.\n\n'
+          + 'The same applies to `datetime-local`, `time`, `week` and `month`.',
+      },
+      source: {
+        code: EmptyMeansNoValueTplStr,
+        language: 'html',
+      },
+    },
+  },
+}
+export const EmptyMeansNoValue = { ...EmptyMeansNoValueTemplate }
+EmptyMeansNoValue.args = {}
 
 // TEXT INPUT WITH DATA LIST SUGGESTION
 

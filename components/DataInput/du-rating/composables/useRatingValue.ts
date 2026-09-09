@@ -2,7 +2,7 @@ import { ref, watch } from 'vue'
 import type { DuRatingEmits } from '../du-rating.types'
 
 interface RatingValueProps {
-  modelValue: number
+  modelValue: number | null
   clearable?: boolean
   disabled?: boolean
   readonly?: boolean
@@ -10,7 +10,7 @@ interface RatingValueProps {
 
 /** Owns the selected rating value, kept in sync with `modelValue`, and the click-to-select/clear business rule. */
 export function useRatingValue(props: RatingValueProps, emit: DuRatingEmits) {
-  const internalValue = ref(props.modelValue)
+  const internalValue = ref<number | null>(props.modelValue)
 
   watch(
     () => props.modelValue,
@@ -24,9 +24,12 @@ export function useRatingValue(props: RatingValueProps, emit: DuRatingEmits) {
       return
     }
     if (value === internalValue.value && props.clearable) {
-      internalValue.value = 0
-      emit('update:modelValue', 0)
-      emit('change', 0)
+      // `null`, not `0`: the scale starts at 1, so `0` was never a rating —
+      // only an absence dressed as one, which left "nobody rated this" and
+      // "somebody rated it zero" impossible to tell apart downstream.
+      internalValue.value = null
+      emit('update:modelValue', null)
+      emit('change', null)
     } else {
       internalValue.value = value
       emit('update:modelValue', value)
